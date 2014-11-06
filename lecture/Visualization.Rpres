@@ -1,0 +1,209 @@
+Visualization
+========================================================
+author: Information Systems Engineering
+date:  January 2015
+
+
+Representing data
+=================
+type: section
+
+Flu data
+========
+
+- What would you like to know about the spread of flu?
+- [Google Flu Trends](http://www.google.org/flutrends/us/#US-PA)
+- [CDC FluView](http://gis.cdc.gov/grasp/fluview/fluportaldashboard.html)
+- [CDC Flu trends](http://www.cdc.gov/flu/weekly/weeklyarchives2013-2014/picILI01.htm)
+
+
+
+
+What is visualization for?
+==========================
+
+-  Analysis and exploration
+-  Communicate and present information
+-  Entertainment
+-  Art
+
+Visualizations in data science
+==============================
+
+
+
+How do we represent data?
+=========================
+
+-  Use visual cues to show values.
+-  Shapes, colors, scales, position.
+-  Visualization is how we summarize raw data to communicate meaning.
+-  What makes for a good visualization?
+
+
+Visualization components
+========================
+type: section
+
+Visualization components
+========================
+
+.
+![Visualization components](figures/visualizationcomponents.jpg)
+
+
+Visual cues
+===========
+
+.
+![Visual cues](figures/visualcues.jpg)
+
+Ranking visual cues
+===================
+
+Some visual cues are more clear than others
+
+![Ranking visual cues](figures/visualcuesranked.jpg)
+
+Coordinate systems
+==================
+
+Coordinate systems dictate the dimensions of the visualization.
+
+.
+![Coordinate systems](figures/coordinatesystems.jpg)
+
+Scales
+======
+
+Scales dictate where in the dimensions the data maps to.
+
+.
+![Scales](figures/visualscales.jpg)
+
+Using visualization
+===================
+type:section
+
+
+Data exploration questions to ask?
+==================================
+
+-  What data do you have?
+-  What do you want to know about your data?
+-  Which visualization methods should you use?
+-  What do you see and does it make sense?
+
+Exploring through visualization
+===============================
+
+![Data exploration](figures/visualizationexploration.jpg)
+
+Visualizing categorical data
+============================
+
+.
+![Visualizing categorical data](figures/visualizationcategorical.jpg)
+
+
+
+Time
+====
+
+Time is continuous, but you can also divide it into categories.
+
+![Time](figures/visualizationtime.jpg)
+
+
+Time series
+===========
+
+How does your data change over time?
+
+.
+![Time series](figures/visualizationtimeseries.jpg)
+
+Visualizing spatial data
+========================
+
+.
+![Time series](figures/visualizationspatial.jpg)
+
+Combining components
+====================
+
+By combining components, graphs are richer and can display many relationships at once.
+
+.
+![Combining components](figures/visualcombinations.jpg)
+
+
+Multiple variables
+==================
+
+There is no hard limit to how many variables can be in one visualization
+
+.
+![Multiple views](figures/visualizationmultiple.jpg)
+
+Data distribution
+=================
+
+- Visualization can show how data is distributed in a population
+- Box plots
+- Histograms
+- Density plots
+
+Visualizing distributions
+=========================
+
+.
+![Distributions](figures/visualizationdistributions.jpg)
+
+
+Comparisons
+===========
+
+One thing that visualizations should do is show how things change.
+
+.
+![Comparisons](figures/visualcomparisons.jpg)
+
+Color scales
+============
+
+-  Sequential
+-  Diverging
+-  Qualitative
+
+![Colorscales](figures/visualizationcolorscales.jpg)
+
+
+Highlighting
+============
+
+Emphasize a particular data point or series to place focus
+
+![Highlighting](figures/visualizationhighlighting.jpg)
+
+Annotation
+==========
+
+Give context to data or explain boundary cases.
+
+.
+![Annotation example](figures/visualannotations.jpg)
+
+Making things pretty
+====================
+
+![Making things pretty](figures/visualizationwind.jpg)
+
+Summary
+=======
+
+-  Think in terms of telling a story.
+-  What is the message?
+-  What is the main point?
+-  How to tell it?
+
