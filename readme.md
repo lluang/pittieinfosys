@@ -22,17 +22,38 @@ The following are resources we will use.  Data Manipulation with R will be the p
 
 ### Datasets
 
-For lectures and lab (module) examples, use one of these data sets.
+For lectures and lab (module) examples, use this data set.  See the data directory for instructions.  The first module should involve assembling this data set.  For ideas on how to work with this data set, see the book Think Stats by Allen Downey
 
-1.  National Survey of Family Growth http://cdc.gov/nchs/nsfg.html
-  -  Codebook http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.html
-2.  American Community Survey
-  -  Household data files for Oakland 2008-2012
+http://greenteapress.com/thinkstats2/
+
+1.  National Survey of Family Growth http://cdc.gov/nchs/nsfg.htm
+  -  Codebook http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
+
+#  Git and Bitbucket
+
+To use this repository, you need R and R Studio, then the version control system Git (which works with Bitbucket)
 
 
 
-##  R and R Studio
+#  Modules
 
+For modules, you should have an R Presentation that walks students through these topics using data in the national survey of family growth (female pregnancy data).  It may be useful to look at Think Stats for ideas on what the survey contains
+
+1.  Module 1:  Using MS Access
+2.  Module 2:  Reading data into R from SQL datatables.  Based on Spector Ch 2 - **Ziyi Kang**
+3.  Module 3:  Using SQL and basic SQL query functions
+4.  Module 4: Data formats Spector Ch 4, 5
+5.  Module 5: Data formats Spector Ch 6, 7
+6.  Module 6: Summarizing data (plyr)  **Yuwen Yang**
+7.  Module 7:  Simple graphs with ggplot2 (qplot) **Shi Tang**
+8.  Modele 8:  Complex graphs with ggplot2 (qplot) **Shi Tang**
+9.  Module 9:  Data manipulation with dplyr (based on dplyr tutorials)
+10. Module 10:  Pivot tables and aggregations with table and reshape
+11. Module 11:  Identifying and marking missing values - Development of algorithms - flow charts **Saurabh Jha**
+12. Module 12:  Missing values imputation kNN **Saurabh Jha**
+13/ Module 13:  Missing values imputation with linear regression **Saurabh Jha**
+
+#  Syllabus
 
 ## Introduction to Data
 
@@ -42,6 +63,7 @@ Spector - Ch 1
 
 Module 1:  Using MS Access
     Load tables from CSV
+    Reading table specifications to create column headings
     Join tables
     Select queries
 
@@ -62,10 +84,6 @@ Spector Ch 3
 
 Module3:  Using SQL and basic SQL query functions
 
--  ODBC
--  RODBC/RSQLite
--  MS Access
--  SQLite
 -  SQL
     -  SELECT
     -  GROUP BY
@@ -91,6 +109,7 @@ Spector 4, 5, 6, 7
 ##  Exploratory data analysis
 
 Module 6:  summarizing data
+  Basic summary statistics. Mean, variance, quantiles, box and whiskers
 
 ##  Graphical data analysis - ggplot2
 
@@ -104,12 +123,12 @@ Wickham Ch 1
 
 ##  Data manipulation
 
-Module 8:  Data manipulation with dplyr
+Module 9:  Data manipulation with dplyr
 
 Reference needed
 select, filter, mutate, summarize, arrange. using dplyr
 
-Module 9:  Pivot tables and aggregations with table and reshape
+Module 10:  Pivot tables and aggregations with table and reshape
 
 Spector 8 and 9
 -  Aggregating   using table
@@ -118,11 +137,11 @@ Spector 8 and 9
 
 ##  Missing values
 
-Module 10:  Identifying and marking missing values - Development of algorithms - diagramming - Near
+Module 11:  Identifying and marking missing values - Development of algorithms - diagramming
 
-Module 11:  Missing values imputation kNN
+Module 12:  Missing values imputation kNN
 
-Module 12:  Missing values imputation with linear regression
+Module 13:  Missing values imputation with linear regression
 
 -  reference material
 Gelman et al. Data Analysis Using Regression and Multilevel/Hierarchical Models Ch 25
