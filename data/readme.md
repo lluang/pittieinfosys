@@ -20,3 +20,4 @@ Pregnancy data cookbook
 These are the columns to the dat file.
 
 ftp://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NSFG/Cycle6Codebook-Pregnancy.pdf
+
