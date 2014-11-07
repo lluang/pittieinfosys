@@ -33,7 +33,24 @@ http://greenteapress.com/thinkstats2/
 
 To use this repository, you need R and R Studio, then the version control system Git (which works with Bitbucket)
 
+##  Git Version Control
 
+-  Bitbucket sourcecode repository.
+http://bitbucket.org
+
+-  Git Distributed Version Control System
+http://git-scm.com/
+
+-  Pro Git Book. ISBN: 1430218339  Available electronically for free.  First chapter is on basics.
+http://git-scm.com/book
+
+-  GotGit  Adaptation of Pro Git in Chinese http://www.worldhello.net/gotgit/
+
+-  Git and R Studio
+https://support.rstudio.com/hc/en-us/articles/200532077-Version-Control-with-Git-and-SVN
+
+-  SourceTree Git Client for Mac and Windows with graphical interface.  Use if RStudio support is not enough.
+http://www.sourcetreeapp.com/
 
 #  Modules
 
