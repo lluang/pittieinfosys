@@ -58,7 +58,7 @@ http://www.sourcetreeapp.com/
 For modules, you should have an R Presentation that walks students through these topics using data in the national survey of family growth (female pregnancy data).  It may be useful to look at Think Stats for ideas on what the survey contains
 
 1.  Module 1:  Using MS Access
-2.  Module 2:  Reading data into R from SQL datatables.  Based on Spector Ch 2 - **Ziyi Kang**
+2.  Module 2:  Reading data into R.  Based on Spector Ch 2 - **Ziyi Kang**
 3.  Module 3:  Using SQL and basic SQL query functions
 4.  Module 4: Data formats Spector Ch 4, 5
 5.  Module 5: Data formats Spector Ch 6, 7
