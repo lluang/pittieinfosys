@@ -17,8 +17,7 @@ The following are resources we will use.  Data Manipulation with R will be the p
 2.  GGplot2 book by Hadley Wickham
   -  Chapter 2 qplot at http://ggplot2.org/book/qplot.pdf
 3.  Data Manipulation with R - Spector (textbook)
-4.  Gelman et al. Data Analysis Using Regression and Multilevel/Hierarchical Models Ch 25
-  -  http://www.stat.columbia.edu/~gelman/arm/missing.pdf
+4.  An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
 
 ### Datasets
 
