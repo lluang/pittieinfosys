@@ -17,8 +17,7 @@ The following are resources we will use.  Data Manipulation with R will be the p
 2.  GGplot2 book by Hadley Wickham
   -  Chapter 2 qplot at http://ggplot2.org/book/qplot.pdf
 3.  Data Manipulation with R - Spector (textbook)
-4.  Gelman et al. Data Analysis Using Regression and Multilevel/Hierarchical Models Ch 25
-  -  http://www.stat.columbia.edu/~gelman/arm/missing.pdf
+4.  An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
 
 ### Datasets
 
@@ -58,7 +57,11 @@ http://www.sourcetreeapp.com/
 For modules, you should have an R Presentation that walks students through these topics using data in the national survey of family growth (female pregnancy data).  It may be useful to look at Think Stats for ideas on what the survey contains
 
 1.  Module 1:  Using MS Access
+<<<<<<< HEAD
+2.  Module 2:  Reading data into R.  Based on Spector Ch 2 and  - **Ziyi Kang**
+=======
 2.  Module 2:  Reading data into R.  Based on Spector Ch 2 - **Ziyi Kang**
+>>>>>>> e579acd9a4b8d6d16baa0d60bcd876465326e26f
 3.  Module 3:  Using SQL and basic SQL query functions
 4.  Module 4: Data formats Spector Ch 4, 5
 5.  Module 5: Data formats Spector Ch 6, 7
@@ -89,7 +92,8 @@ Alternative: Use SQLite manager to do the same
 
 Spector Ch 2
 
-Module 2:  Reading data into R from SQL datatables.  Based on Spector Ch 2
+Module 2:  Reading data into R from SQL datatables.  Based on Spector Ch 2 and de Jonge and van der Loo Section 2
+
 
 -  Reading data into R from
     -  SQL databases
@@ -154,6 +158,8 @@ Spector 8 and 9
 -  Merging data frames
 
 ##  Missing values
+
+de Jonge and van der Loo Section 3
 
 Module 11:  Identifying and marking missing values - Development of algorithms - diagramming
 
