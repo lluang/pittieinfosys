@@ -6,20 +6,25 @@ date:
 Outline
 =======
 
-- Reading data in
+- Reading data into R
   Various information that you would need.
   
--  Reading data files
+Reading data files
+==================
   -  read.table()
   -  read.csv()
   -  read.delim()
   -  read.fwf()
   
 Structure of data
+=================
 
 -  Data files
 -  Metadata/codebook
 -  Demonstrate how to use a codebook
+
+Reading the fixed width file
+===========================
 
 ```{r readfemalepregnancydata}
 # National Survey for Family Growth female pregnancy survey data and codebook from
