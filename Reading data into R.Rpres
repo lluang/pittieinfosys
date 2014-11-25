@@ -31,6 +31,7 @@ Using a codebooks
 
 In order to identify the names of columns in the data file,we need to use a codebook
 http://www.cdc.gov/nchs/nsfg/nsfg_2006_2010_puf.htm
+
 ![alt text](data/codebook.jpg) 
 
 
@@ -210,8 +211,9 @@ Reading .csv file into R
 ======================================================================================
 -read.csv()
 ```{r,eval=FALSE}
-read.csv(file, header = TRUE, sep = ",", quote = "\"",
-         dec = ".", fill = TRUE, comment.char = "", ...)
+read.csv(file, header = TRUE, sep = ",", 
+         quote = "\"",dec = ".", 
+         fill = TRUE, comment.char = "", ...)
 ```
 
 Reading .csv file into R 
@@ -223,7 +225,24 @@ FemPregCSV<-read.csv("data/FemPregCSV.csv",
 FemPregCSV[,c(1:4)]
 ```
 
+Reading spreadsheet into R 
+======================================================================================
+-XLConnect package:
+```{r}
+library(XLConnect)
+```
+-readWorksheetFromFile()
+```{r,eval=FALSE}
+readWorksheetFromFile(file, sheet, header=FALSE, startCol, startRow, endCol, endRow, ...)
+```
 
+Reading spreadsheet into R 
+======================================================================================
+```{r}
+FemPregSheet<-readWorksheetFromFile(
+  "data/FemPregSheet.xlsx",sheet="FemPreg")
+FemPregSheet[,c(1:4)]
+```
 
 
 First Slide

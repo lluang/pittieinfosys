@@ -31,6 +31,7 @@ Using a codebooks
 
 In order to identify the names of columns in the data file,we need to use a codebook
 http://www.cdc.gov/nchs/nsfg/nsfg_2006_2010_puf.htm
+
 ![alt text](data/codebook.jpg) 
 
 
@@ -225,8 +226,9 @@ Reading .csv file into R
 -read.csv()
 
 ```r
-read.csv(file, header = TRUE, sep = ",", quote = "\"",
-         dec = ".", fill = TRUE, comment.char = "", ...)
+read.csv(file, header = TRUE, sep = ",", 
+         quote = "\"",dec = ".", 
+         fill = TRUE, comment.char = "", ...)
 ```
 
 Reading .csv file into R 
@@ -247,7 +249,35 @@ FemPregCSV[,c(1:4)]
 4  33303        2        NA        NA
 ```
 
+Reading spreadsheet into R 
+======================================================================================
+-XLConnect package:
 
+```r
+library(XLConnect)
+```
+-readWorksheetFromFile()
+
+```r
+readWorksheetFromFile(file, sheet, header=FALSE, startCol, startRow, endCol, endRow, ...)
+```
+
+Reading spreadsheet into R 
+======================================================================================
+
+```r
+FemPregSheet<-readWorksheetFromFile(
+  "data/FemPregSheet.xlsx",sheet="FemPreg")
+FemPregSheet[,c(1:4)]
+```
+
+```
+  CASEID pregordr HOWPREG_N HOWPREG_P
+1  39968        2        NA        NA
+2  41474        1        NA        NA
+3  33303        1        NA        NA
+4  33303        2        NA        NA
+```
 
 
 First Slide
@@ -269,16 +299,16 @@ summary(cars)
 ```
 
 ```
-     speed           dist    
- Min.   : 4.0   Min.   :  2  
- 1st Qu.:12.0   1st Qu.: 26  
- Median :15.0   Median : 36  
- Mean   :15.4   Mean   : 43  
- 3rd Qu.:19.0   3rd Qu.: 56  
- Max.   :25.0   Max.   :120  
+     speed           dist       
+ Min.   : 4.0   Min.   :  2.00  
+ 1st Qu.:12.0   1st Qu.: 26.00  
+ Median :15.0   Median : 36.00  
+ Mean   :15.4   Mean   : 42.98  
+ 3rd Qu.:19.0   3rd Qu.: 56.00  
+ Max.   :25.0   Max.   :120.00  
 ```
 
 Slide With Plot
 ========================================================
 
-![plot of chunk unnamed-chunk-10](Reading data into R-figure/unnamed-chunk-10.png) 
+![plot of chunk unnamed-chunk-13](Reading data into R-figure/unnamed-chunk-13-1.png) 
