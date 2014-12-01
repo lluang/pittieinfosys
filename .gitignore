@@ -3,3 +3,4 @@
 .RData
 data/*.dat
 data/*.pdf
+.Rproj
