@@ -1,0 +1,141 @@
+Data In R
+========================================================
+author: IE 0015
+date: Spring 2051 
+
+Data analysis language
+========================================================
+
+**R** is a Data analysis language
+
+-  Reading in data in various formats.
+-  Manipulating data.
+-  Exploratory data analysis.
+-  Graphical display.
+
+Reading in data
+=================
+
+Data exists in various forms
+
+-  Text files
+  -  (Comma) delimited (csv)
+  -  Tabular (fixed format) text (tab)
+-  Excel spreadsheets
+-  Databases
+  -  Local (MS Access, SQLite)
+  -  Server (Oracle, IBM DB2, MySQL)
+-  Web API
+  - Twitter, Facebook, Google, Quandl
+  
+Why do we want to use to the data
+==================================
+incremental: true
+
+- We have a question that needs to be answered.
+- We have a decision that needs to be made.
+- We will do something when we observe an event.
+
+Why use a programming environment
+=================================
+
+-  Review for errors
+-  Repeatable
+-  Documentation
+-  Can be modified
+
+Working in R
+===============
+type: section
+
+Starting R
+==========
+
+-  R is a data analysis environment
+  -  The programming language
+  -  The system of libraries and books around it.
+-  R Studio is an Integrated Development environment.
+  -  If you are already a computer programmer, you can use your editing tools to work in R.
+  -  R Studio includes an editor, console, environment viewer, history
+  -  Access to help files
+  
+Interactive R
+===============
+
+R can be used as a calculator
+
+```{r calculator}
+3+5
+```
+
+
+Get help
+==========
+```{r help}
+help(rnorm)
+```
+
+Run a function
+===============
+
+```{r rnorm}
+x = rnorm(20)
+y = rexp(20)
+plot(x,y)
+```
+
+Some data types
+===============
+
+Some standard data types
+
+- Integers, floats
+- Characters, strings
+- Dates
+- When is a number not a number?  Factors
+
+Some data structures
+======================
+
+-  Vectors (numbers)
+-  You can apply functions over entire vectors (vectorization)
+
+```{r vector}
+a <- c(3, 5, 3, 7, 10)
+b = c(1, 2, 3, 4, 5)
+1/b
+sum((a-mean(a))^2)/(length(a)-1)
+var(a)
+```
+
+Sequences
+============
+
+You can construct a sequence like a for loop
+
+```{r sequence}
+seq(-5, 5, by=2)
+seq(-5, 5, 2)
+```
+
+Functions
+=========
+And group operations into functions
+
+```{r functions}
+
+sortplot <- function(x, y){
+  x <- sort(x)
+  y <- sort(y)
+  plot(x,y)
+  abline(lm(y~x))
+}
+sortplot(a,b)
+```
+
+Statistics
+==========
+
+R is best known as a statistics and data analysis environment
+
+
