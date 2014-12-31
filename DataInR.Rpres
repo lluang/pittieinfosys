@@ -268,3 +268,62 @@ General procedure for getting data into **R**
 -  Read data into data frame
 -  Find data dictionary to translate column names into real names.
 
+The libraries we need
+===========================
+
+- XLConnect - Microsoft Excel
+- RSQLite - SQLite
+- RODBC - MS Access
+
+
+Things that we need to be able to do with data
+===============================================
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+Filter
+========
+
+```
+description <- tenure[tenure$key==x,]
+```
+
+Arrange
+==========
+```{r sorthogwarts}
+hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
+```
+
+Select columns
+==============
+
+```{r sorthogwarts}
+hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
+```
+
+
+Mutate
+========
+```
+acshousing$tenurevalue <- sapply(acshousing$TEN, gettenure)
+```
+
+Summarize (Group By)
+====================
+```{r summarizehogwarts}
+library(plyr)
+ddply(hogwartstudents,~house,summarise,count=length(name))
+```
+
+Random sample
+====================
+```{r randomhogwarts}
+hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
+```
+
