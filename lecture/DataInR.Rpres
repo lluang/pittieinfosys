@@ -303,7 +303,7 @@ hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
 Select columns
 ==============
 
-```{r sorthogwarts}
+```{r columnshogwarts}
 hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
 ```
 

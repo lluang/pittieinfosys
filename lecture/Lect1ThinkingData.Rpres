@@ -3,6 +3,56 @@ Thinking About Data
 author: IE 0015
 date: Spring 2015
 
+Course Outline
+==============
+type: section
+
+
+Course goals - Working with data
+==================================
+
+1.  Databases
+2.  Data manipulation
+3.  Exploratory data analysis
+4.  Algorithms with data (missing values)
+
+Course requirements
+==============
+
+- Labs weekly
+- Homework every other week
+- Midterm and final
+- Class participation
+- Project
+
+Data sets
+==========
+
+-  Titanic survivors (Lectures)
+-  National Survey of Family Growth (Lectures and Labs)
+-  American Community Survey (Homeworks)
+
+Project
+=========
+
+1.  Identify a large, complex data set
+  -  Large - Larger than you can take the time to look at the entire set in Excel.
+  -  At least two related tables (you may need to get two data sources to do this)
+2.  Process it
+  -  The data must need processing
+  -  Missing values
+  -  Data entry errors
+  -  Collapsing categories
+3.  Summarize it
+  -  Data summaries
+  -  Visual
+4.  Tell a story
+  
+5.  Show a picture
+  -  Make it pretty.
+  
+
+
 Introduction to data
 ====================
 type: section
@@ -224,3 +274,36 @@ What do we hope will change after we finish the work?
 -  What will change in the organization?
 -  How do we verify the change?
 
+Course datasets
+===============
+type: section
+
+Titanic dataset
+===============
+
+-  Dataset includes all passengers on the Titanic.
+-  Cruise liner that was advertised as unsinkable.
+-  Crashed ainto iceberg and sank on first trans-atlantic voyage.
+-  High fatalities, in part because there were not enough lifeboats for the number of passengers and crew.
+-  CoNVO - Who survived? What characteristics?
+
+National Survey of Family Growth
+=================================
+
+- Conducted by the U.S. Centers for Disease Control
+- Intended to gather “information on family life, marriage and divorce, preg-
+nancy, infertility, use of contraception, and men’s and women’s health. The
+survey results are used ... to plan health services and health education pro-
+grams, and to do statistical studies of families, fertility, and health*
+- We will focus on the Female pregnancy file.
+- What questions can we ask?
+- E.g. "are first babies born late"
+
+
+American Community Survey
+=========================
+
+- Sample of approximately 1/40 households per year.
+- Public Use Microdata Area - Pittsburgh north of the Monoghohela River.
+- Survey includes demographics, employment, educational, housing, health, questions.
+- Because we have the raw survey results, we can look at cross correlations.
