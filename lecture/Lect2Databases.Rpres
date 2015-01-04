@@ -1,0 +1,296 @@
+Databases
+========================================================
+author: IE 0015 Information Systems 
+date: January 2015
+
+What is the purpose of databases?
+=================================
+
+-  Store data
+-  Retrieve data
+-  Process data
+
+Alternatives to databases
+=========================
+
+-  Paper
+-  Parameters in computer source code
+-  Formatted text
+-  XML, JSON
+-  Tables
+-  Spreadsheets
+
+
+Paper
+========
+- Examples
+  - Library card catalog
+  - Recipe cards
+  - Index card bibliography
+  - Binder of indexed reports
+- Advantages
+  - Data is often generated on paper
+- But can only be searched for in predetermined ways
+  - Order of entry, or predetermined indexes
+
+Parameters in source code
+===========================
+
+```
+weight_apple_large = 223;
+weight_apple_medium = 182;
+weight_apple_small = 149;
+```
+
+- Difficult to change
+  - What if it is in more than one place?
+  - What if I want to work with *oranges* in addition to *apples*
+- Difficult to debug
+- Black box “Magic”
+
+Formatted text
+==============
+```
+@book{hernandez_database_2003,
+  edition = {2},
+	title = {Database Design for Mere {Mortals(R):}
+	isbn = {0201752840},
+	publisher = {{Addison-Wesley} Professional},
+	author = {Michael J. Hernandez},
+	month = mar,
+	year = {2003}
+},
+
+@book{riordan_designing_2005,
+	title = {Designing Effective Database Systems},
+	isbn = {0321290933},
+	publisher = {{Addison-Wesley} Professional},
+	author = {Rebecca M. Riordan},
+	year = {2005},
+	keywords = {database desgn}
+}
+```
+
+Spreadsheets/Tables
+======================
+
+- Most common
+- Often derived from a paper form designed to be easy for a person to understand
+- What is good for reading is not always good for data
+  - Example: two lines for a course record
+- Size limits
+  - Excel maximum is 65,536 rows X 256 columns
+
+What can go wrong
+============
+
+![](figures/plantexample2)
+
+- Records may include keywords or categories that can be used to group or classify records 
+- Searching for items based on a category or characteristic.
+- In plant example, table shows uses for a plant
+  -  But it is difficult to get search the reverse, plants that are useful for a particular use.
+  
+  
+What can go wrong: Repeated information
+==========================================
+
+- Information may be found in more than one location
+- Which is correct?
+- When information changes (e.g. change of address) how to change the information everywhere?
+- Example:  Order database with customer contact information for each order
+  - What if the same customer has a different phone number for different orders?
+  - Is it a typo, does customer have multiple phone numbers
+
+
+What can go wrong: Designing for a single report
+===================================
+
+- E.g.  student record with one field for each required course for a certificate
+- What if someone has to take a course again?
+- What if someone petitions to swap a course?
+- What if the certificate requirements change in the future?
+
+Types of Databases
+==================
+type: section
+
+Types of databases
+============
+
+- Flat file
+- Hierarchal database model
+- Network database model
+- Relational database model
+
+Flat file databases
+==============
+
+- File contains a two-dimensional table
+- Example:  Unix password file, csv files
+- Each field is separated by a colon
+- Requires knowledge of where the file is located in a file system
+- Difficult to relate data in file to other data in other files
+
+Heirarchal database model
+========================
+
+![](figures/heirarchalExample)
+
+Hierarchal database model
+========================
+-  Parent and child tables
+-  Start at parent, then down to child
+-  Requires detailed knowledge of structure
+-  Redundant information
+  - "Inventory" table not directly connected to "Titles" table, because "Titles" is a child of "Authors", not "Book Stores"
+  - Inventory table will also have title information
+
+
+Network Database Model
+=====================
+
+- Heirarchical, plus allowed for shared child tables
+- Nodes (collection of records) and set structure establish relationship
+  - Parent/child -> Owner/Member
+  - Single record in a member node can only be related to one record in an owner node
+  - All records in a member node belong to an existing record in owner node 
+
+![](figures/networkExample)
+
+Network Database Model
+==================
+
+
+
+-  Allows more complex databases to be modeled
+-  Allows for more complex queries
+-  Structure of database not easily modified
+  - If owner/member relationship changed, applications that use that structure to navigate data must change
+  
+Pitfalls:  Dangers of bad database design
+=========================================
+
+- Consistency, accuracy and integrity of the data
+- How to ensure that the data that is extracted from the database is correct?
+- Ensure that information can be retrieved
+- Information identified during the requirements process
+- Ad hoc information needs
+- Ensure data integrity
+- Data structures and values are valid and accurate
+- Ensure consistency
+- Supports business rules
+- Data is meaningful to the process
+- Future growth
+
+Relational Database Model
+=========================
+
+- Data stored in *relations* (tables)
+- Relations are composed of *tuples* (records)
+- Tuples contain *attributes* (fields)
+- Each record in a table can be identified by a unique value (known as a *key*)
+- Relationships between tables are established by matching values of a shared field
+- Relationships can be:
+  - One-to-one
+  - One-to-many
+  - Many-to-many
+  
+ Examples of relational database management systems (RDBMS)
+ ========================================================
+  
+ -  Client-server
+   -  Oracle
+   -  DB2 (IBM)
+   -  SQL Server (MS)
+   -  MySQL
+   -  PostgreSQL
+ -  Standalone
+   -  Access/Jet) (MS)
+   -  SQLite
+   -  Derby/Java DB
+   
+Describing relational database structure
+=========================================
+
+-  UML diagrams
+-  Use Visio or Dia
+-  Data table
+
+![](figures/umlsymbols)
+
+UML Relationships
+==================
+
+- One-to-one
+- One-to-many
+- Many-to-many
+
+![](figures/umlrelations)
+
+UML Example
+============
+
+![](figures/fooddesc)
+
+What do you need to be able to do with a database
+==================================================
+
+1.  Add data to a database
+2.  Name columns in tables
+3.  Data operations
+
+
+
+Structured Query Language (SQL)
+=============================
+type: section
+
+SQL
+===
+
+- SQL is a language that is used in most RDBMS to specify data operations.
+- It has two components
+  -  Data definition language (DDL)
+  -  Data manipulation language (DML)
+- It is a *Declarative* language
+  -  It specifies what needs to be done, not how to do it.
+  -  The RDBMS needs to know how to do an operation.
+  
+SQL Statements
+===============
+
+-  CREATE 
+-  INSERT
+-  UPDATE
+-  SELECT
+
+CREATE
+======
+
+-  CREATE TABLE name AS 
+
+INSERT
+=======
+
+INSERT INTO
+
+
+UPDATE
+=========
+
+SELECT
+=====
+
+Things that we need to be able to do with data
+===============================================
+
+1.  Filter (SELECT . . . WHERE)
+2.  Arrange (SORT BY)
+3.  Select columns (SELECT)
+5.  Distinct rows (UNIQUE)
+6.  Mutate (SELECT . . .  as)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+
