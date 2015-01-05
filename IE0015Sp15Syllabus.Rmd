@@ -1,0 +1,77 @@
+---
+title: "IE 0015 Spring 2015 Syllabus"
+author: "Louis Luangkesorn"
+date: "01/05/2015"
+output: html_document
+---
+
+1.  Databases
+        -  Relational databases
+        -  SQL (select, group by, join, update)
+        -  Introduction to MS Access
+        -  Introduction to ODBC/JDBC (using SQLite as a representative of
+commonly encountered databases)
+
+2.  Data, data manipulation, and Programming (probably either R/Python)
+        -  Programming and using an Integrated Development Environment
+        -  Data types (numerical, character, arrays, matrices, data
+frames/tables)
+        -  Reading in data (text, spreadsheets, databases)
+        -  Dealing with various data types (date/time, text, factors)
+        -  Reshaping data (select, filter, transform, summarize, arrange)
+        -  Merging data
+        -  Dealing with missing values, data errors, outliers, etc.
+
+3.  Exploratory data analysis (EDA)
+        -  Summarizing data
+        -  Graphical data exploration
+        -  Communicating results of EDA
+
+
+# Materials
+
+##  Books
+
+The following are resources we will use.  Data Manipulation with R will be the primary text because that presents information in a way different than all other sources.
+
+1.  Using SQLite
+  -  http://shop.oreilly.com/product/9780596521196.do (get through Pitt Library)
+2.  GGplot2 book by Hadley Wickham
+  -  Chapter 2 qplot at http://ggplot2.org/book/qplot.pdf
+3.  Data Manipulation with R - Spector (textbook)
+4.  An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
+
+##  Articles
+
+-  Each week, an article will be posted for discussion.  Each article will be an example of a data analysis and will be a focus of discussion to consider both strengths and weaknesses of the data analysis and presentation.
+
+
+## Datasets
+
+For lectures and lab (module) examples, use this data set.  See the data directory for instructions.  The first module should involve assembling this data set.  For ideas on how to work with this data set, see the book Think Stats by Allen Downey
+
+-  Titanic survivors (Lectures)
+-  National Survey of Family Growth (Lectures and Labs)
+-  American Community Survey (Homeworks)
+
+#  Grading
+
+1.  Weekly labs               15%
+2.  Midterm                   25%
+3.  Final                     30%
+4.  Project (2 person teams)  20%
+5.  Class participation       10%
+
+# ABET Outcomes
+
+a. an ability to apply knowledge of mathematics, science, and
+engineering;
+b. an ability to design and conduct experiments, as well as to analyze
+and interpret data;
+e. an ability to identify, formulate, and solve engineering problems;g.
+an ability to communicate effectively;
+k. an ability to use the techniques, skills, and modern engineering
+tools necessary for engineering practice.
+
+
+
