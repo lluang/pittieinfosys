@@ -32,12 +32,12 @@ Using a codebooks
 In order to identify the names of columns in the data file,we need to use a codebook
 http://www.cdc.gov/nchs/nsfg/nsfg_2006_2010_puf.htm
 
-![alt text](data/codebook.jpg) 
+![alt text](../data/codebook.jpg) 
 
 
 Using a codebooks 
 ========================================================
-![alt text](data/codebook2.jpg)
+![alt text](../data/codebook2.jpg)
 
 Reading .dat file into R 
 ========================================================
@@ -174,7 +174,7 @@ help(read.fwf)
 Reading .dat file into R 
 ========================================================
 ```{r,eval=FALSE}
-FemPreg<-read.fwf("data/2006_2010_FemPreg.dat", 
+FemPreg<-read.fwf("../data/2006_2010_FemPreg.dat", 
              widths = pregcolwidths, 
              col.names=pregcolnames)
 ```
@@ -200,7 +200,7 @@ numerals = c("allow.loss", "warn.loss", "no.loss"),
 Reading .txt file into R 
 ======================================================================================
 ```{r}
-FemPregTXT<-read.table("data/FemPregTXT.txt",
+FemPregTXT<-read.table("../data/FemPregTXT.txt",
             sep="\t",col.names=pregcolnames)
 
 FemPregTXT[,c(1:4)]
@@ -219,7 +219,7 @@ read.csv(file, header = TRUE, sep = ",",
 Reading .csv file into R 
 ======================================================================================
 ```{r}
-FemPregCSV<-read.csv("data/FemPregCSV.csv",
+FemPregCSV<-read.csv("../data/FemPregCSV.csv",
                      header=TRUE,sep=",")
 
 FemPregCSV[,c(1:4)]
@@ -240,6 +240,6 @@ Reading spreadsheet into R
 ======================================================================================
 ```{r}
 FemPregSheet<-readWorksheetFromFile(
-  "data/FemPregSheet.xlsx",sheet="FemPreg")
+  "../data/FemPregSheet.xlsx",sheet="FemPreg")
 FemPregSheet[,c(1:4)]
 ```

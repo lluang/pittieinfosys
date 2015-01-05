@@ -1,0 +1,329 @@
+Data In R
+========================================================
+author: IE 0015
+date: Spring 2051 
+
+Data analysis language
+========================================================
+
+**R** is a Data analysis language
+
+-  Reading in data in various formats.
+-  Manipulating data.
+-  Exploratory data analysis.
+-  Graphical display.
+
+Reading in data
+=================
+
+Data exists in various forms
+
+-  Text files
+  -  (Comma) delimited (csv)
+  -  Tabular (fixed format) text (tab)
+-  Excel spreadsheets
+-  Databases
+  -  Local (MS Access, SQLite)
+  -  Server (Oracle, IBM DB2, MySQL)
+-  Web API
+  - Twitter, Facebook, Google, Quandl
+  
+Why do we want to use to the data
+==================================
+incremental: true
+
+- We have a question that needs to be answered.
+- We have a decision that needs to be made.
+- We will do something when we observe an event.
+
+Working in R
+===============
+type: section
+
+Starting R
+==========
+
+-  R is a data analysis environment
+  -  The programming language
+  -  The system of libraries and books around it.
+-  R Studio is an Integrated Development environment.
+  -  If you are already a computer programmer, you can use your editing tools to work in R.
+  -  R Studio includes an editor, console, environment viewer, history
+  -  Access to help files
+  
+Interactive R
+===============
+
+R can be used as a calculator
+
+```{r calculator}
+3+5
+```
+
+
+Get help
+==========
+```{r help}
+help(rnorm)
+```
+
+Run a function
+===============
+
+```{r rnorm}
+x = rnorm(20)
+y = rexp(20)
+plot(x,y)
+```
+
+Some data types
+===============
+
+Some standard data types
+
+- Integers, floats
+- Characters, strings
+- Dates
+- When is a number not a number?  Factors
+
+Some data structures
+======================
+
+-  Vectors (numbers)
+-  You can apply functions over entire vectors (vectorization)
+
+```{r vector}
+a <- c(3, 5, 3, 7, 10)
+b = c(1, 2, 3, 4, 5)
+1/b
+sum((a-mean(a))^2)/(length(a)-1)
+var(a)
+```
+
+Sequences
+============
+
+You can construct a sequence like a for loop
+
+```{r sequence}
+seq(-5, 5, by=2)
+seq(-5, 5, 2)
+```
+
+
+Matrices
+===========
+
+You can create matrices all at once, or by having vectors as columns or rows.
+
+```{r matrixexample}
+mat <- matrix(nrow = 3, ncol = 2, c(1,2,3,4,5,6))
+mat2 <- cbind(1:4, c("dog", "cat", "bird", "dog"))
+mat3 <- rbind(c(1,2,4,5), c(6,7,0,4))
+mat
+mat2
+mat3
+```
+
+Data frames
+=============
+
+- Data frames are the primary data structure you will work with.
+- Like a matrix, but you can have different data types.
+- Maintain relationship between rows and columns.
+- The better **R** packages all work on data frames.
+  -  ggplot2, plyr, reshape, dplyr
+  
+```{r dataframe1}
+students <- data.frame(c("Cedric","Fred","George","Cho","Draco","Ginny"),
+                       c(3,2,2,1,0,-1),
+                       c("H", "G", "G", "R", "S", "G"))
+names(students) <- c("name", "year", "house") # name the columns
+class(students)
+class(students$name)
+class(students$year)
+class(students$house)
+students
+dim(students)
+```
+
+Dataframes from vectors
+========================
+You can also create a dataframe from a set of vectors
+
+```{r dataframevectors}
+hogwartstudents <- data.frame(name = students$name, year = students$year, house = students$house)
+hogwartstudents
+```
+
+
+Reading from a file
+====================
+
+- The standard way of creating a data frame is to read in table data from somewhere else
+
+```
+read.table("hogwarts.tab")
+read.csv("hogwarts.csv")
+readWorksheetFromFile("hogwarts.xlsx", sheet="Sheet1")
+```
+
+
+Reading from databases
+======================
+
+-  **R** has a standard format for accessing databases.
+-  You need a database driver, create a connection, then send SQL to the database.
+-  Database driver is in the *RSQLite* package.
+
+Packages
+===========
+
+-  Most functionality in **R** (or any other data analysis environment) is in the form of *packages* or *libraries*.
+-  Packages are created to do a specific task or type of analysis.
+-  The *RSQLite* package handles connection to SQLite databases.
+-  Other packages include *XLConnect* (for Excel spreadsheets), *ggplot2* (for charts), and *plyr* and *reshape* (for data manipulation)
+
+Reading from a database
+=======================
+
+```{r readingsqlite}
+library(RSQLite)
+con <- dbConnect(SQLite(), "data/acs1yrPittsburgh01701.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acs01701 <- dbGetQuery(con, sql)
+```
+
+Using SQL from R
+=================
+
+This is a very large dataset. Maybe we should have taken only a small number of columns.
+
+```{r selectsql}
+sql <- "SELECT
+        SERIALNO, ST, PUMA, 
+        NP, TYPE, ACR, BATH, BDSP, BLD,
+        MRGP, RNTP, TEN, YBL
+        FROM SS12HPA"
+acshousing <- dbGetQuery(con, sql)
+```
+
+What to the codes mean?
+=======================
+
+Look up the code in the data dictionary.
+  
+```{r tenure}
+tenure <- as.data.frame(
+           rbind(c("","NA"),
+                 c("b",".N/A  (GQ/vacant)"),
+                 c("1", ".Owned with mortgage or loan (include home equity loans)"),
+                 c("2",".Owned free and clear"),
+                 c("3",".Rented"),
+                 c("4",".Occupied without payment of rent"))
+           )
+```
+
+You can write a function to look up the value for each survey answer
+=====================================================================
+
+```{r gettenure}
+gettenure <- function(x){
+description <- tenure[tenure$key==x,]$description
+description
+}
+acshousing$tenurevalue <- sapply(acshousing$TEN, gettenure)
+```
+
+Reading data from an Excel spreadsheet
+======================================
+
+- Excel spreadsheets can be read using the package *XLConnect*
+
+```{r readexcel}
+library(XLConnect)
+```
+
+Using *XLConnect*
+=================
+
+-  You can load a workbook (Excel file)
+-  Then read a worksheet
+```{r loadworkbook}
+wb <- loadWorkbook("data/FemPregSheet.xlsx")
+pregnancydata <- readWorksheet(wb, "FemPreg")
+pregnancydata
+class(pregnancydata)
+```
+
+
+General procedure for getting data into **R**
+===============================================
+
+-  Determine data source
+-  Load package(library) that works with that data source
+-  Connect to data source
+-  Determine options (column titles in first row, delimiters, named)
+-  Read data into data frame
+-  Find data dictionary to translate column names into real names.
+
+The libraries we need
+===========================
+
+- XLConnect - Microsoft Excel
+- RSQLite - SQLite
+- RODBC - MS Access
+
+
+Things that we need to be able to do with data
+===============================================
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+Filter
+========
+
+```
+description <- tenure[tenure$key==x,]
+```
+
+Arrange
+==========
+```{r sorthogwarts}
+hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
+```
+
+Select columns
+==============
+
+```{r columnshogwarts}
+hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
+```
+
+
+Mutate
+========
+```
+acshousing$tenurevalue <- sapply(acshousing$TEN, gettenure)
+```
+
+Summarize (Group By)
+====================
+```{r summarizehogwarts}
+library(plyr)
+ddply(hogwartstudents,~house,summarise,count=length(name))
+```
+
+Random sample
+====================
+```{r randomhogwarts}
+hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
+```
+
