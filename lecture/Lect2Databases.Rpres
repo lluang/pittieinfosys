@@ -265,7 +265,7 @@ SQL
 - It is a *Declarative* language
   -  It specifies what needs to be done, not how to do it.
   -  The RDBMS needs to know how to do an operation.
-  
+
 SQL Statements
 ===============
 
@@ -274,22 +274,6 @@ SQL Statements
 -  UPDATE
 -  SELECT
 
-CREATE
-======
-
--  CREATE TABLE name AS 
-
-INSERT
-=======
-
-INSERT INTO
-
-
-UPDATE
-=========
-
-SELECT
-=====
 
 Things that we need to be able to do with data
 ===============================================
