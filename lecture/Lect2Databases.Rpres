@@ -41,7 +41,7 @@ weight_apple_large = 223;
 weight_apple_medium = 182;
 weight_apple_small = 149;
 ```
-
+***
 - Difficult to change
   - What if it is in more than one place?
   - What if I want to work with *oranges* in addition to *apples*
@@ -83,13 +83,13 @@ Spreadsheets/Tables
 
 What can go wrong
 ============
-
-![](figures/plantexample2)
-
+left:40%
+![](figures/plantexample2.png)
+***
 - Records may include keywords or categories that can be used to group or classify records 
 - Searching for items based on a category or characteristic.
 - In plant example, table shows uses for a plant
-  -  But it is difficult to get search the reverse, plants that are useful for a particular use.
+  -  But it is difficult to find plants good for a given use.
   
   
 What can go wrong: Repeated information
@@ -135,7 +135,7 @@ Flat file databases
 Heirarchal database model
 ========================
 
-![](figures/heirarchalExample)
+![](figures/heirarchalExample.png)
 
 Hierarchal database model
 ========================
@@ -149,14 +149,16 @@ Hierarchal database model
 
 Network Database Model
 =====================
-
+left:60%
 - Heirarchical, plus allowed for shared child tables
 - Nodes (collection of records) and set structure establish relationship
   - Parent/child -> Owner/Member
   - Single record in a member node can only be related to one record in an owner node
   - All records in a member node belong to an existing record in owner node 
+  
+***
 
-![](figures/networkExample)
+![](figures/networkExample.png)
 
 Network Database Model
 ==================
@@ -196,8 +198,8 @@ Relational Database Model
   - One-to-many
   - Many-to-many
   
- Examples of relational database management systems (RDBMS)
- ========================================================
+Examples of relational database management systems (RDBMS)
+========================================================
   
  -  Client-server
    -  Oracle
@@ -212,26 +214,33 @@ Relational Database Model
    
 Describing relational database structure
 =========================================
-
+left:40%
 -  UML diagrams
 -  Use Visio or Dia
 -  Data table
 
-![](figures/umlsymbols)
+***
+
+![](figures/umlsymbols.png)
 
 UML Relationships
 ==================
-
+left:40%
 - One-to-one
 - One-to-many
 - Many-to-many
 
-![](figures/umlrelations)
+***
+
+![](figures/umlrelations.png)
 
 UML Example
 ============
+left:60%
 
-![](figures/fooddesc)
+![](figures/fooddesc.png)
+
+***
 
 What do you need to be able to do with a database
 ==================================================
