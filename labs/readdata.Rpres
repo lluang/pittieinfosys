@@ -149,5 +149,5 @@ Several functions also exist to save data frames.
 - write.csv2()
 
 ```{r writecsv}
-write.csv("../data/2006_2010_FemPreg.csv")
+write.csv(pregdata, "../data/2006_2010_FemPreg.csv")
 ```
