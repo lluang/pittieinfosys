@@ -17,8 +17,8 @@ readData <- function(path.name, file.name, column.types, missing.types) {
             na.strings=missing.types )
 }
 
-Titanic.path <- "/home/lluang/Documents/courses/DataScience/pittiedatascience2015/lectures/data/titanic/"
-train.data.file <- "train.csv"
+Titanic.path <- "/home/lluang/Documents/courses/DataScience/pittiedatascience2015/lectures/data"
+train.data.file <- "titanictrain.csv"
 test.data.file <- "test.csv"
 missing.types <- c("NA", "")
 train.column.types <- c('integer',   # PassengerId
