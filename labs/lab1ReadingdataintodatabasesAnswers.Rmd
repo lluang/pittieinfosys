@@ -1,0 +1,54 @@
+---
+title: "Reading data into databases"
+author: "IE0015 Lab 1"
+date: "January 7/8, 2015"
+output: word_document
+---
+
+Note: * indicates items that need to be part of your submission of this lab.
+
+1.  Download the Titanic data from courseweb and look at it using a text editor (Notepad or the R Studio editor).
+
+2.  * What separates fields in this file?  What identifies text that should be kept in the same data field?  What would happen if you did not identify text that should be kept together?
+
+comma, "", the name would be broken into two columns.
+
+3.  * What field would be guaranteed to uniquely identify each row? (Note: it is not the Name).  This will be referred to later as the "Primary Key".
+
+PassengerID
+
+4.  * Create a database in MS Access and Import the data into MS Access using the External Data menu (csv files are 'Text File')  *  What messages did you see, if any? * How many rows and columns are in the resulting table?  Explain how you determined this.
+
+891 rows, 12 columns. (13 if they did not assign PassengerID as the primary key)  Can look at the bottom of the table to get the number of rows. They should have counted the number of columns by hand.
+
+5.  *  Using the SQLite Browser, create an SQLite database and import the Titanic data into SQLite using the Import menu.   What messages did you see, if any?  How many rows and columns are in the resulting table?  Explain how you determined this.
+
+
+891 rows, 12 columns. (13 if they did not assign PassengerID as the primary key)  Can look at the bottom of the table to get the number of rows. They should have counted the number of columns by hand.
+
+6.  * Download and look at the data from the National Survey of Family Growth using a text editor.  How are columns separated?  How is text that should not be separated identified? HWat column should be guaranteed to be unique and can serve as a primary key?
+
+7.  * Create a database in MS Access and Import the data into MS Access using the External Data menu (csv files are 'Text File').  What messages did you see, if any? How many rows and columns are in the resulting table?  Explain how you determined this.
+
+Will fail due to to many columns
+
+8.  *  Create an SQLite database in SQLite and Import the data. What messages did you see, if any? * How many rows and columns are in the resulting table?  Explain how you determined this.
+
+287
+
+9.  * Download and look at the codebook from the NSFG.  How do you determine if the responder is pregnant at the time of the survey?  What is the current length of pregnancy for the first survey response where the responder is currently pregnant?
+
+If the HOWPREG_N and HOWPREG_P values are numbers, the responder is currently pregnant, otherwise, they will be NA
+
+Row 27, 16 weeks.
+
+10.  * How do you determine the end result of the pregnancy (in the case where the mother was not currently pregnant)?  What are the first 10 outcomes? (answer using the word meaning, not the code that is in the database)
+
+Look at the PREGEND1 field.
+
+- 2 miscarriage
+- 3 abortions
+- 1 live birth through Cesarean section
+- 4 live birth by vaginal delivery
+
+9.  (After lab)  Using R and R Studio, work through Learn X in Y Minutes (X=R) http://learnxinyminutes.com/docs/r/

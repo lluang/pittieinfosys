@@ -1,0 +1,211 @@
+SQL
+========================================================
+author: IE 0015 Information Systems
+date: January 2015
+
+What is SQL
+========================================================
+
+- Sometimes thought of as standing for Structured Query Language
+- A declarative language for specifying operations to be made on *relational* data tables
+- Result of an SQL query is another table
+- *Declarative* language - States what the outcome will be, not how to do it
+  - How to accomplish the outcome is determined by the DBMS.
+  
+What can SQL do
+===============
+
+1.  Filter (SELECT)
+2.  Arrange (ORDER BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+How to think about SQL queries
+==============================
+
+1.  Each data table is a set
+2.  The result is another set
+3.  Specify what needs to be in the new set
+
+Where is SQL used
+===================
+
+- In databases
+  - Visual query tools like MS Access generate SQL
+- In programs that interact with databases
+  - You can pass an SQL query in R to a database
+
+Five basic SQL Query types
+======================
+
+1.  SELECT
+2.  CREATE
+3.  INSERT
+4.  UPDATE
+5.  DELETE
+
+SELECT Statements
+=================
+
+```
+SELECT  col1, col2, col3 /* some things */
+FROM  table1             /* places */
+WHERE  col1="term"       /* conditions */
+ORDER BY col2            /* display order */
+```
+
+-  Note the convention of using upper case for SQL keywords
+
+CREATE Statements
+===================
+
+-  Used to create the format for a new table or to create a named view
+  -  A saved query
+  
+CREATE TABLE Example
+====================
+
+```
+CREATE TABLE titanic
+(PassengerId INT,
+Survived INT,
+Pclass INT,
+Name VARCHAR(50),
+Sex VARCHAR(10),
+Age INT,
+SibSp INT,
+Parch INT,
+Ticket VARCHAR(20),
+Fare FLOAT
+Cabin VARCHAR(20),
+Embarked VARCHAR(1))
+ CONSTRAINT pk_passenger PRIMARY_KEY (PassengerId))
+ ```
+
+CREATE VIEW Example
+===============
+
+```
+CREATE VIEW col1term AS
+SELECT  col1, col2, col3 
+FROM  table1             
+WHERE  col1="term"       
+ORDER BY col2            
+```
+
+
+INSERT
+======
+
+- Inserts data in an existing table.
+- Normally, use this by making a list of data fields and a list of values.
+
+```
+INSERT INTO person (passenger_id, name, sex, Age)
+VALUES (null, 'Braund, Mr. Owen Harris', 'M', 22)
+```
+
+UPDATE
+======
+
+-  Updates an existing record
+-  Usually includes a WHERE clause to ensure only one (or a few) records are updated.
+
+```
+UPDATE person
+SET address = '1225 Tremont St.', city = 'Boston', state='MA',
+country = 'USA', postalcode = '02138'
+WHERE person_id = 1
+```
+
+DELETE
+======
+
+- Deletes records where a condition is true
+
+```
+DELETE FROM person
+WHERE person_id = 2
+```
+
+Primary keys
+============
+
+- In the CREATE TABLE example we specified a PRIMARY KEY
+
+```
+ CONSTRAINT pk_passenger PRIMARY_KEY (Passenger_id))
+```
+-  A *Primary key* is an identifier for a unique record in a table.
+-  It is typically used to link all other tables to the table.
+-  When a reference to another table is required, the other table's primary key is used as a *Foreign key*.
+-  Example:  A student id for student records.
+  -  Because two students can have the same name.
+
+Filtering
+============
+
+- SELECT statements are used for filtering.
+- Filtering is required if you are trying to do an operation on only some (SELECT) rows of a table.
+- Accomplished by the WHERE clause of the SELECT statement.
+
+Condition evaluation
+====================
+
+```
+WHERE title = "Mr." and embarked = "S"
+```
+
+Truth statements
+================
+
+X AND Y - Both X and Y must be true
+X OR Y - Either X or Y or both must be true
+
+NOT operator
+===============
+
+(X AND Y) AND NOT Z -  X and Y must be true, Z must be false
+
+
+Building conditions
+====================
+
+Conditions can be:
+
+-  Numbers
+-  Strings 
+-  Result of a function
+-  A subquery
+-  An element of a list
+
+Operators
+===========
+
+Conditions can be comprised of 
+
+-  Comparison operators
+  -  =, !=, <, >, <>, LIKE, IN, BETWEEN
+-  Arithmetic operators
+  -  +, -, *, /
+  
+Condition types
+===============
+
+
+-  Equality =
+-  Inequality  !=, <, >, <>
+-  Range conditions
+  -  WHERE Age < 21 AND Age > 5
+  -  WHERE Age BETWEEN 5 and 21
+  
+Subqueries
+===========
+
+A condition may be that a value is part of a result of another query
+
+
+  
