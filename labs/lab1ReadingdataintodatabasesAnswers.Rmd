@@ -26,7 +26,7 @@ PassengerID
 
 891 rows, 12 columns. (13 if they did not assign PassengerID as the primary key)  Can look at the bottom of the table to get the number of rows. They should have counted the number of columns by hand.
 
-6.  * Download and look at the data from the National Survey of Family Growth using a text editor.  How are columns separated?  How is text that should not be separated identified? HWat column should be guaranteed to be unique and can serve as a primary key?
+6.  * Download and look at the data from the National Survey of Family Growth using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
 
 7.  * Create a database in MS Access and Import the data into MS Access using the External Data menu (csv files are 'Text File').  What messages did you see, if any? How many rows and columns are in the resulting table?  Explain how you determined this.
 

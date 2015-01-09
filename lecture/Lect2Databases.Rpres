@@ -188,10 +188,10 @@ Pitfalls:  Dangers of bad database design
 Relational Database Model
 =========================
 
-- Data stored in *relations* (tables)
-- Relations are composed of *tuples* (records)
-- Tuples contain *attributes* (fields)
-- Each record in a table can be identified by a unique value (known as a *key*)
+- Data stored in *relations* (tables).
+- Relations are composed of *tuples* (records).
+- Tuples contain *attributes* (fields).
+- Each record in a table can be identified by a unique value (known as a *key*).
 - Relationships between tables are established by matching values of a shared field
 - Relationships can be:
   - One-to-one
