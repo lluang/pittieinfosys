@@ -11,7 +11,7 @@ What is SQL
 - Result of an SQL query is another table
 - *Declarative* language - States what the outcome will be, not how to do it
   - How to accomplish the outcome is determined by the DBMS.
-  
+
 What can SQL do
 ===============
 
@@ -117,14 +117,14 @@ FROM ss12hpa
 WHERE FPARC IN ("1", "2", "3")
 GROUP BY FPARC
 ```
-  
+
 
 CREATE Statements
 ===================
 
 -  Used to create the format for a new table or to create a named view
   -  A saved query
-  
+
 CREATE TABLE Example
 ====================
 
@@ -150,10 +150,10 @@ CREATE VIEW Example
 
 ```
 CREATE VIEW col1term AS
-SELECT  col1, col2, col3 
-FROM  table1             
-WHERE  col1="term"       
-ORDER BY col2            
+SELECT  col1, col2, col3
+FROM  table1
+WHERE  col1="term"
+ORDER BY col2
 ```
 
 
@@ -239,7 +239,7 @@ Building conditions
 Conditions can be:
 
 -  Numbers
--  Strings 
+-  Strings
 -  Result of a function
 -  A subquery
 -  An element of a list
@@ -247,13 +247,13 @@ Conditions can be:
 Operators
 ===========
 
-Conditions can be comprised of 
+Conditions can be comprised of
 
 -  Comparison operators
   -  =, !=, <, >, <>, LIKE, IN, BETWEEN
 -  Arithmetic operators
   -  +, -, *, /
-  
+
 Condition types
 ===============
 
@@ -263,7 +263,7 @@ Condition types
 -  Range conditions
   -  WHERE Age < 21 AND Age > 5
   -  WHERE Age BETWEEN 5 and 21
-  
+
 Subqueries
 ===========
 
@@ -283,8 +283,8 @@ Combine two tables
 Identify households
 ====================
 
-``` 
-SELECT SERIALNO 
+```
+SELECT SERIALNO
 FROM ss12hpa
 WHERE FPARC IN ("1", "2", "3")
 AND FEC IN ("5", "6", "7", "8")
@@ -294,11 +294,10 @@ Now find people 18 and under in those households
 ======
 ```
 SELECT p.SERIALNO, p.AGEP, h.FPARC, h.FES
-FROM ss12ppa AS p JOIN ss12hpa as h 
+FROM ss12ppa AS p JOIN ss12hpa as h
 ON p.SERIALNO=h.SERIALNO
 WHERE p.AGEP BETWEEN "0" AND "18"
 AND h.FPARC IN ("1", "2", "3")
 AND h.FES IN ("5", "6", "7", "8")
 ```
 
-  
