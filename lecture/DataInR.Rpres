@@ -166,6 +166,7 @@ Reading from a file
 read.table("hogwarts.tab")
 read.csv("hogwarts.csv")
 readWorksheetFromFile("hogwarts.xlsx", sheet="Sheet1")
+read.fwf("hogwarts.dat")
 ```
 
 
