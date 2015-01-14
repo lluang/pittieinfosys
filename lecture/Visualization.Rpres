@@ -8,16 +8,6 @@ Representing data
 =================
 type: section
 
-Flu data
-========
-
-- What would you like to know about the spread of flu?
-- [Google Flu Trends](http://www.google.org/flutrends/us/#US-PA)
-- [CDC FluView](http://gis.cdc.gov/grasp/fluview/fluportaldashboard.html)
-- [CDC Flu trends](http://www.cdc.gov/flu/weekly/weeklyarchives2013-2014/picILI01.htm)
-
-
-
 
 What is visualization for?
 ==========================
@@ -26,10 +16,6 @@ What is visualization for?
 -  Communicate and present information
 -  Entertainment
 -  Art
-
-Visualizations in data science
-==============================
-
 
 
 How do we represent data?

@@ -1,0 +1,80 @@
+---
+title: 'Lab 2: SQL Queries 1'
+author: "IE0015 Spring 2015"
+output: pdf_document
+---
+
+Note: The full version of an SQL query is:
+
+```
+SELECT columns
+FROM table
+WHERE condition
+GROUP BY columns
+HAVING condition
+ORDER BY column [ASC|DESC]
+LIMIT offset, count;
+```
+
+While the SELECT and FROM clauses are mandatory, the other clauses (lines above) are only included if you need them.
+
+
+1.  Open the Titanic database.
+2.  (*) Create an SQL query to determine how many women who boarded at Southampton (embarkation = "S") survived and perished.
+    a. Answer with both the SQL query(ies) and the answers to the question.
+    
+```
+SELECT Name, Age
+FROM titanictrain
+WHERE embarked="S" AND Sex = "female" AND survived="0"
+```
+63 perished
+```
+SELECT Name, Age
+FROM titanictrain
+WHERE embarked="S" AND Sex = "female" AND survived="1"
+```
+140 survived
+
+3.  (*) Create a Passenger Manifest. It should include the Name, Passenger Class, Sex, Age, Port of Embarkation ('embarked'), and the Cabin. Sort this by last name.  
+    a. Answer with your SQL query and the first 5 rows of the result.
+    
+```
+SELECT Name, PClass, Sex, Age, embarked, Cabin
+FROM titanictrain
+ORDER BY Name
+```
+
+"Abbing, Mr. Anthony"  "3"	"male"	"42"	"S"	""
+
+"Abbott, Mr. Rossmore Edward"	"3"	"male"	"16"	"S"	""
+
+"Abbott, Mrs. Stanton (Rosa Hunt)"	"3"	"female"	"35"	"S"	""
+
+"Abelson, Mr. Samuel"	"2"	"male"	"30"	"C"	""
+
+"Abelson, Mrs. Samuel (Hannah Wizosky)"	"2"	"female"	"28"	"C"	""
+
+
+4.  (*) In (4), this result is actually NOT in alphabetical (phone book) order.  
+    a. Give at least two reasons why you are not able to do this using the SQL you know.
+    The names include a title ("Mr.", "Mrs.", etc.).  Married women are listed based on the husband's name.
+    
+5.  (*) The ship's cruise director wants to know how many children (12 and under) are on the ship. It turns out that you cannot precisely answer this question, so you will have to give a range.
+    a.  Create two SQL queries to create an upper and lower limits of this amount.
+    b.  Explain to the cruise director why you had to give a range when just using SQL.
+```
+SELECT Name, Age
+FROM titanictrain
+WHERE Age <= "12" 
+AND AGE >="0"
+```
+gives 21
+```
+SELECT Name, Age
+FROM titanictrain
+WHERE Age <= "12" 
+```
+gives 198.  Many of the records do not include the age.
+
+Note: not for this lab, when we get to R we will use the title (Master, Miss) to help identify adults vs. children.
