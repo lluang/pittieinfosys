@@ -56,7 +56,7 @@ ORDER BY Name
 "Abelson, Mrs. Samuel (Hannah Wizosky)"	"2"	"female"	"28"	"C"	""
 
 
-4.  (*) In (4), this result is actually NOT in alphabetical (phone book) order.  
+4.  (*) In (3), this result is actually NOT in alphabetical (phone book) order.  
     a. Give at least two reasons why you are not able to do this using the SQL you know.
     The names include a title ("Mr.", "Mrs.", etc.).  Married women are listed based on the husband's name.
     
