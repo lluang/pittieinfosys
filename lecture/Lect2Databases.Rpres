@@ -1,6 +1,6 @@
 Databases
 ========================================================
-author: IE 0015 Information Systems 
+author: IE 0015 Information Systems
 date: January 2015
 
 What is the purpose of databases?
@@ -86,12 +86,12 @@ What can go wrong
 left:40%
 ![](figures/plantexample2.png)
 ***
-- Records may include keywords or categories that can be used to group or classify records 
+- Records may include keywords or categories that can be used to group or classify records
 - Searching for items based on a category or characteristic.
 - In plant example, table shows uses for a plant
   -  But it is difficult to find plants good for a given use.
-  
-  
+
+
 What can go wrong: Repeated information
 ==========================================
 
@@ -154,8 +154,8 @@ left:60%
 - Nodes (collection of records) and set structure establish relationship
   - Parent/child -> Owner/Member
   - Single record in a member node can only be related to one record in an owner node
-  - All records in a member node belong to an existing record in owner node 
-  
+  - All records in a member node belong to an existing record in owner node
+
 ***
 
 ![](figures/networkExample.png)
@@ -169,7 +169,7 @@ Network Database Model
 -  Allows for more complex queries
 -  Structure of database not easily modified
   - If owner/member relationship changed, applications that use that structure to navigate data must change
-  
+
 Pitfalls:  Dangers of bad database design
 =========================================
 
@@ -188,19 +188,19 @@ Pitfalls:  Dangers of bad database design
 Relational Database Model
 =========================
 
-- Data stored in *relations* (tables)
-- Relations are composed of *tuples* (records)
-- Tuples contain *attributes* (fields)
-- Each record in a table can be identified by a unique value (known as a *key*)
+- Data stored in *relations* (tables).
+- Relations are composed of *tuples* (records).
+- Tuples contain *attributes* (fields).
+- Each record in a table can be identified by a unique value (known as a *key*).
 - Relationships between tables are established by matching values of a shared field
 - Relationships can be:
   - One-to-one
   - One-to-many
   - Many-to-many
-  
+
 Examples of relational database management systems (RDBMS)
 ========================================================
-  
+
  -  Client-server
    -  Oracle
    -  DB2 (IBM)
@@ -211,7 +211,7 @@ Examples of relational database management systems (RDBMS)
    -  Access/Jet) (MS)
    -  SQLite
    -  Derby/Java DB
-   
+
 Describing relational database structure
 =========================================
 left:40%
@@ -269,7 +269,7 @@ SQL
 SQL Statements
 ===============
 
--  CREATE 
+-  CREATE
 -  INSERT
 -  UPDATE
 -  SELECT

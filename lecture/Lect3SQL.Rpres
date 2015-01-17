@@ -11,7 +11,7 @@ What is SQL
 - Result of an SQL query is another table
 - *Declarative* language - States what the outcome will be, not how to do it
   - How to accomplish the outcome is determined by the DBMS.
-  
+
 What can SQL do
 ===============
 
@@ -59,17 +59,89 @@ ORDER BY col2            /* display order */
 
 -  Note the convention of using upper case for SQL keywords
 
+SELECT example
+=====
+```
+SELECT  PassengerID, Pclass, Name, Sex, Age, Cabin, Embarked
+FROM  titanictrain
+WHERE  Pclass="1"
+ORDER BY Name
+```
+
+SELECT with multiple tables
+=======================
+
+```
+  SELECT  t1.col1, t1.col2, t2.col1
+  FROM t1 INNER JOIN t2
+  ON  t1.col2 = t2.col2
+```
+
+Note: Only columns where BOTH are present will be in the result
+
+SELECT LEFT JOIN
+=========================
+```
+  SELECT  t1.col1, t1.col2, t2.col1
+  FROM t1 LEFT JOIN t2
+  ON  t1.col2 = t2.col2
+```
+
+- ALL rows from t1 will be in the result.
+- Only rows that are part of a match from t2 will be in the result.
+
+SELECT OUTER JOIN
+====================
+```
+  SELECT  t1.col1, t1.col2, t2.col1
+  FROM t1 LEFT OUTER JOIN t2
+  ON  t1.col2 = t2.col2
+```
+
+-  All rows will be in the result.
+-  If there is no corresponding row in the other table, the fields will be blank.
+-  Note "LEFT OUTER JOIN"
+
+CROSS JOIN
+==========
+
+``` 
+  SELECT  t1.col1, t1.col2, t2.col1
+  FROM t1 CROSS JOIN t2
+```
+-  Each row in Table 1 matched with EACH row in Table 2
+-  When will you use this?
+
+GROUP BY
+========
+
+'GROUP BY' is used to calculate summaries such as SUM, AVE, or COUNT
+
+- Example, count households that have children in north Pittsburgh
+- Look up which columns represent households having children
+
+COUNT
+=====
+
+```
+SELECT FPARC, COUNT(SERIALNO)
+FROM ss12hpa
+WHERE FPARC IN ("1", "2", "3")
+GROUP BY FPARC
+```
+
+
 CREATE Statements
 ===================
 
 -  Used to create the format for a new table or to create a named view
   -  A saved query
-  
+
 CREATE TABLE Example
 ====================
 
 ```
-CREATE TABLE titanic
+CREATE TABLE titanictest
 (PassengerId INT,
 Survived INT,
 Pclass INT,
@@ -89,11 +161,11 @@ CREATE VIEW Example
 ===============
 
 ```
-CREATE VIEW col1term AS
-SELECT  col1, col2, col3 
-FROM  table1             
-WHERE  col1="term"       
-ORDER BY col2            
+CREATE VIEW passengerlist AS
+SELECT  PassengerID, Pclass, Name, Sex, Age, Cabin, Embarked
+FROM  titanictrain
+WHERE  Pclass="1"
+ORDER BY Name
 ```
 
 
@@ -159,6 +231,8 @@ Condition evaluation
 WHERE title = "Mr." and embarked = "S"
 ```
 
+
+
 Truth statements
 ================
 
@@ -177,7 +251,7 @@ Building conditions
 Conditions can be:
 
 -  Numbers
--  Strings 
+-  Strings
 -  Result of a function
 -  A subquery
 -  An element of a list
@@ -185,13 +259,13 @@ Conditions can be:
 Operators
 ===========
 
-Conditions can be comprised of 
+Conditions can be comprised of
 
 -  Comparison operators
   -  =, !=, <, >, <>, LIKE, IN, BETWEEN
 -  Arithmetic operators
   -  +, -, *, /
-  
+
 Condition types
 ===============
 
@@ -201,11 +275,41 @@ Condition types
 -  Range conditions
   -  WHERE Age < 21 AND Age > 5
   -  WHERE Age BETWEEN 5 and 21
-  
+
 Subqueries
 ===========
 
 A condition may be that a value is part of a result of another query
 
 
-  
+JOIN
+====================
+
+Combine two tables
+
+- Example: look at how many children per single parent household in northern Pittsburgh.
+- ss12hpa tells us if it is a single parent household (which field?) and if there are children
+- ss12ppa tells us about each child
+- So, identify households, then count children.
+
+Identify households
+====================
+
+```
+SELECT SERIALNO
+FROM ss12hpa
+WHERE FPARC IN ("1", "2", "3")
+AND FEC IN ("5", "6", "7", "8")
+```
+
+Now find people 18 and under in those households
+======
+```
+SELECT p.SERIALNO, p.AGEP, h.FPARC, h.FES
+FROM ss12ppa AS p JOIN ss12hpa as h
+ON p.SERIALNO=h.SERIALNO
+WHERE p.AGEP BETWEEN "0" AND "18"
+AND h.FPARC IN ("1", "2", "3")
+AND h.FES IN ("5", "6", "7", "8")
+```
+

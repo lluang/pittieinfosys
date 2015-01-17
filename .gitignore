@@ -3,4 +3,11 @@
 .RData
 data/*.dat
 data/*.pdf
+data/*.sqlite
+data/*.csv
 .Rproj
+lecture/*.md
+lecture/*.html
+lecture/*.pdf
+labs/*.html
+labs/*.pdf

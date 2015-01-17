@@ -2,7 +2,7 @@
 title: "Reading data into databases"
 author: "IE0015 Lab 1"
 date: "January 7/8, 2015"
-output: word_document
+output: html_document
 ---
 
 Note: * indicates items that need to be part of your submission of this lab.
@@ -26,5 +26,3 @@ Note: * indicates items that need to be part of your submission of this lab.
 9.  * Download and look at the codebook from the NSFG.  How do you determine if the responder is pregnant at the time of the survey?  What is the current length of pregnancy for the first survey response where the responder is currently pregnant?
 
 10.  * How do you determine the end result of the pregnancy (in the case where the mother was not currently pregnant)?  What are the first 10 outcomes? (answer using the word meaning, not the code that is in the database)
-
-11.  (After lab)  Using R and R Studio, work through Learn X in Y Minutes (X=R) http://learnxinyminutes.com/docs/r/
