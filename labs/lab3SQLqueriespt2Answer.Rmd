@@ -27,7 +27,8 @@ ANSWERS
 2.  [2] Determine the percentage of people of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for hoursing.  Include query(ies), the resulting table, and the percentages of people.
 
 ```
-select TEN, count(SERIALNO), sum(NP) from ss12hpa
+SELECT TEN, count(SERIALNO), sum(NP) 
+FROM ss12hpa
 GROUP BY TEN
 ```
 
@@ -42,24 +43,25 @@ Tenure | Number of households | People in households | Percent total
 1909 people
 
 
-3.  [3] New York City recently instituted universal Pre-Kindergarden for four year-olds.  What is the fraction of 4/5 year olds in Pre-K?  
+3.  [3] New York City recently instituted universal Pre-Kindergarden for four year-olds.  What is the fraction of 4/5 year olds in Pre-K in Pittsburgh (North)? 
   a.  What field identifies age of child?
   b.  What field identifies if the child is in school?
   c.  Generate a query that identifies the school status of 4 and 5 year olds. Do not include children in Kindergarden should not be counted (because they have finished eligibility for Pre-K)
-  d.  What is the fra
+  d.  What is the fraction of 4 and 5 year olds in pre-school/pre-K?
   
 ANSWERS
 
-  a.  p.AGEP where p is ss12.ppa
+  a.  p.AGEP where p is ss12ppa
   b.  p.SCH or p.SCHG for which grade
   c.  
-  ```
-  SELECT count(p.SERIALNO), p.AGEP, p.SCHG
-  FROM ss12ppa AS p 
-  WHERE cast(p.AGEP as INTEGER) BETWEEN 4 AND 5
-  AND cast(P.SCHG as INTEGER) < 2
-  GROUP BY p.SCHG
-  ```
+
+```
+SELECT count(p.SERIALNO), p.AGEP, p.SCHG
+FROM ss12ppa AS p 
+WHERE cast(p.AGEP as INTEGER) BETWEEN 4 AND 5
+AND cast(P.SCHG as INTEGER) < 2
+GROUP BY p.SCHG
+```
   
   0.636 (or 63%)
 
@@ -76,6 +78,7 @@ ANSWERS
   a.  HUPAC in the household table (=1, 3 if children under 6 present)
   b.  HUGCL in the household table (=1 if grandparents with grandchildren)
   c.  Note that the count has to come from the personal survey table, as the household table only indicates that children are present, not how many. (you could get number of people in the household, but you would not know which ones were children)  
+  
 ```
 SELECT count(p.SERIALNO), h.HUGCL
 FROM ss12ppa AS p 
