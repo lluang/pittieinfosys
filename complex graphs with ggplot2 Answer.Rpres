@@ -1,0 +1,59 @@
+complex graphs with ggplot2 Answer
+===========================
+author: Shi Tang 
+date: January, 2015
+
+```{r, echo = FALSE}
+FemPreg <- read.csv("data/2006_2010_FemPreg.csv",
+                     header=TRUE,sep=",")
+library(ggplot2)
+library(plyr)
+library(dplyr)
+library(mgcv)
+```
+
+Add an aesthetic attribute
+=============================================
+- Fill the histogram about BIRTHWGT_LB1 with RACE.  
+
+<small>*Hint:* Use RACE as a factor</small> 
+
+Answer: 
+```{r, echo = FALSE}
+qplot(BIRTHWGT_LB1, data = FemPreg, geom = "histogram", fill = as.factor(RACE), binwidth = 1, xlim = c(0,14)) 
+```
+
+
+Add an aesthetic attribute
+=============================================
+- Add RACE as colour to the density plot about PRGLNGTH.     
+
+<small>*Hint:* Use RACE as a factor</small>         
+
+Answer:
+```{r, echo = FALSE}
+qplot(PRGLNGTH, data = FemPreg, geom = "density", colour = as.factor(RACE), adjust = 1)
+```
+
+
+
+Faceting
+==============================================
+- Ceates a Histogram about Age at pregnancy outcome by splitting the data into Boy and Girl(use *facets*). 
+
+<small>*Hints:* </small>     
+<small>1. Filter the data first. Choose BABYSEX == 1 and BABYSEX == 2, and library dplyr is required.</small> 
+<small>2. Replace "1" with "Boy"; Replace "2" with "girl".</small>     
+<small>3. In the data file, AGEPREG is encoded as an integer number of centiyears. So we need use mutate() to yield floating-point value in years.</small> 
+
+Answer:
+```{r,echo = FALSE}
+library(dplyr)
+FemPreg1 <- filter(FemPreg, BABYSEX1 == 1 | BABYSEX1 == 2)
+FemPreg1$BABYSEX1 <- replace(FemPreg1$BABYSEX1, FemPreg1$BABYSEX1 == "1",
+                             "Boy") 
+FemPreg1$BABYSEX1 <- replace(FemPreg1$BABYSEX1, FemPreg1$BABYSEX1 == "2",
+                             "Girl") 
+FemPreg2 <- mutate(FemPreg1, AGE = AGEPREG/100.0)
+qplot(AGE, data = FemPreg2, facets = BABYSEX1~., binwidth = 2, xlim = c(10,45), geom = "histogram") 
+```
