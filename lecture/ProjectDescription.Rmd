@@ -1,0 +1,37 @@
+---
+title: "Project  Description"
+author: "Information Systems"
+date: "Spring 2015"
+output: word_document
+---
+
+
+1.  Identify a large, complex data set
+  -  Large - Larger than you can take the time to look at the entire set in Excel.
+  -  At least two related tables (you may need to get two data sources to do this)
+  -  **Co**ntext
+  -  **N**eeds
+  -  **V**ision
+  -  **O**utcome
+2.  Process it
+  -  The data must need processing
+  -  Missing values
+  -  Data entry errors
+  -  Collapsing categories
+3.  Summarize it
+  -  Data summaries
+  -  Visual
+4.  Tell a story
+5.  Show a picture
+  -  Make it pretty.
+  
+Timeline
+--------
+
+1.  Form team. Identify a data set and a potential CoNVO - February 11
+
+2.  Exploratory data analysis - March 18
+  -  Initial graphical view of data set
+  -  Refine CoNVO
+3.  Final Report April 8,  Presentations April 13, 15  
+

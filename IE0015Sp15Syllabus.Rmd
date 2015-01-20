@@ -1,0 +1,79 @@
+---
+title: "IE 0015 Information Systems Syllabus"
+author: "Louis Luangkesorn"
+date: "Spring 2015"
+output: word_document
+---
+
+Coarse goals
+============
+
+To be able to work with data and use programming and database tools for processing, manipulating, analyzing, and presenting data. To develop and implement algorithms for processing data. To understand and critique data analysis presentations.
+
+Major Topics
+==================================
+
+1.  Databases
+2.  Data manipulation
+3.  Exploratory data analysis
+4.  Algorithms with data (missing values)
+
+
+# Materials
+
+##  Books
+
+The following are resources we will use.  Data Manipulation with R will be the primary text because that presents information in a way different than all other sources.
+
+1.  Using SQLite
+  -  http://shop.oreilly.com/product/9780596521196.do (get electronically through Pitt Library)
+2.  GGplot2 book by Hadley Wickham
+  -  Chapter 2 qplot at http://ggplot2.org/book/qplot.pdf
+3.  Data Manipulation with R - Spector (textbook)
+4.  An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
+
+##  Articles
+
+-  Each week, an article will be posted for discussion.  Each article will be an example of a data analysis and will be a focus of discussion to consider both strengths and weaknesses of the data analysis and presentation.
+
+
+## Datasets
+
+-  National Survey of Family Growth
+-  American Community Survey
+-  Titanic survivors
+
+#  Grading
+
+1.  Weekly labs               15%
+2.  Midterm                   25%
+3.  Final                     30%
+4.  Project (2 person teams)  20%
+5.  Class participation       10%
+
+# ABET Outcomes
+
+a. an ability to apply knowledge of mathematics, science, and engineering;
+b. an ability to design and conduct experiments, as well as to analyze and interpret data;
+e. an ability to identify, formulate, and solve engineering problems;
+g. an ability to communicate effectively;
+k. an ability to use the techniques, skills, and modern engineering tools necessary for engineering practice.
+
+
+Schedule
+========
+
+- Module 1: Using MS Access
+- Module 2: Using SQL and basic SQL query functions
+- Module 3: Reading data into R. Based on Spector Ch 2  
+- Module 4: Data formats Spector Ch 4, 5
+- Module 5: Data formats Spector Ch 6, 7
+- Module 6: Summarizing data (plyr) 
+- Module 7: Simple graphs with ggplot2 (qplot) 
+- Module 8: Complex graphs with ggplot2 (qplot) i
+- MIDTERM March 4
+- Module 9: Data manipulation with dplyr (based on dplyr tutorials)
+- Module 10: Pivot tables and aggregations with table and reshape
+- Module 11: Identifying and marking missing values - Development of algorithms - flow charts 
+- Module 12: Missing values imputation 
+- FINAL Monday April 20 4:00 - 5:50
