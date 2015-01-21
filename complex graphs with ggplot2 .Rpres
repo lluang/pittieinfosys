@@ -1,0 +1,26 @@
+complex graphs with ggplot2 Answer
+===========================
+author: Shi Tang 
+date: January, 2015
+
+Add an aesthetic attribute
+=============================================
+- Fill the histogram about BIRTHWGT_LB1 with RACE.  
+
+<small>*Hint:* Use RACE as a factor</small> 
+
+Add an aesthetic attribute
+=============================================
+- Add RACE as colour to the density plot about PRGLNGTH.     
+
+<small>*Hint:* Use RACE as a factor</small>         
+
+
+Faceting
+==============================================
+- Ceates a Histogram about Age at pregnancy outcome by splitting the data into Boy and Girl(use *facets*). 
+
+<small>*Hints:* </small>     
+<small>1. Filter the data first. Choose BABYSEX == 1 and BABYSEX == 2, and library dplyr is required.</small> 
+<small>2. Replace "1" with "Boy"; Replace "2" with "girl".</small>     
+<small>3. In the data file, AGEPREG is encoded as an integer number of centiyears. So we need use mutate() to yield floating-point value in years.</small> 

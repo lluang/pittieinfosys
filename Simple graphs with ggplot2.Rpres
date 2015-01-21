@@ -1,0 +1,37 @@
+Simple graphs with ggplot2
+========================================================
+author: Shi Tang
+date: January, 2015  
+
+Density plots
+==========================================
+- Plot a density plot about PRGLNGTH to see the length of pregnacy and the most dangerous time to abort the baby.   
+
+Histogram
+==============
+- Plot a Histogram about BIRTHWGT_LB1. 
+          
+<small>*Hints:*</small>           
+      - <small> Use xlim = c(a,b) to ignore the outliers. </small>       
+      - <small> Set appropriate bins.</small>  
+
+Boxplot
+==============
+- Plot a boxplot. Show the relationship between race and age.         
+           
+<small>*Hint:* in the data file, AGEPREG is encoded as an integer number of centiyears. So we need use mutate() to yield floating-point value in years.</small> 
+
+Jittered points
+===============
+- Plot a jittered points graph. PAYDELIV as x and Age as y.      
+           
+<small>*Hints:*</small>        
+<small> - Use alpha = I(1 / n) to solve overplotting problem (n means levels of transparency)</small>            
+<small> - In the data file, AGEPREG is encoded as an integer number of centiyears. So we need use mutate() to yield floating-point value in years.</small> 
+
+Scatter plots
+================
+- Plot scatter plot. Show the relationship between EDUCAT and POVERTY.        
+            
+<small>*Hint:* add a smoothed line( method = "gam",formula y ~ s(x, bs = "cs") : the defalt method for more than 1000 points) </small>     
+   

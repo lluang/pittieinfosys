@@ -1,0 +1,75 @@
+Simple Graghs with ggplot2
+==========================
+author: Shi Tang
+date: January, 2015 
+
+```{r, echo = FALSE}
+FemPreg <- read.csv("data/2006_2010_FemPreg.csv",
+                     header=TRUE,sep=",")
+library(ggplot2)
+library(plyr)
+library(dplyr)
+library(mgcv)
+```
+Density plots
+=============
+- Plot a density plot about PRGLNGTH to see the length of pregnacy and the most dangerous time to abort the baby.      
+
+Answer:
+```{r, echo = FALSE}
+library(ggplot2)
+qplot(PRGLNGTH, data = FemPreg, geom = "density")
+```
+
+Histogram
+=========
+- Plot a Histogram about BIRTHWGT_LB1.  
+          
+<small>*Hints:*</small>           
+      - <small>1. Use xlim = c(a,b) to ignore the outliers. </small>       
+      - <small>2. Set appropriate bins.</small>     
+Answer: 
+```{r, echo = FALSE}
+qplot(BIRTHWGT_LB1, data = FemPreg, geom = "histogram", binwidth = 1, xlim = c(0,14)) 
+```
+
+Boxplot
+=======
+- Plot a boxplot. Show the relationship between race and age.         
+           
+<small>*Hint:* in the data file, AGEPREG is encoded as an integer number of centiyears. So we need use mutate() to yield floating-point value in years.</small> 
+
+Answer: 
+```{r, echo = FALSE}
+library(plyr) 
+library(dplyr)
+FemPreg1 <- mutate(FemPreg, AGE = AGEPREG/100.0)
+qplot(as.factor(RACE), AGE, data = FemPreg1, geom = "boxplot") 
+```
+
+Jittered points
+===============
+- Plot a jittered points graph. PAYDELIV as x and Age as y.      
+           
+<small>*Hints:*</small>        
+<small>1. Use alpha = I(1 / n) to solve overplotting problem (n means levels of transparency)</small>            
+<small>2. In the data file, AGEPREG is encoded as an integer number of centiyears. So we need use mutate() to yield floating-point value in years.</small> 
+
+Answer:
+```{r, echo = FALSE}
+library(dplyr)
+FemPreg1 <- mutate(FemPreg, AGE = AGEPREG/100.0)
+qplot(PAYDELIV, AGE, data = FemPreg1, geom = "jitter", alpha = I(1 / 3) )
+```
+
+Scatter plots
+=============
+- Plot scatter plot. Show the relationship between EDUCAT and POVERTY.        
+            
+<small>*Hint:* add a smoothed line( method = "gam",formula y ~ s(x, bs = "cs") : the defalt method for more than 1000 points) </small>     
+         
+Answer:
+```{r,echo = FALSE}
+library(mgcv)
+qplot(EDUCAT, POVERTY, data = FemPreg, geom = c("point", "smooth"),  method = "gam", formula = y ~ s(x, bs = "cs"), alpha = I(1/20))
+```
