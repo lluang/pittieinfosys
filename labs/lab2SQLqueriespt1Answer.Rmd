@@ -1,7 +1,7 @@
 ---
 title: 'Lab 2: SQL Queries 1'
 author: "IE0015 Spring 2015"
-output: pdf_document
+output: html_document
 ---
 
 Note: The full version of an SQL query is:
@@ -58,7 +58,10 @@ ORDER BY Name
 
 4.  (*) In (3), this result is actually NOT in alphabetical (phone book) order.  
     a. Give at least two reasons why you are not able to do this using the SQL you know.
-    The names include a title ("Mr.", "Mrs.", etc.).  Married women are listed based on the husband's name. It is capital sensitive (van, de, del)
+    
+    - The names include a title ("Mr.", "Mrs.", etc.).  
+    - Married women are listed based on the husband's name. 
+    - It is capital sensitive (van, de, del)
     
 5.  (*) The ship's cruise director wants to know how many children (12 and under) are on the ship. It turns out that you cannot precisely answer this question, so you will have to give a range.
     a.  Create two SQL queries to create an upper and lower limits of this amount.
@@ -82,7 +85,7 @@ SELECT Name, Age
 FROM titanictrain
 WHERE Age <= "12" 
 ```
-gives 198.  
-Many of the records do not include the age.
+- gives 198.  
+- Many of the records do not include the age.
 
 Note: not for this lab, when we get to R we will use the title (Master, Miss) to help identify adults vs. children.
