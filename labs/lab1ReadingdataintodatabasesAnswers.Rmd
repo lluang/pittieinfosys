@@ -2,7 +2,7 @@
 title: "Reading data into databases"
 author: "IE0015 Lab 1"
 date: "January 7/8, 2015"
-output: word_document
+output: html_document
 ---
 
 Note: * indicates items that need to be part of your submission of this lab.
