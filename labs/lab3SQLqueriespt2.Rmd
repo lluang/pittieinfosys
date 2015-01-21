@@ -21,11 +21,6 @@ AND h.FES IN ("5", "6", "7", "8")
 
 1. [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own).
 
-ANSWERS
-
-- TEN identifies type of ownership
-- NP identifies people in household
-
 2.  [2] Determine the percentage of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for hoursing.  Include query(ies), the resulting table, and the percentages of people.
 
 3.  [3] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Pittsburgh (North)? 

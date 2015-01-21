@@ -1,7 +1,7 @@
 ---
 title: 'Lab 2: SQL Queries 1'
 author: "IE0015 Spring 2015"
-output: html_document
+output: pdf_document
 ---
 
 Note: The full version of an SQL query is:
@@ -88,4 +88,4 @@ WHERE Age <= "12"
 - gives 198.  
 - Many of the records do not include the age.
 
-Note: not for this lab, when we get to R we will use the title (Master, Miss) to help identify adults vs. children.
+Note: not for this lab, when we get to R we will use the title (Master, Miss) to help identify adults vs. children.  In SQL, the real answer is to use the CAST() function.
