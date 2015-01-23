@@ -1,0 +1,39 @@
+---
+title: "Reading data into R"
+author: "Ziyi Kang"
+date: "Wednesday, January 21, 2015"
+output: html_document
+---
+
+Note: Statements that are Commonly used for reading data into R
+```{r,eval=FALSE} 
+-scan()
+-read.table()
+-read.fwf()
+-read.csv()
+-read.csv2()
+-read.delim()
+read.delim2()
+```
+Please download the dataset sample and codebook from National Survey of Family Growth and take a quick look on what is recorded in the code book.
+
+-Female Pregnancy Data File (2002FemPreg.dat) http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
+
+-Pregnancy Codebook(PDF): http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
+
+
+Task 1:
+Read the first 10 column names into R
+
+
+Task 2:
+Read the first 10 categories of data into R from .dat file
+
+
+Task 3:
+Export different format of data(.dat .csv .txt .xls) and try to figure out the meaning of all the arguments in the statement. 
+
+
+Task 4
+read .txt files into R and try to change from the default setting of the argument
+

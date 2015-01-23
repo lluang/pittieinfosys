@@ -1,0 +1,57 @@
+---
+title: "reading data into R answers"
+author: "Ziyi Kang"
+date: "Friday, January 23, 2015"
+output: html_document
+---
+
+Note: Statements that are Commonly used for reading data into R
+```{r,eval=FALSE} 
+-scan()
+-read.table()
+-read.fwf()
+-read.csv()
+-read.csv2()
+-read.delim()
+read.delim2()
+```
+Please download the dataset sample and codebook from National Survey of Family Growth and take a quick look on what is recorded in the code book.
+
+-Female Pregnancy Data File (2002FemPreg.dat) http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
+
+-Pregnancy Codebook(PDF): http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
+
+
+Task 1:
+Read the first 10 column names into R
+```{r}
+FemPreg.colnames<-scan(what="")
+```
+
+Task 2:
+Read the first 10 categories of data into R from .dat file
+
+```{r}
+FemPreg.colnames<-c("CASEID","pregordr","HOWPREG_N","HOWPREG_P","moscurrp","NOWPRGDK","PREGEND1","PREGEND2","NBRNALIV","MULTBRTH")
+
+FemPreg.colwidth<-c(12,2,2,1,1,1,1,1,1,1)
+
+FemPreg<-read.fwf("C:/Users/Ziyi/Desktop/2002FemPreg.dat",widths=FemPreg.colwidth,col.names=FemPreg.colnames)
+
+head(FemPreg)
+```
+
+Task 3:
+Export different format of data(.dat .csv .txt .xls) and try to figure out the meaning of all the arguments in the statement. 
+```{r}
+#Creat .dat .csv .txt files of the dataset
+write.csv(FemPreg,"FemPreg2002.csv",row.names=FALSE)
+write.table(FemPreg,"FemPreg2002.txt",row.names=FALSE)
+```
+
+Task 4
+read .txt files into R and try to change from the default setting of the argument
+```{r}
+FemPreg1<-read.table("FemPreg2002.txt",header=TRUE,sep="")
+head(FemPreg1)
+```
