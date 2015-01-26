@@ -15,12 +15,6 @@ Note: Statements that are Commonly used for reading data into R
 - read.delim()
 - read.delim2()
 ```
-Please download the dataset sample and codebook from National Survey of Family Growth and take a quick look on what is recorded in the code book.
-
--Female Pregnancy Data File (2002FemPreg.dat) http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
-
--Pregnancy Codebook(PDF): http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
-
 
 1.  Reading csv files.  Load the titanictrain.csv file into R. Use the `summary()` to calculate the summary of all of the variables.  Report the code you used and identify the categorical variables in the dataset that you can use for classification. (you can ignore SibSp and Parch for now)
 
@@ -31,11 +25,13 @@ titanic <- read.csv("../data/titanictrain.csv")
 summary(titanic)
 ```
 
-Categorical values reported are the sex, and port of embarkation. Accept responses of 'Cabin', Ticket, and Name
+Categorical values reported are the sex, and port of embarkation. Accept responses of Cabin, Ticket, and Name
 
-2.  Identify if any numerical variables should be categorical variables. If so, change the data type using `as.factor()` and run `summary()` on that variable.  Report the code and summary of the variables you changed.
+2.  Identify if any numerical variables should be categorical variables (factors). If so, change the data type using `as.factor()` and run `summary()` on that variable.  Report the code and summary of the variables you changed.
 
 **ANSWER**
+
+Passenger class and survived are summarized as numerical variables but should be categories/factors
 ```{r titaniccategory}
 titanic$Pclass <- as.factor(titanic$Pclass)
 titanic$Survived <- as.factor(titanic$Survived)
@@ -58,7 +54,7 @@ nsfg <- dbGetQuery(conn, sql)
 summary(nsfg$pregordr)
 ```
 
-4.  The data is read into R as characters, but the data can be analyzed as factors. Convert the pregnancy order (*pregorder*) and birthweight (*BIRTHWGT_LB1*) fiels to numbers using `as.numeric()` and end result (*PREGEND1*) fields to a category using `as.factor()`. Show the code that does this and the summaries for all three variables.
+4.  The data is read into R as characters, but the data should be analyzed as factors. Convert the pregnancy order (*pregorder*) and birthweight (*BIRTHWGT_LB1*) fiels to numbers using `as.numeric()` and end result (*PREGEND1*) fields to a factor using `as.factor()`. Show the code that does this and the summaries for all three variables.
 
 
 **ANSWER**
