@@ -276,6 +276,27 @@ Condition types
   -  WHERE Age < 21 AND Age > 5
   -  WHERE Age BETWEEN 5 and 21
 
+SQL Functions
+================
+
+-  A Function in SQL is part of a clause and takes and argument, usually a column name.
+-  Examples:  COUNT(), SUM(), AVG(), MIN(), MAX()
+-  Also used in extensions to SQL.
+  - PL/SQL (Oracle)
+  - PL/pgSQL (PostgreSQL)
+  - Transact-SQL (MS SQL Server)
+  - SQL PL (IBM DB2)
+  - SQLPSM (ANSI Persistant Stored Modules)
+  
+CAST
+======
+
+-  If a value is of one datatype, you can tell the computer that it is another data type by using CAST.
+-  CAST(p.AGE AS INTEGER)
+-  This feature is also present in most programming languages
+  -  as.integer(), as.numeric(), as.factor()
+  
+  
 Subqueries
 ===========
 
@@ -308,8 +329,9 @@ Now find people 18 and under in those households
 SELECT p.SERIALNO, p.AGEP, h.FPARC, h.FES
 FROM ss12ppa AS p JOIN ss12hpa as h
 ON p.SERIALNO=h.SERIALNO
-WHERE cast(p.AGEP as REAL) BETWEEN 0 AND 18
+WHERE CAST(p.AGEP as INTEGER) BETWEEN 0 AND 18
 AND h.FPARC IN ("1", "2", "3")
 AND h.FES IN ("5", "6", "7", "8")
+ORDER BY p.AGEP
 ```
 
