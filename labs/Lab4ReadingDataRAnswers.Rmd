@@ -1,0 +1,80 @@
+---
+title: "Lab 4: Reading data into R"
+author: "IE 0015"
+date: "Week of January 26, 2015"
+output: pdf_document
+---
+
+Note: Statements that are Commonly used for reading data into R
+```{r,eval=FALSE} 
+- scan()
+- read.table()
+- read.fwf()
+- read.csv()
+- read.csv2()
+- read.delim()
+- read.delim2()
+```
+Please download the dataset sample and codebook from National Survey of Family Growth and take a quick look on what is recorded in the code book.
+
+-Female Pregnancy Data File (2002FemPreg.dat) http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
+
+-Pregnancy Codebook(PDF): http://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm
+
+
+1.  Reading csv files.  Load the titanictrain.csv file into R. Use the `summary()` to calculate the summary of all of the variables.  Report the code you used and identify the categorical variables in the dataset that you can use for classification. (you can ignore SibSp and Parch for now)
+
+**ANSWER**
+
+```{r titanicdata}
+titanic <- read.csv("../data/titanictrain.csv")
+summary(titanic)
+```
+
+Categorical values reported are the sex, and port of embarkation. Accept responses of 'Cabin', Ticket, and Name
+
+2.  Identify if any numerical variables should be categorical variables. If so, change the data type using `as.factor()` and run `summary()` on that variable.  Report the code and summary of the variables you changed.
+
+**ANSWER**
+```{r titaniccategory}
+titanic$Pclass <- as.factor(titanic$Pclass)
+titanic$Survived <- as.factor(titanic$Survived)
+summary(titanic$Pclass)
+summary(titanic$Survived)
+```
+
+3.  Load the SQLite file from the National Survey for Family Growth Female Pregnancy File that you created in Lab 1 into R. Show the code that does this and report the numbers of entries.  
+
+**ANSWER**
+
+```{r connectnsfg}
+library(RSQLite)
+conn <- dbConnect(SQLite(), "../data/nsfg.sqlite")
+```
+```{r getdata}
+sql <- "SELECT *  
+        FROM FemPreg"
+nsfg <- dbGetQuery(conn, sql)
+summary(nsfg$pregordr)
+```
+
+4.  The data is read into R as characters, but the data can be analyzed as factors. Convert the pregnancy order (*pregorder*) and birthweight (*BIRTHWGT_LB1*) fiels to numbers using `as.numeric()` and end result (*PREGEND1*) fields to a category using `as.factor()`. Show the code that does this and the summaries for all three variables.
+
+
+**ANSWER**
+
+```{r summarizensfg}
+nsfg$pregordr <- as.numeric(nsfg$pregordr)
+nsfg$BIRTHWGT_LB1 <- as.numeric(nsfg$BIRTHWGT_LB1)
+nsfg$PREGEND1 <- as.factor(nsfg$PREGEND1)
+summary(nsfg$pregordr)
+summary(nsfg$BIRTHWGT_LB1)
+summary(nsfg$PREGEND1)
+```
+
+5.  In the NSFG Female Pregnancy data codebook, how can you tell if the data should be converted into a number or a factor.  Why should PREGEND1 be recorded as a factor instead of a number?
+
+**ANSWER**
+
+Numbers are identified as the description as (NUMBER) while factors are not.
+PREGEND1 is a factor since the numerical descriptions are not intended to be computed.
