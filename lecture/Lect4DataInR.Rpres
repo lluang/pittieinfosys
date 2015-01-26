@@ -190,7 +190,7 @@ Reading from a database
 
 ```{r readingsqlite}
 library(RSQLite)
-con <- dbConnect(SQLite(), "data/acs1yrPittsburgh01701.sqlite")
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
 sql <- "SELECT *      
         FROM ss12hpa"
 acs01701 <- dbGetQuery(con, sql)
@@ -208,6 +208,7 @@ sql <- "SELECT
         MRGP, RNTP, TEN, YBL
         FROM SS12HPA"
 acshousing <- dbGetQuery(con, sql)
+summary(acshousing)
 ```
 
 What to the codes mean?
@@ -218,12 +219,13 @@ Look up the code in the data dictionary.
 ```{r tenure}
 tenure <- as.data.frame(
            rbind(c("","NA"),
-                 c("b",".N/A  (GQ/vacant)"),
-                 c("1", ".Owned with mortgage or loan (include home equity loans)"),
-                 c("2",".Owned free and clear"),
-                 c("3",".Rented"),
-                 c("4",".Occupied without payment of rent"))
+                 c("b","N/A  (GQ/vacant)"),
+                 c("1", "Owned with mortgage or loan (include home equity loans)"),
+                 c("2","Owned free and clear"),
+                 c("3","Rented"),
+                 c("4","Occupied without payment of rent"))
            )
+colnames(tenure) <- c("key", "description")
 ```
 
 You can write a function to look up the value for each survey answer
@@ -235,6 +237,7 @@ description <- tenure[tenure$key==x,]$description
 description
 }
 acshousing$tenurevalue <- sapply(acshousing$TEN, gettenure)
+head(acshousing$tenurevalue)
 ```
 
 Reading data from an Excel spreadsheet
@@ -252,10 +255,11 @@ Using *XLConnect*
 -  You can load a workbook (Excel file)
 -  Then read a worksheet
 ```{r loadworkbook}
-wb <- loadWorkbook("data/FemPregSheet.xlsx")
+wb <- loadWorkbook("../data/FemPregSheet.xlsx")
 pregnancydata <- readWorksheet(wb, "FemPreg")
-pregnancydata
+head(pregnancydata)
 class(pregnancydata)
+summary(pregnancydata)
 ```
 
 
@@ -291,8 +295,8 @@ Things that we need to be able to do with data
 Filter
 ========
 
-```
-description <- tenure[tenure$key==x,]
+```{r filtergryffindor}
+hogwartstudents[hogwartstudents$house=="G",]
 ```
 
 Arrange
@@ -324,7 +328,207 @@ ddply(hogwartstudents,~house,summarise,count=length(name))
 
 Random sample
 ====================
-```{r randomhogwarts}
+```{r studentsrandom}
 hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
 ```
+
+Plotting with ggplot2
+=======================
+type: section
+
+
+qplot introduction
+==================
+
+A plot is composed of:
+-  Data
+-  aesthetic - Indicates the data
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
+
+
+Packages
+========
+
+-  `Packages` are libraries that contain functionality for R
+-  These libraries include the machine learning and text processing methods that we will use.
+
+```{r}
+library(ggplot2)
+```
+
+Random numbers
+==============
+
+-  We use random numbers to sample from data (smaller datasets are often more manageable) or to create data to test methods on or for simulation.
+```{r}
+set.seed(1234)
+runif(n=4, 0, 1)
+```
+
+Some examples
+=============
+
+-  Take some samples from the `diamonds` dataset that comes with `ggplot2`
+-  Note the `,` which indicates that you are getting all of the columns.
+
+```{r}
+set.seed(1410)
+dsmall = diamonds[sample(nrow(diamonds),200),]
+```
+
+qplot
+=====
+
+-  `qplot` is the quick version of `ggplot`
+-  Base use, `x, y, data=data.frame`
+
+```{r}
+qplot(carat, price, data=dsmall)
+```
+
+plotting transforms
+===================
+
+-  You can transform the data using calculations
+```{r}
+qplot(log(carat), log(price), data=dsmall)
+```
+
+Aesthetics - appearance
+=======================
+
+- Change the appearance of data elements using aesthetics.
+- Color, shape, size, transparancy (alpha), etc.
+- Each aesthetic displays an additional aspect of the data.
+
+```{r}
+qplot(carat, price, data = dsmall, shape = cut, colour = color)
+```
+
+geom - plot type
+================
+
+- The type of plot is set using `geom`
+- `points` - Scatterplots, 
+- `path` and `line` connect points.
+- `smooth` - draw a smoother to the data
+- `histogram`, `boxplot`, `density`, `bar`
+
+```{r}
+qplot(carat, price, data = dsmall, geom = c("point", "smooth"))
+```
+
+Other `smooth` methods
+======================
+
+- We can specify the method used to draw the smoothing line.
+- `lm` linear model (regression)
+```{r}
+qplot(carat, price, data = dsmall, geom = c("point", "smooth"),
+method = "lm")
+```
+
+Boxplots
+========
+
+```{r}
+qplot(color, price / carat, data = dsmall, geom = "boxplot")
+```
+
+Jitter
+======
+
+- `jitter` shifts data points that would otherwise be on top of each other.
+```{r}
+qplot(color, price / carat, data = dsmall, geom = "jitter", 
+  alpha = I(1/ 5))
+```
+
+alpha
+======
+
+- `alpha` adjusts the transparancy, so it is more apparent that multiple data points overlap.
+```{r}
+qplot(color, price / carat, data = diamonds, geom = "jitter", 
+  alpha = I(1/ 25))
+```
+
+Histograms
+==========
+
+-  Histograms and density show distributions.
+
+```{r}
+qplot(carat, data = dsmall, geom = "histogram")
+```
+
+Density plot
+============
+
+-  Histograms and density show distributions.
+
+```{r}
+qplot(carat, data = dsmall, geom = "density")
+```
+
+
+Plots and aesthetics
+====================
+
+-  Aesthetics can be used to create subplots
+
+```{r}
+qplot(carat, data = dsmall, geom = "density", colour = color)
+```
+
+Barcharts and aesthetics
+========================
+
+```{r}
+qplot(color, data = diamonds, geom = "bar", weight = carat) +
+  scale_y_continuous("carat")
+```
+
+
+Time series
+===========
+
+-  Look at time series with a new dataset
+```{r}
+qplot(date, unemploy / pop, data = economics, geom = "line")
+```
+
+Time series path plot
+=======================
+
+-  We can put multiple time series on the same plot.
+
+```{r}
+year <- function(x) as.POSIXlt(x)$year + 1900
+qplot(unemploy / pop, uempmed, data = economics,
+  geom = "path", colour = year(date)) + scale_size_area()
+```
+
+
+Faceting
+========
+
+-  `facets` creates a series of side by side plots where categories of data each get their own plot
+```{r}
+qplot(carat, data = diamonds, facets = color ~ .,
+geom = "histogram", binwidth = 0.1, xlim = c(0, 3))
+```
+
+qplot summary
+===============
+
+A plot is composed of:
+
+-  Data
+-  aesthetic - Indicates the data
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
+
+More can be found in *ggplot2: Elegant graphics for data analysis*
 
