@@ -25,7 +25,14 @@ titanic <- read.csv("../data/titanictrain.csv")
 summary(titanic)
 ```
 
-Categorical values reported are the sex, and port of embarkation. Accept responses of Cabin, Ticket, and Name
+Categorical values reported are the sex, and port of embarkation. Accept responses of Cabin, Ticket, and Name. Not age.
+
+Note:   a) This question mainly ask when you are reading summary() in R, how can you tell which column are being recognized as factor(or categorical). R tries to guess which class each columns should be, and you don't knows whether it's right this time before you look it up.
+        b) Before you do anything in R, please use one of the three ways below to set working directory in order to ease the path writing in your following works.
+                c.1) In the top of RStudio, Session- Set working directory- Choose directory.
+                c.2) use setwd() 
+                c.3) In the “files” tab in the right hand side of the Rstudio, go to the folder you want to set, and click  More - Set as        Working Directory.
+
 
 2.  Identify if any numerical variables should be categorical variables (factors). If so, change the data type using `as.factor()` and run `summary()` on that variable.  Report the code and summary of the variables you changed.
 
@@ -38,7 +45,11 @@ titanic$Survived <- as.factor(titanic$Survived)
 summary(titanic$Pclass)
 summary(titanic$Survived)
 ```
-
+Note:   a) Table name (e.g. titanic) must be added in order to tell R which table does field belongs to. 
+        b) use "<-"" to feed the changed data back to the same field in data frame in order to keep the result in it. (e.g. titanic$Survived <- ... )
+       
+        
+        
 3.  Load the SQLite file from the National Survey for Family Growth Female Pregnancy File that you created in Lab 1 into R. Show the code that does this and report the numbers of entries.  
 
 **ANSWER**
@@ -53,6 +64,10 @@ sql <- "SELECT *
 nsfg <- dbGetQuery(conn, sql)
 summary(nsfg$pregordr)
 ```
+Note:   a) The question require to use SQL database as a source.
+        b) Connection between R and the nsfg data base is made in "dbConnect". "sql" itself is a character variable with a string ("SELECT *  
+        FROM FemPreg"). dbGetQuery() will use the command line inside "sql" to make a query in SQL data base, return the result table as data frame.  
+        c) In "dbConnect()", you should make sure the file path and file name exactly the same as that of the sql data base file, which is                                                                         given when you create the data base. You might had given it a name "nsfg" rather than "nsfg.sqlite". 
 
 4.  The data is read into R as characters, but the data should be analyzed as factors. Convert the pregnancy order (*pregorder*) and birthweight (*BIRTHWGT_LB1*) fiels to numbers using `as.numeric()` and end result (*PREGEND1*) fields to a factor using `as.factor()`. Show the code that does this and the summaries for all three variables.
 
@@ -67,6 +82,9 @@ summary(nsfg$pregordr)
 summary(nsfg$BIRTHWGT_LB1)
 summary(nsfg$PREGEND1)
 ```
+Note:   a) Table name (e.g. titanic$) should be added in order to tell R which table does the column belongs to. If you didn't add table name, R will create a new vector(e.g. with name pregordr) rather than change the "pregordr" column inside the data frame
+        "pregordr" means a new variance with name "pregordr", and "nsfg$pregordr" means the column "pregordr" in data frame nsfg
+
 
 5.  In the NSFG Female Pregnancy data codebook, how can you tell if the data should be converted into a number or a factor.  Why should PREGEND1 be recorded as a factor instead of a number?
 
