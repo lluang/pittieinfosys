@@ -45,7 +45,7 @@ titanic$Survived <- as.factor(titanic$Survived)
 summary(titanic$Pclass)
 summary(titanic$Survived)
 ```
-Note:   a) Table name (e.g. titanic) must be added in order to tell R which table does field belongs to. 
+Note:   a) Data Frame's name (e.g. titanic) must be added in order to tell R which table does field belongs to. 
         b) use "<-"" to feed the changed data back to the same field in data frame in order to keep the result in it. (e.g. titanic$Survived <- ... )
        
         
@@ -82,7 +82,7 @@ summary(nsfg$pregordr)
 summary(nsfg$BIRTHWGT_LB1)
 summary(nsfg$PREGEND1)
 ```
-Note:   a) Table name (e.g. titanic$) should be added in order to tell R which table does the column belongs to. If you didn't add table name, R will create a new vector(e.g. with name pregordr) rather than change the "pregordr" column inside the data frame
+Note:   a) Data frame's name (e.g. titanic$) should be added in order to tell R which table does the column belongs to. If you didn't add table name, R will create a new vector(e.g. with name pregordr) rather than change the "pregordr" column inside the data frame
         "pregordr" means a new variance with name "pregordr", and "nsfg$pregordr" means the column "pregordr" in data frame nsfg
 
 
