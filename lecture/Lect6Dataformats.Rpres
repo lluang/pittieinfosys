@@ -1,0 +1,145 @@
+Data Formats
+========================================================
+author: IE 0015 Information Systems
+date: February 2015
+
+Dates
+=======
+type: section
+
+Date and time formats
+=====================
+
+-  Many ways to represent dates
+-  What does this mean
+  -  02-03-2015
+  
+Date and time formats
+=======================
+
+-  Goal: resolve ambiguity by telling the computer what format dates and times are written in.
+-  POSIX (Portable Operating System Interface) IEEE standard for computer operating systems
+-  Includes standards for representing dates
+-  Day, Month, Year
+-  Hour, minute, second, AM/PM
+-  What else do we have to specify?
+
+Communicating format
+====================
+
+-  When passing a date into R, tell R what the format represents.
+-  Sometimes, it can guess correctly
+
+```{r asdateexample}
+as.Date('2015-02-09')
+as.Date('2015/02/09')
+```
+
+Format codes
+==============
+
+-  Using C style (also Matlab) R has format codes to help R interpret strings.
+
+Code  |  Value
+------|---------
+%d  |  Day of month
+%m  |  Month (number)
+%b  |  Month (abbreviated)
+%B  |  Month (full)
+%y  |  Year (2 digit)
+%Y  |  Year (4 digit)
+
+Date examples
+===============
+
+```{r moredateexamples}
+as.Date('1/15/2015', format = '%m/%d/%Y')
+as.Date('April 26, 2014', format = '%B %d, %Y')
+as.Date('4MAR15', format = '%d%b%y')
+```
+
+Dates as variables
+=====================
+
+-  Date and times can be stored in date time format (independent of how they are entered)
+-  Internally, stored in reference to January 1, 1970.
+-  Default format is YYYY-MM-DD HH:MM:SS TZ
+
+```{r datevariables}
+thedate = as.Date('2/09/2015', format = '%m/%d/%Y')
+print(thedate)
+ndate = as.numeric(thedate)
+print(ndate)
+class(ndate) = 'Date'
+ndate
+```
+
+Other representations of date
+============================
+
+-  If you have the date, you can get the day of the week.
+
+```{r dayofweek}
+weekdays(ndate)
+```
+
+Times
+=====
+
+-  Times can be more complicated because there are many ways of representing time.
+-  If you are reading it from an outside file, look at it within R to determine its format (Excel often hides information from display)
+-  If times are in a standard form, it can be read in directly.
+
+```{r readtimes}
+dts <- c("2014-10-21 18:47:22", "2014-12-24 16:39:58", "2014-10-20 07:30:05")
+as.POSIXlt(dts)
+```
+
+Working with time formats
+==========
+
+-  `strftime` is to read date/times
+-  `strptime` is used to print/output date/times
+
+Time codes
+===========
+
+Code | Meaning | Code | Meaning
+---|----|----|----
+%a | Abbreviated weekday | %A | Full weekday
+%b | Abbreviated month | %B | Full month
+%c | Locale specific date-time | %d | Decimal date
+%H | Decimal hour (24 hour) | %I | Decimal hour (12 hour)
+%M | Decimal minute | %p | Locale specific AM/PM
+%S | Decimal second | %U | Decimal week of year (start on Sunday)
+%w | Decimal weekday | %W | Decimal week of year (start on Monday)
+%x | Locale-specific date | %X | Locale-specific time
+%y | 2-digit year | %Y | 4-digit year
+%z | Offset from GMT | %Z | Time zone (character)
+
+Examples strftime
+==========
+```{r strftime}
+timenow <- Sys.time()
+timenow
+strftime(timenow, format = '%c')
+strftime(timenow, format = '%a %x %X %z')
+strftime(timenow, format = '%A %B %d, %Y %I:%M:%S %p %Z')
+```
+
+Example strptime
+=================
+```{r strptime}
+mydate <- strptime('9/Feb/2015:1:05:00 PM', 
+                   format='%d/%b/%Y:%I:%M:%S %p')
+mydate
+strftime(mydate, format = '%A %B %d, %Y %I:%M:%S %p')
+```
+
+Extract day of week
+==================
+
+```{r dayofweekformat}
+strftime(mydate, format = '%A %w')
+```
+
