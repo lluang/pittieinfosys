@@ -1,13 +1,16 @@
-Simple Graghs with ggplot2
+---
+output: pdf_document
+---
+Lab 5: Simple Graphs with ggplot2
 ==========================
-author: Shi Tang
-date: January, 2015 
+author: IE 0015 Information Systems
+date: Week of February 2, 2015 
 
 ```{r loadlibraries}
 library(ggplot2)
-library(plyr)
-library(dplyr)
-library(mgcv)
+#library(plyr)
+#library(dplyr)
+#library(mgcv)
 ```
 
 ```{r, echo = FALSE}
@@ -49,4 +52,4 @@ qplot(as.integer(pregordr), as.integer(BIRTHWGT_LB1), data = FemPreg[FemPreg$BIR
 qplot(as.integer(pregordr), as.integer(BIRTHWGT_LB1), data = FemPreg[FemPreg$BIRTHWGT_LB1<99,], geom = "jitter", alpha = I(1/5), xlab="Pregnancy order", ylab = "Birthweight (lbs)", main = "Birthweight by pregnancy order")
 ```
 
-There are a large number of missing values in birthweight because of pregancies that do not result in live births.
+There are a large number of missing values in birthweight because of pregnancies that do not result in live births.
