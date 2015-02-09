@@ -8,9 +8,6 @@ date: Week of February 2, 2015
 
 ```{r loadlibraries}
 library(ggplot2)
-#library(plyr)
-#library(dplyr)
-#library(mgcv)
 ```
 
 ```{r, echo = FALSE}
@@ -18,14 +15,14 @@ FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
                      header=TRUE,sep=",")
 ```
 
-1.  [4 pts] Read the National Survey of Family Growth Female Pregnancy dataset into R (either from CSV or SQLite). Identify the variables that corresponds to the duration of a completed pregnancy in weeks and the outcome. Plot three histograms: (1)  All live births, (2) current pregnancy (pregnancy ongoing at the time of survey), and (3) miscarriages. Include axis labels and titles (e.g. , `xlab="Pregnancy length", ylab="Weeks", main="Pregnancy lengths of live births"`).  Give an interpretation of the third histogram (miscarriage).
+1.  [4 pts] Read the National Survey of Family Growth Female Pregnancy dataset into R (either from CSV or SQLite). Identify the variables that corresponds to the duration of a completed pregnancy in weeks and the outcome. Plot three histograms: (1)  All live births, (2) current pregnancy (pregnancy ongoing at the time of survey), and (3) miscarriages. Include axis labels and titles (e.g. , `xlab="Pregnancy length", ylab="Number of live births", main="Pregnancy lengths of live births"`).  Give an interpretation of the third histogram (miscarriage).
 
 **ANSWER**
 
 ```{r, echo = TRUE}
-qplot(PRGLNGTH, data = FemPreg[FemPreg$OUTCOME==1,], geom = "histogram", xlab="Pregnancy length", ylab="Weeks", main="Pregnancy lengths of live births")
-qplot(PRGLNGTH, data = FemPreg[FemPreg$OUTCOME==6,], geom = "histogram", xlab="Pregnancy length", ylab="Weeks", main="Pregnancy lengths of current pregnancies")
-qplot(PRGLNGTH, data = FemPreg[(FemPreg$OUTCOME==4),], geom = "histogram", xlab="Pregnancy length", ylab="Weeks", main="Pregnancy lengths of miscarriages")
+qplot(PRGLNGTH, data = FemPreg[FemPreg$OUTCOME==1,], geom = "histogram", xlab="Pregnancy length", ylab="Number of live births", main="Pregnancy lengths of live births")
+qplot(PRGLNGTH, data = FemPreg[FemPreg$OUTCOME==6,], geom = "histogram", xlab="Pregnancy length", ylab="Number of live births", main="Pregnancy lengths of current pregnancies")
+qplot(PRGLNGTH, data = FemPreg[(FemPreg$OUTCOME==4),], geom = "histogram", xlab="Pregnancy length", ylab="Number of live births", main="Pregnancy lengths of miscarriages")
 ```
 
 Based on the miscarriage histogram, miscarriages tend to occur in the first 20 weeks of the pregnancy.  Don't worry if they say anything in addition to this, but they should at least get this far.
