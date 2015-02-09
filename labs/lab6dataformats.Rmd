@@ -1,0 +1,39 @@
+---
+title: 'Lab 6: Data formats'
+author: "IE 0015 Information Systems"
+date: "Spring 2015"
+output: html_document
+---
+
+Beavers
+=======
+
+Read in the `beavers` data that is included in R.  The data was taken in 1990 in Wisconsin. For both the `beaver1` and `beaver2` dataset, the `day` field is days since the beginning of 1990.
+
+```{r}
+data(beavers)
+summary(beaver1)
+summary(beaver2)
+```
+
+1.  For each dataset, calculate the date for each data record. (ideally, this should be within the data frame, but we will not take points off if this is a vector that corresponds to the dataset). (Hint:  add days to January 1, 1990)
+
+```{r}
+beaver1$date <- as.Date("1990-1-1") + beaver1$day - 1 # January 1, 1990 should be 0 days
+beaver2$date <- as.Date("1990-1-1") + beaver2$day - 1
+```
+
+2.  Look at the time stamps. What makes this hard to work with. Write out an algorithm (in pseudocode or plain english) that converts this time into a time stamp
+
+
+3.  The Titanic accident was in a time when people were identified by their titles. In the Titanic data, How do you identify the title (Mr., Mrs., Miss. etc) of a person.
+
+4.  Read in the titanic data and extract the title of each person
+  (hint, how do you find the first letter? how do you know the title is complete? Note: The Countess is a special case, don't worry about getting her territory right, just her title.)
+  
+5.  Create a table of titles with the number of times each title appears (hint: declare the list of titles to be a factor)
+
+
+2.  Matrices and arrays
+
+3.  Character strings
