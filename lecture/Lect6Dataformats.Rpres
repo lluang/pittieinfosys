@@ -1,7 +1,13 @@
-Data Formats
+Data Formats: Dates and factors
 ========================================================
 author: IE 0015 Information Systems
 date: February 2015
+
+```{r, echo=FALSE, warnings=FALSE}
+library(ggplot2)
+FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
+                     header=TRUE,sep=",")
+```
 
 Dates
 =======
@@ -13,7 +19,7 @@ Date and time formats
 -  Many ways to represent dates
 -  What does this mean
   -  02-03-2015
-  
+
 Date and time formats
 =======================
 
@@ -130,7 +136,7 @@ strftime(timenow, format = '%A %B %d, %Y %I:%M:%S %p %Z')
 Example strptime
 =================
 ```{r strptime}
-mydate <- strptime('9/Feb/2015:1:05:00 PM', 
+mydate <- strptime('9/Feb/2015:1:05:00 PM',
                    format='%d/%b/%Y:%I:%M:%S %p')
 mydate
 strftime(mydate, format = '%A %B %d, %Y %I:%M:%S %p')
@@ -143,3 +149,134 @@ Extract day of week
 strftime(mydate, format = '%A %w')
 ```
 
+Time intervals
+==============
+
+-  For the difference between to date/times, a `difftime` object is created.
+-  Represents the difference in times along with the units (so that the difference can be converted into any unit as required.)
+-  Options for units are 'auto', 'secs', 'mins', 'hours', 'days', 'weeks'
+
+```{r}
+b1 <- ISOdate(2010, 9, 30)
+b2 <- ISOdate(2015, 2, 9)
+b2-b1
+difftime(b2, b1, units = 'weeks')
+```
+
+Factors
+=======
+type: section
+
+Using factors
+=============
+
+-  Factors are variables that take on a limited number of values.
+-  e.g. a bounded set of integers
+-  Categorical variables
+-  Statistical methods work with factors than continuous (real) numbers, so this is helpful information to pass to a statistical model.
+
+Example of factors
+====================
+```{r}
+qplot(as.factor(pregordr), BIRTHWGT_LB1, data = FemPreg[FemPreg$BIRTHWGT_LB1<99,], geom = "boxplot", xlab="Pregnancy order", ylab = "Birthweight (lbs)", main = "Birthweight by pregnancy order")
+```
+
+Summarizing factor variables
+===========
+
+```{r}
+summary(FemPreg$pregordr)
+unique(FemPreg$pregordr)
+```
+
+Renaming factors
+===============
+
+- To rename factors, use the `labels` parameter within the `factors()` function.
+
+```{r}
+data = c(1,1, 2, 3, 3, 2, 2, 3, 1, 2)
+fdata = factor(data)
+fdata
+rdata = factor(data, labels = c("I", "II", "III"))
+rdata
+```
+
+Ordering factors
+===========
+
+- Normally factors to not have ordered
+
+```{r}
+levels(InsectSprays$spray)
+InsectSprays$spray <- with(InsectSprays,
+                           reorder(spray, count, mean))
+levels(InsectSprays$spray)
+```
+
+Creating factors from continuous variables
+============
+
+-  We can create a factor from integers.
+-  For continuous variables, first we need to identify `breaks` in the range, similar to histogram bins.
+```{r}
+summary(women$weight)
+length(women$weight)
+wfact <- cut(women$weight, 3)
+table(wfact)
+wfact <- cut(women$weight, pretty(women$weight,3))
+table(wfact)
+```
+
+Creating labels instead
+========
+
+```{r}
+wfact <- cut(women$weight,3, labels=c('Low', 'Medium', 'High'))
+table(wfact)
+```
+
+Factors based on quantiles
+========
+
+```{r}
+wfact <- cut(women$weight, quantile(women$weight, (0:4)/4))
+table(wfact)
+```
+
+Factors based on time and date
+=========
+
+- With dates, you often are not concerned as much with the precise date time but rather that an event fell within a certain bin.
+  -  Session logs are recorded to the second while you may only be interested in the day or hour.
+  -  Plotting sales data monthly while it is recorded to the second.
+
+
+Example of aggregating days into months
+===============
+
+Create a list of days
+
+```{r}
+everyday = seq(from =as.Date('2014-1-1'),
+               to = as.Date('2014-12-31'), by='day')
+```
+
+Grouping into months
+========
+
+```{r}
+cmonth = format(everyday, '%b')
+months = factor(cmonth, levels=unique(cmonth), ordered=TRUE)
+table(months)
+```
+
+Defining breakpoints
+========
+
+-   Use the 'breaks' argument to define the boundaries.
+
+```{r}
+quarters = cut(everyday, breaks="3 months", labels = paste('Q', 1:5, sep=''))
+tail(quarters)
+```
