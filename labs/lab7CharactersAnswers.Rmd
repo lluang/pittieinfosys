@@ -1,0 +1,13 @@
+---
+title: 'Lab 7: Character Strings'
+author: "Louis Luangkesorn"
+date: "02/10/2015"
+output: html_document
+---
+
+3.  The Titanic accident was in a time when people were identified by their titles. In the Titanic data, How do you identify the title (Mr., Mrs., Miss. etc) of a person.
+
+4.  Read in the titanic data and extract the title of each person
+  (hint, how do you find the first letter? how do you know the title is complete? Note: The Countess is a special case, don't worry about getting her territory right, just her title.)
+  
+5.  Create a table of titles with the number of times each title appears (hint: declare the list of titles to be a factor)
