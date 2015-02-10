@@ -1,0 +1,26 @@
+---
+title: "Lab 5: Simple Graphs"
+author: IE 0015 Information Systems
+date: Week of February 2, 2015 
+output: pdf_document
+---
+
+1.  [4 pts] Read the National Survey of Family Growth Female Pregnancy dataset into R (either from CSV or SQLite). Identify the variables that corresponds to the duration of a completed pregnancy in weeks and the outcome. 
+
+Plot three histograms: 
+  a. All live births, 
+  b. current pregnancy (pregnancy ongoing at the time of survey), and 
+  c. miscarriages. Include axis labels and titles (e.g. , `xlab="Pregnancy length", ylab="Weeks", main="Pregnancy lengths of live births"`).  
+  d. Give an interpretation of the third histogram (miscarriage).
+
+
+2. [6] Plot the relationship between birth weight and birth order.
+  a.  What are the variables that represent the birth weight in pounds (1st child of pregnancy) and the birth order?
+
+Ignoring responses where the birth weight was not given (hint: how can you tell) make the following plots. Include axis labels and titles. (e.g. `, xlab="Pregnancy order", ylab = "Birthweight (lbs)", main = "Birthweight by pregnancy order"`)
+
+  b.  Plot a boxplot of birth weight by pregnancy order (note: convert pregnancy order to a factor using `as.factor()`).
+  c.  Plot a jitter plot of birthweight by birth order.
+  d.  The jitter plot is hard to read. Set the alpha = 1/5 and plot again.
+  e.  Why are there so many missing values reported when making these plots? (or what did you do to prevent missing values in this plot)
+ 

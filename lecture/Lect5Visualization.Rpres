@@ -1,7 +1,33 @@
 Visualization
 ========================================================
 author: Information Systems Engineering
-date:  January 2015
+date:  February 2015
+
+SQL Note
+========
+
+- For using R with databases, everything in the Spector book chapter 3 applies.
+- For all references to MySQL, you can think of SQLite in its place.
+- This holds true for all Relational Database Management Systems.
+- Section 2.11, 3.2, 3.3 discuss ODBC.  Note that we are using the XLConnect package to work with Excel, but everything here applies to using MS Access. 
+
+Schedule order
+================
+
+-  We are introducing plots now.
+-  Next data formats (dates, factors, matrices, data frames)
+-  Return to plots later.
+
+Midterm
+=========
+
+-  CoNVO
+-  Data manipulation (verbs)
+  -  SQL, R, or plain english
+  -  We will not be grading syntax
+-  Data analysis
+  -  Sketch a visualization
+  -  Interpret a data summary or data visualization
 
 
 Representing data
