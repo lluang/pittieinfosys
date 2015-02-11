@@ -228,7 +228,7 @@ Multiplying matrices
 
 - We can do matrix multiplcation when the number of columns in the first equals the number of rows in the second. (with vectors oriented as rows if they are first and columns if they are second)
 - $A * B$ is an element by element multiplication for square matrices
-- $A %*% B$ is the matrix product
+- $A \%*\% B$ is the matrix product
 - Note that we have to take the *transpose* of $A2$
 
 ```{r}
