@@ -1,0 +1,110 @@
+Lect8: Character manipulation and Regular Expressions
+========================================================
+author: IE 0015 Information Systems
+date: February 2015
+
+Working with Characters
+====================
+
+-  For computers, working with numbers is easy.
+-  Working with strings is harder.
+-  Things to do
+  -  Extract substrings
+  -  Combine strings
+  -  Match strings
+  -  Search and replace
+  
+Basics of working with characters
+==================
+
+-  Character strings act much like arrays.
+-  They can be sorted, determine length, etc.
+-  The functions working with characters can be vectorized.
+  - If you apply a function to a vector (array/data frame) it is applied to all members of that vector and the result is a vector.
+
+```{r}
+head(state.name)
+length(state.name)
+nchar(state.name)
+```
+
+Combining (concatenating) strings
+==============
+
+-  You can join strings
+-  You can also combine variable values with strings
+-  Specify how to separate strings using the `sep` parameter.
+
+```{r}
+cat("Long strings can", "be displayed over", "several lines using", "the fill= arguement", 
+    sep = " ", fill = 40)
+```
+
+`paste` is a alternative to `cat`
+=================
+
+- Works when you need to convert other data types to strings
+- Also better when you have to do operations to generate strings.
+
+```{r}
+paste(c('one', 2, 'three', 4, 'five'), 
+      collapse = " ")
+paste('X', 1:5, sep="")
+paste(c('X', 'Y'), 1:6, sep="_", collapse="|")
+```
+
+Working with substrings
+================
+
+-  Computers treat strings like arrays, so getting a substring is like using indices of arrays.
+
+```{r}
+substring(state.name[1:5], 1, 4)
+al = substring(state.name[1],first=1:nchar(state.name[1]), last=1:nchar(state.name[1]))
+al
+which(al=="a")
+```
+
+Replacing texts
+==========
+
+- We can use the substring function to replace strings if we find them
+- Note that it overwrites, not expands the string
+
+```{r}
+nickname = "Sweet Home"
+substring(state.name[1], 4, 4+nchar(nickname))=nickname
+state.name[1]
+```
+
+Regular expressions
+========
+type: section
+
+The Rime of the Ancient Mariner, Coleridge (1798)
+============
+
+-  Copy this into a R-studio editor window
+
+```
+THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.
+
+ARGUMENT.
+
+How a Ship having passed the Line was driven by Storms to the cold
+Country towards the South Pole; and how from thence she made her course
+to the tropical Latitude of the Great Pacific Ocean; and of the strange
+things that befell; and in what manner the Ancyent Marinere came back to
+his own Country.
+
+I.
+
+1      It is an ancyent Marinere,
+2        And he stoppeth one of three:
+3      "By thy long grey beard and thy glittering eye
+4        "Now wherefore stoppest me?
+```
+
+Regular expresssions
+============
+
