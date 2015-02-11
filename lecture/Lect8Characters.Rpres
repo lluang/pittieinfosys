@@ -75,11 +75,134 @@ Replacing texts
 nickname = "Sweet Home"
 substring(state.name[1], 4, 4+nchar(nickname))=nickname
 state.name[1]
-```
+``` 
 
 Regular expressions
 ========
 type: section
+
+What are regular expressions?
+===============
+
+-  Regular expressions are ways of encoding patterns for matching sets of strings.
+-  Find *x*
+-  Find *x* but only if it occurs after *y*
+-  Match *x*, but *x* can be written in many formats
+
+Example - Phone numbers
+======================
+
+- How do you write a North American 10-digit phone number?
+- e.g. 412-624-9830
+
+Lets look for sets of digits
+================
+
+- `[0-9]` represents any character between 0 and 9, inclusive.
+- *between* is based on the ASCII character set.
+- Note that in RStudio, the *Find* bar includes a check box for *Regex*
+
+With great power comes complexity
+========================
+
+-  Regular expressions attempts to be able to represent any type of search that can be imaginable.
+-  But that means it needs to be able to represent very complex logic, and the results are complicated.
+-  This is an example of a Domain Specific Language (DSL)
+
+Preliminaries
+========================
+
+- Wildcards can match anything  ('.', '*')
+- Backslashes ('\\') can be used to specify or ignore special behavior (e.g. I had to use two \ to represent one \ in between the quote marks in this sentence)
+
+Basics
+========
+
+Regular expressions have three components
+
+1.  literal characters
+2.  character classes
+3.  modifiers
+
+Backslashes can be used to turn a modifier into a literal character.
+
+Literal characters
+=============
+
+- Matched exactly
+
+Character classes
+=============
+
+-  Letters [A-Z], [a-z], [A-Za-z]
+-  Digits [0-9] [0123456789]
+-  Other classes [ACTG]
+
+Modifiers
+===========
+
+Modifier | Meaning
+-----|-----
+^ | beginning of target
+$ | end of target
+. | match any single character
+\| |  separates alternative patterns
+() | groups patterns together
+* | matches 0 or more of the preceeding entity
+? | matches 0 or 1 of the preceeding entity
++ | matches 1 or more of the preceeding entity
+{n} | matches exactly *n* occurances of the preceeding entity
+{n,} | matches at least *n* occurances of the preceeding entity
+{n, m} | matches between *n* and *m* occurances of the preceeding entity
+
+Examples
+=========
+
+- [0-9][0-9][a-zA-Z]+ has two digits followed by one or more letters.
+- 12a 01Zd
+- (abc){3} means abcabcabc
+
+Splitting strings
+=================
+
+-  We can split strings based on a character or a regular expression.
+
+```{r}
+str = 'one   two      three  four'
+strsplit(str, " ")
+```
+
+With regular expressions
+==================
+
+-  Use the one or more modifier '+' to say that any number of spaces will be a split
+
+```{r}
+strsplit(str, " +")
+```
+
+We can use it to find records in a data frame
+================================
+
+- *grep* takes a regular expression and a character string or vectors and returns either the indices or values (value=TRUE) of the matches
+- Example, find women who are not members of nobility.
+- Mrs, Miss, Ms, Mme (Madame), Mlle (Mademoiselle) are generic title for women and girls
+- Always followed by a period in this database
+
+```{r loadtitanic, echo=FALSE}
+titanic <- read.csv("../data/titanictrain.csv")
+```
+
+```{r}
+womentitanic <- (titanic[grep('Mrs\\.|Miss\\.|Ms\\.|Mme\\.|Mlle\\.',
+                              titanic$Name), 
+                         'Name'])
+head(womentitanic)
+length(womentitanic)
+```
+
+
+
 
 The Rime of the Ancient Mariner, Coleridge (1798)
 ============
