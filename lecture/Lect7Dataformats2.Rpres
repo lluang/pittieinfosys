@@ -196,6 +196,9 @@ Linear algebra
   - least square fitting, QR decomposition, LU decomposition, singlar value decomposition
   - eigenvalues, eigenvectors, determinants 
 - Linear algebra underlies most numerical computation because of efficiency.
+- There are a few other data analysis languages that share this characteristic.
+  - Matlab, Python
+  - Julia, Clojure, F#
 
 Vector math
 ======
