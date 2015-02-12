@@ -104,8 +104,8 @@ as.POSIXlt(dts)
 Working with time formats
 ==========
 
--  `strftime` is to read date/times
--  `strptime` is used to print/output date/times
+-  `strftime` is used to print/output date/times
+-  `strptime` is used to read date/times
 
 Time codes
 ===========

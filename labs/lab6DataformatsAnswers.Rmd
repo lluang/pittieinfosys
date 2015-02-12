@@ -1,0 +1,62 @@
+---
+title: 'Lab 6: Data formats'
+author: "IE 0015 Information Systems"
+date: "Spring 2015"
+output: pdf_document
+---
+
+For all questions, answer with both the answer and the code used to determine the answer.
+
+Read in the `beavers` data that is included in R.  The data was taken in 1990 in Wisconsin. For both the `beaver1` and `beaver2` dataset, the `day` field is days since the beginning of 1990.
+
+```{r}
+data(beavers)
+summary(beaver1)
+summary(beaver2)
+```
+
+1.  For each dataset, calculate the date for each data record. What dates are repesented in each data file? (ideally, this should be within the data frame, but we will not take points off if this is a vector that corresponds to the dataset). (Hint:  add days to January 1, 1990)
+
+```{r}
+beaver1$date <- as.Date("1990-1-1") + beaver1$day - 1 # January 1, 1990 should be 0 days
+beaver2$date <- as.Date("1990-1-1") + beaver2$day - 1
+unique(beaver1$date)
+unique(beaver2$date)
+```
+
+2.  Look at the time stamps. What makes this hard to work with. Write out an algorithm (in pseudocode or plain english) that converts this time into a time stamp
+
+Discuss the fact that the time stamps are of varying length
+
+    i. Add zeros as needed to make the time stamps four characters
+    ii. Read in data using strftime as %H%M
+
+
+```{r titanicdata}
+titanic <- read.csv("../data/titanictrain.csv")
+```
+
+3.  In the Titanic data, list the people with the following characteristics
+  -  Embarked in Queenstown
+  -  Female
+  -  Known to be under the age of 19 (i.e. 18 and under)
+  
+```{r}
+ titanic[titanic$Embarked=="Q" & titanic$Sex=="female" & titanic$Age < 19 & !is.na(titanic$Age),"Name"]
+```
+
+4.  Solve the following system of equations:
+
+\[
+  \begin{aligned}
+  2 x_1  - x_2  + 3 x_3  = 5 \\
+  3 x_1  + 2 x_2  - x_3  = 0 \\
+  x_1  + 4 x_2  + x_3  = 6
+  \end{aligned}
+\]
+
+```{r}
+X = matrix(c(2, 3, 1, -1, 2, 4, 3, -1, 1), ncol=3)
+b = c(5, 0, 6)
+solve(X,b)
+```
