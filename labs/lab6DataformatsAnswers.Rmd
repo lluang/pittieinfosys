@@ -5,6 +5,8 @@ date: "Spring 2015"
 output: pdf_document
 ---
 
+For all questions, answer with both the answer and the code used to determine the answer.
+
 Read in the `beavers` data that is included in R.  The data was taken in 1990 in Wisconsin. For both the `beaver1` and `beaver2` dataset, the `day` field is days since the beginning of 1990.
 
 ```{r}
