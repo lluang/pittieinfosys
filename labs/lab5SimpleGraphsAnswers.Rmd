@@ -25,7 +25,25 @@ qplot(PRGLNGTH, data = FemPreg[FemPreg$OUTCOME==6,], geom = "histogram", xlab="P
 qplot(PRGLNGTH, data = FemPreg[(FemPreg$OUTCOME==4),], geom = "histogram", xlab="Pregnancy length", ylab="Number of live births", main="Pregnancy lengths of miscarriages")
 ```
 
+
 Based on the miscarriage histogram, miscarriages tend to occur in the first 20 weeks of the pregnancy.  Don't worry if they say anything in addition to this, but they should at least get this far.
+
+Note
+1) Always attach your command line, or TA wonnot be able to give you any point 
+        if there is difference between your graph and the preferred answer. 
+2) "==" means comparison equal.\n
+3) Field "OUTCOME"(P55 in codebook) most accurately fit the requirement \n
+PREGEND1 (Applicable if pregnancy is a completed pregnancy) is not a full reord. In its note it says use record OUTCOME \n
+GESTASUN_W (Applicable if pregnancy is a completed pregnancy (prgoutcome = 1 or 2)) is not a full record either.\n
+HOWPREG_N(Applicable if pregnancy is a current pregnancy (prgoutcome = 3)) is also a partial record. It need to be used with HOWPREG_P(Unit) to become a full reply.\n
+In all the three fields above, "99"s mean "don't know". need to eliminate those record.
+Acceptable answer\n
+4) Sorting function "FemPreg[FemPreg$OUTCOME==1,]" means "in the data frame FemPreg, select all the rows that OUTCOME==1, and select all the columns"
+
+
+qplot(GESTASUN_W, data = FemPreg[FemPreg$OUTCOME==1,], geom = "histogram", xlab="Pregnancy length", ylab="Number of live births", main="Pregnancy lengths of live births")
+
+
 
 
 2. [6] Plot the relationship between birth weight and birth order.
@@ -50,3 +68,9 @@ qplot(as.integer(pregordr), as.integer(BIRTHWGT_LB1), data = FemPreg[FemPreg$BIR
 ```
 
 There are a large number of missing values in birthweight because of pregnancies that do not result in live births.
+
+NOTE:
+1) As a similar problem in Q1, there is several answer not perfectly meet the requirement for the question. Read the full description of the fields before you use them.
+BIRTHORD only applicable for all live birth while pregordr applicable for all.
+2) Whenever you are not 100% sure about the usage of a function, use command like "?qplot" or "?as.factor" to get a help page.(add a ? before the command you want to use) It will help you a lot when you having question about sequence or needed argument.
+3) Use R script to record your lines rather than write them directly on Console. You might need it next time.
