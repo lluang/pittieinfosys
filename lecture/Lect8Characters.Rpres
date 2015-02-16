@@ -1,4 +1,4 @@
-Lect8: Character manipulation and Regular Expressions
+Lecture 8: Character manipulation and Regular Expressions
 ========================================================
 author: IE 0015 Information Systems
 date: February 2015
@@ -114,6 +114,7 @@ Preliminaries
 
 - Wildcards can match anything  ('.', '*')
 - Backslashes ('\\') can be used to specify or ignore special behavior (e.g. I had to use two \ to represent one \ in between the quote marks in this sentence)
+- References to *Perl* - A computer language whose main use was in working with text data. Includes an enhanced version of Regular Expressions from the POSIX standard. Use when available.
 
 Basics
 ========
@@ -135,25 +136,25 @@ Character classes
 =============
 
 -  Letters [A-Z], [a-z], [A-Za-z]
--  Digits [0-9] [0123456789]
+-  Digits [0-9] [0123456789] \d
 -  Other classes [ACTG]
 
 Modifiers
 ===========
 
-Modifier | Meaning
------|-----
-^ | beginning of target
-$ | end of target
-. | match any single character
-\| |  separates alternative patterns
-() | groups patterns together
-* | matches 0 or more of the preceeding entity
-? | matches 0 or 1 of the preceeding entity
-+ | matches 1 or more of the preceeding entity
-{n} | matches exactly *n* occurances of the preceeding entity
-{n,} | matches at least *n* occurances of the preceeding entity
-{n, m} | matches between *n* and *m* occurances of the preceeding entity
+Modifier | Meaning |
+-----|-----|
+^ | beginning of target |
+$ | end of target |
+. | match any single character |
+\| |  separates alternative patterns |
+() | groups patterns together |
+* | matches 0 or more of the preceding entity |
+? | matches 0 or 1 of the preceding entity |
++ | matches 1 or more of the preceding entity |
+{n} | matches exactly *n* occurrences of the preceding entity |
+{n,} | matches at least *n* occurrences of the preceding entity |
+{n, m} | matches between *n* and *m* occurrences of the preceding entity |
 
 Examples
 =========
@@ -161,6 +162,21 @@ Examples
 - [0-9][0-9][a-zA-Z]+ has two digits followed by one or more letters.
 - 12a 01Zd
 - (abc){3} means abcabcabc
+- \d{3}   Any group of three digits
+- \D  Not a digit
+
+Phone number
+===========
+
+- 412-624-9830
+- (412) 624-9830
+- \D?\d{3}\D+\d{3}\D?\d{4}
+  - Optional leading character \D?
+  - Three digits \d{3}
+  - One or more non-digit \D+
+  - Three digits \d{3}
+  - Optional non-digit \D?
+  - Four digits \d{4}
 
 Splitting strings
 =================
@@ -201,13 +217,15 @@ head(womentitanic)
 length(womentitanic)
 ```
 
-
+The Rime of the Ancient Mariner
+==========================
+type:section
 
 
 The Rime of the Ancient Mariner, Coleridge (1798)
 ============
 
--  Copy this into a R-studio editor window
+-  Copy this into a R-studio editor window and save to a file
 
 ```
 THE RIME OF THE ANCYENT MARINERE, IN SEVEN PARTS.
@@ -228,6 +246,191 @@ I.
 4        "Now wherefore stoppest me?
 ```
 
-Regular expresssions
-============
 
+
+Working with text within R
+========================
+
+-  Read text into a variable
+-  Find patterns using `grep`
+
+```{r}
+rime.txt <- file("../data/rime-intro.txt")
+rime <- scan(rime.txt, what=character(), sep='\n')
+any(grep('ship',rime))
+any(grep('Ship',rime))
+any(grep('[Ss]hip',rime))
+```
+
+Better will be to find all examples and where they are
+=====================
+
+-  `regexpr` finds the first match in each section of the text.
+-  `gregexpr` finds all matches in each section of text.
+
+```{r}
+regexprresult <- regexpr('Marinere', rime)
+regexprresult
+gregexprresult <- gregexpr('Marinere', rime)
+gregexprresult
+```
+
+Matching non-digits
+=========
+
+-  *Character classes* also known as *conventions* have been created to express different groups of characters
+
+-  [\d] refers to any digit. Same as [0-9]
+-  [\D] is any non-digit. Same as [^0-9] or [^\d]
+-  [\w] is any word character. Same as [_a-zA-Z0-9]
+  - Does NOT include white space (tabs, new lines, punctuation)
+-  [\W] is any non-word character (whitespace, punctuation, etc). Same as [^_a-zA-Z0-9]
+-  [\s] or [ \t\n\r] matches whitespace, or
+  - spaces
+  - [\t] tabs
+  - [\n] newlines
+  - [\r] carriage returns
+
+Examples of using character classes in R
+=========
+
+-  Note the double backslash. First backslash is to tell R that the second one is real and not an escape sequence.
+
+```{r}
+regexpr('\\d', rime)
+gregexpr('\\D', rime)
+gregexpr('\\w', rime)
+regexpr('\\W', rime)
+gregexpr('[A-Z]', rime)
+```
+
+Alternatives
+==================
+
+- What if you wanted to match alternative spellings?
+- '|' is used to separate alternatives
+
+```{r}
+regexpr('[t|T][h|H][e|E]', rime)
+gregexpr('(the|The|THE)', rime)
+```
+
+More character classes
+==================
+
+```{r}
+characters = "! \" # $ % & ' ( ) * + , - . /
+0       1       2       3       4       5       6       7       8       9
+: ; < = > ? @
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+[ \ ] ^ _ `
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+{ | } ~"
+```
+
+Look for a specific class
+============
+```{r}
+gregexpr("[aeiou]", characters)
+```
+
+Or everything else
+==============
+```{r}
+gregexpr("[^aeiou]", characters)
+```
+
+Try groups of characters
+=====================
+
+```{r}
+gregexpr("[0-3]", characters)
+gregexpr("[6-9]", characters)
+```
+
+Combine them
+=====
+```{r}
+gregexpr("[0-36-9]", characters)
+```
+
+Unicode characters are often used for non-standard characters
+============
+```{r}
+basho.txt <- file("../data/basho.txt")
+basho <- scan(basho.txt, what=character(), sep='\n')
+basho
+```
+
+Searching for unicode characters
+=============
+
+-  Include a '\u' in front of the 4-digit unicode number
+```{r}
+regexpr("\u6c60", basho)
+```
+
+Some punctuation characters are also unicode characters
+===============
+
+-  What do these find?
+-  \u2014
+-  \u2013
+```{r}
+regexpr("\u2014", basho)
+regexpr("\u2013", basho)
+basho
+```
+
+Lookarounds
+=========
+
+- We can look for words in combination.
+- Let's look for "Marinere", but only if it is preceded by "Ancyent"
+- Make it case insensitive by using `(?i)` (and set `perl=TRUE`)
+- Note that the `ancyent` was matched, not the lookahead part (`marinere`) (see the length of the match)
+- We'll use the full Rime of the Ancyent Mariner text
+
+```{r}
+rimefull.txt <- file("../data/rime.txt")
+rimefull <- scan(rimefull.txt, what=character(), sep='\n')
+getAncyentMariner <- function(data, regexpression) {
+  string.start <- regexpr(regexpression, data, perl=TRUE)
+  string.end <- string.start+ attr(string.start, "match.length")-2
+  target <- substr(data, string.start, string.end)
+  return (target)
+}  
+findancyentmariner <- getAncyentMariner(rimefull, "(?i)ancyent (?=marinere)")
+head(findancyentmariner, n=30)
+```
+Let's be more flexible on what we find
+==============
+
+```{r}
+findancyentma <- getAncyentMariner(rimefull, "(?i)ancyent (?=ma*)")
+head(findancyentma, n=30)
+```
+
+Negative lookahead
+======
+- Same pattern, but make sure that the pattern does not appear immediate after the first
+- `?!` (remember that `!` means NOT)
+
+```{r}
+findancyentnomariner <- getAncyentMariner(rimefull, "(?i)ancyent (?!marinere)")
+head(findancyentnomariner, n=30)
+```
+
+Lookbehind
+========
+
+-  Same thing, but look backwards using `?<='
+
+```{r}
+findancyentbeforemariner <- getAncyentMariner(rimefull, "(?i)(?<=ancyent) marinere")
+head(findancyentbeforemariner, n=30)
+```
+```{r}
+findmariner <- getAncyentMariner(rimefull, "(?i)marinere")
+head(findmariner, n=30)
+```
