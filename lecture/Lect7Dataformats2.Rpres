@@ -1,0 +1,309 @@
+Data Formats: Subscripting and Matrices
+========================================================
+author: IE 0015 Information Systems
+date: February 2015
+
+```{r loadtitanic, echo=FALSE}
+titanic <- read.csv("../data/titanictrain.csv")
+```
+
+Subscripting
+========================================================
+type: section
+
+Subscripting
+===============
+
+- R has many data structures that have many elements.
+- Operating on many elements at once makes R efficient and expressive.
+- By using subscripting operations we can select specific elements in a compact way.
+
+Data structures using subscripting
+=================
+
+-  vectors
+-  matrices
+-  arrays
+-  data frames
+-  lists
+
+
+Numbers as subscripts
+===================
+
+-  Elements (rows, columns) can be referenced using integers.
+-  The first element is 1
+  -  Similar to Fortran/Matlab
+  -  Contrast to C based languages which start from 0
+
+Numbers as subscripts
+=============
+
+- Subscripting can be affirmative (list of indices to include) or negative (list of indices to remove)
+
+```{r}
+nums <- c(12, 9, 8, 14, 7, 16, 3, 2, 9)
+keep <- which(nums>10)
+keep
+nums[keep]
+```
+
+Negative subscripts
+=============
+
+-  Specify which ones to remove using a negative number.
+
+```{r}
+remove <- (which(nums<=10)) * (-1)
+remove
+nums[remove]
+```
+
+Character subscripts
+==============
+
+- Columns can be identified by name instead of index
+
+```{r}
+titanic[1, c(3,4)]
+titanic[1, c("Pclass", "Name")]
+```
+
+Logical subscripting
+================
+
+- Create a vector of `TRUE` or `FALSE` that indicates which elements to include in the next stage of analysis
+
+```{r}
+nums
+nums > 10
+nums[nums>10]
+```
+Working with matrices and arrays
+==============
+
+-  Matrices and arrays can have multiple dimensions
+
+```{r}
+x <- matrix(1:12, 4, 3)
+x
+```
+
+Specify a list of rows first, list of columns second
+==============
+
+-  Rows, then columns
+-  Empty subscript implies including all of them
+
+```{r}
+x[,c(3,1)]
+x[c(2,4),]
+```
+
+Conversion to a vector
+=================
+
+-  If you use a single row or column, you get a vector
+
+```{r}
+x[2,]
+x[,2]
+```
+
+Single subscript
+=============
+
+-  If you forget the comma, it will flatten the matrix into a vector, then find the element
+
+```{r}
+x[5]
+```
+
+Lists
+==========
+
+```{r}
+hogwartstudents <- list(names =c("Cedric","Fred","George","Cho","Draco","Ginny"),
+                       year = c(3,2,2,1,0,-1),
+                       house = c("H", "G", "G", "R", "S", "G"))
+mode(hogwartstudents)
+hogwartstudents[2]
+```
+
+Lists are not vectors
+===============
+
+- They may contain a vector, in which case you need to access the vector inside the list.
+
+```{r}
+mean(hogwartstudents[2])
+mean(hogwartstudents$year)
+mean(hogwartstudents[['year']])
+mean(hogwartstudents[[2]])
+```
+
+
+Working with data frames
+===========================
+
+-  We can subscript data frames by generating a logical vector based on the values of the columns.
+
+```{r}
+students <- data.frame(name = c("Cedric","Fred","George","Cho","Draco","Ginny"),
+                       year = c(3,2,2,1,0,-1),
+                       house = c("H", "G", "G", "R", "S", "G"))
+students[students$house=="G",]
+```
+
+Or we can use multiple conditions
+===========
+
+```{r}
+students[students$house=="G" & students$year>0,]
+```
+
+And we can choose columns as well
+==============
+```{r}
+students[students$house=="G" & students$year>0,c('name', 'year')]
+```
+
+The 'subset' function has a more compact version of this
+=============
+
+- Notice that because I specify the data frame in the first arguement, there is no need to specify it later.
+
+```{r}
+subset(students, house=="G" & year > 0)
+```
+
+Now `select` the column in the `subset` function call
+==========
+
+```{r}
+subset(students, house=="G" & year > 0, select=c('name', 'year'))
+```
+
+Linear algebra
+==============
+type: section
+
+Linear algebra
+=========
+
+- R has a full set of linear algebra and matrix operations.
+  - solve, transpose, add, multiply
+  - least square fitting, QR decomposition, LU decomposition, singlar value decomposition
+  - eigenvalues, eigenvectors, determinants 
+- Linear algebra underlies most numerical computation because of efficiency.
+- There are a few other data analysis languages that share this characteristic.
+  - Matlab, Python
+  - Julia, Clojure, F#
+
+Vector math
+======
+
+```{r}
+a = c(1,2,3)
+b = c(2,6,4)
+a + b
+a*b
+sum(a*b)
+```
+
+Matrices
+=========
+
+-  We can create a matrix by specifying its elements, one row at a time, and its dimensions.
+-  Or we can specify that we are specifying by row.
+```{r}
+A <- matrix(c(1,3,2,2,8,9), ncol=3)
+A2 <- matrix(c(1,3,2,2,8,9), ncol=3, byrow=TRUE)
+print(A)
+print(A2)
+```
+
+Multiplying matrices
+===============
+
+- We can do matrix multiplcation when the number of columns in the first equals the number of rows in the second. (with vectors oriented as rows if they are first and columns if they are second)
+- $A * B$ is an element by element multiplication for square matrices
+- $A \%*\% B$ is the matrix product
+- Note that we have to take the *transpose* of $A2$
+
+```{r}
+A %*% t(A2)
+```
+
+Cross product
+=================
+
+-  We can take cross products of a matrix times a vector
+-  Note that vectors are column vectors
+
+```{r}
+x <- c(1, 2, 3)
+A %*% x
+crossprod(t(A), x)
+```
+
+Adding matrices
+============
+
+-  This makes sense only when they have the same number of rows and columns
+
+```{r}
+A + A2
+```
+
+Solving linear equations
+=======================
+
+-  Solving linear equations is the inverse of matrix multiplication
+
+$$
+  \begin{aligned}
+  x_1 + 3 x_2 & = 7\\
+  2 x_1 + 4 x_2 & = 10
+  \end{aligned}
+$$
+
+```{r solvematrix}
+A3 <- matrix(c(1,2,3,4), ncol=2)
+A3
+b = c(7, 10)
+solve(A3, b)
+```
+
+Inverse of a matrix
+============
+
+-  Solving is the same as finding the matrix inverse
+
+```{r solveinverse}
+solve(A3) 
+solve(A3) %*% b
+```
+
+Least squares 
+========
+
+- if we have a set of points, can we determine a line so that the errors have the minimum sum of squares errors?
+
+```{r lseexample, fig=TRUE}
+X = matrix(c(1, 1, 1, 1, 1, 1, 2, 3, 4, 5), ncol=2)
+y = c(3.7, 4.2, 4.9, 5.7, 6.0)
+plot(X[,2], y, xlim=c(1,5), xlab="x-values", ylab = "y-values")
+```
+
+Solving least squares
+=============
+
+$\widehat{\beta} = (X^TX)^{-1} X^T y$
+
+```{r leastsquares}
+beta.hat <- solve(t(X)%*% X) %*% t(X) %*% y
+beta.hat
+```
+
+-  Note that this is the same thing as linear regression
