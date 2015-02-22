@@ -14,6 +14,8 @@ A plot is composed of:
 -  geom - Indicates the type of plot
 -  facets - Indicates multiple plots
 -  scaling - How data layout
+-  statistic - Transformation of the data
+-  position adjustment - To avoid overplotting
 
 ```{r}
 library(ggplot2)
@@ -61,15 +63,7 @@ Scaling
   -  Polar
   -  Spherical
   
-Components of the layered grammer
-==============
 
--  Data set
--  Layers
-  -  geom, statistical transformation, positional adjustment, aesthetic mappings.
--  Scale
--  Coordinate system
--  Faceting
 
 Layering
 ======
@@ -77,5 +71,142 @@ Layering
 -  The mechanism by which we add data elements to a plot.
 -  In qplot, each layer must come from a single dataset and single set of aesthetic mappings.
 -  In ggplot, layers can come from different datasets and aesthetic mappings.
+- `layer(geom, geom_params, stat, stat_params, data, mapping)` 
+  -  *mapping*
+  -  *data* (if not the default from the call to *ggplot*)
+  -  *geom* and *stat* - There is a default *stat* for each *geom*, and a default *geom* for each *stat*, so you only need to define one.
+  -  *position*
+  
+Position adjustments
+============
 
+-  `dodge` - Dodge overlaps to the side
+-  `fill` - Stack overlapping objects and 
+-  `identity` - Don't adjust position
+-  `jitter` - Jitter points to avoid overplotting
+-  `stack` - Stack overlapping objects on top of each other
+
+qplot and ggplot
+============
+
+- `qplot` is the simplified version of `ggplot`
+- The general concepts are the same, but `ggplot` is more flexible
+- But getting `ggplot` started is complex
+
+Putting together a plot
+============
+
+- Build plots layer by layer
+- Start with identifying the data frame.
+- (Note nothing happens)
+
+```{r}
+p = ggplot(dsmall)
+```
+
+Identify how the data will be displayed (aesthetic)
+====================
+
+- Using *aes*, identify which data elements will be chosen.
+- First attribute is the x-axis (if only one, then it is a histogram or density plot)
+- Second attribute is the y-axis.
+- Additional attributes need to be mapped to other visual cues (colour, size, shape, etc)
+
+```{r}
+p = p + aes(x = carat, y = price, color=cut)
+```
+
+Declare the type of plot (geom)
+======================
+
+-  Add the plot layer, which includes the *geom* of the plot, i.e. the type of plot.
+-  **Now** the plot can be displayed
+
+```{r}
+p = p + layer(geom="point")
+show(p)
+```
+
+Same thing, but using different layer (and attributes)
+============
+```{r}
+dbar = ggplot(dsmall) + aes(x = carat) + layer(
+  geom = "bar")
+show(dbar)
+```
+
+Let's add in some options such as a statistic
+=================
+
+- stat = bin identifies how groupsing will be done for the bar (histogram)
+
+```{r}
+dbar = ggplot(dsmall) + aes(x = carat) + layer(
+  geom = "bar",
+  geom_params = list(fill = "steelblue"),
+  stat = "bin",
+  stat_params = list(binwidth = 0.25))
+show(dbar)
+```
+
+Layer shortcuts
+===========
+
+-  Layer shortcuts can be used to specify the type of layer along with the geom/stat
+  -  `geom_area()`
+  -  `geom_point()`
+  -  `geom_path()`
+  -  `geom_line()`
+  -  `geom_smooth()`
+  -  `geom_abline()`
+  -  `geom_bar()`
+  -  `geom_histogram()`
+  -  `geom_density()`
+  -  `geom_abline()`
+  -  `geom_violin()`
+  - `points` - Scatterplots, 
+
+Point
+====
+
+```{r}
+p = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
+show(p)
+```
+
+
+```{r}
+p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
+p + geom_bar() + labs(title="Default for bar plots is to stack")
+p + geom_bar(position="fill") + labs(title="A fill shows percentages of each classification")
+p + geom_bar(position="dodge") + labs(title="dodge puts the bars next to each other")
+p + geom_bar(width=1,position="fill") + coord_polar() + labs(title="A pie chart is a bar chart using polar coordinates")
+p + geom_bar(width=1) + coord_polar() + labs(title="A pie charts do not have to have a constant radius")
+```
+
+Area
+===
+
+```{r}
+d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
+d + stat_bin(aes(ymax = ..count..), binwidth = 0.1, geom = "area")
+d + stat_bin(aes(size = ..density..), binwidth = 0.1, geom = "point", position="identity")
+```
+
+Histograms and density
+===================
+```{r}
+d <- ggplot(diamonds, aes(carat))
+d + geom_histogram() + labs(title="Histograms bin the x axis and count elements in each")
+d + geom_density() + labs(title="Density draws a continuous density curve based on a moving window")
+```
+
+Box and whiskers
+===========
+
+```{r}
+d <- ggplot(diamonds, aes(x=color,y = carat))
+d + geom_boxplot() + labs(title="Box and whiskers plots are often used to show the bulk of the distribution and outliers")
+d + geom_violin() + labs(title="Violin charts include more density information than box and whiskers")
+```
 
