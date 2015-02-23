@@ -154,21 +154,20 @@ Plot geom examples
 type:section
 
 
-Layer shortcuts
+Layer shortcuts can specify the geom separately
 ===========
 
--  Layer shortcuts can be used to specify the type of layer along with the geom/stat
-  -  `geom_area()`
-  -  `geom_point()`
-  -  `geom_path()`
-  -  `geom_line()`
-  -  `geom_smooth()`
-  -  `geom_abline()`
-  -  `geom_bar()`
-  -  `geom_histogram()`
-  -  `geom_density()`
-  -  `geom_abline()`
-  -  `geom_violin()`
+-  `geom_area()`
+-  `geom_point()`
+-  `geom_path()`
+-  `geom_line()`
+-  `geom_smooth()`
+-  `geom_abline()`
+-  `geom_bar()`
+-  `geom_histogram()`
+-  `geom_density()`
+-  `geom_abline()`
+-  `geom_violin()`
 
 
 Geom and stat
@@ -181,8 +180,7 @@ Geom and stat
 Examples of stat
 ========
 
--  `stat_bin()`
--  `stat_bin2d()`
+-  `stat_bin()` -  `stat_bin2d()`
 -  `stat_bindot()`
 -  `stat_binhex()`
 -  `stat_boxplot()`
@@ -216,7 +214,7 @@ Scatter plot using geom_point
 ======
 
 ```{r}
-p + geom_point() + ggtitle("geom_point")
+p + geom_point() + ggtitle("geom_point") + aes(size=4)
 ```
 
 Bar plot using geom_bar
