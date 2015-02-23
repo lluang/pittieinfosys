@@ -1,14 +1,11 @@
 ---
-title: 'Lab 9: More visualization'
+title: 'Lab 8: More visualization'
 author: "IE 0015 Information Systems Engineering"
 date: "02/21/2015"
 output: html_document
 ---
 ```{r loadlibraries}
 library(ggplot2)
-#sql <- "SELECT *
-#        FROM FemPreg"
-#FemPreg <- dbGetQuery(conn, sql)
 FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
                     header=TRUE, sep=",")
 FemPreg$BIRTHORD <- as.factor(FemPreg$BIRTHORD)
@@ -21,20 +18,20 @@ Do first babies arrive late?  A common belief is that first babies are more like
 2.  (2 pt) Using ggplot or qplot (suggest ggplot), create a histogram that looks at the pregnancy duration (`PRGLNGTH`) for each live birth.  Look at only weeks 35 through 45.  Remember to offset your histogram bars by `origin=-0.5` so that the bar appears over the x-axis tick for the weeks.
 3.  (2 pt) Break up the histogram so you can see the pregnancy duration distribution for each of the first four births in a single plot.
 4.  (2 pt) Using faceting, create four histograms to compare the pregnancy duration distribution separately. Organize them into two rows and two columns.
-5.  (2 pt) Try putting them on the same plot again, but use a frequency polygon to compare *stat=density* instead of counts since it may be easier to compare the normalized curves (density) instead of the counts (since there are always more first borns than second borns).
+5.  (2 pt) Try putting them on the same plot again, but use a frequency polygon to compare the distributions. (Note that you should set the binwidth = 1)
 6.  (1 pt) Discuss the question if first babies are born late using the plots you just created.
   
 ANSWER
 
-```{r}
+```{r, warning=FALSE}
 firstbirths <- FemPreg[FemPreg$BIRTHORD %in% c(1, 2, 3, 4),c("BIRTHORD", "PRGLNGTH")]
 f <- ggplot(firstbirths, aes(PRGLNGTH)) + geom_histogram(binwidth=1, origin=-0.5, width=0.8) + xlim(35, 45)  + ggtitle("Distribution of pregnancy durations") + xlab("Weeks")
 show(f)
-f1 <- ggplot(firstbirths, aes(x=PRGLNGTH, color=BIRTHORD)) + geom_histogram(position="dodge", binwidth=1, origin=-0.5, width=0.8) + xlim(35, 45) + ggtitle("Distribution of pregnancy durations by birthorder") + xlab("Weeks")
+f1 <- ggplot(firstbirths, aes(x=PRGLNGTH, color=BIRTHORD, fill=BIRTHORD)) + geom_histogram(position="dodge", binwidth=1, origin=-0.5, width=0.8) + xlim(35, 45) + ggtitle("Distribution of pregnancy durations by birthorder") + xlab("Weeks")
 show(f1)
 f2 <- f + facet_wrap(~BIRTHORD, nrow = 2, ncol = 2)
 show(f2)
-f3 <- ggplot(firstbirths, aes(PRGLNGTH, color=BIRTHORD)) + geom_freqpoly(binwidth=1, origin=-0.5) + xlim(35, 45) + ggtitle("Distribution of pregnancy durations by birthorder") + xlab("Weeks")
+f3 <- ggplot(firstbirths, aes(as.integer(x = PRGLNGTH), color=BIRTHORD)) + geom_freqpoly(binwidth=1,origin=-0.5) + ggtitle("Distribution of pregnancy durations by birthorder") + xlab("Weeks") + xlim(35, 45)
 show(f3)
 ```
 
