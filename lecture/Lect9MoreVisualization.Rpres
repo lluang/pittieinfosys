@@ -216,7 +216,7 @@ Scatter plot using geom_point
 ======
 
 ```{r}
-p + geom_point() + labs(title = "geom_point")
+p + geom_point() + ggtitle("geom_point")
 ```
 
 Bar plot using geom_bar
@@ -224,7 +224,7 @@ Bar plot using geom_bar
 - Note: stat="identity" used to provide the y-value
 
 ```{r}
-p + geom_bar(stat="identity") + labs(title = "geom_bar(stat=\"identity\")")
+p + geom_bar(stat="identity") + ggtitle("geom_bar(stat=\"identity\")")
 ```
 
 Line plot using geom_line
