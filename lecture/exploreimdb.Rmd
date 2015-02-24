@@ -1,0 +1,58 @@
+---
+title: "Explore IMDB"
+author: "IE 0015 Information Systems Engineering"
+date: "02/23/2015"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+data(movies)
+head(movies)
+summary(movies)
+```
+
+
+```{r}
+imdbyear <- ggplot(movies, aes(x=year)) + geom_histogram() + ggtitle("Movies in IMDB per year") + xlab("Year") +ylab("Number of movies")
+```
+
+```{r}
+imdbaction <- ggplot(movies[movies$Action==1,], aes(x=year)) + geom_histogram() + ggtitle("Actions movies per year")
+imdbaction
+
+movieplot <- ggplot() + aes(x=year)
+movieplot + geom_histogram(data=movies[movies$Action==1,], binwidth=1) + ggtitle("Action movies per year")
+movieplot + geom_histogram(data=movies[movies$Animation==1,], binwidth=1) + ggtitle("Animation movies per year")
+movieplot + geom_histogram(data=movies[movies$Comedy==1,], binwidth=1) + ggtitle("Comedy movies per year")
+movieplot + geom_histogram(data=movies[movies$Drama==1,], binwidth=1) + ggtitle("Dramatic movies per year")
+movieplot + geom_histogram(data=movies[movies$Documentary==1,], binwidth=1) + ggtitle("Documentaries per year")
+movieplot + geom_histogram(data=movies[movies$Romance==1,], binwidth=1) + ggtitle("Romantic movies per year")
+movieplot + geom_histogram(data=movies[movies$Short==1,], binwidth=1) + ggtitle("Shorts per year")
+```
+```{r}
+moviepolar <- ggplot() + aes(x=year)
+moviepolar + geom_histogram(data=movies[movies$Action==1,], binwidth=1) + ggtitle("Action movies per year") + coord_polar()
+moviepolar + geom_histogram(data=movies[movies$Animation==1,], binwidth=1) + ggtitle("Animation movies per year") + coord_polar()
+moviepolar + geom_histogram(data=movies[movies$Comedy==1,], binwidth=1) + ggtitle("Comedy movies per year") + coord_polar()
+moviepolar + geom_histogram(data=movies[movies$Drama==1,], binwidth=1) + ggtitle("Dramatic movies per year") + coord_polar()
+moviepolar + geom_histogram(data=movies[movies$Documentary==1,], binwidth=1) + ggtitle("Documentaries per year") + coord_polar()
+```
+
+```{r}
+ggplot(movies, aes(x=year, y=rating, size = budget, position="jitter")) +
+  geom_point(data=movies[movies$Action==1,], color="blue", labels="Action") +
+#  geom_point(data=movies[movies$Animation==1,], color="green", label="Animation") +
+  geom_point(data=movies[movies$Comedy==1,], color="yellow", labels="Comedy") +
+  geom_point(data=movies[movies$Drama==1,], color="orange", labels="Drama") + 
+#  geom_point(data=movies[movies$Documentary==1,], color="purple") + 
+  geom_point(data=movies[movies$Romance==1,], color="red", labels="Romance")# +
+  #guide_legend(guide=labels)
+```
+
+
+```{r}
+movies250 <- movies[order(-movies[,"rating"]),][1:250,]
+ggplot(movies250, aes(year, rating, size=votes)) +geom_point(position = "jitter")
+```
+
