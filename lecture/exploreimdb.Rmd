@@ -9,7 +9,16 @@ output: html_document
 library(ggplot2)
 data(movies)
 head(movies)
+movies$genre <- as.factor(ifelse(movies$Action==1,"Action", 
+                            ifelse(movies$Comedy==1, "Comedy", 
+                                 ifelse(movies$Drama==1, "Drama",
+                                        ifelse(movies$Romance==1, "Romance",
+                                               ifelse(movies$Animation==1, "Animation",
+                                                      ifelse(movies$Documentary==1, "Documentary",
+                                                             "None"))))))
+                          )
 summary(movies)
+
 ```
 
 
@@ -18,41 +27,33 @@ imdbyear <- ggplot(movies, aes(x=year)) + geom_histogram() + ggtitle("Movies in 
 ```
 
 ```{r}
-imdbaction <- ggplot(movies[movies$Action==1,], aes(x=year)) + geom_histogram() + ggtitle("Actions movies per year")
-imdbaction
-
-movieplot <- ggplot() + aes(x=year)
-movieplot + geom_histogram(data=movies[movies$Action==1,], binwidth=1) + ggtitle("Action movies per year")
-movieplot + geom_histogram(data=movies[movies$Animation==1,], binwidth=1) + ggtitle("Animation movies per year")
-movieplot + geom_histogram(data=movies[movies$Comedy==1,], binwidth=1) + ggtitle("Comedy movies per year")
-movieplot + geom_histogram(data=movies[movies$Drama==1,], binwidth=1) + ggtitle("Dramatic movies per year")
-movieplot + geom_histogram(data=movies[movies$Documentary==1,], binwidth=1) + ggtitle("Documentaries per year")
-movieplot + geom_histogram(data=movies[movies$Romance==1,], binwidth=1) + ggtitle("Romantic movies per year")
-movieplot + geom_histogram(data=movies[movies$Short==1,], binwidth=1) + ggtitle("Shorts per year")
+moviesperyear <- ggplot(movies[movies$genre!="None",]) + aes(x=year) + geom_histogram(binwidth=1) + ggtitle("Movies per year") +facet_wrap(~genre,nrow = 2)
+moviesperyear
 ```
 ```{r}
-moviepolar <- ggplot() + aes(x=year)
-moviepolar + geom_histogram(data=movies[movies$Action==1,], binwidth=1) + ggtitle("Action movies per year") + coord_polar()
-moviepolar + geom_histogram(data=movies[movies$Animation==1,], binwidth=1) + ggtitle("Animation movies per year") + coord_polar()
-moviepolar + geom_histogram(data=movies[movies$Comedy==1,], binwidth=1) + ggtitle("Comedy movies per year") + coord_polar()
-moviepolar + geom_histogram(data=movies[movies$Drama==1,], binwidth=1) + ggtitle("Dramatic movies per year") + coord_polar()
-moviepolar + geom_histogram(data=movies[movies$Documentary==1,], binwidth=1) + ggtitle("Documentaries per year") + coord_polar()
-```
-
-```{r}
-ggplot(movies, aes(x=year, y=rating, size = budget, position="jitter")) +
-  geom_point(data=movies[movies$Action==1,], color="blue", labels="Action") +
-#  geom_point(data=movies[movies$Animation==1,], color="green", label="Animation") +
-  geom_point(data=movies[movies$Comedy==1,], color="yellow", labels="Comedy") +
-  geom_point(data=movies[movies$Drama==1,], color="orange", labels="Drama") + 
-#  geom_point(data=movies[movies$Documentary==1,], color="purple") + 
-  geom_point(data=movies[movies$Romance==1,], color="red", labels="Romance")# +
-  #guide_legend(guide=labels)
+moviepolar <- ggplot(movies[movies$genre!="None",]) + aes(x=year) + geom_histogram(binwidth=1) + ggtitle("Movies per year") + coord_polar() + facet_wrap(~genre, nrow=2) + xlim(1950, 2005)
+moviepolar
 ```
 
 
 ```{r}
-movies250 <- movies[order(-movies[,"rating"]),][1:250,]
-ggplot(movies250, aes(year, rating, size=votes)) +geom_point(position = "jitter")
+moviepoly <- ggplot(movies[movies$genre!="None",]) + aes(x=year, color= genre) + geom_freqpoly(width=0.8, binwidth=5 ) + xlim(1945,2005) + ggtitle("Movies per year") + xlab("Year") + ylab("Number of movies") 
+moviepoly
+```
+```{r}
+ggplot(movies, aes(x=year, y=rating, size = budget, color=genre, position="jitter")) + geom_point(alpha=0.5)
 ```
 
+
+```{r}
+moviesgenre <- movies[movies$genre!="None",]
+movies500 <- moviesgenre[order(-moviesgenre[,"rating"]),][1:500,]
+ggplot(movies500, aes(year, rating, size=votes, color=genre)) +geom_point(position="jitter", alpha=0.5) + theme_classic()
+```
+
+
+Questions:
+
+1. Is there a relationship between budget and ratings?  Look at only movies that have the budget given.  What could it be conditioned on?
+
+2. Is there a relationship between ratings and votes
