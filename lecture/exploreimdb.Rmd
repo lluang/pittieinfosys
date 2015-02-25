@@ -57,3 +57,14 @@ Questions:
 1. Is there a relationship between budget and ratings?  Look at only movies that have the budget given.  What could it be conditioned on?
 
 2. Is there a relationship between ratings and votes
+
+```{r}
+movies1970 <- movies[movies$year>=1970 & (movies$genre!="None"),]
+ggplot(movies1970) + aes(x=year, y=budget) + geom_point(position="jitter") + facet_wrap(~ genre)
+ggplot(movies1970) + aes(x=year, y=length) + geom_point(position="jitter") + facet_wrap(~ genre)
+
+
+
+# look at budget vs ratings
+ggplot(movies1970) + aes(x=year, y=budget) + geom_point(position="jitter") + facet_wrap(~ genre)
+```
