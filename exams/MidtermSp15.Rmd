@@ -1,0 +1,25 @@
+---
+title: "IE 0015 Spring 2015 Midterm"
+author: "Louis Luangkesorn"
+date: "02/26/2015"
+output: html_document
+---
+
+
+1.  CoNVO statement
+
+
+
+
+2.  Data Analysis
+
+
+http://flowingdata.com/2015/02/25/identifying-cheaters-in-test-results-a-simple-method/
+
+
+
+
+
+3.  USDA National Nutrient Database
+
+https://www.ars.usda.gov/Services/docs.htm?docid=8964
