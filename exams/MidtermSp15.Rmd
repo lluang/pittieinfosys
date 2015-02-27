@@ -8,7 +8,12 @@ output: html_document
 
 1.  CoNVO statement
 
+http://www.hhs.gov/healthcare/facts/blog/2015/02/open-enrollment-2015-re-enrollment.html
 
+http://www.nytimes.com/2015/02/27/upshot/high-rate-of-shopping-and-switching-in-obamacare-plans-is-a-good-sign.html?
+
+
+http://www.nytimes.com/2015/02/24/upshot/more-new-jobs-are-in-city-centers-while-employment-growth-shrinks-in-the-suburbs.html
 
 
 2.  Data Analysis
