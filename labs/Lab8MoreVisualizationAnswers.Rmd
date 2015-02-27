@@ -13,7 +13,8 @@ FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
 ```
 
 
-Do first babies arrive late?  A common belief is that first babies are more likely to be born late (compared to further babies).  We can examine this by looking at the distribution of the pregnancy duration for each of the first four live births (per mother).
+Do first babies arrive late?  A common belief is that first babies are more likely to be born late (compared to second or third babies).  We can examine this by looking at the distribution of the pregnancy duration for each of the first four live births (per mother).
+
 1.  (1 pt) Create a dataframe from the National Survey of Family Growth using only the first four births (`BIRTHORD`). (Note: after reading in the data, convert the BIRTHORD field into a factor)
 2.  (2 pt) Using ggplot or qplot (suggest ggplot), create a histogram that looks at the pregnancy duration (`PRGLNGTH`) for each live birth.  Look at only weeks 35 through 45.  Remember to offset your histogram bars by `origin=-0.5` so that the bar appears over the x-axis tick for the weeks.
 3.  (2 pt) Break up the histogram so you can see the pregnancy duration distribution for each of the first four births in a single plot.
