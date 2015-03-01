@@ -8,10 +8,16 @@ output: html_document
 
 1.  CoNVO statement
 
+Read the following article on the changing of healthcare enrollments under the Accountable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
+Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
+
 http://www.hhs.gov/healthcare/facts/blog/2015/02/open-enrollment-2015-re-enrollment.html
 
 http://www.nytimes.com/2015/02/27/upshot/high-rate-of-shopping-and-switching-in-obamacare-plans-is-a-good-sign.html?
 
+
+Read the article on the changing distribution of jobs. Take on the view of the Allegheny County planning measures to encourage economic development.
+Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
 
 http://www.nytimes.com/2015/02/24/upshot/more-new-jobs-are-in-city-centers-while-employment-growth-shrinks-in-the-suburbs.html
 
