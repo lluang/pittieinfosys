@@ -8,10 +8,9 @@ output: html_document
 
 1.  CoNVO statement
 
-Read the following article on the changing of healthcare enrollments under the Accountable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
+Read the article on the changing of healthcare enrollments under the Accountable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
 Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
 
-http://www.hhs.gov/healthcare/facts/blog/2015/02/open-enrollment-2015-re-enrollment.html
 
 http://www.nytimes.com/2015/02/27/upshot/high-rate-of-shopping-and-switching-in-obamacare-plans-is-a-good-sign.html?
 
@@ -34,3 +33,25 @@ http://flowingdata.com/2015/02/25/identifying-cheaters-in-test-results-a-simple-
 3.  USDA National Nutrient Database
 
 https://www.ars.usda.gov/Services/docs.htm?docid=8964
+
+
+Trainers at a fitness centers are interested in knowing the nutritional profiles of their clients. As part of their services, they ask new clients to keep a food diary with what they eat and the serving size.  So, the clients keep the following data for everything they eat during the week:
+
+1.  Client id
+2.  Dish
+3.  Serving size
+
+Using the USDA Nutrient Database (NDb), the trainers can then determine how many nutrients their clients have over the week.
+
+The fitness center is interested in looking at the distribution of weekly calorie intake of their new members to compare with longer term members. Write out the sequence of steps needed to use the USDA Nutrient Database and the food diary to determine how many calories each of their clients eat during the week.
+
+
+Dietitions working with a local grocery store are developing weekly menus for clients. The grocery is interested in the distribution of the weekly calorie content of the meals that their dietitians come up with.
+
+1.  Client id
+2.  Dish
+3.  Serving size
+
+Using the USDA Nutrient Database (NDb), the trainers can then determine how many nutrients their clients have over the week.
+
+Write out the sequence of steps needed to use the USDA Nutrient Database and the food diary to determine the distribution of number of calories being recommended by the grocery dietitions to their clients.
