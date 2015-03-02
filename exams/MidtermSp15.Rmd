@@ -24,9 +24,26 @@ http://www.nytimes.com/2015/02/24/upshot/more-new-jobs-are-in-city-centers-while
 2.  Data Analysis
 
 
-http://flowingdata.com/2015/02/25/identifying-cheaters-in-test-results-a-simple-method/
+```{r}
+library(RSQLite)
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acsh <- dbGetQuery(con, sql)
+sql <- "SELECT *      
+        FROM ss12ppa"
+acsp <- dbGetQuery(con, sql)
+```
+
+#  Get insurance status 
+#  Get income status
+#  Plots of income vs insurance type
+#  Plots of 
+
+```{r}
 
 
+```
 
 
 
@@ -55,3 +72,14 @@ Dietitions working with a local grocery store are developing weekly menus for cl
 Using the USDA Nutrient Database (NDb), the trainers can then determine how many nutrients their clients have over the week.
 
 Write out the sequence of steps needed to use the USDA Nutrient Database and the food diary to determine the distribution of number of calories being recommended by the grocery dietitions to their clients.
+
+
+Dietitions working at a nursing home are developing weekly menus for residents. The Nursing home are interested in the number and type of calories residents are taking in every week.  The weekly menus are stored in a table that for each dish and each meal contains the following:
+
+1.  Client id
+2.  Dish
+3.  Serving size
+
+Using the USDA Nutrient Database (NDb), the dietitions can then determine how many calories and if they come from protein, fat, or cholestorol.
+
+Write out the sequence of steps needed to use the USDA Nutrient Database and the weekly menus to determine the distribution of number of calories by type for their residents.
