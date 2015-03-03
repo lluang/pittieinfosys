@@ -35,7 +35,8 @@ Consider the goals of the ACHD.  Provide an interpretation of the data as given.
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(RSQLite)
-con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+#con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+con <- dbConnect(SQLite(), "../data/acs1year2012pa.sqlite")
 sql <- "SELECT *      
         FROM ss12hpa"
 acsh <- dbGetQuery(con, sql)
@@ -57,7 +58,7 @@ race <- as.data.frame(
                  c("2", "Black or African American"),
                  c("3", "American Indian"),
                  c("4", "Alaska Native"),
-                 c("5", "American Indian"),
+                 c("5", "American Indian Tribe Specified"),
                  c("6", "Asian"),
                  c("7", "Native Hawaiian and Other Pacific Islander"),
                  c("8", "Other Race"),
@@ -69,6 +70,7 @@ getrace <- function(x){
   race
 }
 hincins$race <- sapply(hincins$"i. rac1p", getrace)
+hincins$race <- factor(x = hincins$race, levels=c("White", "Black or African American", "American Indian", "Asian"))
 getinsurance <- function(hdata){
   ifelse(hdata["onlyprivate"]==1, "private", 
          ifelse(hdata["onlypublic"]==1, "public",
@@ -80,8 +82,9 @@ hincins$instype <-  factor(ifelse(hincins["onlyprivate"]==1, "private",
 ```
 
 ```{r, echo=FALSE, warning=FALSE}
-ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1,]) + aes(x=HINCP, linetype = instype) + geom_freqpoly(binwidth=20000) + xlab("Household Income") + xlim(0, 200000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race")
+ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$HINCP<150000 & hincins$"i. rac1p" %in% c('1', '2', '6', '9', '8'),]) + aes(x=HINCP, linetype = instype, shape=instype, y=..density..) + geom_freqpoly(binwidth=10000) + xlab("Household Income") + xlim(0, 150000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race") + ylab("Probability density")
 ```
+
 3.  USDA National Nutrient Database
 
 https://www.ars.usda.gov/Services/docs.htm?docid=8964
