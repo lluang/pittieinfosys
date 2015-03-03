@@ -24,6 +24,7 @@ http://www.nytimes.com/2015/02/27/upshot/high-rate-of-shopping-and-switching-in-
 library(ggplot2)
 library(RSQLite)
 con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+#con <- dbConnect(SQLite(), "../data/acs1year2012pa.sqlite")
 sql <- "SELECT *      
         FROM ss12hpa"
 acsh <- dbGetQuery(con, sql)
@@ -68,7 +69,7 @@ hincins$instype <-  factor(ifelse(hincins["onlyprivate"]==1, "private",
 ```
 
 ```{r, echo=FALSE, warning=FALSE}
-ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$"i. rac1p" %in% c('1', '2', '6', '9'),]) + aes(x=HINCP, linetype = instype) + geom_freqpoly(binwidth=20000) + xlab("Household Income") + xlim(0, 200000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race")
+ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$"i. rac1p" %in% c('1', '2', '6', '9'),]) + aes(x=HINCP, linetype = instype) + geom_freqpoly(binwidth=20000) + xlab("Household Income") + xlim(0, 150000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race")
 ```
 
 The Allegheny County Health Department (ACHD) is interested in the racial and income levels of people who are without health insurance to aid in targeting programs to people without regular access to health care. The plots in the figure above are derived from the American Community Survey and looks at the distribution of income for each type of insurance, separated by race (population of other races are negligible within Pittsburgh). The four types of insurance are:
