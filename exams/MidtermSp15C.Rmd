@@ -1,0 +1,94 @@
+---
+title: "IE 0015 Information Systems"
+author: "Spring 2015 Midterm"
+date: "C"
+output: pdf_document
+---
+
+
+
+1.  CoNVO statement
+
+Read the article on the changing of healthcare enrollments under the Accountable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
+Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
+
+
+http://www.nytimes.com/2015/02/27/upshot/high-rate-of-shopping-and-switching-in-obamacare-plans-is-a-good-sign.html?
+
+
+2.  Data Analysis
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(RSQLite)
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acsh <- dbGetQuery(con, sql)
+sql <- "SELECT *      
+        FROM ss12ppa"
+acsp <- dbGetQuery(con, sql)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+sql = 'SELECT i.SERIALNO, h.HINCP, h.FINCP, i. rac1p, i.publicins, i.privateins, (i.publicins and i.privateins) as bothins, (not i.publicins and not i.privateins) as noins, (i.publicins and not i.privateins) as onlypublic, (i.privateins and not i.publicins) as onlyprivate
+FROM insurancetype as i join ss12hpa as h
+ON i.SERIALNO=h.SERIALNO
+WHERE SPORDER="01"
+'
+hincins <- dbGetQuery(con, sql)
+hincins$HINCP <- as.numeric(hincins$h.HINCP)
+race <- as.data.frame(
+           rbind(c("1", "White"),
+                 c("2", "Black or African American"),
+                 c("3", "American Indian"),
+                 c("4", "Alaska Native"),
+                 c("5", "American Indian"),
+                 c("6", "Asian"),
+                 c("7", "Native Hawaiian and Other Pacific Islander"),
+                 c("8", "Other Race"),
+                 c("9", "Two or More Races"))
+           )
+colnames(race) <- c("key", "race")
+getrace <- function(x){
+  race <- race[race==x,]$race
+  race
+}
+hincins$race <- sapply(hincins$"i. rac1p", getrace)
+getinsurance <- function(hdata){
+  ifelse(hdata["onlyprivate"]==1, "private", 
+         ifelse(hdata["onlypublic"]==1, "public",
+                ifelse(hdata["bothins"]==1, "both", "None")))
+}
+hincins$instype <-  factor(ifelse(hincins["onlyprivate"]==1, "private", 
+                     ifelse(hincins["onlypublic"]==1, "public",
+                            ifelse(hincins["bothins"]==1, "both", "None"))))
+```
+
+```{r, echo=FALSE, warning=FALSE}
+ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$"i. rac1p" %in% c('1', '2', '6', '9'),]) + aes(x=HINCP, linetype = instype) + geom_freqpoly(binwidth=20000) + xlab("Household Income") + xlim(0, 200000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race")
+```
+
+The Allegheny County Health Department (ACHD) is interested in the racial and income levels of people who are without health insurance to aid in targeting programs to people without regular access to health care. The plots in the figure above are derived from the American Community Survey and looks at the distribution of income for each type of insurance, separated by race (population of other races are negligible within Pittsburgh). The four types of insurance are:
+
+  1. Private (self-paid, employer paid, union paid)
+  2. Public (VA, Tricare, Medicare/Medicare, Tribal)
+  3. Both (combination of public and private insurance)
+  4. Neither (no insurance coverage)
+  
+Consider the goals of the ACHD.  Provide an interpretation of the data as given.  What course of action does it suggest? Sketch an alternative data analysis that may better help the ACHD achieve its goal.
+
+
+3.  USDA National Nutrient Database
+
+Dietitians working at a nursing home are developing weekly menus for residents. The Nursing home are interested in the number and type of calories residents are taking in every week.  The weekly menus are stored in a table that for each dish and each meal contains the following:
+
+1.  Client id
+2.  Dish
+3.  Serving size
+
+Using the USDA Nutrient Database (NDb), the dietitians can then determine how many calories and if they come from protein, fat, or cholesterol.
+
+Write out the sequence of steps needed to use the USDA Nutrient Database and the weekly menus to determine the distribution of number of calories by type for their residents.

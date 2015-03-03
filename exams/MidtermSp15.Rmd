@@ -23,8 +23,17 @@ http://www.nytimes.com/2015/02/24/upshot/more-new-jobs-are-in-city-centers-while
 
 2.  Data Analysis
 
+The Allegheny County Health Department (ACHD) is interested in the racial and income levels of people who are without health insurance to aid in targetting programs to people without regular access to health care. The plot here is derived from the American Community Survey and looks at the distribution of income for each type of insurance, separated by race. The four types of insurance are:
 
-```{r}
+  1. Private (self-paid, employer paid, union paid)
+  2. Public (VA, Tricare, Medicare/Medicare, Tribal)
+  3. Both (combination of public and private insurance)
+  4. Neither (no insurance coverage)
+  
+Consider the goals of the ACHD.  Provide an interpretation of the data as given.  What course of action does it suggest? Sketch an alternative data analysis that may better help the ACHD achieve its goal.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(ggplot2)
 library(RSQLite)
 con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
 sql <- "SELECT *      
@@ -35,18 +44,44 @@ sql <- "SELECT *
 acsp <- dbGetQuery(con, sql)
 ```
 
-#  Get insurance status 
-#  Get income status
-#  Plots of income vs insurance type
-#  Plots of 
-
-```{r}
-
-
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+sql = 'SELECT i.SERIALNO, h.HINCP, h.FINCP, i. rac1p, i.publicins, i.privateins, (i.publicins and i.privateins) as bothins, (not i.publicins and not i.privateins) as noins, (i.publicins and not i.privateins) as onlypublic, (i.privateins and not i.publicins) as onlyprivate
+FROM insurancetype as i join ss12hpa as h
+ON i.SERIALNO=h.SERIALNO
+WHERE SPORDER="01"
+'
+hincins <- dbGetQuery(con, sql)
+hincins$HINCP <- as.numeric(hincins$h.HINCP)
+race <- as.data.frame(
+           rbind(c("1", "White"),
+                 c("2", "Black or African American"),
+                 c("3", "American Indian"),
+                 c("4", "Alaska Native"),
+                 c("5", "American Indian"),
+                 c("6", "Asian"),
+                 c("7", "Native Hawaiian and Other Pacific Islander"),
+                 c("8", "Other Race"),
+                 c("9", "Two or More Races"))
+           )
+colnames(race) <- c("key", "race")
+getrace <- function(x){
+  race <- race[race==x,]$race
+  race
+}
+hincins$race <- sapply(hincins$"i. rac1p", getrace)
+getinsurance <- function(hdata){
+  ifelse(hdata["onlyprivate"]==1, "private", 
+         ifelse(hdata["onlypublic"]==1, "public",
+                ifelse(hdata["bothins"]==1, "both", "None")))
+}
+hincins$instype <-  factor(ifelse(hincins["onlyprivate"]==1, "private", 
+                     ifelse(hincins["onlypublic"]==1, "public",
+                            ifelse(hincins["bothins"]==1, "both", "None"))))
 ```
 
-
-
+```{r, echo=FALSE, warning=FALSE}
+ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1,]) + aes(x=HINCP, linetype = instype) + geom_freqpoly(binwidth=20000) + xlab("Household Income") + xlim(0, 200000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race")
+```
 3.  USDA National Nutrient Database
 
 https://www.ars.usda.gov/Services/docs.htm?docid=8964
