@@ -1,19 +1,12 @@
 ---
-title: "IE 0015 Spring 2015 Midterm"
-author: "Louis Luangkesorn"
-date: "02/26/2015"
+title: "IE 0015"
+author: "Spring 2015 Midterm"
+date: "A"
 output: html_document
 ---
 
 
 1.  CoNVO statement
-
-Read the article on the changing of healthcare enrollments under the Accountable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
-Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
-
-
-http://www.nytimes.com/2015/02/27/upshot/high-rate-of-shopping-and-switching-in-obamacare-plans-is-a-good-sign.html?
-
 
 Read the article on the changing distribution of jobs. Take on the view of the Allegheny County planning measures to encourage economic development.
 Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
@@ -23,14 +16,14 @@ http://www.nytimes.com/2015/02/24/upshot/more-new-jobs-are-in-city-centers-while
 
 2.  Data Analysis
 
-The Allegheny County Health Department (ACHD) is interested in the racial and income levels of people who are without health insurance to aid in targetting programs to people without regular access to health care. The plot here is derived from the American Community Survey and looks at the distribution of income for each type of insurance, separated by race. The four types of insurance are:
+The Pennsylvania Department of Health (DoH) is interested in the racial and income levels of people who are without health insurance to aid in targetting programs to people without regular access to health care. The plot here is derived from the American Community Survey across Pennsylvania and looks at the distribution of income for each type of insurance, separated by race. The four types of insurance are:
 
   1. Private (self-paid, employer paid, union paid)
   2. Public (VA, Tricare, Medicare/Medicare, Tribal)
   3. Both (combination of public and private insurance)
   4. Neither (no insurance coverage)
   
-Consider the goals of the ACHD.  Provide an interpretation of the data as given.  What course of action does it suggest? Sketch an alternative data analysis that may better help the ACHD achieve its goal.
+Consider the goals of the DoH.  Provide an interpretation of the data as given.  What course of action does it suggest? Sketch an alternative data analysis that may better help the DoH achieve its goal.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(ggplot2)
@@ -45,6 +38,8 @@ sql <- "SELECT *
 acsp <- dbGetQuery(con, sql)
 ```
 
+
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 sql = 'SELECT i.SERIALNO, h.HINCP, h.FINCP, i. rac1p, i.publicins, i.privateins, (i.publicins and i.privateins) as bothins, (not i.publicins and not i.privateins) as noins, (i.publicins and not i.privateins) as onlypublic, (i.privateins and not i.publicins) as onlyprivate
 FROM insurancetype as i join ss12hpa as h
@@ -58,7 +53,7 @@ race <- as.data.frame(
                  c("2", "Black or African American"),
                  c("3", "American Indian"),
                  c("4", "Alaska Native"),
-                 c("5", "American Indian Tribe Specified"),
+                 c("5", "American Indian"),
                  c("6", "Asian"),
                  c("7", "Native Hawaiian and Other Pacific Islander"),
                  c("8", "Other Race"),
@@ -70,7 +65,7 @@ getrace <- function(x){
   race
 }
 hincins$race <- sapply(hincins$"i. rac1p", getrace)
-hincins$race <- factor(x = hincins$race, levels=c("White", "Black or African American", "American Indian", "Asian"))
+hincins$race <- factor(hincins$race, levels=c("White","Black or African American", "Asian", "Two or More Races"), ordered = TRUE)
 getinsurance <- function(hdata){
   ifelse(hdata["onlyprivate"]==1, "private", 
          ifelse(hdata["onlypublic"]==1, "public",
@@ -99,25 +94,3 @@ Trainers at a fitness centers are interested in knowing the nutritional profiles
 Using the USDA Nutrient Database (NDb), the trainers can then determine how many nutrients their clients have over the week.
 
 The fitness center is interested in looking at the distribution of weekly calorie intake of their new members to compare with longer term members. Write out the sequence of steps needed to use the USDA Nutrient Database and the food diary to determine how many calories each of their clients eat during the week.
-
-
-Dietitions working with a local grocery store are developing weekly menus for clients. The grocery is interested in the distribution of the weekly calorie content of the meals that their dietitians come up with.
-
-1.  Client id
-2.  Dish
-3.  Serving size
-
-Using the USDA Nutrient Database (NDb), the trainers can then determine how many nutrients their clients have over the week.
-
-Write out the sequence of steps needed to use the USDA Nutrient Database and the food diary to determine the distribution of number of calories being recommended by the grocery dietitions to their clients.
-
-
-Dietitions working at a nursing home are developing weekly menus for residents. The Nursing home are interested in the number and type of calories residents are taking in every week.  The weekly menus are stored in a table that for each dish and each meal contains the following:
-
-1.  Client id
-2.  Dish
-3.  Serving size
-
-Using the USDA Nutrient Database (NDb), the dietitions can then determine how many calories and if they come from protein, fat, or cholestorol.
-
-Write out the sequence of steps needed to use the USDA Nutrient Database and the weekly menus to determine the distribution of number of calories by type for their residents.
