@@ -1,0 +1,84 @@
+---
+title: "IE 0015 Information Systems"
+author: "Spring 2015 Midterm"
+date: "D"
+output: pdf_document
+---
+
+
+
+1.  CoNVO statement
+
+Read the article on the changing of healthcare enrollments under the Affordable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
+Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
+
+2.  Data Analysis
+
+The Pennsylvania Department of Health (DoH) is interested in the racial and income levels of people who are without health insurance to aid in targeting programs to people without regular access to health care. The plot here is derived from the American Community Survey across Pennsylvania and looks at the distribution of income for each type of insurance, separated by race. The four types of insurance are:
+
+  1. Private (self-paid, employer paid, union paid)
+  2. Public (VA, Tricare, Medicare/Medicare, Tribal)
+  3. Both (combination of public and private insurance)
+  4. Neither (no insurance coverage)
+  
+Consider the goals of the DoH.  
+
+i.  Provide an interpretation of the data as given. 
+ii. What course of action does it suggest? 
+iii. Sketch an alternative data analysis that may better help the DoH achieve its goal.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(RSQLite)
+library(plyr)
+#con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+con <- dbConnect(SQLite(), "../data/acs1year2012pa.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acsh <- dbGetQuery(con, sql)
+sql <- "SELECT *      
+        FROM ss12ppa"
+acsp <- dbGetQuery(con, sql)
+```
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+sql = 'SELECT i.SERIALNO, h.HINCP, h.FINCP, i. rac1p, i.publicins, i.privateins, (i.publicins and i.privateins) as bothins, (not i.publicins and not i.privateins) as noins, (i.publicins and not i.privateins) as onlypublic, (i.privateins and not i.publicins) as onlyprivate
+FROM insurancetype as i join ss12hpa as h
+ON i.SERIALNO=h.SERIALNO
+WHERE SPORDER="01"
+'
+hincins <- dbGetQuery(con, sql)
+hincins$HINCP <- as.numeric(hincins$h.HINCP)
+
+
+hincins$race <- mapvalues(factor(hincins$"i. rac1p", ordered=TRUE), from = c(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                            to= c("White", "Black or African American", 
+                                  "American Indian", "Alaska Native", 
+                                  "American Indian", "Asian", 
+                                  "Native Hawaiian and Other Pacific Islander", 
+                                  "Other Race", "Two or More Races"),
+                            warn_missing=FALSE)
+
+hincins$instype <-  factor(ifelse(hincins["onlyprivate"]==1, "private", 
+                     ifelse(hincins["onlypublic"]==1, "public",
+                            ifelse(hincins["bothins"]==1, "both", "None"))))
+```
+```{r, echo=FALSE, warning=FALSE}
+ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$HINCP<150000 & hincins$"i. rac1p" %in% c('1', '2', '6', '9'),]) + aes(x=HINCP, linetype = instype, shape=instype, y=..density..) + geom_freqpoly(binwidth=10000) + xlab("Household Income") + xlim(0, 150000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race") + ylab("Probability density") + scale_linetype_manual(name = "Insurance type",                                                                                                                                                                                                                                                                                                                                                                                                                     
+                          breaks = c("private", "both", "public", "None"),
+                          labels = c("Private", "Both", "Public", "None"),
+                          values = c("dashed", "solid", "dotted", "dotdash"))
+```
+
+
+3.  USDA National Nutrient Database
+
+Dietitians working at a nursing home are developing weekly menus for residents. The Nursing home is interested in the number and type of calories residents are taking in every week.  The weekly menus are stored in a dietitian table with the fields. One line is in the table for each 
+
+1.  Client id
+2.  Dish id
+3.  Dish
+4.  Serving size
+
+The dietitians can link this table to the USDA Nutrient Database (NDb) through dish id,  determine how many calories and if they come from protein, fat, or cholesterol.
+
+Write out the sequence of steps needed to use the USDA Nutrient Database and the weekly menus to determine the distribution of number of calories per week by source (protein, fat, cholesterol) for their residents.
