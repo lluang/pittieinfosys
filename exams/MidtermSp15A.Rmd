@@ -2,13 +2,13 @@
 title: "IE 0015"
 author: "Spring 2015 Midterm"
 date: "A"
-output: html_document
+output: pdf_document
 ---
 
 
 1.  CoNVO statement
 
-Read the article on the changing distribution of jobs. Take on the view of the Allegheny County planning measures to encourage economic development.
+Read the article on the changing distribution of jobs. Take on the view of the Allegheny County government planning measures to encourage economic development in the Pittsburgh region.
 Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
 
 http://www.nytimes.com/2015/02/24/upshot/more-new-jobs-are-in-city-centers-while-employment-growth-shrinks-in-the-suburbs.html
@@ -77,7 +77,10 @@ hincins$instype <-  factor(ifelse(hincins["onlyprivate"]==1, "private",
 ```
 
 ```{r, echo=FALSE, warning=FALSE}
-ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$HINCP<150000 & hincins$"i. rac1p" %in% c('1', '2', '6', '9'),]) + aes(x=HINCP, linetype = instype, shape=instype, y=..density..) + geom_freqpoly(binwidth=10000) + xlab("Household Income") + xlim(0, 150000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race") + ylab("Probability density")
+ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$HINCP<150000 & hincins$"i. rac1p" %in% c('1', '2', '6', '9'),]) + aes(x=HINCP, linetype = instype, shape=instype, y=..density..) + geom_freqpoly(binwidth=10000) + xlab("Household Income") + xlim(0, 150000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race") + ylab("Probability density") + scale_linetype_manual(name = "Insurance type",                                                                                                                                                                                                                                                                                                                                                                                                                     
+                          breaks = c("private", "both", "public", "None"),
+                          labels = c("Private", "Both", "Public", "None"),
+                          values = c("dashed", "solid", "dotted", "dotdash"))
 ```
 
 3.  USDA National Nutrient Database
