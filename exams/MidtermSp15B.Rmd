@@ -1,8 +1,8 @@
 ---
-title: "IE 0015 "
+title: 'IE 0015 '
 author: "Spring 2015 Midterm"
 date: "B"
-output: html_document
+output: pdf_document
 ---
 
 
@@ -11,83 +11,56 @@ output: html_document
 Read the article on the changing of healthcare enrollments under the Accountable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
 Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
 
-
-http://www.nytimes.com/2015/02/27/upshot/high-rate-of-shopping-and-switching-in-obamacare-plans-is-a-good-sign.html?
-
-
-
 2.  Data Analysis
-
-The Red Yard is a home improvement megastore. Its primary customers are Do-It-Yourself homeowners and home improvement contractors.  It is considering moving into Pennsylvania.  The following plot looks at how long people have been at their current residence, broken out by type of residence (rental, own with mortgage, owned free and clear (no mortgage), and occupied without payment (e.g. squatter)). A total of 797 households had this information.
-
-Consider the goals of The Red Yard.  Provide an interpretation of the data as given.  What course of action does it suggest? Sketch an alternative data analysis that may better help The Red Yard decide if they should enter Pennsylvania.
-
-
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(RSQLite)
-con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
-#con <- dbConnect(SQLite(), "../data/acs1year2012pa.sqlite")
+library(plyr)
+#con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+con <- dbConnect(SQLite(), "../data/acs1year2012pa.sqlite")
 sql <- "SELECT *      
         FROM ss12hpa"
 acsh <- dbGetQuery(con, sql)
 sql <- "SELECT *      
         FROM ss12ppa"
-acsp <- dbGetQuery(con, sql)
+#acsp <- dbGetQuery(con, sql)
 ```
-
-
-
 ```{r, echo=FALSE, warning=FALSE}
 acsh$BLD <- factor(acsh$BLD)
 acsh$VACS <- factor(acsh$VACS)
 acsh$MV <- factor(acsh$MV)
+acsh$TEN <- factor(acsh$TEN)
 
-timemoved <- as.data.frame(
-           rbind(c("", "vacant"),
-                 c(1, "< 1yr"),
-                 c(2, "1-2yr"),
-                 c(3, "2-4 yrs"),
-                 c(4, "5-9 yrs"),
-                 c(5, "10-19 yrs"),
-                 c(6, "20-29 yrs"),
-                 c(7, ">30 yrs"))
-           )
-colnames(timemoved) <- c("key", "timemoved")
-gettimemoved <- function(x){
-  timemoved <- timemoved[timemoved==as.character(x),]$timemoved
-  timemoved
-} 
-acsh$MV <- factor(acsh$MV, ordered=TRUE)
-acsh$timemoved <- sapply(acsh$MV, gettimemoved)
-acsh$timemoved <- factor(acsh$timemoved, ordered = TRUE,
-                         levels = c("< 1yr", "1-2yr", "2-4 yrs", "5-9 yrs", "10-19 yrs", "20-29 yrs", ">30 yrs"))
+acsh$timemoved <- mapvalues(acsh$MV, from = c("", 1, 2, 3, 4, 5, 6, 7),
+                            to= c("vacant", "< 1yr", "1-2yr", "2-4 yrs", "5-9 yrs", 
+                                  "10-19 yrs", "20-29 yrs", ">30 yrs"),
+                            warn_missing=FALSE)
 
-tenure <- as.data.frame(
-           rbind(c("","NA"),
-                 c("b","N/A  (GQ/vacant)"),
-                 c("1", "Owned with mortgage or loan"),
-                 c("2","Owned free and clear"),
-                 c("3","Rented"),
-                 c("4","Occupied without payment of rent"))
-           )
-colnames(tenure) <- c("key", "description")
-gettenure <- function(x){
-description <- tenure[tenure$key==x,]$description
-description
-}
-acsh$tenurevalue <- sapply(acsh$TEN, gettenure)
+acsh$tenurevalues <- mapvalues(acsh$TEN, from = c("", 1, 2, 3, 4), 
+          to = c(NA, 
+                 "Owned with mortgage or loan",
+                 "Owned free and clear",
+                 "Rented",
+                 "Occupied without payment of rent"),
+          warn_missing=FALSE)
 
-ggplot(acsh[acsh$tenurevalue!='NA',]) + aes(x=timemoved)   + facet_wrap(~tenurevalue) + xlab("Time in current residence") + geom_histogram()
+ggplot(acsh[!is.na(acsh$tenurevalue),]) + aes(x=timemoved)   + facet_wrap(~tenurevalues) + xlab("Time in current residence") + geom_histogram() 
 ```
 
+The Red Yard is a home improvement mega-store. Its primary customers are Do-It-Yourself homeowners and home improvement contractors.  It is considering moving into Pennsylvania.  The following plot looks at how long people have been at their current residence, broken out by type of residence (rental, own with mortgage, owned free and clear (no mortgage), and occupied without payment (e.g. squatter)). A total of 50980 households had this information.
+
+Consider the goals of The Red Yard.
+
+1. Provide an interpretation of the data as given. 
+ii. What is one possible course of action that it suggests? 
+iii. Sketch an alternative data analysis that may better help The Red Yard decide if they should enter Pennsylvania.
 
 
 
 3.  USDA National Nutrient Database
 
-Dietitions working with a local grocery store are developing weekly menus for clients. The grocery is interested in the distribution of the weekly calorie content of the meals that their dietitians come up with.
+Dietitians working with a local grocery store are developing weekly menus for clients. The grocery is interested in the distribution of the weekly calorie content of the meals that their dietitians come up with.
 
 1.  Client id
 2.  Dish
@@ -95,4 +68,4 @@ Dietitions working with a local grocery store are developing weekly menus for cl
 
 Using the USDA Nutrient Database (NDb), the trainers can then determine how many nutrients their clients have over the week.
 
-Write out the sequence of steps needed to use the USDA Nutrient Database and the food diary to determine the distribution of number of calories being recommended by the grocery dietitions to their clients.
+Write out the sequence of steps needed to use the USDA Nutrient Database and the food diary to determine the distribution of number of calories being recommended by the grocery dietitians to their clients.
