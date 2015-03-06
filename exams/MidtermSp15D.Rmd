@@ -36,9 +36,6 @@ con <- dbConnect(SQLite(), "../data/acs1year2012pa.sqlite")
 sql <- "SELECT *      
         FROM ss12hpa"
 acsh <- dbGetQuery(con, sql)
-sql <- "SELECT *      
-        FROM ss12ppa"
-acsp <- dbGetQuery(con, sql)
 ```
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 sql = 'SELECT i.SERIALNO, h.HINCP, h.FINCP, i. rac1p, i.publicins, i.privateins, (i.publicins and i.privateins) as bothins, (not i.publicins and not i.privateins) as noins, (i.publicins and not i.privateins) as onlypublic, (i.privateins and not i.publicins) as onlyprivate
@@ -68,7 +65,6 @@ ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$HINCP<150000 & hi
                           labels = c("Private", "Both", "Public", "None"),
                           values = c("dashed", "solid", "dotted", "dotdash"))
 ```
-
 
 3.  USDA National Nutrient Database
 
