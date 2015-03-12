@@ -1,0 +1,140 @@
+Lecture 10: Data Aggregation
+========================================================
+author: IE 0015 Spring 2015
+date: March 2015
+
+Aggregating data
+================
+
+-  We often want to look at summarized data across groups, not individual data points.
+-  e.g. count instances, summations
+-  `table` function accomplishes this goal.
+-  `apply` family of functions can be use dto work on arrays or lists.
+
+table
+=====
+
+-  Creates an array of values and counts
+-  Can be turned into a `data.frame`
+
+Use ACS as an example
+============
+
+```{r readingsqlite}
+library(RSQLite)
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acsh <- dbGetQuery(con, sql)
+sql <- "SELECT *      
+        FROM ss12ppa"
+acsp <- dbGetQuery(con, sql)
+
+```
+
+table summaries
+=================
+
+- Look at travel arrangements
+
+```{r}
+carpool <- acsp$JWRIP
+cptable <- table(carpool)
+cptable
+```
+
+Or make the table summary a data frame
+==================
+
+```{r}
+as.data.frame(cptable)
+```
+
+
+Diversion:  recode variables
+=======================
+
+- In the ACS data, many of the variables are coded as integers ("1", "2", "3", etc)
+- We would want to recode them with their values in english
+- Before, we used a data frame that contained the mapping.
+- Better is to use **map** that applies a function over the entire dataset
+
+
+```{r}
+library(plyr)
+acsp$worktransportation<- mapvalues(acsp$JWTR, 
+            from = c("bb", 1, 2, 3, 4, 5, 6, 
+                     7, 8, 9, 10, 11, 12), 
+            to = c(NA, 
+                    "Car, truck, or van", "Bus or trolley bus",
+                    "Streetcar", "Subway",
+                    "Railroad", "Ferryboat",
+                    "Taxicab", "Motorcycle",
+                    "Bicycle", "Walked",
+                    "Worked at home", "Other"),)
+commutetable <- table(acsp$worktransportation)
+as.data.frame(commutetable)
+```
+
+
+
+
+Thinking about aggregation
+========================
+
+-  What are the groups that are useful to aggregate on?
+-  What is the nature o fdata to be operated on?
+-  What is the desired end result.
+
+
+
+Groups defined as list elements
+==============
+
+-  sapply
+- lapply
+
+Groups defined by rows or colums of a matrix
+===============
+
+-  apply
+
+
+Groups based on one or more group variables
+==============
+
+- `aggregate`
+- `tapply`
+
+Mapping a function to a vector or list
+====================
+
+- `lapply`
+-  `sapply`
+
+
+Mapping a function to a matrix or array
+=====================
+
+-  `apply`
+
+
+Mapping a function based on groups
+=====
+
+-  `aggregate`  for data frames
+-  `tapply` for vectors
+
+
+
+reshape package
+=====
+
+- similar to pivot tables
+- create  *melted* version of data
+- *cast* into an object with the desired orientation.
+
+
+Loops in R and vectorization
+====================
+
