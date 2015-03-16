@@ -9,7 +9,19 @@ Aggregating data
 -  We often want to look at summarized data across groups, not individual data points.
 -  e.g. count instances, summations
 -  `table` function accomplishes this goal.
--  `apply` family of functions can be use dto work on arrays or lists.
+-  `apply` family of functions can be used to work on arrays or lists.
+
+Issues
+======
+
+-  Aggregating data hides information in the data, so typically do this after you have determined what aggregation is useful.
+-  We aggregate to reduce the number of dimensions being presented, so do this because there are more dimensions to be analyzed than can be understood easily.
+-  Aggregation is done because you have something that needs to be communicated and you are attempting to remove extra detail.  Make sure that what is removed is extra.
+
+>  Everything should be a simple as possible, but no simpler.
+>       - Einstein (paraphrase)
+
+
 
 table
 =====
@@ -29,7 +41,6 @@ acsh <- dbGetQuery(con, sql)
 sql <- "SELECT *      
         FROM ss12ppa"
 acsp <- dbGetQuery(con, sql)
-
 ```
 
 table summaries
@@ -91,7 +102,7 @@ Thinking about aggregation
 Groups defined as list elements
 ==============
 
--  sapply
+- sapply
 - lapply
 
 Groups defined by rows or colums of a matrix
@@ -109,14 +120,51 @@ Groups based on one or more group variables
 Mapping a function to a vector or list
 ====================
 
-- `lapply`
--  `sapply`
+- `lapply` - Returns output as a list
+-  `sapply` - returns output as a vector or matrix (if possible)
+-  Note: returning a vector implies that order is important, e.g. the results are matched to another vector.
 
+Example for a mapping
+=============
+
+-  Break out individual words for each sentence.
+-  Unknown number of words in each sentence, so use a list for each sentence.
+
+```{r}
+text = c("R is a free environment for statistical analysis",
+ "It compiles and runs on a variety of platforms",
+ "Visit the R home page for more information")
+result = strsplit(text, " ")
+result
+typeof(result)
+```
+
+Now, take the list and get the length of each sentence
+==================
+
+- Because we want the length to be associated with the sentence, use `sapply`
+
+```{r}
+nwords = sapply(result, length)
+nwords
+```
 
 Mapping a function to a matrix or array
 =====================
 
--  `apply`
+-  Because we often do anaylsis based on each element in a data frame, we often use `apply` on data frames.
+-  Income per family member
+
+```{r}
+familypercapita <- function(acs){
+  percapita <- as.numeric(acs[["HINCP"]])/as.numeric(acs[["NP"]])
+}
+acsh$FINCP <- as.numeric(acsh$FINCP)
+acsh$HINCP <- as.numeric(acsh$HINCP)
+acsh$NP <- as.integer(acsh$NP)
+acsh$percapita <- apply(acsh, 1, familypercapita)
+summary(acsh$percapita)
+```
 
 
 Mapping a function based on groups
