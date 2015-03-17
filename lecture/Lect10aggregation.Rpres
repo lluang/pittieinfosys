@@ -74,10 +74,11 @@ Diversion:  recode variables
 ```{r}
 library(plyr)
 acsp$worktransportation<- mapvalues(acsp$JWTR, 
-            from = c("bb", 1, 2, 3, 4, 5, 6, 
-                     7, 8, 9, 10, 11, 12), 
+            from = c("bb", "01", "02", "03", "04", "05", "06",
+                     "07", "08", "09", "10", "11", "12"), 
             to = c(NA, 
-                    "Car, truck, or van", "Bus or trolley bus",
+                    "Car, truck, or van",
+                    "Bus or trolley bus",
                     "Streetcar", "Subway",
                     "Railroad", "Ferryboat",
                     "Taxicab", "Motorcycle",
@@ -147,12 +148,15 @@ acsh$tenurevalues <- mapvalues(acsh$TEN, from = c("", 1, 2, 3, 4),
                  "Rented",
                  "Occupied without payment of rent"),
           warn_missing=FALSE)
-acsh$timemoved <- mapvalues(acsh$MV, from = c("", 1, 2, 3, 4, 5, 6, 7),
-                            to= c("vacant", "< 1yr", "1-2yr", "2-4 yrs", "5-9 yrs", 
-                                  "10-19 yrs", "20-29 yrs", ">30 yrs"),
-                            warn_missing=FALSE)
 acsh$watercost <- as.numeric(acsh$WATP)
-by(acsh[,c('HINCP', 'NP', 'watercost')], acsh$tenurevalues, colMeans)
+acsh$householdincome <- as.numeric(acsh$HINCP)
+acsh$numpeople <- as.numeric(acsh$NP)
+```
+
+Results of grouping by a factor
+=====
+```{r}
+by(acsh[,c('householdincome', 'numpeople', 'watercost')], acsh$tenurevalues, colMeans)
 ```
 
 lapply
@@ -297,7 +301,40 @@ reshape package
 - create  *melted* version of data
 - *cast* into an object with the desired orientation.
 
+Wide data vs long data
+======
 
-Loops in R and vectorization
-====================
+- There are two ways of storing data about an observation
+  -  *wide* - one row for each entity id, with a column with data representing each feature of the entity
+  -  *long* - one row for each observation, with columns for entity id, feature observed, and the data observerd.
+-  To convert from *wide* to *long*, use `melt`.
+-  To convert from *long* to *wide*, use `cast`.
+
+Airquality
+============
+```{r}
+library(reshape)
+data(diamonds)
+head(diamonds)
+```
+
+wide to long
+======
+```{r}
+dl <- reshape::melt(diamonds)
+head(dl)
+```
+
+long to wide
+=====
+-  To convert from long to wide, use `cast`
+-  Need to identify the dataset
+-  Formula that represent the variables that appears in the columns (a factor) and in the rows (`variable` to indicate all)
+-  And a summary function (default `count`)
+
+```{r}
+dw <- reshape::cast(dl, color + cut ~ variable, mean)
+head(dw)
+```
+
 
