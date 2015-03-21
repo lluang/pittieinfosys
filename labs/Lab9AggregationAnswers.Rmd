@@ -5,7 +5,9 @@ date: "03/17/2015"
 output: html_document
 ---
 
-```{r loadlibraries}
+```{r loadlibraries, warning=FALSE}
+library(reshape)
+library(plyr)
 FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
                     header=TRUE, sep=",")
 FemPreg$BIRTHORD <- as.factor(FemPreg$BIRTHORD)
@@ -32,7 +34,7 @@ FemPreg$marital <- factor(mapvalues(FemPreg$RMARITAL,
                                            "NEVER BEEN MARRIED")), ordered=TRUE)
 ```
 
-1.  Using the female pregnancy data, create a data frame that shows the distribution of respondants by level of education.
+1.  Using the female pregnancy data, create a data frame that shows the distribution of respondents by level of education.
 
 
 ANSWER
@@ -49,15 +51,15 @@ ANSWER
 ```{r}
 completebf <- FemPreg[!(FemPreg$BFEEDWKS %in% c(NA, 994, 995)),]
 completebf$BFEEDWKS <- as.numeric(completebf$BFEEDWKS)
-completebf$MATLEAVE <- as.numeric(completebfMATLEAVE)
+completebf$MATLEAVE <- as.numeric(completebf$MATLEAVE)
 by(completebf[,c('BFEEDWKS', 'MATLEAVE')], completebf$education, colMeans, na.rm=TRUE)
 ```
 
 
 3.  Using the `melt` then `cast` functions from the `reshape` library, find the average number of weeks of breastfeeding and weeks of maternity leave based on education and informal marital status (`education` and `marital`)
 
+ANSWER
 ```{r}
-library(reshape)
 bfm <- melt(completebf, c('education', 'marital'), c('BFEEDWKS', 'MATLEAVE'))
 reshape::cast(bfm, education~variable, mean, na.rm=TRUE)
 ```
