@@ -6,6 +6,10 @@ output: pdf_document
 ---
 
 
+*General note on writing.  The rule of thumb in writing a paragraph is that each paragraph has a topic, and each sentence supports the topic. When the topic becomes too broad, the solution is to break the paragraph into separate paragraphs.*
+
+*This has two effects, one is that it is much easier to follow your writing as the reader knows when you shift topics, even if slightly. The second is that it helps you organize your thoughts. The first step tends to determine an outline of your overall argument, then you write a paragraph for each point. And having this organization makes it less likely that you will miss something.*
+
 1.  CoNVO statement
 
 Read the article on the changing of healthcare enrollments under the Accountable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
@@ -20,6 +24,17 @@ Develop a CoNVO on a data analysis similar to this article. Note: You should inc
 
 http://www.nytimes.com/2015/02/24/upshot/more-new-jobs-are-in-city-centers-while-employment-growth-shrinks-in-the-suburbs.html
 
+Discussion
+----------
+
+- Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.
+
+-  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted.
+
+-  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all."  
+
+-  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context.  One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.
+
 
 2.  Data Analysis
 
@@ -32,9 +47,10 @@ The Allegheny County Health Department (ACHD) is interested in the racial and in
   
 Consider the goals of the ACHD.  Provide an interpretation of the data as given.  What course of action does it suggest? Sketch an alternative data analysis that may better help the ACHD achieve its goal.
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(RSQLite)
+library(pylr)
 #con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
 con <- dbConnect(SQLite(), "../data/acs1year2012pa.sqlite")
 sql <- "SELECT *      
@@ -45,12 +61,12 @@ sql <- "SELECT *
 acsp <- dbGetQuery(con, sql)
 ```
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE}
 sql = 'SELECT i.SERIALNO, h.HINCP, h.FINCP, i. rac1p, i.publicins, i.privateins, (i.publicins and i.privateins) as bothins, (not i.publicins and not i.privateins) as noins, (i.publicins and not i.privateins) as onlypublic, (i.privateins and not i.publicins) as onlyprivate
 FROM insurancetype as i join ss12hpa as h
 ON i.SERIALNO=h.SERIALNO
-WHERE SPORDER="01"
-'
+WHERE SPORDER="01"'
+
 hincins <- dbGetQuery(con, sql)
 hincins$HINCP <- as.numeric(hincins$h.HINCP)
 race <- as.data.frame(
@@ -81,12 +97,54 @@ hincins$instype <-  factor(ifelse(hincins["onlyprivate"]==1, "private",
                             ifelse(hincins["bothins"]==1, "both", "None"))))
 ```
 
-```{r, echo=FALSE, warning=FALSE}
+```{r, warning=FALSE}
 ggplot(hincins[!is.na(hincins$HINCP)&hincins$HINCP>1 & hincins$HINCP<150000 & hincins$"i. rac1p" %in% c('1', '2', '6', '9'),]) + aes(x=HINCP, linetype = instype, shape=instype, y=..density..) + geom_freqpoly(binwidth=10000) + xlab("Household Income") + xlim(0, 150000) + facet_wrap(~race) + ggtitle("Distribution of household income\n based on insurance type of head of household, \nseparated by race") + ylab("Probability density") + scale_linetype_manual(name = "Insurance type",                                                                                                                                                                                                                                                                                                                                                                                                                     
                           breaks = c("private", "both", "public", "None"),
                           labels = c("Private", "Both", "Public", "None"),
                           values = c("dashed", "solid", "dotted", "dotdash"))
 ```
+
+```{r, echo=FALSE, warning=FALSE}
+acsh$BLD <- factor(acsh$BLD)
+acsh$VACS <- factor(acsh$VACS)
+acsh$MV <- factor(acsh$MV)
+acsh$TEN <- factor(acsh$TEN)
+
+acsh$timemoved <- mapvalues(acsh$MV, from = c("", 1, 2, 3, 4, 5, 6, 7),
+                            to= c("vacant", "< 1yr", "1-2yr", "2-4 yrs", "5-9 yrs", 
+                                  "10-19 yrs", "20-29 yrs", ">30 yrs"),
+                            warn_missing=FALSE)
+
+acsh$tenurevalues <- mapvalues(acsh$TEN, from = c("", 1, 2, 3, 4), 
+          to = c(NA, 
+                 "Owned with mortgage or loan",
+                 "Owned free and clear",
+                 "Rented",
+                 "Occupied without payment of rent"),
+          warn_missing=FALSE)
+
+ggplot(acsh[!is.na(acsh$tenurevalue),]) + aes(x=timemoved)   + facet_wrap(~tenurevalues) + xlab("Time in current residence") + geom_histogram() 
+```
+
+The Red Yard is a home improvement mega-store. Its primary customers are Do-It-Yourself homeowners and home improvement contractors.  It is considering moving into Pennsylvania.  The following plot looks at how long people have been at their current residence, broken out by type of residence (rental, own with mortgage, owned free and clear (no mortgage), and occupied without payment (e.g. squatter)). A total of 50980 households had this information.
+
+Consider the goals of The Red Yard.
+
+1. Provide an interpretation of the data as given. 
+ii. What is one possible course of action that it suggests? 
+iii. Sketch an alternative data analysis that may better help The Red Yard decide if they should enter Pennsylvania.
+
+
+DISCUSSION
+----------
+
+-  Interpretation of data and alternative data analysis will be rooted in making comparisons between different groups within the data.  The comparisons allow us to judge if the results of the analysis are favorable or not favorable.  Essentially, without giving context to results, you cannot evaluate if the results are good/bad/acceptable/unacceptable/etc.
+
+-  When interpreting data, pay particular attention to groups that behave differently than others. Many people noted that in the Allegheny County data, Asians had a particularly high rate of no insurance at mid-levels of income.  Because this is most like not a question of means, the question for the Allegheny County Health department, the question would be why does this group act differently than the others.
+
+-  For alternatives data analysis, there should have been something different about it than what was provided (or it is not an alternative, it would be a summary).  Just as with the Vision in a CoNVO, the goal here is to present data so that it exposes comparisons or features that could help make the decision.
+
+-  The data analysis had to fit the context. For ACHD, the context was promoting health access (i.e. insurance to pay for health care). For Red Yard (an expy of Home Depot/Lowes) the question was if they should enter PA.  So ACHD would need a way to identify groups that have unusual patterns of no insurance. Red Yard would want to compare PA against other states that they do well/poorly in and/or look at trends to see if the market is favorable or expanding.
 
 3.  USDA National Nutrient Database
 
@@ -124,3 +182,48 @@ Dietitions working at a nursing home are developing weekly menus for residents. 
 Using the USDA Nutrient Database (NDb), the dietitions can then determine how many calories and if they come from protein, fat, or cholestorol.
 
 Write out the sequence of steps needed to use the USDA Nutrient Database and the weekly menus to determine the distribution of number of calories by type for their residents.
+
+
+DISCUSSION
+----------
+
+-  This was also an area that breaking up the problem into distinct parts would help greatly.  You needed to do the following:
+
+1.  Identify each dish and serving size that each client ate (from the food diary)
+2.  Connect the list of dishes to the recipe table to identify ingredients and their quantity in the recipe.
+3.  Connect to the food description to get the nutritional value (calories) contained in each ingrediant of the recipe.
+4.  Multiply the calories by the quantity of ingredient to get that ingredients contribution to the calories in the serving.
+5.  Multiply by serving size to get the calories for that dish in that meal
+6.  Sum over clients to get the total calories per client.
+7.  Return a distribution of calories over all clients
+
+It is possible to do this all at once, but only if you had nested subqueries.  The better strategy is to use queries to make lists, with each resulting list being used in the next query.  Key issues if you did not included not multiplying by either the serving size or the quantity, not summarizing by client or returning a distribution at the end, or having tables with dishes, but not matching it up with ingredients, then getting the calories per ingredient.
+
+---
+
+1.   List all ingredients eaten over the week for each client using each dish and serving size eaten
+CREATE VIEW ingredientslist AS
+SELECT f.client_id, f.dish_id, f.servings, r.ndb_no, r.quantity
+ 	FROM foodlog as f JOIN recipe as r
+ON f.dish_id = r.dish_id
+
+2.   	Calculate calories for each ingredient per dish per serving
+	Generate multiplier for serving size
+CREATE VIEW calorieslist AS
+SELECT i.client_id, i.dish_id, r.ndb_no, (i.servings * r.quantity) as multiplier, 
+	fd.caloriesprotein, fd.caloriesfat, fd.caloriescholesterol
+FROM ingredientslist as i JOIN fooddesc as fd
+ON i.ndb_no, fd.ndb_no
+
+3.	Calculate calories per served dish
+	CREATE VIEW caloriesdish AS
+SELECT c.client_id, c.dish_id, c.ndb_no, 
+(multiplier * fd.caloriesprotein) as totalprotein, 
+(multiplier * fd.caloriesfat) as totalfat, 
+(multiplier * fd.caloriescholesterol) as totalcholesterol, 
+
+4.	Summarize total calories over client_id
+	CREATE VIEW caloriesclient AS
+	SELECT client_id, sum(totalprotein), sum(totalfat), sum(totalcholesterol)
+	FROM caloriesdish
+	GROUP BY client_id
