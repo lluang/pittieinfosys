@@ -1,0 +1,266 @@
+---
+title: Midterm Review
+author: IE 0015 Information Systems
+date: Spring 2015
+---
+
+R Studio
+========
+
+-  Open this file in R Studio
+-  Check location of the American Community Survey data
+-  Click on 'Knit HTML' in the editor pane menu bar
+
+```{r readacs}
+library(RSQLite)
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+```
+
+Three types of problems
+======
+
+1.  Mini-article - CoNVO
+2.  Mini-article - Data analysis
+3.  Data manipulation
+
+CoNVO
+=====
+
+1.  I give you an article and identify an organization referenced in the article
+2.  Context
+3.  Need
+4.  Vision
+5.  Outcome
+
+Context
+------
+
+1.  Always from an organization point of view.
+2.  Focuses on the bigger picture, why is the organization interested in the general topic of the analysis.
+3.  Does NOT focus on the analysis itself.
+
+Need
+------
+
+1.  Requires a decision to be made.
+2.  A question that needs to be answered to make a good decision.
+3.  The question should be one that can be answered through data.
+
+Vision
+------
+
+1.  What kind of information will data analysis project provide.
+2.  What form will the data analysis take (*ideally a sketch*)
+3.  How does this vision answer the need?
+
+Outcome
+------
+
+1.  How could the organization respond when the information in the vision is presented?
+2.  Give an example  (if . . . then . . .)
+3.  Note: This is an Exploratory Data Analysis. So the answer here is often something like *the organization could investigate doing . . .*
+
+
+
+Data analysis
+=============
+
+1.  I give you a presentation of data (description and plots) and a question
+2.  Provide interpretation
+3.  Explain how to use the data summaries to suggest directions for further investigation
+4.  Discuss what kinds of data analysis would be useful
+
+Incarceration and crime
+------
+
+1.  Article on relationship between incarceration and crime.
+2.  Plots on changes in population incarceration rate and violent and non-violent crime rate across states suggested no relationship.
+3.  Plots on CrimeTrak suggested that use of CrimeTrak (data driven policing) led to decrease in crime.
+4.  What plot could be useful to have?  
+
+Example
+------
+
+http://www.lao.ca.gov/2005/3_strikes/3_strikes_102005.htm
+
+http://www.nytimes.com/2015/02/27/us/california-convicts-are-out-of-prison-after-third-strike-and-staying-out.html?_r=0
+
+
+
+```{r hogwarts, echo=FALSE}
+students <- data.frame(c("Cedric","Fred","George","Cho","Draco","Ginny"),
+                       c(3,2,2,1,0,-1),
+                       c("H", "G", "G", "R", "S", "G"))
+names(students) <- c("name", "year", "house") # name the columns
+hogwartstudents <- data.frame(name = students$name, year = students$year, house = students$house)
+```
+
+Data manipulation
+=======
+
+Things that we need to be able to do with data
+------------------------------------------
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+Example with American Community Survey
+------------
+
+- Look at family income for families with children between 11 and 13.
+
+
+```{r}
+sql <- "SELECT *      
+        FROM ss12hpa"
+acsh <- dbGetQuery(con, sql)
+sql <- "SELECT *      
+        FROM ss12ppa"
+acsp <- dbGetQuery(con, sql)
+```
+
+
+Filter
+------
+
+-  Select rows based on some condition.
+-  All people with someone in range 11-13
+-  Then households were those people live
+
+
+Filter SQL - Ages
+------
+
+```{r}
+sql <- "SELECT SERIALNO, AGEP
+FROM ss12ppa
+WHERE CAST(AGEP as INTEGER) BETWEEN 11 AND 13"
+results <- dbGetQuery(con, sql)
+head(results)
+length(results$AGEP)
+```
+
+Filter SQL - Households
+------------
+
+```{r}
+sql = 'SELECT h.SERIALNO, p.AGEP, h.TAXP
+FROM ss12hpa as h JOIN ss12ppa as p
+ON h.SERIALNO = p.SERIALNO
+WHERE CAST(p.AGEP as INTEGER) BETWEEN 11 AND 13 
+AND h.SERIALNO IN 
+(SELECT DISTINCT p.SERIALNO
+FROM ss12ppa as p
+WHERE CAST(p.AGEP as INTEGER) BETWEEN 11 AND 13)'
+hresults <- dbGetQuery(con, sql)
+head(hresults)
+length(hresults$FINCP)
+```
+
+Filter R
+------
+```{r}
+acsp$AGEP <- as.integer(acsp$AGEP)
+p1113 <- acsp[acsp$AGEP >= 11 & acsp$AGEP<=13, ]
+head(p1113[,c("SERIALNO", "AGEP")])
+# Now get the housing information for those households
+acsh$FINCP <- as.integer(acsh$FINCP)
+h1113 <- acsh[acsh$SERIALNO %in% p1113$SERIALNO,]
+head(h1113[,c("SERIALNO", "TAXP")])
+length(h1113$TAXP)
+```
+
+How to change this to include 13-17??
+
+Arrange
+------
+```{r}
+sql = "SELECT DISTINCT p.SERIALNO
+FROM ss12ppa as p
+WHERE CAST(p.AGEP as INTEGER) BETWEEN 11 AND 13
+ORDER BY AGEP"
+results <- dbGetQuery(con, sql)
+head(results)
+```
+
+Arrange
+------
+```{r}
+head(h1113[order(h1113$TAXP),c("SERIALNO", "TAXP")])
+```
+
+Select columns
+------------
+
+We could have decided we were only interested in a small number of columns.
+
+```
+sql <- "SELECT DISTINCT h.SERIALNO, h.TAXP
+FROM ss12hpa as h JOIN ss12ppa as p 
+ON h.SERIALNO=p.SERIALNO
+WHERE h.SERIALNO IN 
+(SELECT p.SERIALNO FROM ss12ppa as p
+WHERE CAST(p.AGEP as INTEGER) BETWEEN 11 AND 13)"
+
+h1113[,c("SERIALNO", "TAXP")]
+```
+
+
+Mutate
+------
+
+- Sex is coded as '1' or '2'
+- Convert this into 'Male' or 'Female'
+
+```{r}
+gender <- as.data.frame(
+           rbind(c("1","Male"),
+                 c("2","Female"))
+           )
+colnames(gender) <- c("key", "gender")
+```
+
+You can write a function to look up the value for each survey answer
+------------------------------------------------------------------
+
+```{r}
+getgender <- function(x){
+gender <- gender[gender$key==x,]$gender
+gender
+}
+p1113$gender <- sapply(p1113$SEX, getgender)
+head(p1113[,c("SEX", "gender")], 10)
+```
+
+
+Summarize (Group By)
+------------------
+```{r summarizehogwarts}
+library(plyr)
+ddply(p1113,~AGEP,summarise,count=length(AGEP))
+```
+
+Random sample
+------------------
+```{r studentsrandom}
+p1113[sample(nrow(p1113),size = 10),c("SERIALNO", "AGEP", "gender")]
+```
+
+Answer a question
+------
+
+- What is the family income for households with children of school age, by age of the child?
+
+
+1.  What data do we need?
+2.  Where is that data located?
+3.  How do I pull out only the data that I need?
+4.  Where do I get that information?
+5.  What do I need to do to calculate average income?
+6.  What do I need to do to calculate average income by child's age?
+7.  How should I summarize this?
