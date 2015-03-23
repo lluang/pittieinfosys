@@ -1,0 +1,31 @@
+Lecture 11 Reshaping data
+========================================================
+author: IE 0015 Information Systems
+date: March 2015
+
+
+```{r loadlibraries, warning=FALSE}
+library(reshape)
+library(plyr)
+FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
+                    header=TRUE, sep=",")
+```
+
+
+Why is reshape necessary
+==============
+
+1.  In many cases, the question you have is not directly addressed by the data that was collected.
+  - The data was collected for a different purpose.
+  - The actual collection of the data was designed for the ease of the data collector.
+2.  Many mathematical and statistical functions are designed with a specific format of the data.
+  - It is your job to make the data fit the format required.
+
+Reshaping data frames
+=============
+-  Because data frames are so useful in data analysis, many packages are designed to work with data frames.
+-  `reshape` is used to convert a data frame into what is desired before applying a function to it.
+-  Data frames are a list of vectors (so remember how to access lists, and remember how to access vectors)
+
+Modifying data frame variables
+===============
