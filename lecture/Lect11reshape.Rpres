@@ -4,14 +4,14 @@ author: IE 0015 Information Systems
 date: March 2015
 
 
-```{r loadlibraries, echo=FALSE, warning=FALSE}
+Load data for examples
+=======
+```{r loadlibraries,  warning=FALSE}
 library(reshape)
 library(plyr)
+library(RSQLite)
 FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
                     header=TRUE, sep=",")
-```
-```{r readingsqlite, echo=FALSE, warning=FALSE}
-library(RSQLite)
 con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
 sql <- "SELECT *      
         FROM ss12hpa"
@@ -257,7 +257,70 @@ Combining same data on different subjects
 Using rbind
 ======================
 
+- Scenario:  Data frame.  Add data.
+- Use row bind to add a row.
 
+```{r}
+x = data.frame(a=c('A','B','C'),x=c(12,15,19))
+x
+z = rbind(x,data.frame(a='X',x=12))
+z
+```
+
+Using rbind with two data frames
+=========
+
+-  `rbind` will check that two data frames have the same number of columns and that they are the same name and type.
+
+```{r}
+z = rbind(x,c(a='X',x=12))
+y = data.frame(a=c('D','E','F','G'),x=c(19,21,14,12))
+z1 = rbind(x, y)
+z1
+```
+
+cbind adds columns to a dataframe
+============
+- Notice that `cbind` does NOT detect that column names are duplicated.
+
+```{r}
+cbind(x, y[1:3,])
+```
+
+When combining columns, cbind will repeat elements
+================
+
+- `cbind` will recycle vectors to make vectors compatable.
+-  The longer vectors must be even multiples of the shorter one.
+
+```{r}
+cbind(y, z=c(1,2))
+```
+
+Merge works like JOIN from SQL
+===================
+-  Cobine two dataframes by looking for columns they have in common
+
+```{r}
+x = data.frame(a=c(1,2,4,5,6),x=c(9,12,14,21,8))
+y = data.frame(a=c(1,3,4,6),y=c(8,14,19,2))
+merge(x,y)
+```
+
+Left and right  joins in merge
+======
+
+-  Use  `all`, `all.x`, `all.y` parameters to force different types of joins
+```{r}
+merge(x,y)
+merge(x,y, all=TRUE)
+merge(x,y, all.x=TRUE)
+merge(x,y, all.y=TRUE)
+```
+
+Split-apply-combine with plyr
+===================
+type:section
 
 
 Split-apply-combine
@@ -270,3 +333,127 @@ Split-apply-combine
 -  Operate on each piece independently.
 -  Re-combine the pieces with the results.
 -  e.g. calculating marginal statistics based on grouping the data based on a factor.
+
+When to use it
+=================
+
+- Data preparation.
+- Groupwise ranking (i.e. within group ranking)
+- Groupwise summaries (counts, averages, sums)
+- Marginal statistics
+- Modeling, where each group is fit to its own model
+
+Map-reduce
+========
+
+- A similar algorithm used for parallel computing
+- Used in high performance computing and in large scale web applications
+  - e.g. Google
+  
+Other similar implementations
+===========
+
+-  SQL `GROUP BY`
+-  Excel i\pivot tables
+-  R `plyr` package
+  -  Note `plyr` is being replaced by `dplyr`
+  
+Some effects of using plyr
+==============
+
+-  Code more closely matches intent.
+  - Use of split-apply-combine instead of for loops leads to separation of data processing and data analysis code.
+-  Requires that each operation on each piece of data is independent of all other pieces.
+  - Not usable for interative data (e.g. simulations)
+  - Allows for parallelizing (high performance computing)
+
+
+Using plyr
+=========
+type:subsection
+
+Naming of plyr functions
+==================
+
+- Functions in `plyr` are named based on 
+  -  The type of input it accepts
+  -  The type of output it produces
+
+- Types
+  - `a` = array (includes matrices and vectors)
+  - `d` = data frame
+  - `l` = list
+  - `_` = Output is discarded
+  
+Arguements
+=======
+
+-  Functions have two or three main arguments, depending on type of input.
+  -  `a*ply(.data, .margins, .fun, ..., .progress="none")`
+  -  `d*ply(.data, .variables, .fun, ..., .progress="none")`
+  -  `l*ply(.data, .fun, ..., .progress="none")`
+  
+Split
+=======
+
+-  The first arguement is how the data will be split up, processed, and recombined.
+  -  `.margins` - Identify the dimension of the array to summarize over
+  -  `.variables` - Based on categorical (factor) variable(s)
+-  The function `.fun` is applied to each piece in turn
+-  `...` - arguments needed by `.fun`
+-  `.progress` - if a progress bar is displayed
+- Note:  Arguements to `**ply` have a `.` in front. This prevents name conflicts with the arguments to `.fun`.
+
+Output
+======
+
+-  Output can be array, data frame, list, or none
+-  So, for the `a*ply` set of functions there are:
+  - `aaply` - returns another array/matrix/vector
+  - `adply` - returns a data frame
+  - `alply` - returns a list
+  - `a_ply` - returns nothing
+
+Input
+=====
+
+-  Arrays are sliced by one dimension into lower-d pieces: (`a*ply`) 
+-  Data frames are subsetted by combinations of variables: (`d*ply`)
+-  Each element in a list is a piece: (`l*ply`)
+
+Array margins
+=============
+
+-  .margin =1: Slice into rows.
+-  .margin = 2:  Slice into columns
+-  .margin = c(1,2): Slice into individual cells
+- If there are more than three dimensions, folllow this pattern.
+
+***
+![Splitting up a matrix](figures/arraymargins.png)
+
+Data frame subsetting
+================
+
+-  Split data frames by identifying combinations of variables to use to define groups.
+- `.(var1)` will split data into groups defined by the `var1` variable.
+- `.(a, b, c)` will form groups defined by teh interaction of the variables `a, b, c`
+- Can use functions of variables to define the group
+  - `.(round(a)), .(a*b)`
+  - Can specify a column name when using a function e.g. `.(area =  a * b)
+-  Or character vectors
+  - `c('var1', 'var2)`
+- One-sided formula
+  - `~ var1 + var2`
+
+Data frame example
+=============
+
+![Subsetting a data frame](figures/subsettingdataframe.png)
+
+List subsetting
+=================
+
+- Lists are split up into individual elements.
+- Same as `a*ply` on a 1-d array
+
