@@ -14,10 +14,10 @@ library(RSQLite)
 FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
                     header=TRUE, sep=",")
 con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
-sql <- "SELECT *      
+sql <- "SELECT *
         FROM ss12hpa"
 acsh <- dbGetQuery(con, sql)
-sql <- "SELECT *      
+sql <- "SELECT *
         FROM ss12ppa"
 acsp <- dbGetQuery(con, sql)
 ```
@@ -43,7 +43,7 @@ Reshaping data frames
 
 
 
-  
+
 
 Modifying data frame variables
 ===============
@@ -226,8 +226,8 @@ head(obs)
 Using reshape
 =====
 ```{r}
-wideobs <- reshape(obs, idvar='subj', 
-     v.names=c('x','y'), 
+wideobs <- reshape(obs, idvar='subj',
+     v.names=c('x','y'),
      timevar = 'time',  direction='wide')
 head(wideobs)
 ```
@@ -249,7 +249,7 @@ Combining data frames
 =====================
 
 -  Data frames are lists of vectors
--  Sometimes we can get data from two different sources, but with either 
+-  Sometimes we can get data from two different sources, but with either
   -  The same data, but different subjects, or
   -  The same subjects, but different data
 -  Combine data frames using `rbind` or `cbind`
@@ -280,7 +280,7 @@ Using rbind with two data frames
 
 ```{r}
 z = rbind(x,c(a='X',x=12))
-y = data.frame(a=c('D','E','F','G'), 
+y = data.frame(a=c('D','E','F','G'),
                x=c(19,21,14,12))
 rbind(x, y)
 ```
@@ -355,7 +355,7 @@ Map-reduce
 - A similar algorithm used for parallel computing
 - Used in high performance computing and in large scale web applications
   - e.g. Google
-  
+
 Other similar implementations
 ===========
 
@@ -363,7 +363,7 @@ Other similar implementations
 -  Excel pivot tables
 -  R `plyr` package
   -  Note `plyr` is being replaced by `dplyr`
-  
+
 Some effects of using plyr
 ==============
 
@@ -381,7 +381,7 @@ type:subsection
 Naming of plyr functions
 ==================
 
-- Functions in `plyr` are named based on 
+- Functions in `plyr` are named based on
   -  The type of input it accepts
   -  The type of output it produces
 
@@ -390,7 +390,7 @@ Naming of plyr functions
   - `d` = data frame
   - `l` = list
   - `_` = Output is discarded
-  
+
 Arguments
 =======
 
@@ -398,7 +398,7 @@ Arguments
   -  `a*ply(.data, .margins, .fun, ..., .progress="none")`
   -  `d*ply(.data, .variables, .fun, ..., .progress="none")`
   -  `l*ply(.data, .fun, ..., .progress="none")`
-  
+
 Split
 =======
 
@@ -423,7 +423,7 @@ Output
 Input
 =====
 
--  Arrays are sliced by one dimension into lower-d pieces: (`a*ply`) 
+-  Arrays are sliced by one dimension into lower-d pieces: (`a*ply`)
 -  Data frames are subsetted by combinations of variables: (`d*ply`)
 -  Each element in a list is a piece: (`l*ply`)
 
@@ -487,8 +487,8 @@ Progress bar example
 ==============
 
 ```{r}
-weeksbybirthyear <- ddply(FemPreg, .variables = .(BABYDOB_Y), 
-                          .fun = summarize, mean=round(mean(wksgest),1), 
+weeksbybirthyear <- ddply(FemPreg, .variables = .(BABYDOB_Y),
+                          .fun = summarize, mean=round(mean(wksgest),1),
                           .progress = 'text')
 ```
 
