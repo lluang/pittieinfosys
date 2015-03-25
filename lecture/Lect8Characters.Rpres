@@ -1,4 +1,4 @@
-Lecture 8: Character manipulation and Regular Expressions
+Lecture 8: Character Manipulation and Regular Expressions
 ========================================================
 author: IE 0015 Information Systems
 date: February 2015
@@ -162,21 +162,39 @@ Examples
 - [0-9][0-9][a-zA-Z]+ has two digits followed by one or more letters.
 - 12a 01Zd
 - (abc){3} means abcabcabc
-- \d{3}   Any group of three digits
-- \D  Not a digit
+- [0-9]{3}  \d{3} Any group of three digits
+- [\^0-9] \D  Not a digit
+
+Character classes
+=========
+
+-  *Character classes* also known as *conventions* have been created to express different groups of characters
+
+-  [\d] refers to any digit. Same as [0-9]
+-  [\D] is any non-digit. Same as [\^0-9] or [\^\d]
+-  [\w] is any word character. Same as [_a-zA-Z0-9]
+  - Does NOT include white space (tabs, new lines, punctuation)
+-  [\W] is any non-word character (whitespace, punctuation, etc). Same as [\^_a-zA-Z0-9]
+-  [\s] or [ \t\n\r] matches whitespace, or
+  - spaces
+  - [\t] tabs
+  - [\n] newlines
+  - [\r] carriage returns
 
 Phone number
 ===========
 
 - 412-624-9830
-- (412) 624-9830
-- \D?\d{3}\D+\d{3}\D?\d{4}
-  - Optional leading character \D?
-  - Three digits \d{3}
-  - One or more non-digit \D+
-  - Three digits \d{3}
-  - Optional non-digit \D?
-  - Four digits \d{4}
+- (412)624-9838
+- 412/624-9800
+- 412-255-2621
+- [\^0-9]?[0-9]{3}[\^0-9]+[0-9]{3}[\^0-9]?[0-9]{4}
+  - Optional leading character [\^0-9]?
+  - Three digits [0-9]{3}
+  - One or more non-digit [\^0-9]+
+  - Three digits [0-9]{3}
+  - Optional non-digit [\^0-9]?
+  - Four digits [0-9]{4}
 
 Splitting strings
 =================
@@ -204,7 +222,11 @@ We can use it to find records in a data frame
 - Example, find women who are not members of nobility.
 - Mrs, Miss, Ms, Mme (Madame), Mlle (Mademoiselle) are generic title for women and girls
 - Always followed by a period in this database
+- Note that we need to *escape* the period using a backslash (\) or the regular expression will think that it is a wild card character
+  -  And because we are passing a string in R, we need to escape the backslash with another backslash.
 
+Titanic personal title example
+=====
 ```{r loadtitanic, echo=FALSE}
 titanic <- read.csv("../data/titanictrain.csv")
 ```
@@ -252,7 +274,7 @@ Working with text within R
 ========================
 
 -  Read text into a variable
--  Find patterns using `grep`
+-  Find regular expression patterns using `grep`
 
 ```{r}
 rime.txt <- file("../data/rime-intro.txt")
@@ -275,21 +297,7 @@ gregexprresult <- gregexpr('Marinere', rime)
 gregexprresult
 ```
 
-Matching non-digits
-=========
 
--  *Character classes* also known as *conventions* have been created to express different groups of characters
-
--  [\d] refers to any digit. Same as [0-9]
--  [\D] is any non-digit. Same as [^0-9] or [^\d]
--  [\w] is any word character. Same as [_a-zA-Z0-9]
-  - Does NOT include white space (tabs, new lines, punctuation)
--  [\W] is any non-word character (whitespace, punctuation, etc). Same as [^_a-zA-Z0-9]
--  [\s] or [ \t\n\r] matches whitespace, or
-  - spaces
-  - [\t] tabs
-  - [\n] newlines
-  - [\r] carriage returns
 
 Examples of using character classes in R
 =========

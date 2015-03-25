@@ -1,0 +1,65 @@
+---
+title: 'Lab 9:  Aggregation'
+author: "IE 0015 Information Systems Engineering"
+date: "03/17/2015"
+output: html_document
+---
+
+```{r loadlibraries, warning=FALSE}
+library(reshape)
+library(plyr)
+FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
+                    header=TRUE, sep=",")
+FemPreg$BIRTHORD <- as.factor(FemPreg$BIRTHORD)
+FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
+```
+
+```{r}
+# level of education
+FemPreg$education <- factor(mapvalues(FemPreg$HIEDUC,
+          from=c("5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"),
+          to= c("9TH GRADE","10TH GRADE",
+             "11TH GRADE", "12TH GRADE",
+             "HIGH SCHOOL", "SOME COLLEGE",
+             "ASSOCIATE", "BACHELOR",
+             "MASTER", "DOCTORATE", "PROFESSIONAL DEGREE")), ordered=TRUE)
+# informal marital status
+FemPreg$marital <- factor(mapvalues(FemPreg$RMARITAL,
+                                    from=c(1, 2, 3, 4, 5, 6),
+                                    to = c("MARRIED",
+                                           "LIVING WITH PARTNER",
+                                           "WIDOWED",
+                                           "DIVORCED",
+                                           "SEPARATED",
+                                           "NEVER BEEN MARRIED")), ordered=TRUE)
+```
+
+1.  Using the female pregnancy data, create a data frame that shows the distribution of respondents by level of education.
+
+
+ANSWER
+```{r}
+as.data.frame(table(FemPreg$education))
+```
+
+2.  Find the mean of number of weeks of breastfeeding and the weeks of maternity leave taken by level of education. 
+  i.  Create a data frame that only includes women who have completed breastfeeding (hint: remove those for which are not applicable, still breastfeed, or never breastfeed based on the BFEEDWKS field, use the !(FemPreg$BFEEDWKS %in% c( . . .)) to select from the data frame.)
+  ii.  take the mean by factor (education) (note: to ignore NA's, use the argument `na.rm=TRUE` for the colMeans)
+
+ANSWER
+
+```{r}
+completebf <- FemPreg[!(FemPreg$BFEEDWKS %in% c(NA, 994, 995)),]
+completebf$BFEEDWKS <- as.numeric(completebf$BFEEDWKS)
+completebf$MATLEAVE <- as.numeric(completebf$MATLEAVE)
+by(completebf[,c('BFEEDWKS', 'MATLEAVE')], completebf$education, colMeans, na.rm=TRUE)
+```
+
+
+3.  Using the `melt` then `cast` functions from the `reshape` library, find the average number of weeks of breastfeeding and weeks of maternity leave based on education and informal marital status (`education` and `marital`)
+
+ANSWER
+```{r}
+bfm <- melt(completebf, c('education', 'marital'), c('BFEEDWKS', 'MATLEAVE'))
+reshape::cast(bfm, education~variable, mean, na.rm=TRUE)
+```

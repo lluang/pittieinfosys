@@ -1,0 +1,340 @@
+Lecture 10: Data Aggregation
+========================================================
+author: IE 0015 Spring 2015
+date: March 2015
+
+Aggregating data
+================
+
+-  We often want to look at summarized data across groups, not individual data points.
+-  e.g. count instances, summations
+-  `table` function accomplishes this goal.
+-  `apply` family of functions can be used to work on arrays or lists.
+
+Issues
+======
+
+-  Aggregating data hides information in the data, so typically do this after you have determined what aggregation is useful.
+-  We aggregate to reduce the number of dimensions being presented, so do this because there are more dimensions to be analyzed than can be understood easily.
+-  Aggregation is done because you have something that needs to be communicated and you are attempting to remove extra detail.  Make sure that what is removed is extra.
+
+>  Everything should be a simple as possible, but no simpler.
+>       - Einstein (paraphrase)
+
+
+
+table
+=====
+
+-  Creates an array of values and counts
+-  Can be turned into a `data.frame`
+
+Use ACS as an example
+============
+
+```{r readingsqlite}
+library(RSQLite)
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acsh <- dbGetQuery(con, sql)
+sql <- "SELECT *      
+        FROM ss12ppa"
+acsp <- dbGetQuery(con, sql)
+```
+
+table summaries
+=================
+
+- Look at travel arrangements
+
+```{r}
+carpool <- acsp$JWRIP
+cptable <- table(carpool)
+cptable
+```
+
+Or make the table summary a data frame
+==================
+
+```{r}
+as.data.frame(cptable)
+```
+
+
+Diversion:  recode variables
+=======================
+
+- In the ACS data, many of the variables are coded as integers ("1", "2", "3", etc)
+- We would want to recode them with their values in english
+- Before, we used a data frame that contained the mapping.
+- Better is to use **map** that applies a function over the entire dataset
+
+
+```{r}
+library(plyr)
+acsp$worktransportation<- mapvalues(acsp$JWTR, 
+            from = c("bb", "01", "02", "03", "04", "05", "06",
+                     "07", "08", "09", "10", "11", "12"), 
+            to = c(NA, 
+                    "Car, truck, or van",
+                    "Bus or trolley bus",
+                    "Streetcar", "Subway",
+                    "Railroad", "Ferryboat",
+                    "Taxicab", "Motorcycle",
+                    "Bicycle", "Walked",
+                    "Worked at home", "Other"),)
+commutetable <- table(acsp$worktransportation)
+as.data.frame(commutetable)
+```
+
+
+
+
+Thinking about aggregation
+========================
+
+-  What are the groups that are useful to aggregate on?
+-  What is the nature of data to be operated on?
+-  What is the desired end result.
+
+The apply family of functions
+=============================
+
+-  In programming languages that have functional features (e.g. R, Matlab), we generally do not use for loops to loop through data.
+-  If data is organized in a matrix, array, or vector, we can **map** a function to the data structure.
+-  Apply the function so summarize the data into a single dimension.
+
+Some members of the apply family of functions
+===========================
+
+Function name  | Description
+--------------------|------------------
+apply  |  Apply function over array margin
+by     | Apply function to a data frame split by factors
+lapply | Apply function over a list or vector (returns list)
+sapply | Apply function over a list or vector (returns vector or matrix)
+aggregate | Summaries over columns of a data frame.
+tapply | Apply function over a ragged array
+
+apply: 
+=======
+
+-  Apply function over array margins
+-  *Margins* are the dimensions of the array (row = 1, columns = 2)
+
+```{r}
+# create a matrix of 10 rows x 2 columns
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+# mean of the rows
+apply(m, 1, mean)
+# mean of the columns
+apply(m, 2, mean)
+# divide all values by 2
+apply(m, 1:2, function(x) x/2)
+```
+
+by: data frame split by factors
+======
+
+-  Summarize data frame split by factors
+
+```{r}
+# Mean household income split by housing Tenure
+acsh$tenurevalues <- mapvalues(acsh$TEN, from = c("", 1, 2, 3, 4), 
+          to = c(NA, 
+                 "Owned with mortgage or loan",
+                 "Owned free and clear",
+                 "Rented",
+                 "Occupied without payment of rent"),
+          warn_missing=FALSE)
+acsh$watercost <- as.numeric(acsh$WATP)
+acsh$householdincome <- as.numeric(acsh$HINCP)
+acsh$numpeople <- as.numeric(acsh$NP)
+```
+
+Results of grouping by a factor
+=====
+```{r}
+by(acsh[,c('householdincome', 'numpeople', 'watercost')], acsh$tenurevalues, colMeans)
+```
+
+lapply
+======
+- Returns a list resulting from applying a function to the corresponding element of X
+
+```{r}
+# create a list with 2 elements
+l <- list(a = 1:10, b = 11:20)
+# the mean of the values in each element
+l.mean <-lapply(l, mean)
+typeof(l.mean)
+l.mean[['a']]
+```
+
+sapply
+======
+
+- like `lapply` but returns a vector or matrix
+
+```{r}
+l.mean <- sapply(l, mean)
+typeof(l.mean)
+l.mean['a']
+l.mean[1]
+```
+
+vapply
+======
+
+- `vapply` is similar to `sapply`, but has a prespecified type of return value.
+- e.g. `fivenum` returns a summary of min, 1Q, median, 3Q, max
+
+```{r}
+l.fivenum <- vapply(l, fivenum, c(Min.=0, "1st Qu."=0, Median=0, "3rd Qu."=0, Max.=0))
+class(l.fivenum)
+l.fivenum
+```
+
+mapply
+======
+
+-  Multivariate version of `sapply`.  Applies the function to the first elements of each arguement, second element, etc.
+
+```{r}
+l1 <- list(a = c(1:10), b = c(11:20))
+l2 <- list(c = c(21:30), d = c(31:40))
+# sum the corresponding elements of l1 and l2
+mapply(sum, l1$a, l1$b, l2$c, l2$d)
+```
+
+
+Groups based on one or more group variables
+==============
+
+- `aggregate`
+- `tapply`
+
+aggregate
+==========
+
+-  Summarize a columns based on defined groups
+
+```{r}
+library(ggplot2)
+data(diamonds)
+summary(diamonds)
+aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean)
+```
+
+tapply
+======
+
+-  Processes a single vector based on the values of one or more grouping vectors
+
+```{r}
+maxcarat <- tapply(diamonds$carat, diamonds$color, max)
+maxcarat
+```
+Mapping a function to a vector or list
+====================
+
+- `lapply` - Returns output as a list
+-  `sapply` - returns output as a vector or matrix (if possible)
+-  Note: returning a vector implies that order is important, e.g. the results are matched to another vector.
+
+Example for a mapping
+=============
+
+-  Break out individual words for each sentence.
+-  Unknown number of words in each sentence, so use a list for each sentence.
+
+```{r}
+text = c("R is a free environment for statistical analysis",
+ "It compiles and runs on a variety of platforms",
+ "Visit the R home page for more information")
+result = strsplit(text, " ")
+result
+typeof(result)
+```
+
+Now, take the list and get the length of each sentence
+==================
+
+- Because we want the length to be associated with the sentence, use `sapply`
+
+```{r}
+nwords = sapply(result, length)
+nwords
+```
+
+Mapping a function to a matrix or array
+=====================
+
+-  Because we often do anaylsis based on each element in a data frame, we often use `apply` on data frames.
+-  Income per family member
+
+```{r}
+familypercapita <- function(acs){
+  percapita <- as.numeric(acs[["HINCP"]])/as.numeric(acs[["NP"]])
+}
+acsh$FINCP <- as.numeric(acsh$FINCP)
+acsh$HINCP <- as.numeric(acsh$HINCP)
+acsh$NP <- as.integer(acsh$NP)
+acsh$percapita <- apply(acsh, 1, familypercapita)
+summary(acsh$percapita)
+```
+
+
+Mapping a function based on groups
+=====
+
+-  `aggregate`  for data frames
+-  `tapply` for vectors
+
+
+
+reshape package
+=====
+
+- similar to pivot tables
+- create  *melted* version of data
+- *cast* into an object with the desired orientation.
+
+Wide data vs long data
+======
+
+- There are two ways of storing data about an observation
+  -  *wide* - one row for each entity id, with a column with data representing each feature of the entity
+  -  *long* - one row for each observation, with columns for entity id, feature observed, and the data observerd.
+-  To convert from *wide* to *long*, use `melt`.
+-  To convert from *long* to *wide*, use `cast`.
+
+Airquality
+============
+```{r}
+library(reshape)
+data(diamonds)
+head(diamonds)
+```
+
+wide to long
+======
+```{r}
+dl <- reshape::melt(diamonds)
+head(dl)
+```
+
+long to wide
+=====
+-  To convert from long to wide, use `cast`
+-  Need to identify the dataset
+-  Formula that represent the variables that appears in the columns (a factor) and in the rows (`variable` to indicate all)
+-  And a summary function (default `count`)
+
+```{r}
+dw <- reshape::cast(dl, color + cut ~ variable, mean)
+head(dw)
+```
+
+

@@ -1,0 +1,71 @@
+---
+title: 'IE 0015 '
+author: "Spring 2015 Midterm"
+date: "B"
+output: pdf_document
+---
+
+
+1.  CoNVO statement
+
+Read the article on the changing of healthcare enrollments under the Accountable Care Act ("Obamacare") in its second year of enrollment. Take on the view of the Pennsylvania Department of Health. It is planning an overhaul of its public assistance of health care.
+Develop a CoNVO on a data analysis similar to this article. Note: You should include in the Vision something that is not in the article.
+
+2.  Data Analysis
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(RSQLite)
+library(plyr)
+#con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+con <- dbConnect(SQLite(), "../data/acs1year2012pa.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acsh <- dbGetQuery(con, sql)
+sql <- "SELECT *      
+        FROM ss12ppa"
+#acsp <- dbGetQuery(con, sql)
+```
+```{r, echo=FALSE, warning=FALSE}
+acsh$BLD <- factor(acsh$BLD)
+acsh$VACS <- factor(acsh$VACS)
+acsh$MV <- factor(acsh$MV)
+acsh$TEN <- factor(acsh$TEN)
+
+acsh$timemoved <- mapvalues(acsh$MV, from = c("", 1, 2, 3, 4, 5, 6, 7),
+                            to= c("vacant", "< 1yr", "1-2yr", "2-4 yrs", "5-9 yrs", 
+                                  "10-19 yrs", "20-29 yrs", ">30 yrs"),
+                            warn_missing=FALSE)
+
+acsh$tenurevalues <- mapvalues(acsh$TEN, from = c("", 1, 2, 3, 4), 
+          to = c(NA, 
+                 "Owned with mortgage or loan",
+                 "Owned free and clear",
+                 "Rented",
+                 "Occupied without payment of rent"),
+          warn_missing=FALSE)
+
+ggplot(acsh[!is.na(acsh$tenurevalue),]) + aes(x=timemoved)   + facet_wrap(~tenurevalues) + xlab("Time in current residence") + geom_histogram() 
+```
+
+The Red Yard is a home improvement mega-store. Its primary customers are Do-It-Yourself homeowners and home improvement contractors.  It is considering moving into Pennsylvania.  The following plot looks at how long people have been at their current residence, broken out by type of residence (rental, own with mortgage, owned free and clear (no mortgage), and occupied without payment (e.g. squatter)). A total of 50980 households had this information.
+
+Consider the goals of The Red Yard.
+
+1. Provide an interpretation of the data as given. 
+ii. What is one possible course of action that it suggests? 
+iii. Sketch an alternative data analysis that may better help The Red Yard decide if they should enter Pennsylvania.
+
+
+
+3.  USDA National Nutrient Database
+
+Dietitians working with a local grocery store are developing weekly menus for clients. The grocery is interested in the distribution of the weekly calorie content of the meals that their dietitians come up with.
+
+1.  Client id
+2.  Dish
+3.  Serving size
+
+Using the USDA Nutrient Database (NDb), the trainers can then determine how many nutrients their clients have over the week.
+
+Write out the sequence of steps needed to use the USDA Nutrient Database and the food diary to determine the distribution of number of calories being recommended by the grocery dietitians to their clients.

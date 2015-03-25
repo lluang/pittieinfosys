@@ -1,0 +1,507 @@
+Lecture 11 Reshaping data
+========================================================
+author: IE 0015 Information Systems
+date: March 2015
+
+
+Load data for examples
+=======
+```{r loadlibraries,  warning=FALSE}
+options(digits = 3, scipen=4)
+library(reshape)
+library(plyr)
+library(RSQLite)
+FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
+                    header=TRUE, sep=",")
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acsh <- dbGetQuery(con, sql)
+sql <- "SELECT *      
+        FROM ss12ppa"
+acsp <- dbGetQuery(con, sql)
+```
+
+Reshape data
+=============
+type:section
+
+Why is reshape necessary
+==============
+
+1.  In many cases, the question you have is not directly addressed by the data that was collected.
+  - The data was collected for a different purpose.
+  - The actual collection of the data was designed for the ease of the data collector.
+2.  Many mathematical and statistical functions are designed with a specific format of the data.
+  - It is your job to make the data fit the format required.
+
+Reshaping data frames
+=============
+-  Because data frames are so useful in data analysis, many packages are designed to work with data frames.
+-  `reshape` is used to convert a data frame into what is desired before applying a function to it.
+-  Data frames are a list of vectors (so remember how to access lists, and remember how to access vectors)
+
+
+
+  
+
+Modifying data frame variables
+===============
+
+-  Data frames are lists (of vectors)
+-  New values can be created by creating a new column to the data frame.
+  - i.e. add a new vector to the list of vectors.
+
+```{r incomepercapita}
+acsh$percapita <- as.numeric(acsh$HINCP)/as.numeric(acsh$NP)
+```
+
+or
+
+```
+acsh['percapita]' <- as.numeric(acsh['HINCP'])/as.numeric(acsh['NP'])
+```
+
+Removing a column
+============
+
+- We can remove a column by replacing it in the list with `NULL`
+- Usually, it is more useful to set certain values to `NULL` or `NA` or to create a new data frame that has only the values you are interested in.
+
+
+```{r subsetchildren}
+head(acsh$percapita)
+acsh$percapita <- NULL
+head(acsh$percapita)
+acsnoinsurance <- subset(acsp, HICOV==2)
+head(acsnoinsurance[c('HINS1', 'HINS2', 'HINS3', 'HINS4', 'HINS5', 'HINS6', 'HINS7')],)
+```
+
+Recoding values
+=========
+
+-  We may want to create new variables based on values of an old variable.
+-  e.g. encoded in data as a number (0,1), we want to use text or TRUE/FALSE, for reporting.
+  - Note: statistics programs are more efficient with numbers or Boolean, so convert to text after analysis if possible.
+
+Recoding through logical variables
+================
+
+-  We have a condition we want to select on.
+-  Use a logical expression. Automatically creates a logical vector.
+
+```{r}
+below50K <- acsh$HINCP < 50000
+head(below50K)
+typeof(logical)
+```
+
+Recoding to categories using logical variables
+=============
+
+- Note that TRUE >- 1 and FALSE -> 0 so it is possible to create multiple levels this way.
+
+```{r}
+incomegroup <- 0 + (acsh$HINCP > 20000) +
+                   (acsh$HINCP > 50000) +
+                   (acsh$HINCP > 75000) +
+                   (acsh$HINCP > 100000)
+head(incomegroup)
+```
+
+Another way to categorize using cut
+==============
+
+-  We can also use the `cut` function.
+
+```{r}
+incomegroup2 <- cut(as.numeric(acsh$HINCP), c(0, 20000, 50000, 75000, 100000),
+                   include.lowest=TRUE, right=FALSE)
+head(incomegroup2)
+```
+
+ifelse statements work for this purpose
+===========
+
+-  `ifelse(condition, conditiontrue, conditionfalse)`
+
+```{r}
+hiincome <- ifelse(incomegroup %in% c(3,4), 1, 0)
+head(hiincome)
+```
+
+
+Same, but using sapply
+========
+
+-  Note: `ifelse` can be inefficient because the results of both conditions need to be evaluated for every element in the condition vector.
+
+```{r}
+hiincome2 <- sapply(incomegroup, function(incomegroup) if (incomegroup %in% c(3,4))  1 else 0)
+head(hiincome2)
+```
+
+Recoding with multiple outcomes
+============
+
+- Two other functions to recode data are
+-  `recode`, part of the `car` package
+-  `mapvalues`, part of the `plyr` package
+
+car::recode
+======
+
+- `recode` in `car` accepts descriptions of ranges, then applies them to data to determine a new value.
+-  Four types of ranges
+
+1.  Single value - '1' = "Mortgage"
+2.  Multiple values - c(3,4) = 1
+3.  Ranges of values - 3-5 = 'High'
+4.  Anything not covered - `else`
+
+
+Housing tenure
+=======
+
+```{r}
+library(car)
+homeownership <- recode(acsh$TEN, 'c(1,2)= "Own"; 3="Rent"; else="Occupied"')
+head(homeownership)
+```
+
+Reshaping
+========
+
+-  We covered this last week.
+-  We can take a data frame (list of vectors) and `stack` the vectors on top of each other.
+-  Or a vector of values and a vector of factors and `unstack` them to get a list of vectors.
+-  We can use `plyr::reshape` to `melt` data so that it is *long*, or `cast` data so that it becomes *wide*.
+-  One reason to use this is if data is provided in columns of groups, but we want to plot them together.
+  -  i.e. instead of separate columns that happen to be together, create a single data frame that has factors so we can use `qplot` or `ggplot`.
+
+Example of groups as columns
+========
+
+```{r}
+mydata = data.frame(grp1=c(12,15,19,22,25),
+                    grp2=c(18,12,42,29,44),
+                    grp3=c(8,17,22,19,31))
+mydata
+```
+
+Stack the vectors
+====
+
+-  `stack` takes a list of vectors and creates a single vector alongside a factor variable
+
+```{r}
+sdata = stack(mydata)
+head(sdata)
+```
+
+Unstack
+=====
+-  `unstack` takes a vector of values and a vector of factor values and breaks them into separate columns
+
+```{r}
+mydata2 <- unstack(sdata, values~ind)
+mydata2
+```
+
+reshape
+=======
+
+- `reshape` is more flexible (part of the base `stats` package, does not have to be reloaded)
+-  Use this when the data is not readily organized into a list of vectors.
+-  E.g. the same observation has several different measurements made.
+
+```{r}
+set.seed(17)
+obs = data.frame(subj=rep(1:4,rep(3,4)),
+                time=rep(1:3),
+                x=rnorm(12),y=rnorm(12))
+head(obs)
+```
+
+Using reshape
+=====
+```{r}
+wideobs <- reshape(obs, idvar='subj', 
+     v.names=c('x','y'), 
+     timevar = 'time',  direction='wide')
+head(wideobs)
+```
+-  We now have three pairs of variables for each subject.
+-  Representing the three observations for each subjects.
+
+Convert back to original
+========
+
+-  How the `reshape` was done is preserved in the new data frame.
+-  Reverse the procedure by running `reshape` with no arguments.
+```{r}
+obs2 <- reshape(wideobs)
+head(obs2)
+```
+
+
+Combining data frames
+=====================
+
+-  Data frames are lists of vectors
+-  Sometimes we can get data from two different sources, but with either 
+  -  The same data, but different subjects, or
+  -  The same subjects, but different data
+-  Combine data frames using `rbind` or `cbind`
+
+Combining same data on different subjects
+======================
+
+-  Scenario: you have the same data elements, but the two files refer to different observations.
+-  Want to combine the two by adding rows
+-  `rbind`
+-  Data frames must have the same number of columns (and they should be matched to each other)
+
+Using rbind
+======================
+
+- Scenario:  Data frame.  Add data.
+- Use row bind to add a row.
+
+```{r}
+x = data.frame(a=c('A','B','C'), x=c(12,15,19))
+rbind(x,data.frame(a='X',x=12))
+```
+
+Using rbind with two data frames
+=========
+
+-  `rbind` will check that two data frames have the same number of columns and that they are the same name and type.
+
+```{r}
+z = rbind(x,c(a='X',x=12))
+y = data.frame(a=c('D','E','F','G'), 
+               x=c(19,21,14,12))
+rbind(x, y)
+```
+
+cbind adds columns to a dataframe
+============
+- Notice that `cbind` does NOT detect that column names are duplicated.
+
+```{r}
+cbind(x, y[1:3,])
+```
+
+When combining columns, cbind will repeat elements
+================
+
+- `cbind` will recycle vectors to make vectors compatible.
+-  The longer vectors must be even multiples of the shorter one.
+
+```{r}
+cbind(y, z=c(1,2))
+```
+
+Merge works like JOIN from SQL
+===================
+-  Combine two dataframes by looking for columns they have in common
+
+```{r}
+x = data.frame(a=c(1,2,4,5,6), x=c(9,12,14,21,8))
+y = data.frame(a=c(1,3,4,6), y=c(8,14,19,2))
+merge(x,y)
+```
+
+Left and right  joins in merge
+======
+
+-  Use  `all`, `all.x`, `all.y` parameters to force different types of joins
+```{r}
+merge(x,y)
+merge(x,y, all=TRUE)
+merge(x,y, all.x=TRUE)
+merge(x,y, all.y=TRUE)
+```
+
+Split-apply-combine with plyr
+===================
+type:section
+
+
+Split-apply-combine
+============
+
+-  A common data analysis pattern.
+  -  `pattern` - A structure that is used to approach types of problems
+  -  Originated in architecture, often used in fields that involved developing and implementing creative solutions.
+-  Break up a problem into manageable pieces.
+-  Operate on each piece independently.
+-  Re-combine the pieces with the results.
+-  e.g. calculating marginal statistics based on grouping the data based on a factor.
+
+When to use it
+=================
+
+- Data preparation.
+- Groupwise ranking (i.e. within group ranking)
+- Groupwise summaries (counts, averages, sums)
+- Marginal statistics
+- Modeling, where each group is fit to its own model
+
+Map-reduce
+========
+
+- A similar algorithm used for parallel computing
+- Used in high performance computing and in large scale web applications
+  - e.g. Google
+  
+Other similar implementations
+===========
+
+-  SQL `GROUP BY`
+-  Excel pivot tables
+-  R `plyr` package
+  -  Note `plyr` is being replaced by `dplyr`
+  
+Some effects of using plyr
+==============
+
+-  Code more closely matches intent.
+  - Use of split-apply-combine instead of for loops leads to separation of data processing and data analysis code.
+-  Requires that each operation on each piece of data is independent of all other pieces.
+  - Not usable for interactive data (e.g. simulations)
+  - Allows for parallelizing (high performance computing)
+
+
+Using plyr
+=========
+type:subsection
+
+Naming of plyr functions
+==================
+
+- Functions in `plyr` are named based on 
+  -  The type of input it accepts
+  -  The type of output it produces
+
+- Types
+  - `a` = array (includes matrices and vectors)
+  - `d` = data frame
+  - `l` = list
+  - `_` = Output is discarded
+  
+Arguments
+=======
+
+-  Functions have two or three main arguments, depending on type of input.
+  -  `a*ply(.data, .margins, .fun, ..., .progress="none")`
+  -  `d*ply(.data, .variables, .fun, ..., .progress="none")`
+  -  `l*ply(.data, .fun, ..., .progress="none")`
+  
+Split
+=======
+
+-  The first argument is how the data will be split up, processed, and recombined.
+  -  `.margins` - Identify the dimension of the array to summarize over
+  -  `.variables` - Based on categorical (factor) variable(s)
+-  The function `.fun` is applied to each piece in turn
+-  `...` - arguments needed by `.fun`
+-  `.progress` - if a progress bar is displayed
+- Note:  Arguments to `**ply` have a `.` in front. This prevents name conflicts with the arguments to `.fun`.
+
+Output
+======
+
+-  Output can be array, data frame, list, or none
+-  So, for the `a*ply` set of functions there are:
+  - `aaply` - returns another array/matrix/vector
+  - `adply` - returns a data frame
+  - `alply` - returns a list
+  - `a_ply` - returns nothing
+
+Input
+=====
+
+-  Arrays are sliced by one dimension into lower-d pieces: (`a*ply`) 
+-  Data frames are subsetted by combinations of variables: (`d*ply`)
+-  Each element in a list is a piece: (`l*ply`)
+
+Array margins
+=============
+
+-  .margin =1: Slice into rows.
+-  .margin = 2:  Slice into columns
+-  .margin = c(1,2): Slice into individual cells
+- If there are more than three dimensions, follow this pattern.
+
+***
+![Splitting up a matrix](figures/arraymargins.png)
+
+Data frame subsetting
+================
+
+-  Split data frames by identifying combinations of variables to use to define groups.
+- `.(var1)` will split data into groups defined by the `var1` variable.
+- `.(a, b, c)` will form groups defined by the interaction of the variables `a, b, c`
+- Can use functions of variables to define the group
+  - `.(round(a)), .(a*b)`
+  - Can specify a column name when using a function e.g. `.(area =  a * b)
+-  Or character vectors
+  - `c('var1', 'var2)`
+- One-sided formula
+  - `~ var1 + var2`
+
+Data frame example
+=============
+
+![Subsetting a data frame](figures/subsettingdataframe.png)
+
+List subsetting
+=================
+
+- Lists are split up into individual elements.
+- Same as `a*ply` on a 1-d array
+
+Discarded output (`*_ply`)
+=========
+
+-  Sometimes we are not interested in doing something with the output.
+  - Only print or output to screen
+  - As a parameter to another function, e.g. within `qplot` or `ggplot`
+-  Use `*_ply` so that the results are not stored.
+
+Progress bars
+==============
+
+-  Because the `**ply` functions work over a known data structure, it can track its progress.
+-  `.progress` argument can take four potential values
+  - `none`
+  - `text` - textual progress bar
+  - `win`, `tk` - Progress bars for either Windows or Unix based systems (Mac OS X)
+- Gauging progress over an array/data frame lets you know how long the computer will run.
+  - i.e. should you wait, get coffee, eat, sleep, etc.
+- Based on the assumption that each element in the array will take the same amount of time.
+
+Progress bar example
+==============
+
+```{r}
+weeksbybirthyear <- ddply(FemPreg, .variables = .(BABYDOB_Y), 
+                          .fun = summarize, mean=round(mean(wksgest),1), 
+                          .progress = 'text')
+```
+
+
+Summary
+=======
+
+-  General use of split-apply-combine with  `plyr`
+  1.  Extract a subset of the data (e.g. one group)
+  2.  Solve problem for the subset.
+  3.  Write a function that encapsulates the solution (for one piece)
+  4.  Use the appropriate `plyr` function to:
+    1. Split up the data
+    2. Apply the function to each piece
+    3. Join the pieces back together
+

@@ -1,0 +1,70 @@
+---
+title: "Explore IMDB"
+author: "IE 0015 Information Systems Engineering"
+date: "02/23/2015"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+data(movies)
+head(movies)
+movies$genre <- as.factor(ifelse(movies$Action==1,"Action", 
+                            ifelse(movies$Comedy==1, "Comedy", 
+                                 ifelse(movies$Drama==1, "Drama",
+                                        ifelse(movies$Romance==1, "Romance",
+                                               ifelse(movies$Animation==1, "Animation",
+                                                      ifelse(movies$Documentary==1, "Documentary",
+                                                             "None"))))))
+                          )
+summary(movies)
+
+```
+
+
+```{r}
+imdbyear <- ggplot(movies, aes(x=year)) + geom_histogram() + ggtitle("Movies in IMDB per year") + xlab("Year") +ylab("Number of movies")
+```
+
+```{r}
+moviesperyear <- ggplot(movies[movies$genre!="None",]) + aes(x=year) + geom_histogram(binwidth=1) + ggtitle("Movies per year") +facet_wrap(~genre,nrow = 2)
+moviesperyear
+```
+```{r}
+moviepolar <- ggplot(movies[movies$genre!="None",]) + aes(x=year) + geom_histogram(binwidth=1) + ggtitle("Movies per year") + coord_polar() + facet_wrap(~genre, nrow=2) + xlim(1950, 2005)
+moviepolar
+```
+
+
+```{r}
+moviepoly <- ggplot(movies[movies$genre!="None",]) + aes(x=year, color= genre) + geom_freqpoly(width=0.8, binwidth=5 ) + xlim(1945,2005) + ggtitle("Movies per year") + xlab("Year") + ylab("Number of movies") 
+moviepoly
+```
+```{r}
+ggplot(movies, aes(x=year, y=rating, size = budget, color=genre, position="jitter")) + geom_point(alpha=0.5)
+```
+
+
+```{r}
+moviesgenre <- movies[movies$genre!="None",]
+movies500 <- moviesgenre[order(-moviesgenre[,"rating"]),][1:500,]
+ggplot(movies500, aes(year, rating, size=votes, color=genre)) +geom_point(position="jitter", alpha=0.5) + theme_classic()
+```
+
+
+Questions:
+
+1. Is there a relationship between budget and ratings?  Look at only movies that have the budget given.  What could it be conditioned on?
+
+2. Is there a relationship between ratings and votes
+
+```{r}
+movies1970 <- movies[movies$year>=1970 & (movies$genre!="None"),]
+ggplot(movies1970) + aes(x=year, y=budget) + geom_point(position="jitter") + facet_wrap(~ genre)
+ggplot(movies1970) + aes(x=year, y=length) + geom_point(position="jitter") + facet_wrap(~ genre)
+
+
+
+# look at budget vs ratings
+ggplot(movies1970) + aes(x=year, y=budget) + geom_point(position="jitter") + facet_wrap(~ genre)
+```
