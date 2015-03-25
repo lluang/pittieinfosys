@@ -40,6 +40,11 @@ FemPreg$marital <- factor(mapvalues(FemPreg$RMARITAL,
 ANSWER
 ```{r}
 as.data.frame(table(FemPreg$education))
+# Optional solution:
+edu<-FemPreg$education
+edudf<-as.data.frame(summary(edu))
+
+as.data.frame(summary(subset(FemPreg,select=c("education"))))
 ```
 
 2.  Find the mean of number of weeks of breastfeeding and the weeks of maternity leave taken by level of education. 
@@ -53,6 +58,12 @@ completebf <- FemPreg[!(FemPreg$BFEEDWKS %in% c(NA, 994, 995)),]
 completebf$BFEEDWKS <- as.numeric(completebf$BFEEDWKS)
 completebf$MATLEAVE <- as.numeric(completebf$MATLEAVE)
 by(completebf[,c('BFEEDWKS', 'MATLEAVE')], completebf$education, colMeans, na.rm=TRUE)
+# Optional solutions:
+aggregate(completebf[,c('BFEEDWKS', 'MATLEAVE')],by=list(completebf$education),mean,na.rm=TRUE)
+# tapply mostly works on vector, so it will need two lines, each for one vector. 
+tapply(completebf$BFEEDWKS,completebf$education,mean)
+tapply(completebf$MATLEAVE,completebf$education,mean)
+
 ```
 
 
@@ -60,6 +71,19 @@ by(completebf[,c('BFEEDWKS', 'MATLEAVE')], completebf$education, colMeans, na.rm
 
 ANSWER
 ```{r}
-bfm <- melt(completebf, c('education', 'marital'), c('BFEEDWKS', 'MATLEAVE'))
-reshape::cast(bfm, education~variable, mean, na.rm=TRUE)
+library(reshape)
+bfm <- reshape::melt(completebf, c('education', 'marital'), c('BFEEDWKS', 'MATLEAVE'))
+reshape::cast(bfm, education+marital~variable, mean, na.rm=TRUE)
+
+# Optional solution:
+library(reshape2)
+bfm <- reshape2::melt(completebf, c('education', 'marital'), c('BFEEDWKS', 'MATLEAVE'))
+reshape2::dcast(bfm, education+marital~variable, mean, na.rm=TRUE)
 ```
+Remark:   
+1) When there is Error message like "Error: could not find function "cast" ", possible reason is that you haven't 
+activate the library or haven't install it. Install or activate the library should fix the problem.       
+
+2) Melt function is used for preparing data for cast function. For the melt command above, it will extract 4 columns from "completebf". For each row of the data frame, the melt command will create two new rows containing the information from the 4 blocks being extracted. For example, a row containing "BACHELOR,MARRIED,4,10" in "completebf"" will be represented by 2 rows "BACHELOR,MARRIED,BFEEDWKS,4" and "BACHELOR,MARRIED,MATLEAVE,10" in the melted dataframe.   
+
+
