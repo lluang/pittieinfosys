@@ -1,0 +1,88 @@
+---
+title: 'Lab 10:  Reshape and Split-Apply-Combine'
+author: "IE 0015 Information Systems Engineering"
+date: "March 2015"
+output: html_document
+---
+
+```{r loadlibraries, warning=FALSE}
+library(reshape)
+library(plyr)
+library(ggplot2)
+FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
+                    header=TRUE, sep=",")
+```
+
+# 1. Recode data (2pts)
+
+In the National Survey of Family Growth (NSFG), the highest level of education achieved by the mother is identified in the variable `HIEDUC`.  Create a variable `education` that contains the text value of the meaning behind `HIEDUC`.
+
+ANSWER
+------
+
+
+```{r}
+# level of education
+FemPreg$education <- factor(mapvalues(FemPreg$HIEDUC,
+          from=c("5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"),
+          to= c("9TH GRADE","10TH GRADE",
+             "11TH GRADE", "12TH GRADE",
+             "HIGH SCHOOL", "SOME COLLEGE",
+             "ASSOCIATE", "BACHELOR",
+             "MASTER", "DOCTORATE", "PROFESSIONAL DEGREE")), ordered=TRUE)
+```
+
+# 2. Manipulate data (5 pts)
+
+We are interested in looking at the trend in birthweight over time and how education can effect this.  But the birthweight is currently in three sets of columns (for potential triplets).  Create a dataframe with the following columns:
+  -  HIEDUC, education,BABYDOB\_Y, BIRTHWGT\_LB, BIRTHWGT\_OZ, birthweight\_oz
+  
+Note that birthweight\_oz = BIRTHWGT\_LB * BIRTHWGT\_OZ
+
+ANSWER
+-------
+
+First, create a long data frame. Optional, remove rows with NA for the year (because these also do not have values for birthweight)
+
+```{r}
+babyweights1 = data.frame(FemPreg[c('BABYDOB_Y', 'HIEDUC', 'education', 'BIRTHWGT_LB1', 'BIRTHWGT_OZ1')])
+babyweights2 = data.frame(FemPreg[c('BABYDOB_Y', 'HIEDUC', 'education', 'BIRTHWGT_LB2', 'BIRTHWGT_OZ2')])
+babyweights3 = data.frame(FemPreg[c('BABYDOB_Y', 'HIEDUC', 'education', 'BIRTHWGT_LB3', 'BIRTHWGT_OZ3')])
+colnames(babyweights1) = c('BABYDOB_Y', 'HIEDUC', 'education', 'BIRTHWGT_LB', 'BIRTHWGT_OZ')
+colnames(babyweights2) = c('BABYDOB_Y', 'HIEDUC', 'education', 'BIRTHWGT_LB', 'BIRTHWGT_OZ')
+colnames(babyweights3) = c('BABYDOB_Y', 'HIEDUC', 'education', 'BIRTHWGT_LB', 'BIRTHWGT_OZ')
+babyweights = data.frame(rbind(babyweights1, babyweights2, babyweights3))
+```
+
+Note: at some point you need to remove NA and placeholder values from the data.
+
+```{r}
+babyweights = babyweights[!is.na(babyweights$BABYDOB_Y) & 
+                            babyweights$BABYDOB_Y<9999 & 
+                            babyweights$BIRTHWGT_LB < 99 & 
+                            babyweights$BIRTHWGT_OZ < 99 &
+                            !is.na(babyweights$education), ]
+```
+
+Now, create a column of ounces at birth (remember 1 lb = 16 oz.)
+
+```{r}
+babyweights$birthweight_oz = babyweights$BIRTHWGT_LB * 16 + babyweights$BIRTHWGT_OZ
+```
+
+Next, take the average by year and level of education
+
+```{r}
+babyweighthieduc <- ddply(babyweights, .variables = .(BABYDOB_Y, education), .fun=summarize, mean=round(mean(birthweight_oz, na.rm = TRUE),1))
+```
+
+#  3. Plotting multiple groups (3 pts)
+
+Plot the time series of the mean birthweight in ounces for each year with one plot for each level of education (e.g. use `facet_wrap(~education)`)
+
+ANSWER
+------
+
+```{r}
+ggplot(babyweighthieduc)+aes(x=BABYDOB_Y, y=mean) + geom_point() + facet_wrap(~education)
+```
