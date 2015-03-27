@@ -22,7 +22,7 @@ In the National Survey of Family Growth (NSFG), the highest level of education a
 We are interested in looking at the trend in birthweight over time and how education can effect this.  But the birthweight is currently in three sets of columns (for potential triplets).  Create a dataframe with the following columns:
   -  HIEDUC, education,BABYDOB\_Y, BIRTHWGT\_LB, BIRTHWGT\_OZ, birthweight\_oz
   
-Note: birthweight\_oz = BIRTHWGT\_LB * BIRTHWGT\_OZ
+Note: birthweight\_oz = BIRTHWGT\_LB * 16 + BIRTHWGT\_OZ
 
 Note: at some point you need to remove NA and placeholder values from the data.
 

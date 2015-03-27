@@ -37,7 +37,7 @@ FemPreg$education <- factor(mapvalues(FemPreg$HIEDUC,
 We are interested in looking at the trend in birthweight over time and how education can effect this.  But the birthweight is currently in three sets of columns (for potential triplets).  Create a dataframe with the following columns:
   -  HIEDUC, education,BABYDOB\_Y, BIRTHWGT\_LB, BIRTHWGT\_OZ, birthweight\_oz
   
-Note that birthweight\_oz = BIRTHWGT\_LB * BIRTHWGT\_OZ
+Note that birthweight\_oz = BIRTHWGT\_LB * 16 + BIRTHWGT\_OZ
 
 ANSWER
 -------
