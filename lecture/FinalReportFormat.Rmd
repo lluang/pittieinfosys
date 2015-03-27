@@ -25,7 +25,7 @@ For the final report, we will use a report format that is in common use in the M
 2.  Methodology
   -  How you process the data prior to analysis.
   -  How you will analyze the data (summaries or plots).
-  -  Note: the analysis you do should be consistant with the CoNVO statement in the introduction.
+  -  Note: the analysis you do should be consistent with the CoNVO statement in the introduction.
   
 3.  Results
   -  Data summaries
@@ -33,7 +33,7 @@ For the final report, we will use a report format that is in common use in the M
   -  Remember that tables and figures should have captions that help interpret the output.
 
 4.  Conclusion
-  -  Explaination of how the summaries and figures relate to the CoNVO statement.
+  -  Explanation of how the summaries and figures relate to the CoNVO statement.
   -  Your overall interpretation of the results (should include comparisons so you can make claims on if the data suggest courses of action).
   -  Discuss limitations.
   -  Is there data analysis that you would want to do (i.e. data to collect and integrate it into the analysis) that would help the decision maker make the decisions in the CoNVO statement.
