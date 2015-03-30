@@ -1,0 +1,215 @@
+Lecture 12: Cleaning Data
+========================================================
+author: IE 0015 Information Systems Engineering
+date: March 2015
+
+The analysis value chain
+=================
+
+-  A rule of thumb that for most quantitative analysis projects, 80% of the effort is spent working with the data, 20% applying methodology.
+-  This class is about the 80%.
+
+Steps in the value chain
+=============================
+
+-  Read in raw data
+-  Transform it into technically correct data
+-  Correct it into consistent data
+-  Perform analysis
+-  Present analysis in a usable form
+
+***
+
+![Statistical analysis value chain](figures/analysisvaluechain.png)
+
+The steps in the value chain
+================
+
+
+-  Read in raw data
+  - Take the source data and bring it in to the data analysis tool.
+-  Technically correct
+  - Put the data into a form that is usable by the data analysis tool.
+-  Consistent data
+  - Ensure correctness of the data prior to analysis.
+-  Perform analysis
+  - All of your other classes.
+-  Present analysis in a usable form
+  - Create summaries, plots, tables, figures and interpretation.
+  
+Components of ensuring correctness
+==============================
+
+- Making data consistent
+-  Handling special values
+-  Identifying and handling errors
+-  Identifying and handling outliers
+-  Handling missing values.
+
+
+Consistency
+=====
+
+Three aspects of consistency
+- Within-record - No contradictory information in any single record
+- Cross-record - Statistical summaries do not conflict
+- Cross-dataset - Different datasets of similar samples have similar results.
+
+Three steps to evaluating consistency
+=============
+
+1. Detection of an inconsistency
+2. Selection of field or fields that cause the inconsistency
+3. Correction of the fields that are erroneous
+
+
+
+Missing values
+=========
+incremental:true
+
+- Ideally NA - The type of data is known but the value is not.
+- What are other options in common use?
+  - Replaces missing values with a 0
+  - Blank
+  - 99 or 9999
+  - Unknown
+  
+What are the effects?
+===============
+incremental:true
+
+-  Calculations
+-  Summary functions 
+-  How should they behave?
+  -  Ignore the missing values?
+  -  Fail with error?
+  -  Fail gracefully?
+
+How can we work with this?
+===========
+
+> Explicit is better than implicit
+>      - The Zen of Python
+
+- Calculations should fail or return `NA` if a missing value is present
+- Optional: summary functions should complete ignoring the missing value
+  - `option na.rm=TRUE`
+
+
+Ignoring missing values
+====================
+
+-  Summary functions (e.g. `sum`, `mean`) have an option to ignore missing values.
+  -  `na.rm=TRUE`
+-  We can remove rows from data frames that are not complete using the `complete.cases()` function
+  -  `df[complete.cases(df),]
+  -  Similarly, use the `na.omit(df)` function the same way.
+
+Special values
+================
+
+-  Some entries are indicators for special values
+-  e.g. `NA`, `NaN`, `Inf`
+-  Check for them using `is.na()` or `is.finite()`
+  - Usually, we remove `NA` using a conditional
+    - `!is.na()`
+
+
+Outliers
+=========
+incremental: true
+-  An observation or set of observations which appear to be inconsistent with that set of data.
+-  How do you know that they are inconsistent?
+-  Subject expertise.
+-  Clustering (machine learning)
+-  Box and whiskers
+  -  `boxplot.stats()` function
+
+Box and whiskers
+==================
+incremental: true
+
+1.  Determine the median (why not the mean?)
+2.  Determine the 25 and 75 quartiles.
+3.  Calculate the Inter Quartile Range (IQR) (this defines the box)
+4.  Extend the box by 1.5 X IQR (these are the whiskers)
+5.  Anything beyond the whiskers are outliers.
+
+Handling outliers
+===================
+
+- Determine what kind of outliers they are:
+  -  Is something changing the process that does not occur regularly?
+    - Then remove it
+  -  It is because there is an occasional event that recurs?
+    - Keep it in the data set
+    
+Obvious inconsistencies
+===================
+incremental:true
+-  Variable values that cannot occur in a single observation.
+-  Examples
+  -  Age cannot be negative
+  -  A male cannot be pregnant
+    - Unless you are a seahorse
+-  Create a function that checks for these
+
+Missing value imputation
+==========================
+type:section
+
+Imputation
+==============
+incremental:true
+
+-  *Imputation* is the estimating or deriving values when data is missing.
+-  Does this seem legitimate?
+
+Method for imputation
+=============
+
+-  Which method to use for imputation depends on what information is available and what is the relationship between samples.
+-  Summary functions (mean, median)
+-  *k* Nearest Neighbors
+-  Hot deck imputation
+-  Minimal value adjustment
+
+Using summary functions
+===================
+
+-  Assign to the missing value the value of the mean or another summary function.
+-  mean, median
+-  The mean could be conditional based on some other variable.
+
+K Nearest Neighbors
+====================
+
+- Identify the *k* samples that are the most similar to the one with the missing value.
+  - Note: need to define what *similar* means
+- Take the average value of the variable from these *k*NN.
+
+Hot deck imputation
+==================
+
+-  Assign to the missing value a random draw from the other samples.
+-  Can be conditional on other variables.
+-  Note that it maintains the distribution of values for the variable
+
+Minimal value adjustment
+=======================
+
+-  Missing value imputation methods may lead to inconsistent data.
+-  Adjust the added values the minimal amount needed to be consistent.
+-  Usually use a weighted Euclidean distance in the case where more than one missing value has been added.
+$$\sum_i w_i (x_i-x_i^0)^2$$
+
+
+Considerations
+================
+
+-  What type of analysis will be done next?
+-  Does the information that you do have tend to suggest a value to replace the missing value with?  Is there a mechanism that leads to a relationship?
+-  Is there a conservative direction a value can take? 
+
+
