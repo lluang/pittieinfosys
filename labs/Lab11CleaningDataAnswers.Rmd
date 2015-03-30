@@ -1,0 +1,106 @@
+---
+title: "Lab 11: Data cleaning"
+author: "Louis Luangkesorn"
+date: "03/30/2015"
+output: html_document
+---
+```{r loadlibraries,  warning=FALSE}
+options(digits = 3, scipen=4)
+library(RSQLite)
+library(ggplot2)
+titanic <- read.csv("../data/titanictrain.csv",
+                    header=TRUE, sep=",")
+summary(titanic)
+```
+
+In the Titanic data, of the 1313 entries, 680 of them are missing the age. Because one hypothesis regarding who survived the sinking of the Titanic is the Victorian ideal of *women and children first* that gives priority to women and children in survival situations, the age is a key variable. The goal for this lab is to implement techniques to impute the age of passengers that are currently listed as missing.
+
+#  1. (2 pts) Summary values
+
+One method of filling in missing values is to use a summary value. Plot the age data and give two potential summary values that can be used to fill in the missing value. Discuss why you would use one over the other.
+
+ANSWER
+------
+
+```{r}
+qplot(Age, data=titanic)
+mean(titanic$Age, na.rm=TRUE)
+median(titanic$Age, na.rm=TRUE)
+```
+
+Because the data is skewed, it is probably better to use the median instead of the mean.
+
+Note: in this case, because the age we are interested in if the person is a child, summary values are not useful.
+
+#  2.  (3 pts) Hot Deck imputation
+
+Create a plot of all pairwise comparisons of variables (hint: search for "pairs" in R help if you do not know how to do this).  What variables provide indications of the age of the passenger? (hint: the plot should give and impression of the distribution, and the distribution should be different for each age).  Pick one variable and use Hot Deck (random sample) to fill in the age of passenger into the variable `HotDeckAge` in the `titanic` dataframe.
+
+Notes:
+ 
+  1.  You need to create a vector of ages of people with the same characteristic as your current passenger where you do have an age (`!is.na(titanic$Age`) to `sample` an age from.
+  2.  You should create a function and use `apply`  over the data frame to do this.
+  3.  To get a single random value from a vector, use `sample(n, size =1)`
+  
+
+ANSWER
+------
+
+They should identify passenger class and embarked (port of embarkation) as good candidates based on the plots. Potentially the ticket prices as well (although the ticket prices also has a very large number of missing values).
+
+
+```{r}
+getHotDeckAge <- function(data) {
+  age <- sample(titanic[titanic$Pclass==data['Pclass'] & 
+                          !is.na(titanic$Age),'Age'], 
+                size=1)
+}
+titanic$HotDeckAge <- apply(titanic, 1,  getHotDeckAge)
+```
+
+#  3.  (4 pts) Mean value and title.
+
+In Lab 7, we used the Name field to extract the title.  Try to use the mean age based on the title and gender to fill in a variable named `titanic$Agetitle`.  Note:  
+
+
+
+```{r}
+getTitle <- function(data) {
+  title.dot.start <- regexpr("\\,[A-Z ]*\\.", data$Name, TRUE)
+  title.comma.end <- title.dot.start+ attr(title.dot.start, "match.length")-1
+  data$Title <- substr(data$Name, title.dot.start+2, title.comma.end-1)
+  return (data$Title)
+}  
+titanic$Title <- getTitle(titanic)
+unique(titanic$Title)  
+```
+
+ANSWER
+------
+
+```{r}
+getTitleAge <- function(data) {
+  age <- median(titanic[titanic$Title==data['Title'] & titanic$Sex==data['Sex'],'Age'], 
+              na.rm=TRUE)
+}
+titanic$Agetitle <- apply(titanic, 1,  getTitleAge)
+```
+
+
+# 4.  (1 pt) Evaluation
+
+Look at the `HotDeckAge` and `Agetitle` variables for the passengers whose age was not available.  Which of these two methods of imputing the missing value is more useful?  Why? Can you improve this? (Hint: In early 20th century England "Master" denoted a male child.)
+
+
+Answer
+------
+
+Should look at the data with the following columns:  Title (or Name), Pclass, Sex, HotDeckAge, Agetitle.
+When discussing why, we should note that because the hypothesis is *women or children first*, it is only necessary to get an age to identify male children, because if it is a female child, they would be given priority based on being female.
+So Agetitle is a better imputation method. (especially if you look at names).
+It could be improved by adding `Pclass` to the conditions under which the mean/median was taken.
+
+
+```{r}
+head(titanic[is.na(titanic$Age), c('Title', 'Pclass', 'Sex', 'HotDeckAge', 'Agetitle')])
+```
