@@ -25,12 +25,13 @@ Major Topics
 
 The following are resources we will use.  Data Manipulation with R will be the primary text because that presents information in a way different than all other sources.
 
-1.  Using SQLite
+1.  Data Manipulation with R - Spector (textbook)
+2.  Using SQLite notes
   -  http://shop.oreilly.com/product/9780596521196.do (get electronically through Pitt Library)
 2.  GGplot2 book by Hadley Wickham
   -  Chapter 2 qplot at http://ggplot2.org/book/qplot.pdf
-3.  Data Manipulation with R - Spector (textbook)
 4.  An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
+5.  Introduction to Probability and Statistics Using R
 
 ##  Articles
 
@@ -48,7 +49,7 @@ The following are resources we will use.  Data Manipulation with R will be the p
 1.  Weekly labs               15%
 2.  Midterm                   25%
 3.  Final                     30%
-4.  Project (2 person teams)  20%
+4.  Project (3 person teams)  20%
 5.  Class participation       10%
 
 # ABET Outcomes
@@ -63,17 +64,18 @@ k. an ability to use the techniques, skills, and modern engineering tools necess
 Schedule
 ========
 
-- Module 1: Using MS Access
+- Module 1: Using SQLite
 - Module 2: Using SQL and basic SQL query functions
 - Module 3: Reading data into R. Based on Spector Ch 2  
 - Module 4: Data formats Spector Ch 4, 5
 - Module 5: Data formats Spector Ch 6, 7
 - Module 6: Summarizing data (plyr) 
 - Module 7: Simple graphs with ggplot2 (qplot) 
-- Module 8: Complex graphs with ggplot2 (qplot) i
+- Module 8: Complex graphs with ggplot2 (qplot)
 - MIDTERM March 4
-- Module 9: Data manipulation with dplyr (based on dplyr tutorials)
+- Module 9: Data manipulation with plyr (based on Spect Ch 8, 9)
 - Module 10: Pivot tables and aggregations with table and reshape
 - Module 11: Identifying and marking missing values - Development of algorithms - flow charts 
 - Module 12: Missing values imputation 
+- Module 13: Statistical analysis (linear regression and sampling/Simulation) (based on IPSUR)
 - FINAL Monday April 20 4:00 - 5:50
