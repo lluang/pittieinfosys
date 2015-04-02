@@ -102,5 +102,5 @@ It could be improved by adding `Pclass` to the conditions under which the mean/m
 
 
 ```{r}
-head(titanic[is.na(titanic$Age), c('Title', 'Pclass', 'Sex', 'HotDeckAge', 'Agetitle')])
+head(titanic[is.na(titanic$Age), c('Name', 'Pclass', 'Sex', 'HotDeckAge', 'Agetitle')])
 ```

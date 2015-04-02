@@ -37,3 +37,18 @@ For the final report, we will use a report format that is in common use in the M
   -  Your overall interpretation of the results (should include comparisons so you can make claims on if the data suggest courses of action).
   -  Discuss limitations.
   -  Is there data analysis that you would want to do (i.e. data to collect and integrate it into the analysis) that would help the decision maker make the decisions in the CoNVO statement.
+
+
+Final Presentation
+============
+
+Presentations will be during the final lab session. If your team is split across the lab sessions, talk to me about timing.
+
+For the final presentation, you will have around 5 minutes. Note the slide count in this outline.
+
+0.  Title slide
+1.  Context (one slide to introduce organization and the mission that results in the need)
+2.  Need (one slide.  The decision to be made and a question to be answered)
+3.  Results (1 slide to discuss data source, 1-2 slide to display results, one slide to explain how it meets the need)
+4.  Outcome (1-2 slide on how the results can help make a decision)
+5.  Conclusion (1 slide on limitations and a further analysis) 

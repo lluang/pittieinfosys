@@ -157,7 +157,6 @@ incremental:true
 -  Examples
   -  Age cannot be negative
   -  A male cannot be pregnant
-    - Unless you are a seahorse
 -  Create a function that checks for these
 
 Missing value imputation
@@ -301,17 +300,27 @@ $$d_g(i,j) = \frac{\sum_k w_{ijk}d_k(i,j)}{\sum_k w_{ijk}}$$
 kNN implementation
 ==================
 
+-  Take the Iris data, and randomly 
 ```{r}
 library(VIM)
-n <- nrow(iris)
+set.seed(1234)
+data(iris)
+iris$Sepal.Length[1:10] <- NA
+I <- is.na(iris$Sepal.Length)
+#n <- nrow(iris)
 # provide some empty values (10 in each column, randomly)
-for (i in 1:ncol(iris)) {
-iris[sample(1:n, 10, replace = FALSE), i] <- NA
-}
+#for (i in 1:ncol(iris)) {
+#iris[sample(1:n, 10, replace = FALSE), i] <- NA
+#}
+iris[I,]
 ```
+
+
+kNN results
+===
 ```{r}
 iris2 <- kNN(iris)
-head(iris2)
+iris2[I, c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species', 'Sepal.Length_imp')]
 ```
 
 Minimal value adjustment
@@ -319,6 +328,7 @@ Minimal value adjustment
 
 -  Missing value imputation methods may lead to inconsistent data.
 -  Adjust the added values the minimal amount needed to be consistent.
+  - Remember, you have a function that checks for inconsistent data
 -  Usually use a weighted Euclidean distance in the case where more than one missing value has been added.
 $$\sum_i w_i (x_i-x_i^0)^2$$
 
