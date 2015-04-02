@@ -58,7 +58,7 @@ Note: at some point you need to remove NA and placeholder values from the data.
 
 ```{r}
 babyweights = babyweights[!is.na(babyweights$BABYDOB_Y) & 
-                            babyweights$BABYDOB_Y<9999 & 
+                            babyweights$BABYDOB_Y<9998 & 
                             babyweights$BIRTHWGT_LB < 99 & 
                             babyweights$BIRTHWGT_OZ < 99 &
                             !is.na(babyweights$education), ]
@@ -74,6 +74,12 @@ Next, take the average by year and level of education
 
 ```{r}
 babyweighthieduc <- ddply(babyweights, .variables = .(BABYDOB_Y, education), .fun=summarize, mean=round(mean(birthweight_oz, na.rm = TRUE),1))
+
+
+# Optional
+library(reshape)
+bfm <- reshape::melt(babyweights, c('BABYDOB_Y','education'), c('birthweight_oz'))
+babyweighthieduc<-reshape::cast(bfm, BABYDOB_Y+education~variable, mean, na.rm=TRUE)
 ```
 
 #  3. Plotting multiple groups (3 pts)
@@ -84,5 +90,6 @@ ANSWER
 ------
 
 ```{r}
-ggplot(babyweighthieduc)+aes(x=BABYDOB_Y, y=mean) + geom_point() + facet_wrap(~education)
+ggplot(babyweighthieduc)+aes(x=BABYDOB_Y, y=mean) + geom_point() + facet_wrap(~education) 
+
 ```
