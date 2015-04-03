@@ -139,7 +139,7 @@ Confidence intervals
 ===========
 -  For each coefficient we get an estimate and a standard error.
   - $S=\sqrt{S^2}$, $S^2=\frac{SSE}{n-2}$
--  We can use the *t-statistic* with the standard error to get confidence intevals
+-  We can use the *t-statistic* with the standard error to get confidence intervals
 -  `confint` give us 95% confidence intervals
 ```{r}
 confint(irispetal)
@@ -286,7 +286,7 @@ plot(irispetal, which=3)
 Independence assumption
 =================
 
-- Test for autocorrelation using Durbin-Watson test.
+- Test for auto-correlation using Durbin-Watson test.
 ```{r}
 dwtest(irispetal, alternative="two.sided")
 ```
@@ -317,11 +317,195 @@ Some causes for violating the regression assumptions
 -  Error variance not constant or distribution not normal
   - Box-Cox transformations
 -  Error distribution not independent
-  - Use autoregressive time-series models
+  - Use auto-regressive time-series models
 
 
 Special observations
 ==================
 
--  Influatential observations
 -  Outliers
+-  Influential observations
+
+
+Influential observations
+======================
+
+-  Some observations play a large role in the model results.
+-  This is a problem, we do not like our procedures to be influenced by the value of a single observation.
+-  If it does, that observation deserves extra attention.
+  - What happened?
+  
+Measuring the influence of an observations
+=========================
+
+-  Measure the change in the statistic if the observation was removed.
+  - DFBETAS
+  - Suspicious if it is greater than $2/\sqrt{n}$ (for large data sets) or 1 (for small data sets) 
+
+```{r}
+dfb <- dfbetas(irispetal)
+head(dfb)
+```
+
+Check the influence of an observation on itself
+==========================
+
+-  Check the influence of an observation on its own fitted value.
+  - DFFITS
+  - Flag observations where $|dffit|>1$
+```{r}
+dff <- dffits(irispetal)
+head(dff)
+```
+
+Cook's distance
+================
+
+-  Measure of the influence of each observation against all of the others.
+$$D_i = \frac{E^2_i}{(p+1)S^2} * \frac{h_{ii}}{(1-h_{ii})^2}$$
+-  Compares the leverage ($h_{ii}$, the measure of being an outlier in a regression model) against the residual.
+-  Compare to quantiles of a *f(df1=2, df2=n-2)* distribution.
+  - Greater than 50th percentile is extreme.
+-  Plot Residuals vs Leverage
+  - Look for points in isolation or above the Cook's distance.
+```{r}
+cooksD <- cooks.distance(irispetal)
+F0.50 <- qf(0.5, df1=2, df2 = length(irispetal)-2)
+cooksD[which(cooksD > F0.50)]  
+```
+
+
+Overview of diagnostics plots
+===========
+incremental:true
+```{r, echo=FALSE}
+par(mfrow=c(2,2))
+plot(irispetal)
+par(mfrow=c(1,1))
+```
+
+- Why does this model fail (look at the constant variance assumption)
+
+Iris data
+===========
+
+- Maybe we should add another term to the linear regression
+
+```{r, echo=FALSE}
+ggplot(iris, aes(x = Petal.Length, y=Petal.Width, color=Species)) + geom_point()
+```
+
+Multiple linear regression
+===================
+
+$$Y=X\beta + \epsilon$$
+
+where
+$$\epsilon \sim mvnorm(mean=0, sigma=\sigma^2 I_{nXn})$$
+
+Look at the relationships between all variables
+====================
+```{r}
+library(GGally)
+ggpairs(data = iris)
+```
+
+Try all relationships
+=====================
+
+```{r}
+iris.lm <- lm(Petal.Width ~ Petal.Length + Sepal.Width + Sepal.Length + Species, data = iris)
+iris.lm
+```
+
+Results
+======
+```{r, echo=FALSE}
+summary(iris.lm)
+```
+
+Analysis of variance
+==============
+```{r, echo=FALSE}
+anova(iris.lm)
+```
+
+Sum of squares of residuals
+========
+
+$$MSE = S^2 = \frac{SSE}{n-(p-1)}$$
+
+- And residual standard error is
+
+$$S = \sqrt{S^2}$$
+
+
+Confidence and prediction intervals
+====================
+
+-  We can get confidence and prediction intervals the same way
+```{r, echo=FALSE}
+new <- data.frame(Petal.Length = c(3.5, 4, 4.5), Sepal.Width=c(2.5, 3.0, 3.5), 
+                  Sepal.Length=c(4.5,5, 5.5), Species=c("versicolor", "versicolor", "versicolor"))
+```
+```{r}
+predict(iris.lm, newdata=new, interval="confidence")
+predict(iris.lm, newdata=new, interval="prediction")
+```
+
+Coefficient of determination
+==================
+
+-  In multiple linear regression, adding explanatory variables *always* increases $R^2$, *no matter how worthless* the explanatory variable is.
+-  It is more important to use adjusted $R^2$ which includes a penalty for additional terms.
+
+$$Adjusted.R^2 = \bar{R}^2 = \left(R^2- \frac{p}{n-1}\right) \left(\frac{n-1}{n-p-1}\right)$$
+
+F-test
+===========
+
+- The F-test is also modified for the multiple linear regression.
+$$F=\frac{SSR/p}{SSE/(n-p-1)}$$
+```{r}
+summary(iris.lm)$fstatistic
+```
+
+t-test for individual explanatory variables
+====================
+
+```{r, echo=FALSE}
+summary(iris.lm)
+```
+
+Add in an interaction term
+=======================
+
+-  Two independent variables may in fact be related, so try to capture the dependence between variables.
+-  Implemented in R using the `:`, e.g. *X1:X2*
+```{r}
+iris.lm.inter <- lm(Petal.Width ~ Petal.Length + Species + Petal.Length:Species, data=iris)
+```
+
+Results
+======
+```{r}
+summary(iris.lm.inter)
+```
+
+And we can see how it shows up in confidence intervals
+=====
+
+```{r}
+confint(iris.lm.inter)
+```
+
+
+Summary
+========
+
+-  Linear regression
+-  Uses
+-  Implementation
+-  Checking assumptions
+-  Model evaluation
+-  Multiple linear regression
