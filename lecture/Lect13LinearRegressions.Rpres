@@ -12,8 +12,10 @@ R Commander
 =====
 - GUI for R
 - Install R Commander along with functions used in IPSUR and all dependency libraries.
+
 ```
 install.packages('RcmdrPlugin.IPSUR', dependencies=TRUE)
+
 Rcmdr()
 ```
 
@@ -28,10 +30,10 @@ Basic philosophy
 -  Variables *X* and *Y*
 -  *X* is NOT random, but *Y* is.
 -  We believe that *Y* depends in *some* way on *X*.
-  - *E(Y) = f(x)*
+  - $E(Y) = f(x)$
   - $Y = \mu(x) = \beta_o + \beta_1 x_1 + \beta_2 x_2 + \ldots + \epsilon$
 
-Result of philosophy
+Implication
 ========
 
 -  For each given value of *x*, we observe a random value of *Y* normally distributed with a mean at the regression line.
@@ -136,6 +138,7 @@ summary(irispetal)
 Confidence intervals
 ===========
 -  For each coefficient we get an estimate and a standard error.
+  - $S=\sqrt{S^2}$, $S^2=\frac{SSE}{n-2}$
 -  We can use the *t-statistic* with the standard error to get confidence intevals
 -  `confint` give us 95% confidence intervals
 ```{r}
@@ -167,6 +170,8 @@ Coefficient of determination
 
 $$r^2 = 1 - \frac{SSE}{SSTO}$$
 
+-  Note: $r^2$ can compare models, but what is a *good* value of $r^2$ is context dependent. There may be variation that can never be explained with the available data.
+
 Analysis of Variance
 =========================
 
@@ -176,7 +181,7 @@ anova(irispetal)
 ```
 $$r^2 = 1 - \frac{SSE}{SSTO} = 1-\frac{6.3}{80.3 + 6.3} \approx 0.93$$
 
-Adjusted $R^2$
+Adjusted R-squared
 ==========================
 
 -  We are biased towards simpler models (fewer independent variables).
@@ -185,6 +190,138 @@ $$Adjusted.R^2 = \bar{R}^2 = \left(R^2- \frac{p}{n-1}\right) \left(\frac{n-1}{n-
 -  *n* - number of cases in data
 
 
+Evaluating individual coefficients
+============
+
+- The linear regression summary shows an estimate and standard error of each coefficient.
+- $t$-test used to test if each coefficient is significant.
+
+```{r, echo=FALSE}
+summary(irispetal)
+```
+
+Evaluating predictions
+===========
+- Question: how good is our estimate of $\mu(x)$ for any given value of $x$?
+- It should be based on the confidence interval of the mean of $\mu(x)$ and the standard deviation of $Y$ at $x$.
+
+Confidence and prediction intervals in R
+==============
+
+```{r}
+new = data.frame(Petal.Length=c(2,4, 6))
+predict(irispetal, newdata=new, interval="confidence")
+predict(irispetal, newdata=new, interval="prediction")
+```
+
+Confidence and prediction intervals
+========
+```{r}
+library(HH)
+ci.plot(irispetal)
+```
+
+Confidence interval plot
+================
+- Prediction intervals are much larger than confidence intervals.
+- Intervals generally curve out as you reach the extremes
+
+```{r, echo=FALSE}
+data(cars)
+cars.lm <- lm(dist ~ speed, data = cars)
+ci.plot(cars.lm)
+```
+
+Analysis of Residuals
+==========
+- Normality assumption
+- Constant variance assumption
+- Independence
+
+Normality
+================
+
+-  *Normality* - Errors should be normally distributed if a model is good.
+-  Shapiro.Wilk test
+```{r}
+shapiro.test(residuals(irispetal))
+```
+
+Density plot
+=========
+-  Note: regression models are generally robust to violations of normality, so more important is that the residuals are not too skewed.
+```{r}
+densityplot(irispetal$residuals)
+```
+
+QQ-plot
+=======
+-  Quantile-Quantile plot (QQ-plot) compares the sorted residuals against what they would be if they were normally distributed.
+
+```{r}
+qqnorm(irispetal$residuals)
+qqline(irispetal$residuals)
+```
+
+Constant variance assumption
+===========
+
+-  Breusch-Pagan test
+```{r}
+library(lmtest)
+bptest(irispetal)
+```
+-  Reject constant variance test.
+-  Note: this assumption is vary often violated.
 
 
+Plot residuals to check variance
+=============
+-  Plot fitted values against standardized residuals.
+-  If constant variance, should be flat.
+```{r}
+plot(irispetal, which=3)
+```
 
+Independence assumption
+=================
+
+- Test for autocorrelation using Durbin-Watson test.
+```{r}
+dwtest(irispetal, alternative="two.sided")
+```
+
+Independence plot
+=================
+
+-  Look for any pattern or structure.
+-  Points should be scattered evenly.
+```{r}
+plot(irispetal, which=1)
+```
+
+Remedies
+========
+
+-  Change the model.
+  -  Is something missing?
+  -  Should something be removed?
+  -  Should a variable be transformed?
+
+Some causes for violating the regression assumptions
+==============
+
+-  Mean response is not linear
+  - Try polynomial or other non-linear model
+  - Try a transform (e.g. log)
+-  Error variance not constant or distribution not normal
+  - Box-Cox transformations
+-  Error distribution not independent
+  - Use autoregressive time-series models
+
+
+Special observations
+==================
+
+-  Influatential observations
+-  Outliers
