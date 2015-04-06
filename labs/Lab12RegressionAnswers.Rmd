@@ -1,0 +1,85 @@
+---
+title: "Lab 12: Regression"
+author: "IE 0015 Information Systems Engineering"
+date: April 2015
+output: html_document
+---
+
+```{r loadlibraries,  warning=FALSE}
+options(digits = 3, scipen=4)
+library(RSQLite)
+library(ggplot2)
+library(VIM)
+titanic <- read.csv("../data/titanictrain.csv",
+                    header=TRUE, sep=",")
+
+getTitle <- function(data) {
+  title.dot.start <- regexpr("\\,[A-Z ]*\\.", data$Name, TRUE)
+  title.comma.end <- title.dot.start+ attr(title.dot.start, "match.length")-1
+  data$Title <- substr(data$Name, title.dot.start+2, title.comma.end-1)
+  return (data$Title)
+}  
+titanic$Title <- getTitle(titanic)
+unique(titanic$Title)  
+```
+
+# 1.  kNN imputation (3pts).
+
+Identify the records that are missing age data.  Include the information from the title as part of information on each passenger.
+  a. Use kNN imputation to fill in these values based on 7 nearest neighbors.
+  b. Display a few of the records that previously were  missing ages.  How does the records that were imputed using kNN compare to the methods you used in last week's lab? Explain your answer.
+
+ANSWER
+------
+```{r}
+I = which(is.na(titanic$Age))
+head(titanic[I,])
+titanic2 <- kNN(titanic, k = 7)
+head(titanic2[I,])
+```
+The values should feel closer because there is more variety in the imputed records due to the averaging of records that were similar.
+Also, they feel more correct than hot deck imputation because the assignment of an age to a person is based on characteristics.
+
+# 2. Regression (7 pts)
+
+You think that the age is dependent on the following
+
+  i.  Sex
+  ii.  Pclass
+  iii.  Title
+  iv.  Fare
+(Note: so few people have SibSp or Parch that you are going to ignore these)
+
+  a.  Develop a multiple linear regression model for the age based on these characteristics for use in missing value imputation.
+  b.  Display the summary and the analysis of variance tables for this model. Comment on each of the four predictors that are in your model and make corrections as needed.
+  c.  Display diagnostics plots. Discuss the three assumptions of regression models.
+  
+ANSWER
+======
+
+a-b. Model
+```{r}
+age.lm <- lm(Age ~ Sex + Pclass + Title + Fare, data=titanic)
+summary(age.lm)
+anova(age.lm)
+```
+
+You should recognize that the Fare should be removed from the model. One issue is that the Fare is more related to the Pclass than the age of the passenger.
+
+```{r}
+age.lm2 <- lm(Age ~ Sex + Pclass + Title, data=titanic)
+summary(age.lm2)
+anova(age.lm2)
+```
+c.  Diagnostics
+```{r}
+par(mfrow=c(2,2))
+plot(age.lm2)
+par(mfrow=c(1,1))
+```
+
+-  Normality (looks pretty good, only breaks of near the top)
+-  Error distribution seems independent (very young and old are different, but that may be because so few points)
+-  Constant variance (only as the passengers are no longer very young or very old)
+
+-  Bonus: Cook's distance looks good as no point is in isolation and all are inside the boundaries.

@@ -50,6 +50,7 @@ They should identify passenger class and embarked (port of embarkation) as good 
 
 
 ```{r}
+pairs(~ Survived + Pclass + Sex + Age + SibSp + Parch + Fare + Embarked, data=titanic)
 getHotDeckAge <- function(data) {
   age <- sample(titanic[titanic$Pclass==data['Pclass'] & 
                           !is.na(titanic$Age),'Age'], 
