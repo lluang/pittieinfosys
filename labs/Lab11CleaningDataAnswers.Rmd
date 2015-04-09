@@ -1,8 +1,10 @@
 ---
-title: "Lab 11: Data cleaning"
-author: "Louis Luangkesorn"
-date: "03/30/2015"
-output: html_document
+title: 'Lab 11: Data cleaning'
+author: "IE 0015 Information Systems Engineering"
+date: "April 2015"
+output:
+  html_document:
+    keep_md: yes
 ---
 ```{r loadlibraries,  warning=FALSE}
 options(digits = 3, scipen=4)
