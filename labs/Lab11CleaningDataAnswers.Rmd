@@ -56,8 +56,25 @@ getHotDeckAge <- function(data) {
                           !is.na(titanic$Age),'Age'], 
                 size=1)
 }
-titanic$HotDeckAge <- apply(titanic, 1,  getHotDeckAge)
+titanic$HotDeckAge <- apply(titanic, MARGIN=1,  getHotDeckAge) #Apply getHotDeckAge function to each ROW, by setting MARGIN=1.
+#Put sample data in new column.
+
+# Optional solution, Only create a new value for NA in Age.
+I<-is.na(titanic$Age)
+titanic$HotDeckAge1<-NA #New column
+getHotDeckAge <- function(vb) {
+  age <- sample(titanic[titanic$Pclass==vb & 
+                          !is.na(titanic$Age),'Age'], 
+                size=1)
+}
+for (i in which (I)){
+        titanic$HotDeckAge1[i]<-getHotDeckAge(titanic$Pclass[i])
+}
 ```
+Note: 
+1)Do not change the original "Age" Column. Create a new column, for example, the HotDeckAge above. You will need to compare the new one with the origin. Alter the orignal one will also make it necessary to reload data before you start Q3 because the NA already been filled in Q2. 
+2）Do not replace the original Age column with NA. The lecture do it for the first 10 row just because there wasn't NA in that column, to show the process we put NA in it.
+You will lost every useful data if you erase all the data inside Age column.
 
 #  3.  (4 pts) Mean value and title.
 
@@ -80,11 +97,25 @@ ANSWER
 ------
 
 ```{r}
+#Create one full column with every item from mean.
 getTitleAge <- function(data) {
-  age <- median(titanic[titanic$Title==data['Title'] & titanic$Sex==data['Sex'],'Age'], 
+  age <- mean(titanic[titanic$Title==data['Title'] & titanic$Sex==data['Sex'],'Age'], 
               na.rm=TRUE)
 }
-titanic$Agetitle <- apply(titanic, 1,  getTitleAge)
+titanic$Agetitle <- apply(titanic, 1,  getTitleAge)#Put mean into new column.
+
+# Optional Solution,create entry for those NA.
+I<-is.na(titanic$Age)
+titanic$Agetitle1<-NA # New column with NA
+getTitleAge <- function(x1,x2) {
+  age <- mean(titanic[titanic$Title==x1 & titanic$Sex==x2  &
+                          !is.na(titanic$Age),'Age'], 
+                size=1)
+}
+for (i in which (I)){
+        titanic$Agetitle1[i]<-getTitleAge(titanic$Title[i],titanic$Sex[i])
+}
+
 ```
 
 
