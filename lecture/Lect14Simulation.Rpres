@@ -1,0 +1,150 @@
+Simulation
+========================================================
+author: IE0015 Information Systems Engineering
+date: April 2015
+
+
+Simulation in data analysis
+=============================
+incremental:true
+-  Simulation is the use of sampling through random numbers to obtain a distribution of a dependent variable.
+-  e.g. Discrete event simulation, Monte Carlo simulation
+-  Useful when we do not have a direct way of determining the value of a dependent variable.
+
+Resampling methods
+==============================
+
+-  Each determination of the dependent variable (performance measure) based on random simulation is a *sample*.
+-  Results in a *sampling distribution* of the dependent variable.
+  - Note: this is *not* the same as a single, "correct" answer.
+  - Answers in statistics are given as probability distributions.
+    - "There is a 95% probability that the true average is between __ and __"
+-  We assume there is a true underlying distribution. The simulation allows us to have an estimate of it.
+
+Advantages of simulation
+==============================
+
+-  Fewer assumptions:  we do not require that the underlying population is normally distributed or that the sample size is large.
+-  Greater accuracy: Many statistical methods are based on having rough upper bounds or use Taylor series expansions.  Simulations can be replicated based on the desired accuracy.
+-  Generality - Resampling methods can be applied to a large class of problems, so do not require developing and implementing methods specific to that problem definition.
+
+Using bootstrap sampling
+=======================
+
+-  We have a small enough of observed data but not enough to identify a distribution.
+-  *Bootstrap* - resample with replacement from the observed data.
+
+Steps in the bootstrap
+=========================
+1.  Create samples of the independent variables $x_1^*, ..., x_M^*$, called *resamples*, by sampling with replacement from the data.
+
+2.  Calculate the statistic of interest $S(x_1^*), ..., S(x_M^*)$ for each resample. The distribution of the result of the resample is the *bootstrap distribution*.
+
+3.  The bootstrap distribution gives information about the sampling distribution of the original, unobservable, statistic *S*.  It gives an approximation of the center, spread, and shape of *S*.
+
+Standard errors
+=================
+
+-  Errors from bootstrapping come from two sources
+  -  The observed data does not the same exact distribution as the population from which it was drawn.
+  -  The resampled sample will have a different distribution than the observed data.
+  
+Standard error example
+============================
+
+-  Look at a sample where the underling population is normally distributed $X \sim N(\mu=3, \sigma=1)$.
+-  Look at $\bar{x}$
+-  We know that $\bar{x} \sim N(\mu, 1/\sqrt{n})$
+
+
+Example
+=====
+
+```{r}
+srs <- rnorm(25, mean = 3)
+resamps <- replicate(1000, sample(srs, 25, TRUE), simplify = FALSE)
+xbarstar <- sapply(resamps, mean, simplify = TRUE)
+hist(xbarstar, breaks = 40, prob = TRUE, xlim=c(2, 4))
+curve(dnorm(x, 3, 0.2), add = TRUE)
+```
+
+Compare simulation to the theoretical mean
+=========================================
+
+-  Expected confidence interval of the mean
+  - $sd/\sqrt{n} = 1/\sqrt{25} = 0.2$
+```{r}
+mean(xbarstar)
+sd(xbarstar)
+```
+-  Within expectation
+
+Improving the errors
+======================
+incremental: true
+
+-  What would happen if we took more samples?
+-  More samples would make the sample look more like the observed data.
+  - Does not make the observed data closer to the true underlying population distribution.
+  
+Implementing using the boot package
+===================
+
+-  The function `boot` is in the *boot* package.
+-  
+```{r}
+library(boot)
+mean_fun <- function(x, indices) mean(x[indices])
+boot(data = srs, statistic = mean_fun, R = 1000)
+```
+
+Try the same thing with a different statistic
+========================
+
+```{r}
+median_fun <- function(x, indices) median(x[indices])
+boot(data = rivers, statistic = median_fun, R = 1000)
+```
+
+Confidence intervals
+===================
+
+- Typically, we calculated confidence intervals by assuming that outputs were normally distributed.
+  - e.g. use c.i. as a function of the *t*-distribution.
+- Using simulation, we can apply the definition of the c.i. directly.
+  - "95% of the estimates are between __ and __"
+  
+C.I. example
+====================
+
+```{r}
+btsamps <- replicate(2000, sample(stack.loss, 21, TRUE), simplify = FALSE)
+thetast <- sapply(btsamps, median, simplify = TRUE)
+mean(thetast)
+```
+
+Percentile interval of the median
+===============
+```{r}
+median(stack.loss)
+quantile(thetast, c(0.025, 0.975))
+```
+
+Now, using the boot function
+===============
+```{r}
+med_fun <- function(x, ind) median(x[ind])
+med_boot <- boot(stack.loss, med_fun, R = 2000)
+boot.ci(med_boot, type = c("perc", "norm", "bca"))
+```
+
+Note: *bca* = bias-corrected and adjusted
+
+Use with the t-interval
+=======================
+
+- We usually use the *t*-statistic to calculate confidence intervals.
+
+$$\bar{X} \pm t_{\alpha/2, df=n-1}\frac{S}{\sqrt{n}}$$
+
+-  If we know that our outcome statistics will be bell shaped (e.g. symmetric with a shape similar to the normal), we can use the *t*-statistics along with our bootstrap 
