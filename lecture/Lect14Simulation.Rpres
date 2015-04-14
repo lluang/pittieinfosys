@@ -4,6 +4,63 @@ author: IE0015 Information Systems Engineering
 date: April 2015
 
 
+Project feedback
+================
+type:section
+
+CoNVO
+========
+
+-  Context - An organization that has a mission that leads to its interest in the analysis.
+-  Need - A decision to be made and a question that needs to be answered to support the decision.
+-  Vision - A data presentation that answers the need.
+-  Outcome - A decision that could be made based on the data presented in the form identified in the vision.
+
+Data description
+=============
+
+-  Source - What data was collected, by whom, and why.
+-  Volume - How much data.
+-  Variety - For each subject in the data, what kinds of infromation.
+-  Velocity - Does data change from time period to time period.
+  - Subjects added, subjects lost, or do subjects change over time.
+-  Veracity - Truth of the data in representing the population you are interested in.
+  - Surveys always have an issue of the responders need to understand the question.
+  - Do responders have motivation of being honest?
+
+
+Methodology and results
+==============
+
+-  Methodology - What procedure will you do to perform the analysis?
+  -  Make a plan
+  -  Goal: reader can evaluate the methodology objectively separate from the results.
+-  Results - What was the result of performing the methodology.
+  -  The result of carrying out the plan.
+  -  Goal: An objective presentation of the analysis.
+-  Conclusion - Your interpretation of the analysis as it applies to the Context, Need, Vision, Outcome
+  -  Goal: The reader can see how the analysis will lead to a resultion to the decision that was described in the CoNVO
+  
+Sampling
+==========
+
+-  Data usually involves sampling from populations
+  - You should know how many responders there are and how they may compare to the entire population, but the results are always percentages/ratios.
+  - Statisticians can draw conclusions based on the data results and understanding how the sample was created (e.e.g the weighting variables in NSFG and US Census ACS)
+
+
+Comparing data
+==============
+
+-  We understand data through comparisons with a standard.
+-  In statistics, we use the null hypothesis to compare against equality.
+-  In data analysis, we must find a comparison group.
+
+Simulation
+=============
+type:section
+
+
 Simulation in data analysis
 =============================
 incremental:true
@@ -61,6 +118,7 @@ Example
 =====
 
 ```{r}
+options(digits=2)
 srs <- rnorm(25, mean = 3)
 resamps <- replicate(1000, sample(srs, 25, TRUE), simplify = FALSE)
 xbarstar <- sapply(resamps, mean, simplify = TRUE)
@@ -91,7 +149,8 @@ Implementing using the boot package
 ===================
 
 -  The function `boot` is in the *boot* package.
--  
+-  Define a summary function, then apply it using bootstrap.
+
 ```{r}
 library(boot)
 mean_fun <- function(x, indices) mean(x[indices])
@@ -113,6 +172,9 @@ Confidence intervals
   - e.g. use c.i. as a function of the *t*-distribution.
 - Using simulation, we can apply the definition of the c.i. directly.
   - "95% of the estimates are between __ and __"
+  - Using simulation, use the 0.025 and 0.975 quantiles of the simulation results. (e.g. equal tails)
+  - Another choice if you believe that the distribution is to use the smallest range that gives a 0.95 interval.
+    - Question: Why are these not the same thing?
   
 C.I. example
 ====================
@@ -148,3 +210,98 @@ Use with the t-interval
 $$\bar{X} \pm t_{\alpha/2, df=n-1}\frac{S}{\sqrt{n}}$$
 
 -  If we know that our outcome statistics will be bell shaped (e.g. symmetric with a shape similar to the normal), we can use the *t*-statistics along with our bootstrap 
+
+$$statistic  \pm t_{\alpha/2, df=n-1} * SE(statistic)$$
+
+
+Hypothesis testing
+====================
+
+Used to test if two groups are significantly different or if two groups are reasonably similar.  Standard method
+
+- Collect information/data from the two groups and calculate a statistic for comparison.  e.g.
+  $$\bar{X}_1 - \bar{X}_2$$
+- Presume there is no difference between the groups ($H_0$).  Find the distribution of the statistic in 1.  e.g. assume *mean=0* and calculate *sd*
+- Locate the observed value of the statistic with respect to the distribution found in 2. If the value is not in the main body of the distribution, then it provides evidence *against* the null hypothesis.  We usually compute the *p*-value to decide this.
+
+Hypothesis testing with simulation
+====================
+
+
+-  Example: the common dosage for an anti-retroviral drug AZT is 300mg. Higher doses are potentially more effective, but also have more side effects. Question: are the side effects significantly higher?
+
+1.  Calculate the difference in means between two groups.
+
+```{r}
+azt300 <- c(284, 279, 289, 292, 287, 295, 285, 279, 306, 298)
+azt600 <- c(298, 307, 297, 279, 291, 335, 299, 300, 306, 291)
+mean(azt300)
+mean(azt600)
+delta300600 <- mean(azt600) - mean(azt300)
+delta300600
+```
+
+Significance with bootstrap
+===========================
+
+2.  Resample from the data to generate a distribution of differences.
+  -  Presuming there are no differences, sample 10 from the combined data to generate a *a300* group, with the remainder in the *a600* group. (*Q: why 10?*)
+  -  Calculate and save the differences in mean.
+3.  Draw the *permutation distribution* of these differences. Locate the observed difference (10.9) and determine its *p-value* from the *permutation distribution*. If *p* is small, this is evidence against the null hypothesis
+
+```{r}
+set.seed(1234)
+permdistfun <- function(azt){
+  pdelta <- c()
+  tf10 <- c(rep(FALSE, 10), rep(TRUE, 10))
+  select <- sample(tf10, 20, replace =FALSE)
+  azt3 <- azt[select]
+  azt6 <- azt[!select]
+  delta <- mean(azt6)-mean(azt3)
+  delta
+}
+```
+
+
+Now, apply bootstrap and to get the permutation distribution
+
+=====
+```{r}
+azt <- c(azt300, azt600)
+samples = 1000
+pdist <- sort(replicate(samples,permdistfun(azt)))
+```
+```{r, echo=FALSE}
+summary(pdist)
+hist(pdist, breaks=seq(-20, 20, by=1))
+```
+
+
+Find the p-value of the observed difference
+=================
+```{r}
+qdist <- max(which(pdist<delta300600))/samples
+pvalue <- min(qdist, 1-qdist)
+pvalue
+```
+
+Compare to normal hypothesis testing
+==========================
+
+```{r}
+t.test(x=azt300, y=azt600)
+```
+
+-  Why the difference?
+
+Summary
+======
+
+-  Simulation often used when some data is unobservable.
+  -  Ask the question: could I have seen the result I saw if *X* was true?
+-  Resampling can be used for hypothesis testing in the case of little data or if normal assumption is not true.
+  -  Bootstrapping can be used to 
+
+
+
+
