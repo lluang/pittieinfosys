@@ -178,6 +178,7 @@ Method for imputation
 -  *k* Nearest Neighbors
 -  Hot deck imputation
 -  Minimal value adjustment
+-  Linear regression
 
 Using summary functions
 ===================
