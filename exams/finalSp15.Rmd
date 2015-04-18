@@ -1,0 +1,46 @@
+---
+title: "IE 0015 Final"
+author: "IE 0015 Information Systems Engineering"
+date: "04/18/2015"
+output: html_document
+---
+
+# 1.  CoNVO Statement
+
+Article
+
+Discuss the following in terms of a CoNVO Statement
+
+ANSWER
+--------
+
+-  Context:  Identify organization. Identify mission.  Mission is a broader context than the project.
+-  Need:  Identify a decision to be made or a problem to be resolved.  Identify a question that can be answered with data.
+-  Vision:  A description of a presentation of data that would answer the question identified in the Need.
+-  Outcome:  A description of how the organization identified in the Context could respond when given the presentation described in the Vision.
+
+
+#  2.  Missing value imputation
+
+Mean value imputation
+
+kNN imputation
+
+Random imputation
+
+#  3.  Text analysis.
+
+Walk through steps in 
+
+Description of characters/number pattern that is the target.
+
+Identify starting marker
+Identify ending marker
+
+#  4.  Data analysis
+
+Table of provided data and question
+
+Design the desired data format
+
+Sequence of steps to transform data into desired format.
