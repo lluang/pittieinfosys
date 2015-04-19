@@ -10,15 +10,17 @@ library(ggplot2)
 library(faraway)
 ```
 
-1.  There are four questions and an article for this exam.
+1.  There are four questions (4 pages) and an article (2 pages) for this exam.  Each question has multiple parts to answer indicated by capital letters. Start your answer for each question on a new page in your exam blue book.
 2.  You may have a double sided, hand-written page of notes (crib sheet)
 3.  You may have a stand-alone calculator (e.g. not your cell phone). If you do not have a calculator, when you have a calculation you may set up the calculation and provide an approximation of the answer for full credit.
 4.  Answer questions in the blue book provided. Additional blue books may be available if needed.
 5.  You have 2 hours for the exam.
+6.  Staple blue book and your notes sheet to the exam when you turn it in.
 
-# 1.  Mobile phones in sub-saharan Africa (20 pts)
 
-Mobile Phones Are Revolutionizing Personal Finance In Sub-Saharan Africa
+# 1.  Mobile phones in sub-saharan Africa (25 pts)
+
+Article: Mobile Phones Are Revolutionizing Personal Finance In Sub-Saharan Africa
 
 Discuss the article in terms of:
 
@@ -26,7 +28,7 @@ A.  A CoNVO Statement and
 B.  Data Volume, Velocity, Variety
 
 
-#  2.  Physician complaints (35 points)
+#  2.  Physician complaints (30 points)
 
 Table 1 contains data for 20 emergency room doctors at an Australian hospital regarding complaints.  We are interested in the rate of complaints for doctors, however, the records for three of the doctors is incomplete because we do not have the number of patient visits handled by that doctor.
 
@@ -54,7 +56,7 @@ C.  Assume that you can categorize on residency and gender.  Use mean value impu
 
 D.  Discuss how you would choose between the methods for imputing missing value:  mean value, random selection, kNN, and linear regression.
 
-#  3.  HTML pages. (25 pts)
+#  3.  HTML pages. (20 pts)
 
 In an HTML file such as those displayed on web browsers, the files are formatted through the form of HTML tags. For example, here is a very simple web html page:
 
