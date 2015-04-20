@@ -1,0 +1,123 @@
+---
+title: "B- IE 0015 Spring 2015 Final - B"
+author: "IE 0015 Information Systems Engineering"
+output: pdf_document
+---
+---
+title: "A - IE 0015 Spring 2015 Final - A"
+author: "IE 0015 Information Systems Engineering"
+output: pdf_document
+---
+
+```{r, echo=FALSE}
+options(digits=1)
+library(ggplot2)
+library(faraway)
+```
+
+1.  There are four questions (4 pages) and an article (3 pages) for this exam.  Each question has multiple parts to answer indicated by capital letters. Start your answer for each question on a new page in your exam blue book.
+2.  You may have a double sided, hand-written page of notes (crib sheet)
+3.  You may have a stand-alone calculator (e.g. not your cell phone). If you do not have a calculator, when you have a calculation you may set up the calculation and provide an approximation of the answer for full credit.
+4.  Answer questions in the blue book provided. Additional blue books may be available if needed.
+5.  You have 2 hours for the exam.
+6.  Staple blue book and your notes sheet to the exam when you turn it in.
+
+#  1.  Madrid Rock 'n Roll Marathon (25 points)
+
+Analysing The Rock ‘n’ Roll Madrid Marathon
+
+You are a personal trainer preparing a number of her clients to run in the 2015 Pittsburgh Marathon. Discuss the article and analysis in terms of:
+
+A.  A CoNVO Statement and 
+B.  Data Volume, Velocity, Variety
+
+
+#  2.  Physician complaints (30 points)
+
+Table 1 contains data for 20 emergency room doctors at an Australian hospital regarding complaints.  We are interested in the rate of complaints for doctors, however, the records for three of the doctors is incomplete because we do not have the number of patient visits handled by that doctor.
+
+- visits - the number of patient visits
+- complaints - the number of complaints
+-  residency - is the doctor in residency training N or Y
+- gender - gender of doctor F or M
+- revenue - dollars per hour earned by the doctor
+- hours - total number of hours worked
+
+```{r, echo=FALSE}
+data(esdcomp)
+esdfinal <- esdcomp[1:20, ]
+esdfinal$visits[c(2, 10, 14)] = NA
+esdfinal
+#gender.color = c(M="gray0", F="gray1")
+ggplot(esdfinal, aes(y=complaints, x=revenue, shape= residency, color=gender)) + geom_point() + geom_jitter() + scale_color_grey(start=0.0, end=0.5) + scale_size_continuous(range = c(3,4)) + theme_bw() + ggtitle(label = "Complaints by dollars per hour earned by the doctor")
+```
+
+A.  One of your colleagues thinks that the best thing to do is use all available data and run a linear regression using the other five data elements available to fill in the number of visits. Assume that a linear regression is the correct method to use to impute missing values in this case.  Argue either in favor or against this argument (Note: an argument against should discuss what should be removed from a linear regression and why.)
+
+B.  Assume that the variables that are important are residency, gender, and hours worked.  Use kNN imputation to impute the number of visits for doctor 10. Use $k=2$
+
+C.  Assume that you can categorize on residency and gender.  Use mean value imputation to impute the number of visits for doctor 10.
+
+D.  Discuss how you would choose between the methods for imputing missing value:  mean value, random selection, kNN, and linear regression. Your answer should be between 2-5 sentences.
+
+#  3. Addresses by ZIP code prefix (20 points)
+
+The first three digits (the prefix) of a U.S. ZIP code identify the Sectional Center Facility that serves as a distribution and processing center for an area. Therefore, the prefix can be used to identify geographic location in a sense that the entire five digit ZIP code cannot.  Below is an example of a set of addresses.
+
+```
+602 Church Street South 
+Osseo, MN 55311
+
+962 Delaware Avenue 
+Newport News, VA 23601
+
+747 Buckingham Drive 
+Brockton, MA 02301
+
+663 Aspen Court 
+Carlisle, PA 17013
+
+90 Hudson Street 
+Jamaica, NY 11432
+
+716 Elm Street 
+Long Beach, NY 11561
+
+165 Oak Avenue 
+Culpeper, VA 22701
+
+223 Woodland Road 
+Mount Laurel, NJ 08054
+
+459 Grove Street 
+Cranston, RI 02920
+
+947 Park Drive 
+Massillon, OH 44646
+```
+
+With a set of 1000s of addresses that have been formatted in this form and a set of ZIP code prefixes that are your responsibility.  Because this was provided in plane text you need to use regular expressions to identify the addresses that you need to pull out and then copy the correct lines.  Remember, regular expressions identify the exact location within the file of what you find.
+
+A.  How do you identify the beginning of the address?
+B.  How do you identify the ZIP code in the address?
+C.  Given the ZIP code, how do you identify the ZIP code prefix?
+D.  Now that you have identified the ZIP code and the prefix, how do you specify the address you need to copy to your final address file?
+
+#  4.  Kansas election results (25 pts)
+
+```{r, echo=FALSE}
+kansas <- read.delim(file = "2010-Kansas-General-Election-11-03.txt", header = TRUE, sep = "|")
+kansashouse <- kansas[(substr(kansas$Contest, 1, 19)=="United States House"), c(1,2,3,4)]
+racename <- function(contest){
+  name <- paste("U.S.", substring(contest,15, 26), substring(contest, 40))
+}
+kansashouse$Contest <-  sapply(kansashouse$Contest, racename)
+head(kansashouse, 20)
+```                                         
+
+The Kansas Secretary of States publishes election results in the format of Table 2, (which provides the first 20 entries). It breaks down voting for each county, contest (race) and candidate voted for. There are 105 counties in Kansas, and 4 house seats (which are not divided along county lines) with 13 candidates. However, what you are interested in is the total for each candidate in each contest across the state.
+
+Note: the Contest is in the form *U.S. House of Rep 00#* where *#* represents the number of the district, e.g. *U.S. House of Rep 002* would indicate the 2nd Congressional District.
+
+A.  Is this data in *wide* or *long* format?
+B.  Provide the procedure to convert this data into a desired format then determine the winner of each U.S. House of Representatives Congressional District.  After each step, you should describe what the data looks like at each step.

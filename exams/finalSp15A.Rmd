@@ -54,7 +54,7 @@ B.  Assume that the variables that are important are residency, gender, and hour
 
 C.  Assume that you can categorize on residency and gender.  Use mean value imputation to impute the number of visits for doctor 2.
 
-D.  Discuss how you would choose between the methods for imputing missing value:  mean value, random selection, kNN, and linear regression.
+D.  Discuss how you would choose between the methods for imputing missing value:  mean value, random selection, kNN, and linear regression.  Your answer should be between 2-5 sentences.
 
 #  3.  HTML pages. (20 pts)
 

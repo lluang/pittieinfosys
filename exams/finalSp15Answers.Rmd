@@ -10,18 +10,36 @@ library(ggplot2)
 library(faraway)
 ```
 
-1.  There are four questions (4 pages) and an article (2 pages) for this exam.  FEach question has multiple parts to answer indicated by capital letters. Start your answer for each question on a new page in your exam blue book.
+1.  There are four questions (4 pages) and an article (2 pages) for this exam.  Each question has multiple parts to answer indicated by capital letters. Start your answer for each question on a new page in your exam blue book.
 2.  You may have a double sided, hand-written page of notes (crib sheet)
 3.  You may have a stand-alone calculator (e.g. not your cell phone). If you do not have a calculator, when you have a calculation you may set up the calculation and provide an approximation of the answer for full credit.
 4.  Answer questions in the blue book provided. Additional blue books may be available if needed.
 5.  You have 2 hours for the exam.
 6.  Staple blue book and your notes sheet to the exam when you turn it in.
 
-# 1.  Mobile phones in sub-saharan Africa (25 pts)
+# 1A.  Mobile phones in sub-saharan Africa (25 pts)
 
 Mobile Phones Are Revolutionizing Personal Finance In Sub-Saharan Africa
 
-Discuss the article in terms of:
+Assume that you work for an international development bank evaluating project proposals for funding. Discuss the article in terms of:
+
+A.  A CoNVO Statement and 
+B.  Data Volume, Velocity, Variety
+
+#  1B.  Madrid Rock 'n Roll Marathon  (25 pts)
+
+Analysing The Rock ‘n’ Roll Madrid Marathon
+
+You are a personal trainer preparing a number of her clients to run in the 2015 Pittsburgh Marathon. Discuss the article and analysis in terms of:
+
+A.  A CoNVO Statement and 
+B.  Data Volume, Velocity, Variety
+
+#  1C.  National Weather Service Pittsburgh, PA  (25 pts)
+
+Severe Weather Climatology for the Pittsburgh, PA Warning Area
+
+You are working with the Pennsylvania Emergency Management Agency (PEMA) Region 13 (covering southwestern Pennsylvania) and you are responsible for emergency preparedness.  Discuss the attached article and analysis in terms of:
 
 A.  A CoNVO Statement and 
 B.  Data Volume, Velocity, Variety
@@ -37,7 +55,6 @@ ANSWER
 -  Volume: How much data is there
 -  Velocity: How do subjects change over time
 -  Variety: What data is available on every subject
-
 
 #  2.  Physician complaints (30 points)
 
@@ -59,13 +76,39 @@ esdfinal
 ggplot(esdfinal, aes(y=complaints, x=revenue, shape= residency, color=gender)) + geom_point() + geom_jitter() + scale_color_grey(start=0.0, end=0.5) + scale_size_continuous(range = c(3,4)) + theme_bw() + ggtitle(label = "Complaints by dollars per hour earned by the doctor")
 ```
 
+VERSION A
+---------
+
 A.  One of your colleagues thinks that the best thing to do is use all available data and run a linear regression using the other five data elements available to fill in the number of visits. Assume that a linear regression is the correct method to use to impute missing values in this case.  Argue either in favor or against this argument (Note: an argument against should discuss what should be removed from a linear regression and why.)
 
 B.  Assume that the variables that are important are residency, gender, and hours worked.  Use kNN imputation to impute the number of visits for doctor 2. Use $k=2$
 
 C.  Assume that you can categorize on residency and gender.  Use mean value imputation to impute the number of visits for doctor 2.
 
-D.  Discuss how you would choose between the methods for imputing missing value:  mean value, random selection, kNN, and linear regression.
+D.  Discuss how you would choose between the methods for imputing missing value:  mean value, random selection, kNN, and linear regression. Your answer should be between 2-5 sentences.
+
+VERSION B
+-----------
+
+A.  One of your colleagues thinks that the best thing to do is use all available data and run a linear regression using the other five data elements available to fill in the number of visits. Assume that a linear regression is the correct method to use to impute missing values in this case.  Argue either in favor or against this argument (Note: an argument against should discuss what should be removed from a linear regression and why.)
+
+B.  Assume that the variables that are important are residency, gender, and hours worked.  Use kNN imputation to impute the number of visits for doctor 10. Use $k=2$
+
+C.  Assume that you can categorize on residency and gender.  Use mean value imputation to impute the number of visits for doctor 10.
+
+D.  Discuss how you would choose between the methods for imputing missing value:  mean value, random selection, kNN, and linear regression. Your answer should be between 2-5 sentences.
+
+VERSION C
+-----------
+
+A.  One of your colleagues thinks that the best thing to do is use all available data and run a linear regression using the other five data elements available to fill in the number of visits. Assume that a linear regression is the correct method to use to impute missing values in this case.  Argue either in favor or against this argument (Note: an argument against should discuss what should be removed from a linear regression and why.)
+
+B.  Assume that the variables that are important are residency, gender, and hours worked.  Use kNN imputation to impute the number of visits for doctor 14. Use $k=2$
+
+C.  Assume that you can categorize on residency and gender.  Use mean value imputation to impute the number of visits for doctor 14.
+
+D.  Discuss how you would choose between the methods for imputing missing value:  mean value, random selection, kNN, and linear regression. Your answer should be between 2-5 sentences.
+
 
 ANSWER
 ------
@@ -91,7 +134,7 @@ visits
 
 D.  Should say kNN.  Linear regression is also acceptable.  They should argue that the number of visits is related to the amount of work done (which can be measured by either revenue or hours).
 
-#  3.  HTML pages. (20 pts)
+#  3A.  HTML pages. (20 pts)
 
 In an HTML file such as those displayed on web browsers, the files are formatted through the form of HTML tags. For example, here is a very simple web html page:
 
@@ -133,6 +176,93 @@ B. The value of `#` from the above.
 C. Search for the next occurrence of the string `</H#>` where `#` is the string found in (A).  Note this answer needs to specify that it is looking for the same number `#` as in (A)
 
 D. Starting character value is A + 4. Ending character is C - 1. You should eliminate starting and closing spaces, but that is not important.
+
+
+#  3B. Addresses by ZIP code prefix (20 pts)
+
+The first three digits (the prefix) of a U.S. ZIP code identify the Sectional Center Facility that serves as a distribution and processing center for an area. Therefore, the prefix can be used to identify geographic location in a sense that the entire five digit ZIP code cannot.  Below is an example of a set of addresses.
+
+```
+602 Church Street South 
+Osseo, MN 55311
+
+962 Delaware Avenue 
+Newport News, VA 23601
+
+747 Buckingham Drive 
+Brockton, MA 02301
+
+663 Aspen Court 
+Carlisle, PA 17013
+
+90 Hudson Street 
+Jamaica, NY 11432
+
+716 Elm Street 
+Long Beach, NY 11561
+
+165 Oak Avenue 
+Culpeper, VA 22701
+
+223 Woodland Road 
+Mount Laurel, NJ 08054
+
+459 Grove Street 
+Cranston, RI 02920
+
+947 Park Drive 
+Massillon, OH 44646
+```
+
+With a set of 1000s of addresses that have been formatted in this form and a set of ZIP code prefixes that are your responsibility.  Because this was provided in plane text you need to use regular expressions to identify the addresses that you need to pull out and then copy the correct lines.  Remember, regular expressions identify the exact location within the file of what you find.
+
+A.  How do you identify the beginning of the address?
+B.  How do you identify the ZIP code in the address?
+C.  Given the ZIP code, how do you identify the ZIP code prefix?
+D.  Now that you have identified the ZIP code and the prefix, how do you specify the address you need to copy to your final address file?
+
+ANSWER
+------------------
+
+A.  Addresses begin after a blank line, so you look for two line returns.
+B.  The ZIP code is the last five characters in the second line of an address.
+C.  The ZIP code prefix is the first three characters of the ZIP code.
+D.  The address is the line before the ZIP code and the line which includes the ZIP code.
+
+#  3C.  Finding URLs (20 pts)
+
+You have a number of reports that reference a range of web pages based in the United States.  You want to analyze the domains that are referenced to identify common references.  Some examples of references include:
+
+```
+http://fivethirtyeight.com/datalab/how-many-americans-dont-know-how-to-ride-a-bike/
+
+http://www.engineering.pitt.edu/Departments/Industrial/_Content/Undergraduate/Curriculum-2010/
+
+http://www.lrp.usace.army.mil/Careers.aspx
+
+http://travel.state.gov/content/passports/english.html
+
+http://www.spacex.com/dragon
+```
+
+You are only interested in U.S. based websites, so you can restrict the top level domains to *.com, .gov, .edu, .mil*. Also, assume that all characters will be lower case. You need to create a list of domain names (e.g. pitt.edu) that are referenced.
+
+
+A.  How do you identify a URL?
+B.  How do you identify the beginning and end of the URL?
+C.  Given the URL, how do you identify the domain name so that it can be copied to your list?
+D.  Now that you have identified the domain name, how do you specify what needs to go into your domain name list?
+
+ANSWER
+--------
+
+A.  URLs include one of the suffixes
+B.  The URL is proceeded by a space. Ends with a space, but there may be a period that is between the URL and the space.
+C.  The domain name is the part that preceeds the suffix
+D.  Start at the suffix, find the `.` that is before it. Start after the `.`
+
+
+
 
 #  4.  Kansas election results (25 pts)
 
