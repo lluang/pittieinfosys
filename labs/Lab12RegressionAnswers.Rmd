@@ -1,8 +1,8 @@
 ---
-title: "Lab 12: Regression"
+title: 'Lab 12: Regression'
 author: "IE 0015 Information Systems Engineering"
-date: April 2015
-output: html_document
+date: "April 2015"
+output: pdf_document
 ---
 
 ```{r loadlibraries,  warning=FALSE}
@@ -78,8 +78,8 @@ plot(age.lm2)
 par(mfrow=c(1,1))
 ```
 
--  Normality (looks pretty good, only breaks of near the top)
+-  Normality (looks pretty good, only breaks off the 45 degree line near the top of the distribution)
 -  Error distribution seems independent (very young and old are different, but that may be because so few points)
--  Constant variance (only as the passengers are no longer very young or very old)
+-  Constant variance (only changes as for passengers that are   very young or very old)
 
 -  Bonus: Cook's distance looks good as no point is in isolation and all are inside the boundaries.

@@ -98,13 +98,3 @@ Note: the Contest is in the form *U.S. House of Rep 00#* where *#* represents th
 
 A.  Is this data in *wide* or *long* format?
 B.  Provide the procedure to convert this data into a desired format then determine the winner of each U.S. House of Representatives Congressional District.  After each step, you should describe what the data looks like at each step.
-
-
-ANSWER
-------
-
-A.  The data is in *long* format.  Each row shows a single vote tally.
-B.  Reshape then aggregate
-  i.  Use reshape to *cast* the data into a row for each county and race. So you will have a row for each county, and there will be columns for each candidate. Note that most candidate vote values will be 0 or NA.
-  ii. *Aggregate* (taking the sum) votes by race and candidate (Note: each candidate is in only one race, so it is not necessary to say *race*).  You will have a row for each race, with only candidates for each race having non-zero values.
-  iii.  *Select* the candidate with the maximum number of votes for each race.

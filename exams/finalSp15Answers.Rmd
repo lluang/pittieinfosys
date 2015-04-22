@@ -1,5 +1,5 @@
 ---
-title: "A - IE 0015 Spring 2015 Final - A"
+title: "SOLUTIONS - IE 0015 Spring 2015 Final - SOLUTIONS"
 author: "IE 0015 Information Systems Engineering"
 output: pdf_document
 ---

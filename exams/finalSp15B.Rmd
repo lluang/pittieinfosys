@@ -96,7 +96,7 @@ Cranston, RI 02920
 Massillon, OH 44646
 ```
 
-With a set of 1000s of addresses that have been formatted in this form and a set of ZIP code prefixes that are your responsibility.  Because this was provided in plane text you need to use regular expressions to identify the addresses that you need to pull out and then copy the correct lines.  Remember, regular expressions identify the exact location within the file of what you find.
+You are given a set of 1000s of addresses that have been formatted in this form and a set of ZIP code prefixes that are your responsibility.  Because this was provided in plane text you need to use regular expressions to identify the addresses that you need to pull out and then copy the correct lines.  Remember, regular expressions identify the exact location within the file of what you find.
 
 A.  How do you identify the beginning of the address?
 B.  How do you identify the ZIP code in the address?
