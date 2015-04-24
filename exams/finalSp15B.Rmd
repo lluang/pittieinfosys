@@ -3,11 +3,6 @@ title: "B- IE 0015 Spring 2015 Final - B"
 author: "IE 0015 Information Systems Engineering"
 output: pdf_document
 ---
----
-title: "A - IE 0015 Spring 2015 Final - A"
-author: "IE 0015 Information Systems Engineering"
-output: pdf_document
----
 
 ```{r, echo=FALSE}
 options(digits=1)

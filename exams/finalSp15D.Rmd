@@ -1,0 +1,112 @@
+---
+title: "D - IE 0015 Spring 2015 Final - D" 
+author: "IE 0015 Information Systems Engineering"
+output: pdf_document
+---
+
+```{r, echo=FALSE}
+options(digits=1)
+library(ggplot2)
+library(faraway)
+```
+
+1.  There are four questions (4 pages) and an article (2 pages) for this exam.  Each question has multiple parts to answer indicated by capital letters. Start your answer for each question on a new page in your exam blue book.
+2.  You may have a double sided, hand-written page of notes (crib sheet)
+3.  You may have a stand-alone calculator (e.g. not your cell phone). If you do not have a calculator, when you have a calculation you may set up the calculation and provide an approximation of the answer for full credit.
+4.  Answer questions in the blue book provided. Additional blue books may be available if needed.
+5.  You have 2 hours for the exam.
+6.  Staple blue book and your notes sheet to the exam when you turn it in.
+
+
+# 1.  Mobile phones in sub-saharan Africa (25 pts)
+
+Article: Mobile Phones Are Revolutionizing Personal Finance In Sub-Saharan Africa.  Take the point of view of a bank in Sub-Saharan Africa.
+
+Discuss the article in terms of:
+
+A.  A CoNVO Statement and 
+B.  Data Volume, Velocity, Variety
+
+
+#  2.  Physician complaints (30 points)
+
+Table 1 contains data for 20 emergency room doctors at an Australian hospital regarding complaints.  We are interested in the rate of complaints for doctors, however, the records for three of the doctors is incomplete because we do not have the number of patient visits handled by that doctor.
+
+- visits - the number of patient visits
+- complaints - the number of complaints
+-  residency - is the doctor in residency training N or Y
+- gender - gender of doctor F or M
+- revenue - dollars per hour earned by the doctor
+- hours - total number of hours worked
+
+```{r, echo=FALSE}
+data(esdcomp)
+esdfinal <- esdcomp[1:20, ]
+esdfinal$visits[c(2, 10, 14)] = NA
+esdfinal
+#gender.color = c(M="gray0", F="gray1")
+ggplot(esdfinal, aes(y=complaints, x=revenue, shape= residency, color=gender)) + geom_point() + geom_jitter() + scale_color_grey(start=0.0, end=0.5) + scale_size_continuous(range = c(3,4)) + theme_bw() + ggtitle(label = "Complaints by dollars per hour earned by the doctor")
+```
+
+A.  One of your colleagues thinks that the best thing to do is use all available data and run a linear regression using the other five data elements available to fill in the number of visits. Assume that a linear regression is the correct method to use to impute missing values in this case (all elements are statistically significant and all analysis of residuals indicate that the residuals are independent and normally distributed).  Argue either in favor or against this argument (Note: an argument against should discuss what should be removed from a linear regression and why.)
+
+B.  Assume that the variables that are important are residency, gender, and hours worked.  Use kNN imputation to impute the number of visits for doctor 10. Use $k=2$
+
+C.  Assume that you can categorize on residency and gender.  Use mean value imputation to impute the number of visits for doctor 10.
+
+D.  Discuss how you would choose between the methods for imputing missing value for this data set:  mean value, random selection, kNN, and linear regression.  Your answer should be between 2-5 sentences.
+
+#  3.  DOCX Headers (20 pts)
+
+A Microsoft Word .docx file is actually an Extensible Markup Language (XML) file that has been compressed using Zip.  The embedded XML file is a text file that includes markup using XML, which is very similar to HTML.
+
+In an XML file, the text is marked-up and formatted through the form of XML tags. For example, here is a very simple xml document:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<heading1>My First Heading</heading1>
+  <body>some text</body>
+<heading2>This is heading level 2</heading2>
+  <body>some text</body>
+<heading3>This is heading level 3</heading3>
+  <body>some text</body>
+<heading3>This is another heading level 3</heading3>
+  <body>some text</body>
+<heading4>This is heading level 4</heading4>
+  <body>some text</body>
+<heading2>This is another heading level 2</heading2>
+  <body>some text</body>
+
+```
+
+Examples of tags are `<note>`, `<body>`, and `<heading1>`, and they are always closed by something like `</note>`, `</body>`, and `</heading1>`.
+
+You have a Word .docx document with an embedded XML and you want to identify all headings in the document so that you can create a table of contents of this and your other docx files. You do not know how many levels of headings can be in the file, but you know it does not go more than 9 levels deep.
+
+A.  How do you identify the beginning of the heading?
+B.  How do you identify the heading level?
+C.  How do you identify the end of the heading?
+D.  Given that you know the character position (number) of every character in the file, and that you can identify the position of the results to (A) and (B), how do you specify the heading text for use in your table of contents?
+
+
+
+#  4.  Kansas election results (25 pts)
+
+```{r, echo=FALSE}
+kansas <- read.delim(file = "2010-Kansas-General-Election-11-03.txt", header = TRUE, sep = "|")
+kansashouse <- kansas[(substr(kansas$Contest, 1, 19)=="United States House"), c(1,2,3,4)]
+racename <- function(contest){
+  name <- paste("U.S.", substring(contest,15, 26), substring(contest, 40))
+}
+kansashouse$Contest <-  sapply(kansashouse$Contest, racename)
+head(kansashouse, 15)
+```                                         
+
+The Kansas Secretary of States publishes election results in the format of Table 2, (which provides the first 15 entries). It breaks down voting for each county, contest (race) and candidate voted for. There are 105 counties in Kansas, and 4 house seats (which are not divided along county lines) with 13 candidates. However, what you are interested in is the total for each candidate in each contest across the state.
+
+Note: the Contest is in the form *U.S. House of Rep 00#* where *#* represents the number of the district, e.g. *U.S. House of Rep 002* would indicate the 2nd Congressional District.
+
+A.  Is this data in *wide* or *long* format?
+B.  Provide the procedure to convert this data into a desired format then determine the winner of each U.S. House of Representatives Congressional District.  After each step, you should describe what the data looks like at each step.
+
+
