@@ -1,0 +1,197 @@
+Problem Solving
+========================================================
+author: IE 0015 Information Systems Engineering
+date: March 2015
+
+What is problem solving
+======================
+
+-  The pathway from considering a problem to developing a method to addressing the problem to implementing the method.
+-  Go from being able to know a solution to a problem to understanding the motivation of the procedures to solving the problem.
+
+How is it different than standard mathematical problem solving
+=======================
+
+- In your classes, you are given problems in a context, usually to illustrate a method.
+- In problem solving, you are given a problem, and you have to determine the context, then identify the procedure to solve the problem.
+  - Problems can be complex and require application of a series of methods.
+- Math/Science/Engineering are often presented as systematic and deductive.
+- Problem solving in practice is often experimental and inductive.
+
+
+Goal
+====
+
+-  An overview of how, in general to develop heuristics.
+-  To think of the process of problem solving as a process of creative invention.
+
+Materials
+=========
+
+-  The better management consulting companies put you through a *boot camp* where they teach you:
+  1.  How to use Excel correctly.
+  2.  Their problem solving methodology
+-  Polya, How to solve it (link in )
+  - Directed at mathematicians, but the strategies are general.
+
+Four phases
+==========
+type:section
+
+Four phases in problem solving
+========================
+
+1.  Understanding the problem
+2.  Devising a plan
+3.  Carrying out the plan
+4.  Looking back
+
+Understanding the problem
+========================
+
+0.  Is this a problem to find or a problem to prove?
+1.  What are you being asked to find or show?
+2.  Can you restate the problem?
+3.  Can you think of a picture or diagram that might help you understand the problem?
+4.  Is there enough information to enable you to find a solution?
+5.  Do you understand all the words used in stating the problem?
+6.  Do you need to ask another question to get the answer?
+
+
+Devising a plan
+==============
+
+-  The *plan* is a strategy for approaching a problem.
+-  It should be systematic.
+-  Making a plan helps you remember the bigger picture while you spend your time working on the details.
+
+Some strategies
+==============
+
+-  Guess and check
+-  Make an orderly list
+-  Process of elimination
+-  Use symmetry
+-  Divide and conquer
+-  Use direct reasoning
+-  Solve an equation
+
+***
+
+-  Look for a pattern
+-  Solve a simpler problem
+-  Use a model
+-  Work backwards
+-  Generalize
+-  Specialize
+
+
+Carrying out the plan
+=======================
+
+-  This is the detailed work that is similar to what you do in your classes.
+-  Key: Complete the plan.
+  - Your plan is systematic, not completing the plan makes your work have holes.
+
+Looking back
+=======================
+
+-  Examine the solution.  How could it be better?
+-  Can you check the result?
+-  Can you check the argument?
+-  Can you derive the result differently?
+-  Can you use the result or method for some other problem?
+-  What worked? what did not?
+-  Can you think of an alternative answer?
+
+Heuristics
+==========
+type:section
+
+- Some heuristics that can be used.
+
+
+Analogy
+=======
+
+-  Identify some sort of similarity with another problem.
+-  Analogous objects *agree in certain relations* of their parts.
+-  Can the other problem point you in the right direction for this one?
+-  Can the other problem help *decompose* the current problem to make it easier.
+
+
+Auxiliary elements
+==================
+
+- Are there elements that we can add to the problem to make it easier to solve?
+- Adding the problem leads to an analogy to a problem we know how to solve.
+- e.g. a vertical line to a parallelogram to help calculate area.
+
+Could you derive something useful from the data
+============================
+
+-  If we are trying to determine an unknown, but we do not know how to determine it from the data we have.
+-  Can you derive something from the data we have that is similar to the unknown, or could help us determine the unknown?
+
+Decomposing and recombining
+===========================
+
+-  Can you break the problem into parts, then solve each of the parts?
+-  Problem could be decomposed by separating it into a series of identical problems, or by decomposing it into a series of steps.
+-  Mathematical problems can be described as:
+  - Unknowns
+  - Data
+  - Condition
+- Decomposing leads to separating parts of the data or the conditions and examining each part by itself.
+- Then recombine the elements in some manner
+- Note: Split-apply-combine is based on this strategy.
+
+Do you know a related problem
+=============================
+
+-  Related can mean
+  -  Same unknown
+  -  Generalized version of problem (fewer conditions)
+  -  Specialized version of problem (more conditions)
+  -  Analogy
+
+
+Generalization
+==============
+
+-  We can create another problem with fewer conditions that is easier to solve.
+-  Works by removing conditions that make the problem complex.
+-  The solution of the easier problem may be a starting point to finding 
+-  Many optimization problems are solved this way. e.g. Lagrangian relaxation.
+
+Specialization
+==============
+
+-  Can you find a problem more specialized?
+-  If some more conditions are added, does it become a problem easier to solve.
+-  Works because the condition limits the potential solutions that need to be evaluated.
+-  e.g. convexity in optimization
+
+Symmetry
+========
+
+- In geometry, symmetry is respect to a point or a plane, the object is reflective in form.
+- In general, symmetry is present when there are interchangeable parts.
+  -  Use the parts
+  -  The parts may be ways to decompose the problem.
+  
+Varying the problem
+===================
+
+-  Could you solve the problem if one aspect was different?
+-  Try approaching the problem in different ways.
+-  Use this as a starting point for a solution.
+-  e.g. branch-and-bound
+
+Working backwards
+=========================
+
+-  If you do now know how to get to the final end goal, consider what circumstances could result in your final goal.
+-  Eventually, find a circumstance which either:
+  -  Matches your starting condition.
+  -  Matches a condition that you know how to reach.

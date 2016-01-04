@@ -2,7 +2,7 @@
 title: "IE 0015 Information Systems Syllabus"
 author: "Louis Luangkesorn"
 date: "Spring 2016"
-output: word_document
+output: html_document
 ---
 
 Coarse goals
@@ -21,6 +21,28 @@ Major Topics
 
 # Materials
 
+## Software
+
+1.  R -  http://cran.r-project.org  Follow the appropriate download link for your platform
+
+2.  R Studio - An Integrated Development Environment (IDE). A basic environment (editor, console) comes with R, so this is optional, however, highly recommended as it will be much easier with this.
+
+http://www.rstudio.com/products/RStudio/#Desktop - Click on 'Download R Studio Desktop'.  You will be given options for your platform.  After installing this watch the video to get familiarized with the platform.
+
+3.  Packages.  Much of the functionality of R is embedded in packages.  These need to be installed prior to use. (Note: installation of packages is easy given access to the internet.  You will quickly learn to recognize when it is necessary to install a package. But to start, you should enter the following in the R console after you install R and R Studio
+
+install.packages(c(  "ggplot2",  "knitr",  "plyr",  "reshape2",  "dplyr",  "rJava",  "XLConnect",  "RODBC",  "RSQLite",  "chron",  "lubridate",  "stringr",  "stringdist",  "editrules",  "Hmisc",  "rspa",  "deducorrect"))
+
+4.  SQLite - Available on MS Windows, Mac OS X, and other platforms. Free download from https://www.sqlite.org/download.html.  Note that DB Browser includes SQLite embedded in it. As does the RSQLite library in R so you may not need to install SQLite yourself.
+
+5.  DB Browser for SQLite http://sqlitebrowser.org/
+
+To use SQLite, it is best to use a Graphical based browser. Here is one: (note: if you know how to use another database tool that links to SQL databases, you are welcome to use it).
+
+Firefox browser users can also use the SQLite Manager addon.
+
+
+
 ##  Books
 
 The following are resources we will use.  Data Manipulation with R will be the primary text because that presents information in a way different than all other sources. 
@@ -30,12 +52,14 @@ The following are resources we will use.  Data Manipulation with R will be the p
   -  http://shop.oreilly.com/product/9780596521196.do (get electronically through Pitt Library)
 3.  GGplot2 book by Hadley Wickham
   - Available electronically through Pitt Library
-4.  An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
-5.  OpenIntro Statistics, https://www.openintro.org/stat/?stat_book=os. This will not be used heavily, but is a useful reference on how to use R for the topics you covered in your Introduction to Statistics course.
+4.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
+5.  An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
+6.  OpenIntro Statistics, https://www.openintro.org/stat/?stat_book=os. This will not be used heavily, but is a useful reference on how to use R for the topics you covered in your Introduction to Statistics course.
 
 ##  Articles
 
 -  Each week, an article will be posted for discussion.  Each article will be an example of a data analysis and will be a focus of discussion to consider both strengths and weaknesses of the data analysis and presentation.
+-  The article discussions are intended to help you prepare for the exams. Exams are focused on being able to specify a data problem (CoNVO) and interpret exploratory data analysis output.
 
 
 ## Datasets
