@@ -1,0 +1,58 @@
+---
+title: "Project  Description"
+author: "Information Systems"
+date: "Spring 2016"
+output: word_document
+---
+
+
+1.  Identify a large, complex data set
+  -  Large - Larger than you can take the time to look at the entire set in Excel.
+  -  At least two related tables (you may need to get two data sources to do this)
+  -  **Co**ntext
+  -  **N**eeds
+  -  **V**ision
+  -  **O**utcome
+2.  Process it
+  -  The data must need processing
+  -  Missing values
+  -  Data entry errors
+  -  Collapsing categories
+3.  Summarize it
+  -  Data summaries
+  -  Visual
+4.  Tell a story
+5.  Show a picture
+  -  Make it pretty.
+  
+Timeline
+--------
+
+1.  Form team. Identify a data set and a potential CoNVO - February 10
+2.  Exploratory data analysis - March 16
+  -  Initial graphical view of data set
+  -  Refine CoNVO
+3.  Final Report April 18,  Presentations April 21, 22 in lab
+
+Inspiration
+============
+
+The ESPN run website FiveThirtyEight has numerous data driven articles that are similar in spirit to what the class project would be. They usually describe the setting, the data, and the analysis in every article. http://fivethirtyeight.com/
+
+Data sources
+------------
+
+- Quandl is a site that has curated (cleaned and processed into a usable format) data sets of a wide range of topics. Mostly economic, financial, and demographic (its primary paid audience are people working in finance). Most non-realtime finance data are freely available.
+
+https://www.quandl.com/
+
+- Sports - Most sports have websites that collect a wide range of detailed statistics accessable by enthusiasts.
+
+- American Community Survey - http://www.census.gov/acs/www/ - Detailed questionaire given to 1% of the population annually in the U.S.   Questionaires are de-identified and located according to geographies at the census tract level and larger.
+
+- National Immunization Survey and National Immunization Survey (Teen) http://www.cdc.gov/nchs/nis.htm - Survey given on health habits and experiences.  Focuses on immunization coverage.
+
+- Project Tycho - https://www.tycho.pitt.edu/  Data on infectious diseases at national, and global scales.  Note: There is an annual undergraduate student competition over the spring sponsored by the University of Pittsburgh Graduate School of Public Health that looks for innovative ways of working with Project Tycho data.
+
+- American Time Use Survey - http://www.bls.gov/tus/ The American Time Use Survey (ATUS) measures the amount of time people spend doing various activities, such as paid work, childcare, volunteering, and socializing.
+
