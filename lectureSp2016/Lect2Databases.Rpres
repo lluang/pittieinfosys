@@ -1,7 +1,7 @@
 Databases
 ========================================================
 author: IE 0015 Information Systems
-date: January 2015
+date: January 2016
 
 What is the purpose of databases?
 =================================
@@ -282,7 +282,7 @@ Things that we need to be able to do with data
 2.  Arrange (SORT BY)
 3.  Select columns (SELECT)
 5.  Distinct rows (UNIQUE)
-6.  Mutate (SELECT . . .  as)
+6.  Mutate (SELECT . . .  AS)
 7.  Summarize (GROUP BY)
 8.  Random sample
 

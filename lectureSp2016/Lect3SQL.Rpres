@@ -1,7 +1,7 @@
 SQL
 ========================================================
 author: IE 0015 Information Systems
-date: January 2015
+date: January 2016
 
 What is SQL
 ========================================================
@@ -19,7 +19,7 @@ What can SQL do
 2.  Arrange (ORDER BY)
 3.  Select columns
 5.  Distinct rows (UNIQUE)
-6.  Mutate (new columns)
+6.  Mutate (SELECT . . . AS new columns)
 7.  Summarize (GROUP BY)
 8.  Random sample
 
