@@ -48,13 +48,13 @@ B.  Data Volume, Velocity, Variety
 ANSWER
 --------
 
--  Context:  Identify organization. Identify mission.  Mission is a broader context than the project.
+-  Context:  Identify one organization. Identify mission.  Mission is a broader context than the project.
 -  Need:  Identify a decision to be made or a problem to be resolved.  Identify a question that can be answered with data.
--  Vision:  A description of a presentation of data that would answer the question identified in the Need.
+-  Vision:  A description of a presentation of data that would answer the question identified in the Need.  A discussion of data is not sufficient here, it is what you will present if you were to do the data analysis.
 -  Outcome:  A description of how the organization identified in the Context could respond when given the presentation described in the Vision.
--  Volume: How much data is there
--  Velocity: How do subjects change over time
--  Variety: What data is available on every subject
+-  Volume: How much data is there.  Count number of subjects.
+-  Velocity: How do subjects change over time.  For the mobile phones this should address the fact that mobile phone use in banking is accelerating. For the marathon, there should be discussion of the fact that the data came from a different marathon (city) than the marathon the trainer's clients are running. For weather discuss the number of years, because there are decades, it is a representative
+-  Variety: What data is available on every subject. 
 
 #  2.  Physician complaints (30 points)
 
@@ -123,16 +123,18 @@ esdfinal[c(2,10,14),]
 esdknn[c(2,10,14),]
 ```
 
-B.  kNN should be based on taking all doctors of the same residency status and gender, then finding the two nearest in revenue, then taking the average number of visits for those two.
+B.  kNN should be based on taking all doctors of the same residency status and gender, then finding the two nearest in revenue, then taking the average number of visits for those two.  A common issue is to consider table position instead of characteristics as the definition of 'nearest'. In databases, the table position is essentially random.
 
-C.  Mean value imputation is based on taking all doctors of the same residency and gender, then taking the average number of visits.
+C.  Mean value imputation is based on taking all doctors of the same residency and gender, then taking the average number of visits.  Or it could be taking the average of all results.
 
 ```{r}
 visits = by(esdfinal[,"visits"], INDICES = esdfinal[,c("residency", "gender")], FUN = mean, na.rm=TRUE)
 visits
 ```
 
-D.  Should say kNN.  Linear regression is also acceptable.  They should argue that the number of visits is related to the amount of work done (which can be measured by either revenue or hours).
+D.  Should say kNN.  Linear regression is also acceptable.  They should argue that the number of visits is related to the amount of work done (which can be measured by either revenue or hours).  If you were to make an abstract argument, the question is if what is needed is accuracy for specific predictions or maintaining the distribution of values across the data set.
+
+Side note:  when doing a data analysis, you must work with what is, not what you wish was true.  In particular, it is well known in U.S. universities that minority and female faculty are evaluated considerably harsher than white male faculty.  Universities that have investigated further have found that the comments are very different in nature as well. So an evaluation system that does not recognize this bias in evaluations perpetuates bias that is present in U.S. university students at both undergraduate and graduate levels.
 
 #  3A.  HTML pages. (20 pts)
 
@@ -224,7 +226,7 @@ D.  Now that you have identified the ZIP code and the prefix, how do you specify
 ANSWER
 ------------------
 
-A.  Addresses begin after a blank line, so you look for two line returns.
+A.  Addresses begin after a blank line, so you look for two line returns.  Alternative would have been to look for a line starting with digits.  Addresses in the U.S. (and pretty much every other country in the world) can have numbers ranging from 1 to 5 or even more digits.
 B.  The ZIP code is the last five characters in the second line of an address.
 C.  The ZIP code prefix is the first three characters of the ZIP code.
 D.  The address is the line before the ZIP code and the line which includes the ZIP code.
@@ -256,10 +258,10 @@ D.  Now that you have identified the domain name, how do you specify what needs 
 ANSWER
 --------
 
-A.  URLs include one of the suffixes
-B.  The URL is proceeded by a space. Ends with a space, but there may be a period that is between the URL and the space.
+A.  URLs include one of the suffixes  .edu, .gov, .mil, .com. another option would be to range from *http* to a space.
+B.  The URL is proceeded by a space and starts with http. Ends with a space, but there may be a period that is between the URL and the space.
 C.  The domain name is the part that preceeds the suffix
-D.  Start at the suffix, find the `.` that is before it. Start after the `.`
+D.  Start at the suffix, find the `.` that is before it. Start after the `.` Alternatively, look for spaces (*http* to the end)
 
 
 
@@ -292,3 +294,5 @@ B.  Reshape then aggregate
   i.  Use reshape to *cast* the data into a row for each county and race. So you will have a row for each county, and there will be columns for each candidate. Note that most candidate vote values will be 0 or NA.
   ii. *Aggregate* (taking the sum) votes by race and candidate (Note: each candidate is in only one race, so it is not necessary to say *race*).  You will have a row for each race, with only candidates for each race having non-zero values.
   iii.  *Select* the candidate with the maximum number of votes for each race.
+  
+  Common problems here:  You need to take sums across county vote totals for each candidate.  At the end you compare the totals for each candidate by contest.  A common mistake was not to sum votes for a candidate.

@@ -7,7 +7,7 @@ output: pdf_document
 
 Note: * indicates items that need to be part of your submission of this lab.
 
-1.  Download the Titanic data from courseweb and look at it using a text editor (Notepad or the R Studio editor).
+1.  Download the Titanic data from Courseweb and look at it using a text editor (Notepad or the R Studio editor).
 
 2.  * What separates fields in this file?  What identifies text that should be kept in the same data field?  What would happen if you did not identify text that should be kept together?
 
@@ -17,44 +17,39 @@ comma, "", the name would be broken into two columns.
 
 PassengerID
 
-4.  * Create a database in MS Access and Import the data into MS Access using the External Data menu (csv files are 'Text File')  *  What messages did you see, if any? * How many rows and columns are in the resulting table?  Explain how you determined this.
 
-891 rows, 12 columns. (13 if you did not assign PassengerID as the primary key)  Can look at the bottom of the table to get the number of rows. You could count the number of columns by hand. 
-
-Note: If you get 892 that means you didn't select the first rows as field name so they becomes row 1. Remember to select first row as field name when you importing csv into database.
-
-5.  *  Using the SQLite Browser, create an SQLite database and import the Titanic data into SQLite using the Import menu.   What messages did you see, if any?  How many rows and columns are in the resulting table?  Explain how you determined this.
+4.  *  Using the SQLite Browser, create an SQLite database and import the Titanic data into SQLite using the Import menu.   What messages did you see, if any?  How many rows and columns are in the resulting table?  Explain how you determined this.
 
 891 rows, 12 columns. (13 if you did not assign PassengerID as the primary key)  Can look at the bottom of the table to get the number of rows. You could count the number of columns by hand. 
 
 Note: If you get 892 that means you didn't select the first rows as field name. Remember to select first row as field name when you importing csv into database.
 
-6.  * Download and look at the data from the National Survey of Family Growth using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
+5.  * Download and look at the data from the National Survey of Family Growth using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
 
 comma, "", first field.
 
 Note: CaseID cannot be used as primary key since each women has one CaseID even if she had pregnanted for more than one times. In short, the CaseID is not unique.
 
-7.  * Create a database in MS Access and Import the data into MS Access using the External Data menu (csv files are 'Text File').  What messages did you see, if any? How many rows and columns are in the resulting table?  Explain how you determined this.
+6.  * Create a database in MS Access and Import the data into MS Access using the External Data menu (csv files are 'Text File').  What messages did you see, if any? How many rows and columns are in the resulting table?  Explain how you determined this.
 
 Will fail due to to many columns
 
 Note: If we need to import such "large" database into Access in the future, we can split the file into two tables with less than 255 columns and with same primary key (PessengerID) in both of them. After they were imported, we can use primary key(PessengerID) to connect the information of the same rows from each tables.
 
-8.  *  Create an SQLite database in SQLite and Import the data. What messages did you see, if any? * How many rows and columns are in the resulting table?  Explain how you determined this.
+7.  *  Create an SQLite database in SQLite and Import the data. What messages did you see, if any? * How many rows and columns are in the resulting table?  Explain how you determined this.
 
 288 columns and 20492 rows. You can got columns quantity in excel or RStudio.
 
 Note: In Excel, KB is not the 262 columns because there are A~Z columns in the beginning.
       If you get 287 it probably means you calculates Excel's first rows, since A1 cell is empty.
       
-9.  * Download and look at the codebook from the NSFG.  How do you determine if the responder is pregnant at the time of the survey?  What is the current length of pregnancy for the first survey response where the responder is currently pregnant?
+8.  * Download and look at the codebook from the NSFG.  How do you determine if the responder is pregnant at the time of the survey?  What is the current length of pregnancy for the first survey response where the responder is currently pregnant?
 
 If the HOWPREG_N and HOWPREG_P values are numbers, the responder is currently pregnant, otherwise, they will be NA
 
 Row 37, 16 weeks.
 
-10.  * How do you determine the end result of the pregnancy (in the case where the mother was not currently pregnant)?  What are the first 10 outcomes? (answer using the word meaning, not the code that is in the database)
+9.  * How do you determine the end result of the pregnancy (in the case where the mother was not currently pregnant)?  What are the first 10 outcomes? (answer using the word meaning, not the code that is in the database)
 
 Refer to codebook, look at the PREGEND1 field.
 
@@ -63,4 +58,4 @@ Refer to codebook, look at the PREGEND1 field.
 - 1 live birth through Cesarean section
 - 4 live birth by vaginal delivery
 
-9.  (After lab)  Using R and R Studio, work through Learn X in Y Minutes (X=R) http://learnxinyminutes.com/docs/r/
+10.  (After lab)  Using R and R Studio, work through Learn X in Y Minutes (X=R) http://learnxinyminutes.com/docs/r/
