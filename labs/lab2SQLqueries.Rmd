@@ -1,6 +1,6 @@
 ---
 title: 'Lab 3: SQL Joins'
-author: "Louis Luangkesorn"
+author: "IE 0015 Information Systems Engineering"
 date: "01/21/2015"
 output: pdf_document
 ---
