@@ -1,7 +1,7 @@
 Data In R
 ========================================================
 author: IE 0015
-date: Spring 2015
+date: Spring 2016
 
 Data analysis language
 ========================================================
@@ -399,7 +399,7 @@ Aesthetics - appearance
 =======================
 
 - Change the appearance of data elements using aesthetics.
-- Color, shape, size, transparancy (alpha), etc.
+- Color, shape, size, transparency (alpha), etc.
 - Each aesthetic displays an additional aspect of the data.
 
 ```{r}
@@ -448,7 +448,7 @@ qplot(color, price / carat, data = dsmall, geom = "jitter",
 alpha
 ======
 
-- `alpha` adjusts the transparancy, so it is more apparent that multiple data points overlap.
+- `alpha` adjusts the transparency, so it is more apparent that multiple data points overlap.
 ```{r}
 qplot(color, price / carat, data = diamonds, geom = "jitter", 
   alpha = I(1/ 25))
