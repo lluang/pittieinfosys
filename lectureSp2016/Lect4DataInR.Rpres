@@ -3,6 +3,8 @@ Data In R
 author: IE 0015
 date: Spring 2016
 
+Note: It will help to have R Studio open and follow along in this lecture.
+
 Data analysis language
 ========================================================
 
@@ -417,16 +419,6 @@ geom - plot type
 
 ```{r}
 qplot(carat, price, data = dsmall, geom = c("point", "smooth"))
-```
-
-Other `smooth` methods
-======================
-
-- We can specify the method used to draw the smoothing line.
-- `lm` linear model (regression)
-```{r}
-qplot(carat, price, data = dsmall, geom = c("point", "smooth"),
-method = "lm")
 ```
 
 Boxplots

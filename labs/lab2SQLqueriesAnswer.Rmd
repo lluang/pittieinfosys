@@ -5,7 +5,8 @@ date: "01/21/2015"
 output: pdf_document
 ---
 
-This lab uses the ACS Public Use Microdata Sample (PUMS) data.  The data dictionary is at http://www.census.gov/acs/www/data_documentation/pums_documentation/
+This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh (North) (Public Use Microdata Area 01701).  The data dictionary is at 
+http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html
 
 NOTE:  To force a number that is stored as a string to behave like a number, use CAST.
 
