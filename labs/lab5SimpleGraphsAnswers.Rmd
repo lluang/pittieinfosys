@@ -4,7 +4,7 @@ output: pdf_document
 Lab 5: Simple Graphs with ggplot2
 ==========================
 author: IE 0015 Information Systems
-date: Week of February 2, 2015 
+date: Week of February 4, 2016 
 
 ```{r loadlibraries}
 library(ggplot2)
@@ -15,7 +15,13 @@ FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
                      header=TRUE,sep=",")
 ```
 
-1.  [4 pts] Read the National Survey of Family Growth Female Pregnancy dataset into R (either from CSV or SQLite). Identify the variables that corresponds to the duration of a completed pregnancy in weeks and the outcome. Plot three histograms: (1)  All live births, (2) current pregnancy (pregnancy ongoing at the time of survey), and (3) miscarriages. Include axis labels and titles (e.g. , `xlab="Pregnancy length", ylab="Number of live births", main="Pregnancy lengths of live births"`).  Give an interpretation of the third histogram (miscarriage).
+1.  [4 pts] Read the National Survey of Family Growth Female Pregnancy dataset into R (either from CSV or SQLite). Identify the variables that corresponds to the duration of a completed pregnancy in weeks (duration of pregnancy) and the outcome (Pregnancy outcome). Plot three histograms: 
+
+(1)  All live births, 
+(2) current pregnancy (pregnancy ongoing at the time of survey), and 
+(3) miscarriages. 
+
+Include axis labels and titles (e.g. , `xlab="Pregnancy length", ylab="Number of live births", main="Pregnancy lengths of live births"`).  Give an interpretation of the third histogram (miscarriage). Note that the code book that corresponds to the data we are using (2006-2010) can be found at  http://www.cdc.gov/nchs/nsfg/nsfg_2006_2010_puf.htm Use the NSFG_2006-10_FemPreg_Codebook.
 
 **ANSWER**
 
@@ -29,7 +35,7 @@ qplot(PRGLNGTH, data = FemPreg[(FemPreg$OUTCOME==4),], geom = "histogram", xlab=
 Based on the miscarriage histogram, miscarriages tend to occur in the first 20 weeks of the pregnancy.  Don't worry if they say anything in addition to this, but they should at least get this far.
 
 Note
-1. Always attach your R code, or TA wonnot be able to give you any point  if there is difference between your graph and the preferred answer. 
+1. Always attach your R code, or TA will not be able to give you any points if there is difference between your graph and the preferred answer. 
 2. "==" is used for comparisons while "=" indicates an assignment. 
 3. Field "OUTCOME"(P55 in codebook) most accurately fit the requirement 
   - PREGEND1 (Applicable if pregnancy is a completed pregnancy) is not a full reord. In its note it says use record OUTCOME 

@@ -1,11 +1,11 @@
 ---
 title: "Lab 5: Simple Graphs"
 author: IE 0015 Information Systems
-date: Week of February 2, 2015 
+date: Week of February 4, 2016 
 output: pdf_document
 ---
 
-1.  [4 pts] Read the National Survey of Family Growth Female Pregnancy dataset into R (either from CSV or SQLite). Identify the variables that corresponds to the duration of a completed pregnancy in weeks and the outcome. 
+1.  [4 pts] Read the National Survey of Family Growth Female Pregnancy dataset into R (either from CSV or SQLite). Identify the variables that corresponds to the duration of a completed pregnancy in weeks (duration of pregnancy) and the outcome (Pregnancy outcome). Note that the code book that corresponds to the data we are using (2006-2010) can be found at  http://www.cdc.gov/nchs/nsfg/nsfg_2006_2010_puf.htm Use the NSFG_2006-10_FemPreg_Codebook.
 
 Plot three histograms: 
   a. All live births, 
@@ -23,4 +23,11 @@ Ignoring responses where the birth weight was not given (hint: how can you tell)
   c.  Plot a jitter plot of birthweight by birth order.
   d.  The jitter plot is hard to read. Set the alpha = 1/5 and plot again.
   e.  Why are there so many missing values reported when making these plots? (or what did you do to prevent missing values in this plot)
+  
+Notes:
+
+1. Always include your R code in what you turn in, or the TA will not be able to give you any points if there is difference between your graph and the preferred answer. 
+2. "==" is used for comparisons while "=" indicates an assignment. 
+3. Whenever you are not 100% sure about the usage of a function, use command like "?qplot" or "?as.factor" to get a help page.(add a ? before the command you want to use) It will help you a lot when you have questions about the order or format of function parameters.
+4. Use R script to record your lines rather than write them directly on Console. You might need it next time.  If you were using the console to figure out the code, in R Studio your code is available in the History tab (upper right box)
  
