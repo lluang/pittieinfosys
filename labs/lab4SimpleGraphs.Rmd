@@ -1,5 +1,5 @@
 ---
-title: "Lab 5: Simple Graphs"
+title: "Lab 4: Simple Graphs"
 author: IE 0015 Information Systems
 date: Week of February 4, 2016 
 output: pdf_document
