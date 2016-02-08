@@ -2,7 +2,7 @@
 title: "Project  Description"
 author: "Information Systems"
 date: "Spring 2016"
-output: word_document
+output: html_document
 ---
 
 
@@ -31,8 +31,13 @@ Timeline
 1.  Form team. Identify a data set and a potential CoNVO - February 10
 2.  Exploratory data analysis - March 16
   -  Initial graphical view of data set
+  -  Describe data according to Volume, Variety, Velocity, Veracity
+    -  Volume - How much is there?
+    -  Variety - How much and what variety is available about each observation?
+    -  Velocity - Is data changing over time?
+    -  Veracity - Is the data correct or are there questions about its accuracy or meaning?
   -  Refine CoNVO
-3.  Final Report April 18,  Presentations April 21, 22 in lab
+3.  Final Report April 20,  Presentations April 21, 22 in lab
 
 Inspiration
 ============
@@ -55,4 +60,6 @@ https://www.quandl.com/
 - Project Tycho - https://www.tycho.pitt.edu/  Data on infectious diseases at national, and global scales.  Note: There is an annual undergraduate student competition over the spring sponsored by the University of Pittsburgh Graduate School of Public Health that looks for innovative ways of working with Project Tycho data.
 
 - American Time Use Survey - http://www.bls.gov/tus/ The American Time Use Survey (ATUS) measures the amount of time people spend doing various activities, such as paid work, childcare, volunteering, and socializing.
+
+- Western PA Regional data Center - http://www.wprdc.org/  Housed at the University of Pittsburgh Center for Urban and Social Research. Partnership with City of Pittsburgh, Allegheny County, Pitt, and Mellon Foundation. Intended to be a central source for publically available data put out by local government. Inspired by similar efforts in Chicago, New York, and those hosted at Socrata https://www.socrata.com/
 
