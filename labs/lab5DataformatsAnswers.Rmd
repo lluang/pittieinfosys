@@ -1,7 +1,7 @@
 ---
-title: 'Lab 6: Data formats'
+title: 'Lab 5: Data formats'
 author: "IE 0015 Information Systems"
-date: "Spring 2015"
+date: "Spring 2016"
 output: pdf_document
 ---
 
@@ -15,7 +15,7 @@ summary(beaver1)
 summary(beaver2)
 ```
 
-1.  For each dataset, calculate the date for each data record. What dates are repesented in each data file? (ideally, this should be within the data frame, but we will not take points off if this is a vector that corresponds to the dataset). (Hint:  add days to January 1, 1990)
+1.  For each dataset, calculate the date for each data record. What dates are represented in each data file? (ideally, this should be within the data frame, but we will not take points off if this is a vector that corresponds to the dataset). (Hint:  add days to January 1, 1990)
 
 ```{r}
 beaver1$date <- as.Date("1990-1-1") + beaver1$day - 1 # January 1, 1990 should be 0 days
@@ -45,18 +45,9 @@ titanic <- read.csv("../data/titanictrain.csv")
  titanic[titanic$Embarked=="Q" & titanic$Sex=="female" & titanic$Age < 19 & !is.na(titanic$Age),"Name"]
 ```
 
-4.  Solve the following system of equations:
-
-\[
-  \begin{aligned}
-  2 x_1  - x_2  + 3 x_3  = 5 \\
-  3 x_1  + 2 x_2  - x_3  = 0 \\
-  x_1  + 4 x_2  + x_3  = 6
-  \end{aligned}
-\]
+4.  In the Titanic data, plot a histogram of ages in 5 year increments separated by Sex (gender) include a meaningful plot title, and x and y axis labels. Note: Look at the help file for qplot. You want to use the titanic data set, the geometry is "histogram", to separate histograms by Sex, you use "facets = Sex ~ ."  To set the size of a histogram width you use "binwidth=".
 
 ```{r}
-X = matrix(c(2, 3, 1, -1, 2, 4, 3, -1, 1), ncol=3)
-b = c(5, 0, 6)
-solve(X,b)
+library(ggplot2)
+qplot(Age, geom="histogram", binwidth=5, facets=Sex ~ ., data = titanic, main="Age of Titanic passengers by gender", xlab="Number of passengers", ylab="Age")
 ```
