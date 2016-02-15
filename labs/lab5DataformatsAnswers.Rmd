@@ -24,19 +24,22 @@ unique(beaver1$date)
 unique(beaver2$date)
 ```
 
-2.  Look at the time stamps. What makes this hard to work with. Write out an algorithm (in pseudocode or plain english) that converts this time into a time stamp
+2.  Look at the time stamps. What makes this hard to work with. Write out an algorithm (in pseudocode or plain english) that would converts this time into the R time format (you do not need to write code for this).
 
-Discuss the fact that the time stamps are of varying length
+```
+Discuss the fact that the time stamps are of varying length, 3 or 4 numbers
 
-    i. Add zeros as needed to make the time stamps four characters
+    i. Add zeros in front of the time as needed to make the time stamps four characters
     ii. Read in data using strftime as %H%M
+```
 
 
+Questions 3 and 4 use the Titanic data set. you can read it in as csv, Excel, or SQLite as you need it. Note: The data dictionary is in Courseweb -> Course Documents -> data.
 ```{r titanicdata}
 titanic <- read.csv("../data/titanictrain.csv")
 ```
 
-3.  In the Titanic data, list the people with the following characteristics
+3.  In the Titanic data, list the people with the following characteristics: 
   -  Embarked in Queenstown
   -  Female
   -  Known to be under the age of 19 (i.e. 18 and under)
@@ -45,8 +48,7 @@ titanic <- read.csv("../data/titanictrain.csv")
  titanic[titanic$Embarked=="Q" & titanic$Sex=="female" & titanic$Age < 19 & !is.na(titanic$Age),"Name"]
 ```
 
-4.  In the Titanic data, plot a histogram of ages in 5 year increments separated by Sex (gender) include a meaningful plot title, and x and y axis labels. Note: Look at the help file for qplot. You want to use the titanic data set, the geometry is "histogram", to separate histograms by Sex, you use "facets = Sex ~ ."  To set the size of a histogram width you use "binwidth=".
-
+4.  In the Titanic data, plot a histogram of ages in 5 year increments separated by Sex (gender) include a meaningful plot title, and x and y axis labels. Note: Look at the help file for `qplot`. You want to use the titanic data set, the geometry is `histogram`, to separate histograms by Sex, you use `facets = Sex ~ .`  (include the period) To set the size of a histogram width you use `binwidth=#`.
 ```{r}
 library(ggplot2)
 qplot(Age, geom="histogram", binwidth=5, facets=Sex ~ ., data = titanic, main="Age of Titanic passengers by gender", xlab="Number of passengers", ylab="Age")
