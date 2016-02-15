@@ -1,0 +1,32 @@
+---
+title: "Lab 3: Reading data into R"
+author: "IE 0015"
+date: "January 27, 2016"
+output: pdf_document
+---
+
+Note: Statements that are Commonly used for reading data into R
+```{r,eval=FALSE} 
+- scan()
+- read.table()
+- read.fwf()
+- read.csv()
+- read.csv2()
+- read.delim()
+- read.delim2()
+```
+
+1.  [1] Reading csv files.  Load the titanictrain.csv file into R. Use the `summary()` to calculate the summary of all of the variables.  Report the code you used and identify the categorical variables in the dataset that you can use for classification. (you can ignore SibSp and Parch for now)
+
+
+2.  [1] Identify if any numerical variables should be categorical variables (factors). If so, change the data type using `as.factor()` and run `summary()` on that variable.  Report the code and summary of the variables you changed.
+
+3.  [3] Load the SQLite file from the National Survey for Family Growth Female Pregnancy File that you created in Lab 1 into R. Show the code that does this and report the numbers of entries.  
+
+
+4.  [3] The data is read into R as characters, but the data should be analyzed as factors. Convert the pregnancy order (*pregorder*) and birthweight (*BIRTHWGT_LB1*) fiels to numbers using `as.numeric()` and end result (*PREGEND1*) fields to a factor using `as.factor()`. Show the code that does this and the summaries for all three variables.
+
+
+Note:   a) The data frame's name followed by the '\$'  (e.g. titanic\$) should precede the column name in order to tell R which table does the column belongs to e.g. titanic\$name. If you didn't add the table name, R will create a new vector(e.g. with the name 'name') rather than change the 'name' column inside the data frame.
+
+5.  [2] In the NSFG Female Pregnancy data codebook, how can you tell if the data should be converted into a number or a factor.  Why should PREGEND1 be recorded as a factor instead of a number?
