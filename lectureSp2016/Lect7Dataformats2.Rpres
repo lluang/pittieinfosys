@@ -5,6 +5,7 @@ date: February 2016
 
 ```{r loadtitanic, echo=FALSE}
 titanic <- read.csv("../data/titanictrain.csv")
+library(ggplot2)
 ```
 
 Subscripting
@@ -184,4 +185,80 @@ Now `select` the column in the `subset` function call
 ```{r}
 subset(students, house=="G" & year > 0, select=c('name', 'year'))
 ```
+
+Subsetting with qplot
+======================
+
+```{r}
+library(ggplot2)
+data(diamonds)
+```
+
+- You can use subsetting with plots to show multiple layers of information
+- Faceting, visual cues (color, shape, pattern)
+
+Diamonds data
+====
+
+Take a random sample so we can see what we are doing
+
+```{r}
+data(diamonds)
+dsmall <- diamonds[sample(nrow(diamonds), 500),]
+qplot(carat, price, data=dsmall)
+```
+
+Color and shape
+==============
+```{r}
+qplot(carat, price, data=dsmall, color = color)
+````
+
+***
+```{r}
+qplot(carat, price, data=dsmall, shape = cut)
+```
+
+Combine them with jitter and transparancy
+====================
+```{r}
+qplot(carat, price, data=dsmall,  color = color, shape = cut)
+```
+***
+```{r}
+qplot(carat, price, data=dsmall, alpha = 0.1, geom = "jitter", color = color, shape = cut)
+```
+
+Density plots and histograms
+======
+```{r}
+qplot(carat, binwidth = 0.1, data=dsmall, geom = "histogram")
+```
+***
+```{r}
+qplot(carat, data=dsmall, geom = "density")
+```
+
+Break the plots based on color
+======
+```{r}
+qplot(carat, binwidth = 0.1, fill = color, data=dsmall, geom = "histogram")
+```
+***
+```{r}
+qplot(carat, color = color, data=dsmall, geom = "density")
+```
+
+Faceting
+=========
+```{r}
+qplot(carat, binwidth = 0.1, facets = .~ color, fill = color, data=dsmall, geom = "histogram")
+```
+
+Make facets horizontal
+=========
+```{r}
+qplot(carat, binwidth = 0.1, facets = color~ ., fill = color, data=dsmall, geom = "histogram")
+```
+
 
