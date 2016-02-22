@@ -4,7 +4,7 @@ author: IE 0015 Information Systems
 date: February 2016
 
 Working with Characters
-====================                                                                                                                                                                                                                                                                                                                                                                                                      
+==================== 
                                                                         
 -  For computers, working with numbers is easy.
 -  Working with strings is harder.
@@ -188,12 +188,13 @@ Phone number
 - (412)624-9838
 - 412/624-9800
 - 412-255-2621
-- [\^0-9]?[0-9]{3}[\^0-9]+[0-9]{3}[\^0-9]?[0-9]{4}
-  - Optional leading character [\^0-9]?
+- 412.624.9830
+- [\W]?[0-9]{3}[\W]?[0-9]{3}[\W]?[0-9]{4}
+  - Optional leading character not letter or number [\W]?
   - Three digits [0-9]{3}
-  - One or more non-digit [\^0-9]+
+  - One or more non-digit [\W]?
   - Three digits [0-9]{3}
-  - Optional non-digit [\^0-9]?
+  - Optional non-digit [\W]?
   - Four digits [0-9]{4}
 
 Splitting strings
