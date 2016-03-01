@@ -1,0 +1,208 @@
+\documentclass[12pt, addpoints, answers]{exam}
+\usepackage{multirow}
+\usepackage{pdflscape}
+%\usepackage{amssymb}
+
+%\usepackage{makeidx}
+
+%\usiepackage[colorlinks]{hyperref}
+
+% In case we're not using hyperref.sty:
+%\providecommand{\texorpdfstring}[2]{#1}
+% Thie following can be used in \section commands
+% without generating pdf warnings:
+%\newcommand{\bs}{\texorpdfstring{\char`\\}{}}
+
+%\newcommand{\docversion}{2.5}
+%\newcommand{\docdate}{May 7, 2015}
+%\newcommand{\docdate}{\today}
+
+%--------------------------------------------------------------------
+%
+% Changes since version 2.4 are described in the comments
+% near the beginning of the file exam.cls.
+%
+%--------------------------------------------------------------------
+
+%\makeindex
+
+%\newcommand{\indc}[1]{\index{#1@\texttt{\char`\\#1}}}
+%\newcommand{\indcsub}[2]{\index{#1@\texttt{\char`\\#1}!#2}}
+%\newcommand{\indcstart}[1]{\index{#1@\texttt{\char`\\#1}|(}}
+%\newcommand{\indcstop}[1]{\index{#1@\texttt{\char`\\#1}|)}}
+
+%\newcommand{\indt}[1]{\index{#1@\texttt{#1}}}
+%\newcommand{\indtsub}[2]{\index{#1@\texttt{#1}!#2}}
+%\newcommand{\indtstart}[1]{\index{#1@\texttt{#1}|(}}
+%\newcommand{\indtstop}[1]{\index{#1@\texttt{#1}|)}}
+
+%---------------------------------------------------------------------
+\newenvironment{example}%
+   {\bigskip\filbreak
+    \subsubsection{Example:}
+   }%
+   {}
+
+\def\samplehead#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    \hbox to \textwidth{%
+      \rlap{\parbox[b]{\textwidth}{\raggedright#1\strut}}%
+      \hfil\parbox[b]{\textwidth}{\centering#2\strut}\hfil
+      \llap{\parbox[b]{\textwidth}{\raggedleft#3\strut}}%
+    }% hbox
+    #4
+  \end{trivlist}
+}
+
+\def\samplefoot#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    #1
+    \vskip 3pt
+
+    \hbox to \textwidth{%
+      \rlap{\parbox[t]{\textwidth}{\raggedright#2}}%
+      \hfil\parbox[t]{\textwidth}{\centering#3}\hfil
+      \llap{\parbox[t]{\textwidth}{\raggedleft#4}}%
+    }% hbox
+  \end{trivlist}
+}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\centering
+{\bf IE 0015 Spring 2016 Midterm}
+
+\centering
+{\bf A}
+
+
+<<echo=FALSE>>=
+library(xtable)
+library(ggplot2)
+@
+
+
+\begin{center}
+  \fbox{\fbox{\parbox{5.5in}{\centering
+        Answer the questions in the spaces provided on the
+        question sheets.  If you run out of room for an answer,
+        continue on the back of the page.}}}
+\end{center}
+\vspace{0.1in}
+
+\makebox[\textwidth]{Name and section:\enspace\hrulefill}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Write your name on the top of this page.
+\item
+  Exam is closed book. You may have a 2 sided 8 1/2'' X 11'' crib sheet
+  (standard letter sized) and a calculator.
+\item
+  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
+\item
+  If you need to divide, you may leave the result in fraction form (e.g.~4/3
+  instead of 1.333333)
+\item
+  You have until 1:45 PM to finish. There are 100 points total divided
+  among  questions.
+\item
+  Show your work and clearly identify your answer for each subquestion
+  (identified by a lower case letter). Showing work may involve writing down equations and identifying data elements used.
+\item
+  When you turn in your exam, staple the exam and your crib sheet together.
+\end{enumerate}
+\pagebreak
+
+\begin{landscape}
+This exam will make use of the data from the gun violence archive on mass shootings, child injuries, and child deaths.  A sample from each of these tables is below. Note that if an incident involved a child killed and a child injured, that incident would appear in both Table 1 and Table 2.
+
+<<echo=False>>=
+massshooting <- read.csv("gva_massshooting.csv")
+childinjury <- read.csv("gva_childreninjured.csv")
+childdeath <- read.csv("gva_childrenkilled.csv")
+accidentinjury <- read.csv("gva_accidentalinjuries.csv")
+accidentdeath <- read.csv("gva_accidentaldeaths.csv")
+@
+
+\centering
+{Table 1. Children Killed}
+<<echo=FALSE, results = tex>>=
+childdeathtop <- childdeath[1:7,-7]
+childinjurytop <- childinjury[1:7,-7]
+massshootingtop <- massshooting[1:7,-7]
+childdeathtab <- xtable(childdeathtop, caption="Children Killed", label="tbl:killed")
+childinjurytab <- xtable(childinjurytop, caption="Children Injured", label="tbl:injured")
+massshootingtab <- xtable(massshootingtop, caption="Mass shootings", label="tbl:massshootings")
+print(childdeathtab, floating=FALSE, include.rownames = FALSE)
+@
+
+
+\centering
+{Table 2. Children Injured}
+
+<<echo=FALSE, results = tex>>=
+print(childinjurytab, floating=FALSE, include.rownames = FALSE)
+@
+
+
+\centering
+{Table 3. Mass Shootings}
+
+<<echo=FALSE, results = tex>>=
+print(massshootingtab, floating=FALSE, include.rownames = FALSE)
+@
+
+\end{landscape}
+
+\begin{questions}
+
+\question[32]  CoNVO statement
+
+In the Commonwealth of Pennsylvania, the Pennsylvania Department of Education Office for Safe Schools coordinates school safety and security programs and provides technical assistance to school districts regarding school safety. 
+Many school districts throughout the Commonwealth have been requesting guidance on staff training for gun related violence. 
+Specifically, districts have been asking if they should prioritize training and resources for dealing with students bringing guns to schools or for mass shootings.
+
+\begin{parts}
+\part  Write a CoNVO statement for the PA Dept. of Education Office of School Safety for a data analysis motivated the above question.
+
+\end{parts}
+
+\begin{solution}[6in]
+
+- Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.
+
+-  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted.
+
+-  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all."  
+
+-  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context.  One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.
+\end{solution}
+
+\question[36] Data Analysis
+
+As part of an answer on school security you decide to look at all shootings involving school aged children.
+
+\begin{parts}
+\part What additional information do you need that is not currently in the records provided by the Gun Violence Archive?
+\part Write out a procedure (data manipulation flow) that will enable comparisons between shooting incidents involving children and mass shootings involving children using the three tables from the Gun Violence Archive. Note that many incidents can exist in more than one table.
+
+\begin{solution}[6in]
+1.  The data provided does not include the ages of the victims.
+2.  Methodology should include the following:
+    1.  Combine the child killed and injured and remove duplicates
+    2.  Separate mass shooting into with children and without children
+    3.  
+\end{solution}
+
+\end{parts}
+
+
+\end{questions}
+\end{document}
