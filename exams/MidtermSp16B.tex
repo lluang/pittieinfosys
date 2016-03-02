@@ -1,4 +1,5 @@
-\documentclass[12pt, addpoints, answers]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, letter, addpoints]{exam}
 \usepackage{multirow}
 \usepackage{pdflscape}
 %\usepackage{amssymb}
@@ -70,31 +71,21 @@
     }% hbox
   \end{trivlist}
 }
+\usepackage{Sweave}
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+\input{MidtermSp16B-concordance}
+
+\makebox[\textwidth]{Name:\enspace\hrulefill}
 
 \centering
 {\bf IE 0015 Spring 2016 Midterm}
 
 \centering
-{\bf A}
+{\bf B}
 
 
-<<echo=FALSE>>=
-library(xtable)
-library(ggplot2)
-@
 
 
-\begin{center}
-  \fbox{\fbox{\parbox{5.5in}{\centering
-        Answer the questions in the spaces provided on the
-        question sheets.  If you run out of room for an answer,
-        continue on the back of the page.}}}
-\end{center}
-\vspace{0.1in}
-
-\makebox[\textwidth]{Name and section:\enspace\hrulefill}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -102,68 +93,18 @@ library(ggplot2)
 \item
   Write your name on the top of this page.
 \item
-  Exam is closed book. You may have a 2 sided 8 1/2'' X 11'' crib sheet
-  (standard letter sized) and a calculator.
+  Exam is closed book with no notes. The article "The Phrase 'Mass Shooting' Belongs To The 21st Century"*" is provided with the exam. In addition, the last page of the exam includes examples of data from the Gun Violence Archive.
 \item
   Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
 \item
-  If you need to divide, you may leave the result in fraction form (e.g.~4/3
-  instead of 1.333333)
-\item
-  You have until 1:45 PM to finish. There are 100 points total divided
-  among  questions.
-\item
-  Show your work and clearly identify your answer for each subquestion
-  (identified by a lower case letter). Showing work may involve writing down equations and identifying data elements used.
-\item
-  When you turn in your exam, staple the exam and your crib sheet together.
+  You have until 1:50 PM to finish. There are 100 points total divided among 3 questions.
 \end{enumerate}
-\pagebreak
-
-\begin{landscape}
-This exam will make use of the data from the gun violence archive on mass shootings, child injuries, and child deaths.  A sample from each of these tables is below. Note that if an incident involved a child killed and a child injured, that incident would appear in both Table 1 and Table 2.
-
-<<echo=False>>=
-massshooting <- read.csv("gva_massshooting.csv")
-childinjury <- read.csv("gva_childreninjured.csv")
-childdeath <- read.csv("gva_childrenkilled.csv")
-accidentinjury <- read.csv("gva_accidentalinjuries.csv")
-accidentdeath <- read.csv("gva_accidentaldeaths.csv")
-@
-
-\centering
-{Table 1. Children Killed}
-<<echo=FALSE, results = tex>>=
-childdeathtop <- childdeath[1:7,-7]
-childinjurytop <- childinjury[1:7,-7]
-massshootingtop <- massshooting[1:7,-7]
-childdeathtab <- xtable(childdeathtop, caption="Children Killed", label="tbl:killed")
-childinjurytab <- xtable(childinjurytop, caption="Children Injured", label="tbl:injured")
-massshootingtab <- xtable(massshootingtop, caption="Mass shootings", label="tbl:massshootings")
-print(childdeathtab, floating=FALSE, include.rownames = FALSE)
-@
 
 
-\centering
-{Table 2. Children Injured}
-
-<<echo=FALSE, results = tex>>=
-print(childinjurytab, floating=FALSE, include.rownames = FALSE)
-@
-
-
-\centering
-{Table 3. Mass Shootings}
-
-<<echo=FALSE, results = tex>>=
-print(massshootingtab, floating=FALSE, include.rownames = FALSE)
-@
-
-\end{landscape}
 
 \begin{questions}
 
-\question[32]  CoNVO statement
+\question[35]  CoNVO statement
 
 In the Commonwealth of Pennsylvania, the Pennsylvania Department of Education Office for Safe Schools coordinates school safety and security programs and provides technical assistance to school districts regarding school safety. 
 Many school districts throughout the Commonwealth have been requesting guidance on staff training for gun related violence. 
@@ -174,7 +115,7 @@ Specifically, districts have been asking if they should prioritize training and 
 
 \end{parts}
 
-\begin{solution}[6in]
+\begin{solution}[3in]
 
 - Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.
 
@@ -184,8 +125,8 @@ Specifically, districts have been asking if they should prioritize training and 
 
 -  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context.  One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.
 \end{solution}
-
-\question[36] Data Analysis
+\pagebreak
+\question[35] Data Analysis
 
 As part of an answer on school security you decide to look at all shootings involving school aged children.
 
@@ -193,16 +134,98 @@ As part of an answer on school security you decide to look at all shootings invo
 \part What additional information do you need that is not currently in the records provided by the Gun Violence Archive?
 \part Write out a procedure (data manipulation flow) that will enable comparisons between shooting incidents involving children and mass shootings involving children using the three tables from the Gun Violence Archive. Note that many incidents can exist in more than one table.
 
-\begin{solution}[6in]
+\begin{solution}[4in]
+
 1.  The data provided does not include the ages of the victims.
 2.  Methodology should include the following:
     1.  Combine the child killed and injured and remove duplicates
     2.  Separate mass shooting into with children and without children
-    3.  
+    3.  Count mass shootings with and without children
+    4.  Compare the two
 \end{solution}
 
 \end{parts}
+\pagebreak
 
+\begin{center}
+\gradetable[v][questions]
+\end{center}
+\question[30] Data visualization
+
+The Tesla company is building a battery "Gigafactory" nearby Reno, NV to produce batteries for their electric cars. Construction is being done with a mix of contractors (companies that are hired to do part of the work). Part of the deal that at least 50\% of the construction workforce be Nevada residents. There is a dispute that due to the presence of one contractor (and its workers) that Tesla is not meeting this requirement.
+
+\begin{parts}
+\part Sketch as data presentation (tables or charts/graphs) that relates the workforce and their states of origin broken out by contractor and the total workforce.
+\part Write a description of your sketch using visual cues. There should be a description of at least three visual cues in your description. (Note: since it is unlikely that you brought colored pencils, use shading or shapes where you would normally use colors.)
+\end{parts}
+
+\begin{solution}[3in]
+The solution is probably going to be a series of bar graphs, one for each contractor where the heights of the bar relate to the number of workers, and there are different bars for Nevada residents and non-residents. In addition there should be a total.  Additionally, the one contractor that is singled out can be highlighted.
+\end{solution}
 
 \end{questions}
+\pagebreak
+
+\begin{landscape}
+This exam will make use of the data from the gun violence archive on mass shootings, child injuries, and child deaths.  A sample from each of these tables is below. Note that if an incident involved a child killed and a child injured, that incident would appear in both Table 1 and Table 2.
+
+
+\centering
+{Table 1. Children Killed}
+% latex table generated in R 3.2.2 by xtable 1.8-2 package
+% Tue Mar  1 23:39:59 2016
+\begin{tabular}{llllrr}
+  \hline
+Incident.Date & State & City.Or.County & Address & X..Killed & X..Injured \\ 
+  \hline
+February 29, 2016 & Tennessee & Apison & 4724 Gates Lane &   1 &   0 \\ 
+  February 26, 2016 & Indiana & Sunman & Van Wedding Road &   1 &   0 \\ 
+  February 25, 2016 & North Carolina & Wayne (county) & Sevendales Drive &   1 &   0 \\ 
+  February 23, 2016 & Arizona & Glendale & 4812 West Sunnyside Ave &   5 &   0 \\ 
+  February 20, 2016 & Florida & Miami & 1225 NE 103rd Lane &   1 &   0 \\ 
+  February 17, 2016 & Indiana & Zionsville & 6833 Old Hunt Club Rd &   3 &   0 \\ 
+  February 16, 2016 & Texas & Lubbock & 2500 block of  71st Street &   1 &   0 \\ 
+   \hline
+\end{tabular}
+
+\centering
+{Table 2. Children Injured}
+
+% latex table generated in R 3.2.2 by xtable 1.8-2 package
+% Tue Mar  1 23:39:59 2016
+\begin{tabular}{llllrr}
+  \hline
+Incident.Date & State & City.Or.County & Address & X..Killed & X..Injured \\ 
+  \hline
+March 1, 2016 & Tennessee & Nashville & 1500 block of Porter Road &   0 &   3 \\ 
+  February 29, 2016 & New Jersey & Paterson & 43 Rosa Parks Boulevard &   0 &   1 \\ 
+  February 29, 2016 & South Carolina & Spartanburg & 340 Rowe St. &   0 &   1 \\ 
+  February 28, 2016 & Virginia & Portsmouth & 4200 block of Moregate Lane &   0 &   1 \\ 
+  February 28, 2016 & Virginia & Portsmouth & 700 block of Lancer Drive &   0 &   1 \\ 
+  February 27, 2016 & New York & Buffalo & N/A &   0 &   2 \\ 
+  February 27, 2016 & California & Mc Farland & N/A &   0 &   2 \\ 
+   \hline
+\end{tabular}
+
+\centering
+{Table 3. Mass Shootings}
+
+% latex table generated in R 3.2.2 by xtable 1.8-2 package
+% Tue Mar  1 23:40:00 2016
+\begin{tabular}{llllrr}
+  \hline
+Incident.Date & State & City.Or.County & Address & X..Killed & X..Injured \\ 
+  \hline
+February 28, 2016 & Michigan & Detroit & 8800 block of Livernois &   0 &   5 \\ 
+  February 28, 2016 & California & Riverside (Jurupa Valley) & 5500 block of Etiwanda Avenue &   1 &   3 \\ 
+  February 27, 2016 & Virginia & Woodbridge (Lake Ridge) & 13051 Lashmere Court &   2 &   2 \\ 
+  February 26, 2016 & Washington & Belfair & 300 block of Horseshoe Rd. &   5 &   0 \\ 
+  February 25, 2016 & Kansas & Hesston & 200 S Ridge Rd &   4 &  14 \\ 
+  February 23, 2016 & Arizona & Glendale & 4812 West Sunnyside Ave &   5 &   0 \\ 
+  February 23, 2016 & Florida & Daytona Beach & 1042 Sheridan Road &   0 &   4 \\ 
+   \hline
+\end{tabular}
+\end{landscape}
+
+\pagebreak
 \end{document}
