@@ -1,0 +1,216 @@
+%\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, letter, addpoints]{exam}
+\usepackage{multirow}
+\usepackage{pdflscape}
+%\usepackage{amssymb}
+
+%\usepackage{makeidx}
+
+%\usiepackage[colorlinks]{hyperref}
+
+% In case we're not using hyperref.sty:
+%\providecommand{\texorpdfstring}[2]{#1}
+% Thie following can be used in \section commands
+% without generating pdf warnings:
+%\newcommand{\bs}{\texorpdfstring{\char`\\}{}}
+
+%\newcommand{\docversion}{2.5}
+%\newcommand{\docdate}{May 7, 2015}
+%\newcommand{\docdate}{\today}
+
+%--------------------------------------------------------------------
+%
+% Changes since version 2.4 are described in the comments
+% near the beginning of the file exam.cls.
+%
+%--------------------------------------------------------------------
+
+%\makeindex
+
+%\newcommand{\indc}[1]{\index{#1@\texttt{\char`\\#1}}}
+%\newcommand{\indcsub}[2]{\index{#1@\texttt{\char`\\#1}!#2}}
+%\newcommand{\indcstart}[1]{\index{#1@\texttt{\char`\\#1}|(}}
+%\newcommand{\indcstop}[1]{\index{#1@\texttt{\char`\\#1}|)}}
+
+%\newcommand{\indt}[1]{\index{#1@\texttt{#1}}}
+%\newcommand{\indtsub}[2]{\index{#1@\texttt{#1}!#2}}
+%\newcommand{\indtstart}[1]{\index{#1@\texttt{#1}|(}}
+%\newcommand{\indtstop}[1]{\index{#1@\texttt{#1}|)}}
+
+%---------------------------------------------------------------------
+\newenvironment{example}%
+   {\bigskip\filbreak
+    \subsubsection{Example:}
+   }%
+   {}
+
+\def\samplehead#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    \hbox to \textwidth{%
+      \rlap{\parbox[b]{\textwidth}{\raggedright#1\strut}}%
+      \hfil\parbox[b]{\textwidth}{\centering#2\strut}\hfil
+      \llap{\parbox[b]{\textwidth}{\raggedleft#3\strut}}%
+    }% hbox
+    #4
+  \end{trivlist}
+}
+
+\def\samplefoot#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    #1
+    \vskip 3pt
+
+    \hbox to \textwidth{%
+      \rlap{\parbox[t]{\textwidth}{\raggedright#2}}%
+      \hfil\parbox[t]{\textwidth}{\centering#3}\hfil
+      \llap{\parbox[t]{\textwidth}{\raggedleft#4}}%
+    }% hbox
+  \end{trivlist}
+}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\makebox[\textwidth]{Name:\enspace\hrulefill}
+
+\centering
+{\bf IE 0015 Spring 2016 Midterm}
+
+\centering
+{\bf A}
+
+
+<<echo=FALSE>>=
+library(xtable)
+library(ggplot2)
+@
+
+
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Write your name on the top of this page.
+\item
+  Exam is closed book with no notes. The article "The Phrase 'Mass Shooting' Belongs To The 21st Century" is provided with the exam. In addition, the last page of the exam includes examples of data from the Gun Violence Archive.
+\item
+  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
+\item
+  You have until 1:50 PM to finish. There are 100 points total divided among 3 questions.
+\end{enumerate}
+
+
+
+\begin{questions}
+
+\question[35]  CoNVO statement
+
+This description applies to questions 1 and 2.
+
+Part of the response to mass shootings on college campuses has been suggestions that faculty, staff, and students be allowed to conceal carry firearms if they have a state license to do so. The Commonwealth of Pennsylvania allows colleges and university to set their own rules on doing so. Those that argue for allowing concealed carry on campus state that their presence deters mass shooting events. Those opposed state that the presence of firearms leads to more death an injury due to accident than preventing an active shooter on campus.
+
+\begin{parts}
+\part  Write a CoNVO statement for a university department of public safety that is considering if concealed carry should be allowed on a university campus and desires to resolve the debate identified above.
+
+\end{parts}
+
+\begin{solution}[3in]
+
+- Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.
+
+-  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted.
+
+-  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all."  
+
+-  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context.  One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.
+\end{solution}
+\pagebreak
+\question[35] Data Analysis
+
+As part of an answer on campus security you decide to compare the rate of accidental death and injury with mass shooting incidents.
+
+\begin{parts}
+\part What additional information do you need that is not currently in the records provided by the Gun Violence Archive?
+\part Write out a procedure (data manipulation flow) that will enable comparisons between accidental shooting incidents and mass shootings involving children using the three tables from the Gun Violence Archive. Note that many incidents can exist in more than one table.
+
+\begin{solution}[4in]
+
+1.  The data provided does not include the ages of the victims.
+2.  Methodology should include the following:
+    1.  Combine the child killed and injured and remove duplicates
+    2.  Separate mass shooting into with children and without children
+    3.  Count mass shootings with and without children
+    4.  Compare the two
+\end{solution}
+
+\end{parts}
+\pagebreak
+
+\begin{center}
+\gradetable[v][questions]
+\end{center}
+\question[30] Data visualization
+
+FedEx Ground is considering adding another distribution center in the southwest Pennsylvania region.  However, like other companies that have large numbers of distribution centers around the country (e.g. UPS, Amazon.com), FedEx Ground finds that finding labor to staff its distribution centers is an issue.  Assume that U.S. Census data and American Community Survey data is available.
+
+\begin{parts}
+\part Sketch as data presentation (tables or charts/graphs) that can relate unemployment to the road network (interstate highways).  Include a title and legend/axis labels as appropriate.
+\part Write a description of your sketch using visual cues. There should be a description of at least three visual cues in your description. (Note: since it is unlikely that you brought colored pencils, use shading or shapes where you would normally use colors.)
+\end{parts}
+
+\begin{solution}[3in]
+The solution is likely going to be a map with the road network, and southwest Pennyslvania divided into something like counties. And some charting of unemployment levels (raw numbers) superimposed on the map.  
+\end{solution}
+
+\end{questions}
+\pagebreak
+
+\begin{landscape}
+This exam will make use of the data from the gun violence archive on mass shootings, child injuries, and child deaths.  A sample from each of these tables is below. Note that if an incident involved a child killed and a child injured, that incident would appear in both Table 1 and Table 2.
+
+<<echo=False>>=
+massshooting <- read.csv("gva_massshooting.csv")
+childinjury <- read.csv("gva_childreninjured.csv")
+childdeath <- read.csv("gva_childrenkilled.csv")
+accidentinjury <- read.csv("gva_accidentalinjuries.csv")
+accidentdeath <- read.csv("gva_accidentaldeaths.csv")
+@
+
+\centering
+{Table 1. Accidental deaths}
+<<echo=FALSE, results = tex>>=
+childdeathtop <- childdeath[1:7,-7]
+childinjurytop <- childinjury[1:7,-7]
+massshootingtop <- massshooting[1:7,-7]
+accidentinjurytop <- accidentinjury[1:7, -7]
+accidentdeathtop <- accidentdeath[1:7, -7]
+accidentdeathtab <- xtable(accidentdeathtop, caption="Accidental deaths", label="tbl:killed")
+accidentinjurytab <- xtable(accidentinjurytop, caption="Accidental  Injuries", label="tbl:injured")
+massshootingtab <- xtable(massshootingtop, caption="Mass shootings", label="tbl:massshootings")
+print(accidentdeathtab, floating=FALSE, include.rownames = FALSE)
+@
+
+
+\centering
+{Table 2. Accidental injuries}
+
+<<echo=FALSE, results = tex>>=
+print(accidentinjurytab, floating=FALSE, include.rownames = FALSE)
+@
+
+
+\centering
+{Table 3. Mass Shootings}
+
+<<echo=FALSE, results = tex>>=
+print(massshootingtab, floating=FALSE, include.rownames = FALSE)
+@
+
+\end{landscape}
+
+\pagebreak
+\end{document}
