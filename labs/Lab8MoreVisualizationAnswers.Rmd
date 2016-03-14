@@ -2,7 +2,7 @@
 title: 'Lab 8: More visualization'
 author: "IE 0015 Information Systems Engineering"
 date: "02/21/2015"
-output: html_document
+output: pdf_document
 ---
 ```{r loadlibraries}
 library(ggplot2)
@@ -16,24 +16,30 @@ FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
 Do first babies arrive late?  A common belief is that first babies are more likely to be born late (compared to second or third babies).  We can examine this by looking at the distribution of the pregnancy duration for each of the first four live births (per mother).
 
 1.  (1 pt) Create a dataframe from the National Survey of Family Growth using only the first four births (`BIRTHORD`). (Note: after reading in the data, convert the BIRTHORD field into a factor)
-2.  (2 pt) Using ggplot or qplot (suggest ggplot), create a histogram that looks at the pregnancy duration (`PRGLNGTH`) for each live birth.  Look at only weeks 35 through 45.  Remember to offset your histogram bars by `origin=-0.5` so that the bar appears over the x-axis tick for the weeks.
-3.  (2 pt) Break up the histogram so you can see the pregnancy duration distribution for each of the first four births in a single plot.
-4.  (2 pt) Using faceting, create four histograms to compare the pregnancy duration distribution separately. Organize them into two rows and two columns.
-5.  (2 pt) Try putting them on the same plot again, but use a frequency polygon to compare the distributions. (Note that you should set the binwidth = 1)
-6.  (1 pt) Discuss the question if first babies are born late using the plots you just created.
+2.  (2 pt) Using ggplot create a histogram that looks at the pregnancy duration (`PRGLNGTH`) for each live birth.  Look at only weeks 35 through 45.  Remember to offset your histogram bars by `origin=-0.5` so that the bar appears over the x-axis tick for the weeks.
+3.  (2 pt) Break up (facet) the histogram so you can see the pregnancy duration distribution for each of the first four births in adjacent plots.
+4.  (2 pt) Try putting them on the same plot again, but use a frequency polygon (`geom_freqpoly()`) to compare the distributions. (Hint: use `geom_freqpoly()` just like you would `geom_histogram()`. Look up `geom_freqpoly` in the R Studio help for details.)
+5.  (1 pt) Discuss the question if first babies are born late using the plots you just created.  Which plot is the most helpful?
   
 ANSWER
 
 ```{r, warning=FALSE}
 firstbirths <- FemPreg[FemPreg$BIRTHORD %in% c(1, 2, 3, 4),c("BIRTHORD", "PRGLNGTH")]
-f <- ggplot(firstbirths, aes(PRGLNGTH)) + geom_histogram(binwidth=1, origin=-0.5, width=0.8) + xlim(35, 45)  + ggtitle("Distribution of pregnancy durations") + xlab("Weeks")
+f <- ggplot(firstbirths, aes(PRGLNGTH)) + geom_histogram(binwidth=1, origin=-0.5, width=0.8) + xlim(35, 45)  + ggtitle("(1) Distribution of pregnancy durations") + xlab("Weeks")
 show(f)
-f1 <- ggplot(firstbirths, aes(x=PRGLNGTH, color=BIRTHORD, fill=BIRTHORD)) + geom_histogram(position="dodge", binwidth=1, origin=-0.5, width=0.8) + xlim(35, 45) + ggtitle("Distribution of pregnancy durations by birthorder") + xlab("Weeks")
+f1 <- ggplot(firstbirths, aes(x=PRGLNGTH, color=BIRTHORD, fill=BIRTHORD)) + geom_histogram(position="dodge", binwidth=1, origin=-0.5, width=0.8) + xlim(35, 45) + ggtitle("(2) Distribution of pregnancy durations by birthorder") + xlab("Weeks")
 show(f1)
-f2 <- f + facet_wrap(~BIRTHORD, nrow = 2, ncol = 2)
-show(f2)
-f3 <- ggplot(firstbirths, aes(as.integer(x = PRGLNGTH), color=BIRTHORD)) + geom_freqpoly(binwidth=1,origin=-0.5) + ggtitle("Distribution of pregnancy durations by birthorder") + xlab("Weeks") + xlim(35, 45)
+
+
+f2a <- f + facet_wrap(~BIRTHORD, nrow = 2, ncol = 2) + ggtitle("(3) Distribution of pregnancy durations by birthorder") + xlab("Weeks")
+show(f2a)
+
+
+
+f3 <- ggplot(firstbirths, aes(as.integer(x = PRGLNGTH), color=BIRTHORD)) + geom_freqpoly(stat="count") + ggtitle("(4) Distribution of pregnancy durations by birthorder frequency polygon") + xlab("Weeks") + xlim(35, 45)
 show(f3)
 ```
+
+5. Answer should note that the peaks for each of the plots are in the same week, so they are effectively the same. Most people will say that the frequency polygon is the most useful.
 
 

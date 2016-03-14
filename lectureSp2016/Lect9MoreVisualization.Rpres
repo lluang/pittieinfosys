@@ -1,11 +1,11 @@
 Lecture 9: More Visualization
 ========================================================
 author: IE 0015 Information Systems
-date: February 2016
+date: March 2016
 
 
 
-Overview of Grammer of Graphics
+Overview of Grammar of Graphics
 ============
 
 A plot is composed of:
@@ -16,21 +16,28 @@ A plot is composed of:
 -  scaling - How data layout
 -  statistic - Transformation of the data
 -  position adjustment - To avoid overplotting
-
 ```{r}
 library(ggplot2)
 dsmall = diamonds[sample(nrow(diamonds),200),]
 ```
 
+
+qplot and ggplot
+============
+
+- `qplot` is the simplified version of `ggplot`
+- The general concepts are the same, but `ggplot` is more flexible
+- But getting `ggplot` started is complex
+
 Aesthetics - appearance
 =======================
 
 - Change the appearance of data elements using aesthetics.
-- Color, shape, size, transparancy (alpha), etc.
+- Color, shape, size, transparency (alpha), etc.
 - Each aesthetic displays an additional aspect of the data.
-
-```{r, fig.width=6, fig.height=3}
-qplot(carat, price, data = dsmall, shape = cut, colour = color)
+***
+```{r}
+ggplot(dsmall, aes(carat, price, shape=cut, color=color)) + geom_point()
 ```
 
 
@@ -42,16 +49,30 @@ geom - plot type
 - `path` and `line` connect points.
 - `smooth` - draw a smoother to the data
 - `histogram`, `boxplot`, `density`, `bar`
-
+***
 ```{r}
-qplot(carat, price, data = dsmall, geom = c("point", "smooth"))
+ggplot(dsmall, aes(carat, price, shape=cut, color=color)) + geom_point()
 ```
 
 Faceting
 ==========
 
 -  How data will be divided among multiple plots
+-  Note the use of the function format
+   *y ~ x*
+***
+```{r}
+ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(color ~ .)
+```
 
+Faceting horizontally
+=====
+
+
+-  Change the order of the function in the facet_grid to layout facets horizontally
+```{r}
+ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(. ~ color)
+```
 
 Scaling
 =========
@@ -87,12 +108,6 @@ Position adjustments
 -  `jitter` - Jitter points to avoid overplotting
 -  `stack` - Stack overlapping objects on top of each other
 
-qplot and ggplot
-============
-
-- `qplot` is the simplified version of `ggplot`
-- The general concepts are the same, but `ggplot` is more flexible
-- But getting `ggplot` started is complex
 
 Putting together a plot
 ============
@@ -111,7 +126,8 @@ Identify how the data will be displayed (aesthetic)
 - Using *aes*, identify which data elements will be chosen.
 - First attribute is the x-axis (if only one, then it is a histogram or density plot)
 - Second attribute is the y-axis.
-- Additional attributes need to be mapped to other visual cues (colour, size, shape, etc)
+- Additional attributes need to be mapped to other visual cues (color, size, shape, etc)
+- Note: you can build plots by building on the plot object.
 
 ```{r}
 p1 = p + aes(x = carat)
@@ -126,6 +142,13 @@ Declare the type of plot (geom)
 ```{r}
 p2 = p1 +  geom_histogram()
 p2
+```
+
+Same thing, but with density
+==========
+```{r}
+p3 = p1 + geom_density()
+p3
 ```
 
 Same thing, but using different layer (and attributes)
@@ -426,6 +449,9 @@ library(reshape2) # for melt
 volcano3d <- melt(volcano)
 names(volcano3d) <- c("x", "y", "z")
 v <- ggplot(volcano3d, aes(x, y, z = z))
+```
+***
+```{r}
 v + stat_contour()
 ```
 
@@ -503,6 +529,9 @@ Themes
 
 ```{r}
 t = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
+```
+***
+```{r}
 show(t)
 ```
 
@@ -511,4 +540,32 @@ Black and white and gray
 
 ```{r}
 t+theme_bw()
+```
+
+Review of Grammar of Graphics
+============
+
+A plot is composed of:
+-  data
+-  aesthetic - How the data will be plotted
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
+-  scaling - How data layout
+-  statistic - Transformation of the data
+-  position adjustment - To avoid overplotting
+-  theme - How it looks
+
+Building the plot
+================
+
+- Start from the simplist possible plot, then add details.
+
+```{r}
+t = ggplot(dsmall,aes(carat, price, color = color)) 
+t1 = t + geom_point()
+t2 = t1 + theme_bw()
+```
+***
+```{r, echo=FALSE}
+show(t2)
 ```
