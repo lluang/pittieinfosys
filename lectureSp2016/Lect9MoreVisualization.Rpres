@@ -9,6 +9,7 @@ Overview of Grammar of Graphics
 ============
 
 A plot is composed of:
+
 -  data
 -  aesthetic - How the data will be plotted
 -  geom - Indicates the type of plot
@@ -16,6 +17,7 @@ A plot is composed of:
 -  scaling - How data layout
 -  statistic - Transformation of the data
 -  position adjustment - To avoid overplotting
+
 ```{r}
 library(ggplot2)
 dsmall = diamonds[sample(nrow(diamonds),200),]
@@ -569,3 +571,38 @@ t2 = t1 + theme_bw()
 ```{r, echo=FALSE}
 show(t2)
 ```
+
+Plotting multiple elements
+================
+
+- Use multiple geom statements in the same plot.
+```{r}
+u = ggplot(dsmall)
+u+geom_point(aes(table/50, price), color="red") + geom_point(aes(carat, price), color="blue") + xlab("Table/50 or Carat")
+```
+
+Summarizing on top of data
+====
+
+-  Create a dataframe with an associated summary (we will cover dplyr next week)
+-  Use multiple geom statements (specify that you are using a new data frame)
+
+```{r}
+library(dplyr)
+dsmallbycut<- group_by(dsmall, cut)
+dsmallsummarize <- summarize(dsmallbycut, meanprice = mean(price, na.rm=TRUE), sdprice = sd(price, na.rm=TRUE))
+```
+
+Plot by using multiple geom statements
+==================
+
+-  geom statement can specify another dataset
+
+```{r}
+v = ggplot(dsmallsummarize, aes(x=cut))
+v+ geom_errorbar(aes(ymin=meanprice-sdprice, 
+                    ymax=meanprice+sdprice), width=0.25) +
+  geom_point(data=dsmall, aes(x=cut, y=price), size = 1, alpha=.2) +
+  ggtitle("Price of diamonds by cut")
+```
+
