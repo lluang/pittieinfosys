@@ -1,7 +1,7 @@
 ---
 title: 'Lab 8: More visualization'
 author: "IE 0015 Information Systems Engineering"
-date: "02/21/2015"
+date: "03/17/2016"
 output: pdf_document
 ---
 ```{r loadlibraries}
@@ -15,11 +15,11 @@ FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
 
 Do first babies arrive late?  A common belief is that first babies are more likely to be born late (compared to second or third babies).  We can examine this by looking at the distribution of the pregnancy duration for each of the first four live births (per mother).
 
-1.  (1 pt) Create a dataframe from the National Survey of Family Growth using only the first four births (`BIRTHORD`). (Note: after reading in the data, convert the BIRTHORD field into a factor)
+1.  (2 pt) Create a dataframe from the National Survey of Family Growth using only the first four births (`BIRTHORD`). (Note: after reading in the data, convert the BIRTHORD field into a factor)
 2.  (2 pt) Using ggplot create a histogram that looks at the pregnancy duration (`PRGLNGTH`) for each live birth.  Look at only weeks 35 through 45.  Remember to offset your histogram bars by `origin=-0.5` so that the bar appears over the x-axis tick for the weeks.
 3.  (2 pt) Break up (facet) the histogram so you can see the pregnancy duration distribution for each of the first four births in adjacent plots.
 4.  (2 pt) Try putting them on the same plot again, but use a frequency polygon (`geom_freqpoly()`) to compare the distributions. (Hint: use `geom_freqpoly()` just like you would `geom_histogram()`. Look up `geom_freqpoly` in the R Studio help for details.)
-5.  (1 pt) Discuss the question if first babies are born late using the plots you just created.  Which plot is the most helpful?
+5.  (2 pt) Discuss the question if first babies are born late using the plots you just created.  Which plot is the most helpful?
 
 
 
