@@ -1,5 +1,5 @@
 %\documentclass[12pt, addpoints, answers]{exam}
-\documentclass[12pt, letter, addpoints]{exam}
+documentclass[12pt, letter, addpoints]{exam}
 \usepackage{multirow}
 \usepackage{pdflscape}
 %\usepackage{amssymb}
@@ -122,9 +122,9 @@ Specifically, districts have been asking if they should prioritize training and 
 
 - Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.
 
--  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted.
+-  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
 
--  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all."  
+-  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all."  The big mistake here is to be vague (e.g. 'a data analysis' or 'a chart).  This needs to be concrete so that the client knows what she will be getting from you. Another major mistake is to not address the problem presented (which was generally two options on where to put effort)
 
 -  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context.  One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.
 \end{solution}
@@ -144,7 +144,7 @@ As part of an answer on school security you decide to look at all shootings invo
     1.  Combine the child killed and injured and remove duplicates
     2.  Separate mass shooting into with children and without children
     3.  Count mass shootings with and without children
-    4.  Compare the two
+    4.  Compare the two. This usually involved a summary (e.g. count of victims, count of incidents) of two groups of data. The comparison needed to be fair (i.e. there needed to be grouping of filtering to ensure fairness, usually by date)
 \end{solution}
 
 \end{parts}
@@ -164,6 +164,8 @@ FedEx Ground is considering adding another distribution center in the southwest 
 
 \begin{solution}[3in]
 The solution is likely going to be a map with the road network, and southwest Pennyslvania divided into something like counties. And some charting of unemployment levels (raw numbers) superimposed on the map.  
+
+One problem is in the use of percentages.  Because percentages are calculations off a base, they cannot be added when the percentages were fractions of different starting point. In addition, percentage graphs are always based on 100\%.
 \end{solution}
 
 \end{questions}
