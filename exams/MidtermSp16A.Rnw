@@ -1,5 +1,5 @@
 %\documentclass[12pt, addpoints, answers]{exam}
-documentclass[12pt, letter, addpoints]{exam}
+\documentclass[12pt, letter, addpoints]{exam}
 \usepackage{multirow}
 \usepackage{pdflscape}
 %\usepackage{amssymb}
@@ -124,9 +124,9 @@ Specifically, districts have been asking if they should prioritize training and 
 
 -  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
 
--  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all."  The big mistake here is to be vague (e.g. 'a data analysis' or 'a chart).  This needs to be concrete so that the client knows what she will be getting from you. Another major mistake is to not address the problem presented (which was generally two options on where to put effort)
+-  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all." Another common mistake is to be too vague. The Vision in particular needs to be concrete enough so that a potential client has a picture of what she will be getting at the end of an analysis project and how she can use it.
 
--  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context.  One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.
+-  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context and lead to the decision identified in the Need. There should be more than one possible outcome (if not, there is no reason to do the project, the organization should take that route now). One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.  
 \end{solution}
 \pagebreak
 \question[35] Data Analysis
@@ -163,9 +163,9 @@ FedEx Ground is considering adding another distribution center in the southwest 
 \end{parts}
 
 \begin{solution}[3in]
-The solution is likely going to be a map with the road network, and southwest Pennyslvania divided into something like counties. And some charting of unemployment levels (raw numbers) superimposed on the map.  
+The solution is likely going to be a map with the road network, and southwest Pennyslvania divided into something like counties. And some charting of unemployment levels (raw numbers) superimposed on the map. (It is very hard to answer a question involving location without using a map as a visual cue).  Another difficulty was using an overall summary instead of discussing specific areas. As the question was about finding specific locations and overall summary is not helpful. Similarly using percentages when an employer would be interested in the actual size of a workforce. (which requires knowing what the actual value of unemployment was.)
 
-One problem is in the use of percentages.  Because percentages are calculations off a base, they cannot be added when the percentages were fractions of different starting point. In addition, percentage graphs are always based on 100\%.
+Common issue was trying to add percentages that were based on different baselines (e.g. percentage of employees of different contracters living in a certain area.)
 \end{solution}
 
 \end{questions}
