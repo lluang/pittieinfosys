@@ -34,6 +34,8 @@ Use ACS as an example
 
 ```{r readingsqlite}
 library(RSQLite)
+library(tidyr)
+library(dplyr)
 con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
 sql <- "SELECT *      
         FROM ss12hpa"
