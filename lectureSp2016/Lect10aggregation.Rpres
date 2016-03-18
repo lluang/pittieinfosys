@@ -67,23 +67,23 @@ Diversion:  recode variables
 
 - In the ACS data, many of the variables are coded as integers ("1", "2", "3", etc)
 - We would want to recode them with their values in english
-- Before, we used a data frame that contained the mapping.
-- Better is to use **map** that applies a function over the entire dataset
+- Use ``merge`` to do an operation similar to join
 
 
 ```{r}
-library(plyr)
-acsp$worktransportation<- mapvalues(acsp$JWTR, 
-            from = c("bb", "01", "02", "03", "04", "05", "06",
+worktransportation = data.frame(
+              JWTR = c("bb", "01", "02", "03", "04", "05", "06",
                      "07", "08", "09", "10", "11", "12"), 
-            to = c(NA, 
+              worktransportation = c(NA, 
                     "Car, truck, or van",
                     "Bus or trolley bus",
                     "Streetcar", "Subway",
                     "Railroad", "Ferryboat",
                     "Taxicab", "Motorcycle",
                     "Bicycle", "Walked",
-                    "Worked at home", "Other"),)
+                    "Worked at home", "Other"))
+
+acsp <- merge(acsp, worktransportation, all.x=TRUE, by='JWTR')
 commutetable <- table(acsp$worktransportation)
 as.data.frame(commutetable)
 ```
@@ -141,13 +141,14 @@ by: data frame split by factors
 
 ```{r}
 # Mean household income split by housing Tenure
-acsh$tenurevalues <- mapvalues(acsh$TEN, from = c("", 1, 2, 3, 4), 
-          to = c(NA, 
-                 "Owned with mortgage or loan",
-                 "Owned free and clear",
-                 "Rented",
-                 "Occupied without payment of rent"),
-          warn_missing=FALSE)
+tenurevalues <- data.frame(
+                  TEN = c("", 1, 2, 3, 4), 
+                  tenurevalues = c(NA, 
+                                 "Owned with mortgage or loan",
+                                 "Owned free and clear",
+                                 "Rented",
+                                 "Occupied without payment of rent"))
+acsh <- merge(acsh, tenurevalues, by='TEN')
 acsh$watercost <- as.numeric(acsh$WATP)
 acsh$householdincome <- as.numeric(acsh$HINCP)
 acsh$numpeople <- as.numeric(acsh$NP)
@@ -221,7 +222,7 @@ aggregate
 -  Summarize a columns based on defined groups
 
 ```{r}
-library(ggplot2)
+library(ggplot2) #loads reshape2 package
 data(diamonds)
 summary(diamonds)
 aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean)
@@ -294,12 +295,13 @@ Mapping a function based on groups
 
 
 
-reshape package
+reshape2 package
 =====
 
 - similar to pivot tables
 - create  *melted* version of data
 - *cast* into an object with the desired orientation.
+- Note: an evolution of the `reshape` package
 
 Wide data vs long data
 ======
@@ -313,7 +315,7 @@ Wide data vs long data
 Airquality
 ============
 ```{r}
-library(reshape)
+#library(reshape2) # loaded by ggplot2
 data(diamonds)
 head(diamonds)
 ```
@@ -321,7 +323,8 @@ head(diamonds)
 wide to long
 ======
 ```{r}
-dl <- reshape::melt(diamonds)
+# Note: package reshape2 loaded by ggplot2
+dl <- reshape2::melt(diamonds)
 head(dl)
 ```
 
@@ -333,7 +336,7 @@ long to wide
 -  And a summary function (default `count`)
 
 ```{r}
-dw <- reshape::cast(dl, color + cut ~ variable, mean)
+dw <- reshape2::cast(dl, color + cut ~ variable, mean)
 head(dw)
 ```
 
