@@ -34,8 +34,8 @@ Use ACS as an example
 
 ```{r readingsqlite}
 library(RSQLite)
-library(tidyr)
-library(dplyr)
+#library(tidyr)
+#library(dplyr)
 con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
 sql <- "SELECT *      
         FROM ss12hpa"
@@ -224,6 +224,7 @@ aggregate
 -  Summarize a columns based on defined groups
 
 ```{r}
+library(reshape2)
 library(ggplot2) #loads reshape2 package
 data(diamonds)
 summary(diamonds)
@@ -311,14 +312,10 @@ Wide data vs long data
 - There are two ways of storing data about an observation
   -  *wide* - one row for each entity id, with a column with data representing each feature of the entity
   -  *long* - one row for each observation, with columns for entity id, feature observed, and the data observerd.
--  To convert from *wide* to *long*, use `melt`.
--  To convert from *long* to *wide*, use `cast`.
 
 Airquality
 ============
 ```{r}
-#library(reshape2) # loaded by ggplot2
-data(diamonds)
 head(diamonds)
 ```
 
@@ -338,7 +335,7 @@ long to wide
 -  And a summary function (default `count`)
 
 ```{r}
-dw <- reshape2::cast(dl, color + cut ~ variable, mean)
+dw <- reshape2::dcast(dl, color + cut ~ variable, mean)
 head(dw)
 ```
 
