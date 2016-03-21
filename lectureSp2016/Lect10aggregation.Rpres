@@ -42,6 +42,125 @@ Tidy data in R
 ====================
 
 -  In **R**, many packages work with `data.frame`, so they are designed with this philosophy in mind.
+-  `A data.frame` is made up of *rows* (observations) and *columns* (variables).
+-  Every data element is the value of a variable for an observation.
+-  *Note: a lot of data are not presented this way!*
+
+Examples of what you will see
+==============
+
+    | treatmenta  | treatmentb
+--------------|----------------|-----------
+John Smith | - | 2
+Jane Doe  | 16 | 11
+Mary Johnson  | 3 | 1
+
+
+    | John Smith | Jane Doe  | May Johnson 
+----|------------|-----------|---------------
+treatmenta | - | 16 | 3
+treatmentb | 2 | 11 | 1
+
+- But these both have observations as columns
+- Need to have each row be a single observation
+
+Each row is only a single observation
+=====================
+
+  person     | treatment   | value
+-------------|-------------|--------
+John Smith | a | --
+Jane Doe | a | 16
+Mary Johnson | a | 3
+John Smith | b | 2
+Jane Doe | b | 11
+Mary Johnson | b | 1
+
+
+
+Do variables really define new observations?
+==================
+
+> -  When should variables be used to define a new observation?
+> - Are variables related?
+> - Are variables a function of another?
+> - If yes, then the variables can be kept together in a single observation.
+> - It is easier to make comparisons across groups of observations rather than groups of columns. 
+
+What does Tidy data look like
+===============
+
+1.  Each variable forms a column.
+2.  Each observation forms a row.
+3.  Each type of observational unit forms a table
+
+- Note: in database design, this corresponds to Cobb's Third Normal Form.
+- *Messy data* is any other arrangement.
+  -  When doing statistical analysis, you will have to do organizational contortions before applying statistical methods.
+  
+Some advantages to tidy data
+===============================
+
+-  Experimental design is apparent
+  -  Sort by descriptive variables to show the experimental design
+-  Method to analyze each variable is the same
+  -  Only change is in your SELECT or equality conditions
+
+Common ways data sets diverge from tidy data
+==============
+
+1.  Column headers are values, not variable names.
+2.  Multiple variables are stored in one column.
+3.  Variables are stored in both rows and columns.
+4.  Multiple types of observational units are stored in the same table.
+5.  A single observational unit is stored in multiple table.
+
+Column headers are values, not variable names.
+=============
+
+-  Common because data is often reported for display, not analysis.
+   -  Advantage because it is efficient in space.  
+-  Often row and column headers are both variables, and the data element is a value in a table.
+-  We can correct this by stacking the columns into a longer table, this turns columns into rows (later we will call this *melt*. Also known as making a *wide* table into a *long* table.)
+
+
+Multiple variables are stored in one column.
+===================
+
+-  Example, a data element `m14` refers to a male, age 14.
+-  You cannot use this to analyze either gender or age.
+-  Need to break this up into a column for gender and a column for age.
+
+Variables are stored in both rows and columns.
+==============
+
+-  Often done to conserve space
+-  Also often shows relationships between certain observations by laying them out side by side.
+-  e.g. Each row is a week (e.g. week 1 of January) and there are columns for Mon, Tue, Wed, Thu, Fri, Sat, Sun
+-  But to do any analysis other than the one demonstrated, you need to convert the columns into rows.
+
+Multiple types of observational units are stored in the same table.
+===============
+
+-  Often done to conserve space.
+-  You notice this because some data ends up being repeated in many rows.
+-  E.g. Billboard music charts that identify a song, artist, label, a week, and rank for that week.  The artist and label repeated every time the song is on the chart.
+-  Causes errors because of repetition, if you have a correction, it needs to be corrected everywhere.
+-  Better to have a table for song, rank, and week, and a second table that includes data that does not change for that song, e.g. song, artist, label, release date, etc.
+
+
+
+A single observational unit is stored in multiple tables.
+=====================
+
+-  Often because the data is collected for different reasons or by different sources.
+-  Solution is to JOIN the tables.
+  -  Use one table as a starting point, and add columns from each of the other tables.
+
+
+
+
+
 Aggregation of data
 =========
 type:section
@@ -111,7 +230,7 @@ Diversion:  recode variables
 =======================
 
 - In the ACS data, many of the variables are coded as integers ("1", "2", "3", etc)
-- We would want to recode them with their values in english
+- We would want to recode them with their values in English
 - Use ``merge`` to do an operation similar to join
 
 
@@ -318,7 +437,7 @@ nwords
 Mapping a function to a matrix or array
 =====================
 
--  Because we often do anaylsis based on each element in a data frame, we often use `apply` on data frames.
+-  Because we often do analysis based on each element in a data frame, we often use `apply` on data frames.
 -  Income per family member
 
 ```{r}
@@ -354,9 +473,9 @@ Wide data vs long data
 
 - There are two ways of storing data about an observation
   -  *wide* - one row for each entity id, with a column with data representing each feature of the entity
-  -  *long* - one row for each observation, with columns for entity id, feature observed, and the data observerd.
+  -  *long* - one row for each observation, with columns for entity id, feature observed, and the data observed.
 
-Airquality
+Air quality
 ============
 ```{r}
 head(diamonds)
