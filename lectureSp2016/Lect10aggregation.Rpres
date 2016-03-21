@@ -3,6 +3,49 @@ Lecture 10: Data Aggregation
 author: IE 0015 Spring 2016
 date: March 2016
 
+
+Tidy data
+==============
+type:section
+
+Data preparation
+===================
+
+-  *Data preparation* involves *cleaning* and *preparing* the data.
+  -  *cleaning* - correcting mistakes and formatting the data into a usable form.
+  -  *preparing* - organizing the data for analysis.
+-  Some tasks involved in data preparation.
+  1.  Checking for outliers
+  2.  Error checking
+  2.  Parsing dates
+  3.  Missing value imputation
+  4.  *Structuring data to facilitate analysis*
+  
+Tidy data
+========
+
+-  Tidy data is a set of principles to organize data values within the data set.
+-  Makes data cleaning and preparation easier because you have an end goal.
+-  Makes data exploration and analysis easier.
+-  Makes it easier to develop data analysis tools that work together.
+
+Why a philosophy of data preparation
+=====================
+
+1.  Real world datasets are often hard to work with.
+  -  Data is often organized for presentation, not analysis.
+  -  Data is collected and reported as a goal in itself, not as a first step in analysis.
+  -  So to work with the data, we need to manage it first.
+2.  Many of these principles are the same as principles in relational database design. (IE 1014)
+
+Tidy data in R
+====================
+
+-  In **R**, many packages work with `data.frame`, so they are designed with this philosophy in mind.
+Aggregation of data
+=========
+type:section
+
 Aggregating data
 ================
 
