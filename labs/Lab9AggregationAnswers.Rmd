@@ -1,13 +1,11 @@
 ---
 title: 'Lab 9:  Aggregation'
 author: "IE 0015 Information Systems Engineering"
-date: "03/17/2015"
-output: html_document
+date: "03/27/2016"
+output: pdf_document
 ---
 
 ```{r loadlibraries, warning=FALSE}
-library(reshape)
-library(plyr)
 FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
                     header=TRUE, sep=",")
 FemPreg$BIRTHORD <- as.factor(FemPreg$BIRTHORD)
@@ -16,25 +14,26 @@ FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
 
 ```{r}
 # level of education
-FemPreg$education <- factor(mapvalues(FemPreg$HIEDUC,
-          from=c("5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"),
-          to= c("9TH GRADE","10TH GRADE",
+education <- data.frame(
+          HIEDUC=c("5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"),
+          education = c("9TH GRADE","10TH GRADE",
              "11TH GRADE", "12TH GRADE",
              "HIGH SCHOOL", "SOME COLLEGE",
              "ASSOCIATE", "BACHELOR",
-             "MASTER", "DOCTORATE", "PROFESSIONAL DEGREE")), ordered=TRUE)
+             "MASTER", "DOCTORATE", "PROFESSIONAL DEGREE"))
 # informal marital status
-FemPreg$marital <- factor(mapvalues(FemPreg$RMARITAL,
-                                    from=c(1, 2, 3, 4, 5, 6),
-                                    to = c("MARRIED",
-                                           "LIVING WITH PARTNER",
-                                           "WIDOWED",
-                                           "DIVORCED",
-                                           "SEPARATED",
-                                           "NEVER BEEN MARRIED")), ordered=TRUE)
+FemPreg <- merge(FemPreg, education, all.x=TRUE, by="HIEDUC")
+marital <- data.frame(RMARITAL=c(1, 2, 3, 4, 5, 6),
+                      marital = c("MARRIED",
+                                 "LIVING WITH PARTNER",
+                                 "WIDOWED",
+                                 "DIVORCED",
+                                 "SEPARATED",
+                                 "NEVER BEEN MARRIED"))
+FemPreg <- merge(FemPreg, marital, all.x=TRUE, by="RMARITAL")
 ```
 
-1.  Using the female pregnancy data, create a data frame that shows the distribution of respondents by level of education.
+1.  Using the female pregnancy data, create a table in the form of a data frame that shows the distribution of respondents by level of education. Note that there is more than one way to approach this. (Note that the above code takes ACS data and replaces the education code with the meaning of the code.)
 
 
 ANSWER
@@ -47,22 +46,20 @@ edudf<-as.data.frame(summary(edu))
 as.data.frame(summary(subset(FemPreg,select=c("education"))))
 ```
 
-2.  Find the mean of number of weeks of breastfeeding and the weeks of maternity leave taken by level of education. 
-  i.  Create a data frame that only includes women who have completed breastfeeding (hint: remove those for which are not applicable, still breastfeed, or never breastfeed based on the BFEEDWKS field, use the !(FemPreg$BFEEDWKS %in% c( . . .)) to select from the data frame.)
-  ii.  take the mean by factor (education) (note: to ignore NA's, use the argument `na.rm=TRUE` for the colMeans)
+2.  Find the mean of number of weeks of breastfeeding  by level of education of the mother. (Note that the code above merges the ACS coded level of education with its meaning.) 
+  i.  Create a data frame that only includes women who have completed breastfeeding (hint: remove those for which are not applicable, still breastfeed, or never breastfeed based on the BFEEDWKS field, use the `!(FemPreg$BFEEDWKS %in% c( . . .))` to select from the data frame. The Female pregnancy data codebook identifies the codes used in the `BFEEDWKS` variable.)
+  ii.  Take the mean number of weeks of breastfeeding by education (of mother) (note: to ignore NA's, use the argument `na.rm=TRUE` if you are using the `colMeans` or other aggregation functions.)
 
 ANSWER
 
 ```{r}
 completebf <- FemPreg[!(FemPreg$BFEEDWKS %in% c(NA, 994, 995)),]
 completebf$BFEEDWKS <- as.numeric(completebf$BFEEDWKS)
-completebf$MATLEAVE <- as.numeric(completebf$MATLEAVE)
-by(completebf[,c('BFEEDWKS', 'MATLEAVE')], completebf$education, colMeans, na.rm=TRUE)
+by(completebf$'BFEEDWKS', completebf$education, colMeans, na.rm=TRU)Efa
 # Optional solutions:
-aggregate(completebf[,c('BFEEDWKS', 'MATLEAVE')],by=list(completebf$education),mean,na.rm=TRUE)
+aggregate(completebf[,c('BFEEDWKS')],by=list(completebf$education),mean,na.rm=TRUE)
 # tapply mostly works on vector, so it will need two lines, each for one vector. 
 tapply(completebf$BFEEDWKS,completebf$education,mean)
-tapply(completebf$MATLEAVE,completebf$education,mean)
 
 ```
 
@@ -70,15 +67,11 @@ tapply(completebf$MATLEAVE,completebf$education,mean)
 3.  Using the `melt` then `cast` functions from the `reshape` library, find the average number of weeks of breastfeeding and weeks of maternity leave based on education and informal marital status (`education` and `marital`)
 
 ANSWER
-```{r}
-library(reshape)
-bfm <- reshape::melt(completebf, c('education', 'marital'), c('BFEEDWKS', 'MATLEAVE'))
-reshape::cast(bfm, education+marital~variable, mean, na.rm=TRUE)
-
+```{r, warnings=FALSE}
 # Optional solution:
 library(reshape2)
 bfm <- reshape2::melt(completebf, c('education', 'marital'), c('BFEEDWKS', 'MATLEAVE'))
-reshape2::dcast(bfm, education+marital~variable, mean, na.rm=TRUE)
+head(reshape2::dcast(bfm, education+marital~variable, mean, na.rm=TRUE), 10)
 ```
 Remark:   
 1) When there is Error message like "Error: could not find function "cast" ", possible reason is that you haven't 
