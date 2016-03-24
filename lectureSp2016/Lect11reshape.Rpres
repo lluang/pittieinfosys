@@ -1,4 +1,4 @@
-Lecture 11 Reshaping data
+Lecture 11 Vectorization and Reshaping data
 ========================================================
 author: IE 0015 Information Systems
 date: March 2016
@@ -7,7 +7,7 @@ date: March 2016
 Load data for examples
 =======
 ```{r loadlibraries,  warning=FALSE}
-options(digits = 3, scipen=4)
+options(digits = 4, scipen=4)
 library(reshape2)
 library(plyr)
 library(RSQLite)
@@ -20,6 +20,125 @@ acsh <- dbGetQuery(con, sql)
 sql <- "SELECT *
         FROM ss12ppa"
 acsp <- dbGetQuery(con, sql)
+```
+
+Vectorization
+=============
+type:section
+
+Vectors in R
+================
+
+-  We have covered data types such as character, integer, numeric, logical.
+-  R also has data types for common items such as dates and time.
+-  But the fundamental data type in R is the vector
+  -  Array and matrices are vectors as well.
+  -  Data Frames are lists of vectors (or lists)
+  -  This is true for Matlab and Python as well
+-  If you can organize your calculations into operations on vectors then:
+  -  Code is more compact
+  -  It is easier to read the code (reading the code is closer to what you would write in a flow chart or using math notation)
+  
+Constructing vectors
+=============
+
+-  The `read` functions and SQL packages automatically read data into data.frames
+
+```{r}
+c(5, 12)  # right hand side is a vector
+c(5:12) #  : creates a sequence
+seq(5, 12, 2) # a sequence with skips
+seq(5.0, 12.0, length=10)  #  a sequence with 10 elements
+rep(1:3,4) # Repeat the sequence 1:3 4 times 
+```
+
+Vector arithmetic
+=============
+
+-  Vector arithmetic is *elementwise*
+```{r}
+a = c(1,2,3)
+b = c(2, 0, 3)
+a+b
+a*b
+b > 0
+```
+
+Recycling vectors
+==========
+
+-  When applying an operation on two vectors, the shorter one will be *recycled* (repeated) until it is long enough to match the longer one.
+```{r}
+c(1, 2) + 1:10
+c(1,2,3) + 1:10
+x = matrix(c(1,4,2,5,3,6), 3)
+x
+x+ c(1,2)
+```
+
+Subscripts
+===========
+
+-  Vectors use *1-based* indexing
+  -  First element is `1`
+  -  Like Matlab, not like C
+```{r}
+a
+a[1]
+a[c(1,1,3)] # list of indices to return
+```
+
+Negative indices
+================
+
+- A negative index removes that element from the vector
+
+```{r}
+a
+a[-2]
+```
+
+Vecttorized operations
+==============
+
+- If we want to run a function *f* on all elements of a vector **x**, we can call *f* on **x**
+- For matrices or arrays, need to identify the dimension you are using
+
+```{r}
+a
+add1 <- function(x) x+1
+add1(a)
+```
+
+Diversion: functions
+===========
+
+- Functions are defined using the `function` key word, with statements in braces (curly brackets)
+- The results of the last statement is returned as the result of the function.
+- The `return` keyword can be used for clarity
+- Braces are not required if there is only one line
+
+```{r}
+print(c(a,b))
+addab <- function(a,b) return (a+b)
+subab <- function(a,b) return (a-b)
+addab(a,b)
+subab(b,a)
+```
+
+ifelse
+=========
+
+-  The `ifelse` function is a vectorized version of `if . . . else`
+- Test is for each element of the first vector, result is the corresponding element of the second.
+-  This is very useful for reclassifying.
+-  Note that it can be replaced with a function
+```{r}
+a
+ones = seq(11,13)
+twos = seq(21,23)
+ifelse(a>2, ones, twos)
+ifelse(a>2, ones, twos+10)
 ```
 
 Reshape data
