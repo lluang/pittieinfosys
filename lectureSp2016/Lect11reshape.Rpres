@@ -126,6 +126,117 @@ addab(a,b)
 subab(b,a)
 ```
 
+Example: Linear regression
+=================
+
+- Let's look at the relationship between speed and braking distance for cars.
+- Note: it is included in **R** as a data frame, but I'll create a new data frame just to illustrate this.
+
+```{r}
+data(cars)
+braking <- data.frame(speed = cars$speed, distance = cars$dist)
+```
+
+Linear regression
+=========
+
+-  Determine a relationship between an independent and a dependent variable.
+-  Model of the form
+$$y = \beta_0 + \beta x_i + \epsilon$$
+
+***
+$$\beta_1 = \frac{\sum_i (x_i-\bar{x})(y_i-\bar{y})}{\sum_i(x_i-\bar{x})^2}$$ 
+
+$$\beta_0 = \bar{y}-\beta_1\bar{x}$$
+
+Calculations
+==========
+```{r}
+linR <- function(x, y){
+  xbar <- mean(x)
+  ybar <- mean(y)
+  numerator1 <- 0.0
+  denominator1 <- 0.0
+  for(i in 1:length(y)){
+    numerator1 = numerator1 + (x[i]-xbar)*(y[i]-ybar)
+    denominator1 = denominator1 + (x[i]-xbar)^2
+  }
+  b1 = numerator1/denominator1
+  b0 = ybar - b1 * xbar
+  return (c(b0,b1))
+}
+```
+
+Results
+========
+```{r}
+b <- linR(braking$speed, braking$distance)
+b
+blm <- lm(distance ~ speed, data = braking)
+blm$coefficients
+```
+
+Problem
+===========
+
+- This code is hard to read.
+  - Lots of ways to make mistakes.
+- There are these `for` loops 
+-  When adding large numbers of terms, you have rounding errors.
+  - A computer only keeps a limited number of digits.
+  - MS Excel (<2013) had this problem in calculating standard deviation.
+
+
+Vectorize for loops
+========
+
+- Replace for loop with vectorized version for each of the terms in the for loop
+- Easier to read
+
+```{r}
+linR1 <- function(x, y){
+  xbar <- sum(x)/length(x)
+  ybar <- sum(y)/length(y)
+  numerator <- sum((x-xbar) * (y-ybar))
+  denominator <- sum((x-xbar)^2)
+  b1 = numerator/denominator
+  b0 = ybar - b1 * xbar
+  return (c(b0,b1))
+}
+linR1(braking$speed, braking$distance)
+```
+
+Problems
+========
+
+-  These equations are only good for simple linear regression.
+-  Solution: use the vector/matrix form
+
+Matrix form of linear regression equation
+==========
+
+$$\beta = (X^T X)^{-1} X^T y$$
+
+- Note X is an augmented matrix with one columns of `1` and the second column of the value of *x*
+
+```{r}
+linRmatrix <- function(X, y){
+  # solve(M) gives the inverse of matrix M
+  beta <- (solve(t(X) %*% X) %*% t(X)) %*% y
+}
+X <- cbind(rep(1, length(braking$speed)), braking$speed)
+print(linRmatrix(X, braking$distance))
+```
+
+Advantages of matrix and vector forms
+=================
+
+- The size of the matrix and vector is not important.
+  - You can have more than one term in the linear regression, and the regression equation does not change.
+- Matrix functions are very efficient in R, Matlab, Python, (other data oriented languages)
+- Easy to parallelize (use multi-core or parallel processors)
+- Easier to read (It looks like math notation)
+
 ifelse
 =========
 
@@ -140,6 +251,13 @@ twos = seq(21,23)
 ifelse(a>2, ones, twos)
 ifelse(a>2, ones, twos+10)
 ```
+
+Apply family of functions
+=================
+
+- The apply family of functions (`apply, sapply, lapply, by, aggregate, tapply`) take a list or vector, and apply a function to every element or row.
+- Assumes that every row is independent.
+- 
 
 Reshape data
 =============
@@ -254,6 +372,7 @@ Same, but using sapply
 ========
 
 -  Note: `ifelse` can be inefficient because the results of both conditions need to be evaluated for every element in the condition vector.
+-  The function here will only evaluate the term that applies for that element.
 
 ```{r}
 hiincome2 <- sapply(incomegroup, function(incomegroup) if (incomegroup %in% c(3,4))  1 else 0)
@@ -270,7 +389,7 @@ Recoding with multiple outcomes
 car::recode
 ======
 
-- `recode` in `car` accepts descriptions of ranges, then applies them to data to determine a new value.
+- `recode` in the `car` package accepts descriptions of ranges, then applies them to data to determine a new value.
 -  Four types of ranges
 
 1.  Single value - '1' = "Mortgage"
@@ -367,7 +486,7 @@ head(obs2)
 Combining data frames
 =====================
 
--  Data frames are lists of vectors
+-  Data frames are lists of lists or lists of vectors.
 -  Sometimes we can get data from two different sources, but with either
   -  The same data, but different subjects, or
   -  The same subjects, but different data
