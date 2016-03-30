@@ -1,39 +1,38 @@
 ---
 title: 'Lab 10:  Reshape and Split-Apply-Combine'
 author: "IE 0015 Information Systems Engineering"
-date: "March 2015"
+date: "March 2016"
 output: pdf_document
 ---
 
 ```{r loadlibraries, warning=FALSE}
-library(reshape)
+library(reshape2)
 library(plyr)
 library(ggplot2)
 FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
                     header=TRUE, sep=",")
+FemPreg$HIEDUC <- as.ordered(FemPreg$HIEDUC)
 ```
 
-# 1. Recode data
+
+# 1. Recode data (2pts)
 
 In the National Survey of Family Growth (NSFG), the highest level of education achieved by the mother is identified in the variable `HIEDUC`.  Create a variable `education` that contains the text value of the meaning behind `HIEDUC`.
 
-# 2. Manipulate data
+# 2. Manipulate data (5 pts)
 
 We are interested in looking at the trend in birthweight over time and how education can effect this.  But the birthweight is currently in three sets of columns (for potential triplets).  Create a dataframe with the following columns:
   -  HIEDUC, education,BABYDOB\_Y, BIRTHWGT\_LB, BIRTHWGT\_OZ, birthweight\_oz
-  
-Note: birthweight\_oz = BIRTHWGT\_LB * 16 + BIRTHWGT\_OZ
 
-Note: at some point you need to remove NA and placeholder values from the data.
+Some steps you need to take along the way:  
 
-```
-babyweights = babyweights[!is.na(babyweights$BABYDOB_Y) & 
-                            babyweights$BABYDOB_Y<9999& 
-                            babyweights$BIRTHWGT_LB < 99 & 
-                            babyweights$BIRTHWGT_OZ < 99 & 
-                            !is.na(babyweights$education), ]
-```
+i.  birthweight\_oz = BIRTHWGT\_LB * 16 + BIRTHWGT\_OZ and needs to be calculated. Remember that you can perform arithmetic operations on vectors.
+ii.  remove `NA` and placeholder values from the data.
+iii. take the average by year and level of education. (use `ddply` or `aggregate` )
 
-#  3. Plotting multiple groups
 
-Plot the time series of the mean birthweight in ounces for each year with one plot for each level of education (e.g. use `facet_wrap(~education)`)
+
+
+#  3. Plotting multiple groups (3 pts)
+
+Plot the time series of the mean birthweight in ounces for each year with one plot for each level of education (e.g. use `facet_gird(education ~ .)`). Remember to use `ggtitle(), xlab(), ylab()` to provide a title and label your x- and y- axis. Don't worry about the fact that there are too many levels of education to properly analyze the data.
