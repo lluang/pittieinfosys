@@ -220,7 +220,10 @@ Ratio imputation
 Iris example
 =====================
   
-  - Petal length data of irises
+- Three species of iris  
+- Petal and Sepal length and width data of irises
+- Often the Sepal.Length is missing
+
 ```{r}
 data(iris)
 iris$Sepal.Length[1:10] <- NA
