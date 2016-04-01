@@ -6,13 +6,13 @@ date: April 2016
 The analysis value chain
 =================
   
-  -  A rule of thumb that for most quantitative analysis projects, 80% of the effort is spent working with the data, 20% applying methodology.
+-  A rule of thumb that for most quantitative analysis projects, 80% of the effort is spent working with the data, 20% applying methodology.
 -  This class is about the 80%.
 
 Steps in the value chain
 =============================
   
-  -  Read in raw data
+-  Read in raw data
 -  Transform it into technically correct data
 -  Correct it into consistent data
 -  Perform analysis
@@ -20,13 +20,13 @@ Steps in the value chain
 
 ***
   
-  ![Statistical analysis value chain](figures/analysisvaluechain.png)
+![Statistical analysis value chain](figures/analysisvaluechain.png)
 
 The steps in the value chain
 ================
   
   
-  -  Read in raw data
+-  Read in raw data
 - Take the source data and bring it in to the data analysis tool.
 -  Technically correct
 - Put the data into a form that is usable by the data analysis tool.
@@ -40,7 +40,7 @@ The steps in the value chain
 Components of ensuring correctness
 ==============================
   
-  - Making data consistent
+- Making data consistent
 -  Handling special values
 -  Identifying and handling errors
 -  Identifying and handling outliers
@@ -58,7 +58,7 @@ Consistency
 Three steps to evaluating consistency
 =============
   
-  1. Detection of an inconsistency
+1. Detection of an inconsistency
 2. Selection of field or fields that cause the inconsistency
 3. Correction of the fields that are erroneous
 
@@ -66,7 +66,7 @@ Three steps to evaluating consistency
 
 Missing values
 =========
-  incremental:true
+incremental:true
 
 - Ideally NA - The type of data is known but the value is not.
 - What are other options in common use?
@@ -77,7 +77,7 @@ Missing values
 
 What are the effects?
 ===============
-  incremental:true
+incremental:true
 
 -  Calculations
 -  Summary functions 
@@ -100,7 +100,7 @@ How can we work with this?
 Ignoring missing values
 ====================
   
-  -  Summary functions (e.g. `sum`, `mean`) have an option to ignore missing values.
+-  Summary functions (e.g. `sum`, `mean`) have an option to ignore missing values.
 -  `na.rm=TRUE`
 -  We can remove rows from data frames that are not complete using the `complete.cases()` function
 -  `df[complete.cases(df),]
@@ -109,7 +109,7 @@ Ignoring missing values
 Special values
 ================
   
-  -  Some entries are indicators for special values
+-  Some entries are indicators for special values
 -  e.g. `NA`, `NaN`, `Inf`
 -  Check for them using `is.na()` or `is.finite()`
 - Usually, we remove `NA` using a conditional
@@ -118,7 +118,8 @@ Special values
 
 Outliers
 =========
-  incremental: true
+incremental: true
+
 -  An observation or set of observations which appear to be inconsistent with that set of data.
 -  How do you know that they are inconsistent?
 -  Subject expertise.
@@ -129,13 +130,13 @@ Outliers
 Box and whiskers
 ==================
   
-  ```{r, echo=FALSE}
+```{r, echo=FALSE}
 x=c(0,4,15, 1, 6, 3, 20, 5, 8, 1, 3, 7, 5, 2)
 boxplot(x)
 ```
 ***
   
-  1.  Determine the median (why not the mean?)
+1.  Determine the median (why not the mean?)
 2.  Determine the 25 and 75 quartiles.
 3.  Calculate the Inter Quartile Range (IQR) (this defines the box)
 4.  Extend the box by 1.5 X IQR. Furthest points within this range are the whiskers.
@@ -144,28 +145,29 @@ boxplot(x)
 Handling outliers
 ===================
   
-  - Determine what kind of outliers they are:
+- Determine what kind of outliers they are:
   -  Is something changing the process that does not occur regularly?
-- Then remove it
--  It is because there is an occasional event that recurs?
-- Keep it in the data set
+    - Then remove it
+  -  It is because there is an occasional event that recurs?
+    - Keep it in the data set
 
 Obvious inconsistencies
 ===================
-  incremental:true
+incremental:true
+  
 -  Variable values that cannot occur in a single observation.
 -  Examples
--  Age cannot be negative
--  A male cannot be pregnant
--  Create a function that checks for these
+  -  Age cannot be negative
+  -  A male cannot be pregnant
+  -  Create a function that checks for these
 
 Missing value imputation
 ==========================
-  type:section
+type:section
 
 Imputation
 ==============
-  incremental:true
+incremental:true
 
 -  *Imputation* is the estimating or deriving values when data is missing.
 -  Does this seem legitimate?
@@ -173,7 +175,7 @@ Imputation
 Method for imputation
 =============
   
-  -  Which method to use for imputation depends on what information is available and what is the relationship between samples.
+-  Which method to use for imputation depends on what information is available and what is the relationship between samples.
 -  Summary functions (mean, median)
 -  *k* Nearest Neighbors
 -  Hot deck imputation
@@ -182,15 +184,15 @@ Method for imputation
 
 Using summary functions
 ===================
-  
-  -  Assign to the missing value the value of the mean or another summary function.
+
+-  Assign to the missing value the value of the mean or another summary function.
 -  mean, median
 -  The mean could be conditional based on some other variable.
 
 Imputing with the mean
 =====
   
-  ```{r}
+```{r}
 x[2] <- NA # ...with an empty value
 x[4] <- NA
 x
@@ -206,7 +208,7 @@ x[which(is.na(x))] <- mean(x, na.rm=TRUE)
 Linear regression imputation
 ======================
   
-  -  Use a linear regression model to impute a missing value
+-  Use a linear regression model to impute a missing value
 $$y_i = \beta_0 + \beta_1 y_{1,i} + \beta_2 y_{2,i} + ...$$
   -  In **R**
   -  Develop the linear regression model using `lm`
@@ -215,7 +217,7 @@ $$y_i = \beta_0 + \beta_1 y_{1,i} + \beta_2 y_{2,i} + ...$$
 Ratio imputation
 ===============
   
-  - One variable is a multiple of another
+- One variable is a multiple of another
 
 Iris example
 =====================
@@ -234,7 +236,7 @@ iris[I,]
 Ratio imputation
 =======
   
-  ```{r}
+```{r}
 R = sum(iris$Sepal.Length[!I])/sum(iris$Petal.Length[!I])
 iris$Sepal.Length[I] <- R * iris$Petal.Length[I]
 iris[I,]
@@ -243,7 +245,8 @@ iris[I,]
 
 Use linear regression
 =======
-  ```
+
+```
 model <- lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = iris)
 ```
 -  Use a linear regression model to relate Sepal Width to Petal Width
@@ -254,7 +257,8 @@ model <- lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = iris)
 
 Linear model implementation
 ============
-  ```{r}
+
+```{r}
 iris$Sepal.Length[1:10] <- NA
 I <- is.na(iris$Sepal.Length)
 model <- lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = iris)
@@ -265,13 +269,14 @@ iris[I,]
 Hot deck imputation
 ==================
   
-  -  Assign to the missing value a random draw from the other samples.
+-  Assign to the missing value a random draw from the other samples.
 -  Can be conditional on other variables.
 -  Note that it maintains the distribution of values for the variable
 
 Hot deck example
 =============
-  ```{r}
+
+```{r}
 iris$Sepal.Length[1:10] <- NA
 I <- is.na(iris$Sepal.Length)
 hotdecksepal = function(petal){
@@ -288,7 +293,7 @@ iris[I,]
 K Nearest Neighbors
 ====================
   
-  -  Compute a degree of dissimilarity.
+-  Compute a degree of dissimilarity.
 -  based on defining a *distance* function
 -  Identify the nearest *k* samples to the one to be filled in.
 -  Take the average value of the missing variable among the *k* nearest samples.
@@ -304,27 +309,26 @@ $$d_g(i,j) = \frac{\sum_k w_{ijk}d_k(i,j)}{\sum_k w_{ijk}}$$
 kNN implementation
 ==================
 
--  Take the Iris data, and randomly 
+-  Take the Iris data, and randomly create some empty values
 ```{r}
 library(VIM)
 set.seed(1234)
 data(iris)
-iris$Sepal.Length[1:10] <- NA
-I <- is.na(iris$Sepal.Length)
-#n <- nrow(iris)
-# provide some empty values (10 in each column, randomly)
-#for (i in 1:ncol(iris)) {
-#iris[sample(1:n, 10, replace = FALSE), i] <- NA
-#}
-iris[I,]
+n <- nrow(iris)
+# provide some empty valuesx
+for (i in 1:ncol(iris)) {
+  iris[sample(1:n, 10, replace = FALSE), i] <- NA
+}
+iris[1:10,]
 ```
 
 
 kNN results
 ===
+Use kNN to fill in the empty values
 ```{r}
 iris2 <- kNN(iris)
-iris2[I, c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species', 'Sepal.Length_imp')]
+iris2[1:10, c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species', 'Sepal.Length_imp')]
 ```
 
 Minimal value adjustment
