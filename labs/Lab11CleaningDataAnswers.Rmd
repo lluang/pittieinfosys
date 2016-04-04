@@ -1,8 +1,9 @@
 ---
 title: 'Lab 11: Data cleaning'
-author: "IE 0015 Information Systems Engineering"
-date: "April 2015"
+author: 'IE 0015 Information Systems Engineering'
+date: 'April 2016'
 output:
+  pdf_document: default
   html_document:
     keep_md: yes
 ---
@@ -25,7 +26,7 @@ ANSWER
 ------
 
 ```{r}
-qplot(Age, data=titanic)
+ggplot(titanic, aes(Age)) + geom_bar(binwidth=4) +ggtitle("Age distribution of Titanic Passengers") + xlab("Passenger age") + ylab("Number of passengers")
 mean(titanic$Age, na.rm=TRUE)
 median(titanic$Age, na.rm=TRUE)
 ```
@@ -36,7 +37,7 @@ Note: in this case, because the age we are interested in if the person is a chil
 
 #  2.  (3 pts) Hot Deck imputation
 
-Create a plot of all pairwise comparisons of variables (hint: search for "pairs" in R help if you do not know how to do this).  What variables provide indications of the age of the passenger? (hint: the plot should give and impression of the distribution, and the distribution should be different for each age).  Pick one variable and use Hot Deck (random sample) to fill in the age of passenger into the variable `HotDeckAge` in the `titanic` dataframe.
+Create a plot of all pairwise comparisons of variables (hint: search for `pairs` in R help if you do not know how to do this).  What variables provide indications of the age of the passenger? (hint: the plot should give and impression of the distribution, and the distribution should be different for each age).  Pick one variable and use Hot Deck (random sample) to fill in the age of passenger into the variable `HotDeckAge` in the `titanic` dataframe.
 
 Notes:
  
@@ -74,14 +75,11 @@ for (i in which (I)){
 }
 ```
 Note: 
-1)Do not change the original "Age" Column. Create a new column, for example, the HotDeckAge above. You will need to compare the new one with the origin. Alter the orignal one will also make it necessary to reload data before you start Q3 because the NA already been filled in Q2. 
-2）Do not replace the original Age column with NA. The lecture do it for the first 10 row just because there wasn't NA in that column, to show the process we put NA in it.
-You will lost every useful data if you erase all the data inside Age column.
+ Do not change the original `Age` Column. Create a new column, for example, the HotDeckAge above. You will need to compare the new one with the origin. Alter the orignal one will also make it necessary to reload data before you start Q3 because the `NA` already been filled in Q2.
 
 #  3.  (4 pts) Mean value and title.
 
-In Lab 7, we used the Name field to extract the title.  Try to use the mean age based on the title and gender to fill in a variable named `titanic$Agetitle`.  Note:  
-
+In Lab 7, we used the Name field to extract the title.  Try to use the mean age based on the title and gender to fill in a variable named `titanic$Agetitle`.   
 
 
 ```{r}
@@ -130,7 +128,7 @@ Answer
 ------
 
 Should look at the data with the following columns:  Title (or Name), Pclass, Sex, HotDeckAge, Agetitle.
-When discussing why, we should note that because the hypothesis is *women or children first*, it is only necessary to get an age to identify male children, because if it is a female child, they would be given priority based on being female.
+When discussing why, we should note that because the hypothesis is *women or children first*, it is only necessary to get an age to identify male children, because if it is a female child, they would already be given priority based on being female.
 So Agetitle is a better imputation method. (especially if you look at names).
 It could be improved by adding `Pclass` to the conditions under which the mean/median was taken.
 
