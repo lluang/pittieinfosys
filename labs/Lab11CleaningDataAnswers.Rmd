@@ -20,7 +20,10 @@ In the Titanic data, of the 1313 entries, 680 of them are missing the age. Becau
 
 #  1. (2 pts) Summary values
 
-One method of filling in missing values is to use a summary value. Plot the age data and give two potential summary values that can be used to fill in the missing value. Discuss why you would use one over the other.
+One method of filling in missing values is to use a summary value. 
+
+i.  Filter the Titanic data for the entries that are missing the age and inspect a few values (using either `head()` or `tail()` functions.
+ii. Plot the age data and give two potential summary values that can be used to fill in the missing value. Discuss why you would use one over the other. Remember to include a title and axis labels.
 
 ANSWER
 ------
@@ -35,9 +38,10 @@ Because the data is skewed, it is probably better to use the median instead of t
 
 Note: in this case, because the age we are interested in if the person is a child, summary values are not useful.
 
-#  2.  (3 pts) Hot Deck imputation
+#  2.  (4 pts) Hot Deck imputation
 
-Create a plot of all pairwise comparisons of variables (hint: search for `pairs` in R help if you do not know how to do this).  What variables provide indications of the age of the passenger? (hint: the plot should give and impression of the distribution, and the distribution should be different for each age).  Pick one variable and use Hot Deck (random sample) to fill in the age of passenger into the variable `HotDeckAge` in the `titanic` dataframe.
+i. Create a plot of all pairwise comparisons of variables (hint: search for `pairs` in R help if you do not know how to do this).  What variables provide indications of the age of the passenger? (hint: the plot should give and impression of the distribution, and the distribution should be different for each age).  
+ii. Pick one variable and use Hot Deck (random sample) to fill in the age of passenger into the variable `HotDeckAge` in the `titanic` dataframe.
 
 Notes:
  
@@ -77,7 +81,7 @@ for (i in which (I)){
 Note: 
  Do not change the original `Age` Column. Create a new column, for example, the HotDeckAge above. You will need to compare the new one with the origin. Alter the orignal one will also make it necessary to reload data before you start Q3 because the `NA` already been filled in Q2.
 
-#  3.  (4 pts) Mean value and title.
+#  3.  (3 pts) Mean value and title.
 
 In Lab 7, we used the Name field to extract the title.  Try to use the mean age based on the title and gender to fill in a variable named `titanic$Agetitle`.   
 
@@ -121,7 +125,7 @@ for (i in which (I)){
 
 # 4.  (1 pt) Evaluation
 
-Look at the `HotDeckAge` and `Agetitle` variables for the passengers whose age was not available.  Which of these two methods of imputing the missing value is more useful?  Why? Can you improve this? (Hint: In early 20th century England "Master" denoted a male child.)
+Look at the `HotDeckAge` and `Agetitle` variables for the passengers whose age was not available. (hint, use `head()` or `tail()` to sample a few rows)  Which of these two methods of imputing the missing value is more useful?  Why? Can you improve this? (Hint: In early 20th century England "Master" denoted a male child.)
 
 
 Answer
