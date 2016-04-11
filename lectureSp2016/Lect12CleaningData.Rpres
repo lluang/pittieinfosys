@@ -27,15 +27,15 @@ The steps in the value chain
   
   
 -  Read in raw data
-- Take the source data and bring it in to the data analysis tool.
+  - Take the source data and bring it in to the data analysis tool.
 -  Technically correct
-- Put the data into a form that is usable by the data analysis tool.
+  - Put the data into a form that is usable by the data analysis tool.
 -  Consistent data
-- Ensure correctness of the data prior to analysis.
+  - Ensure correctness of the data prior to analysis.
 -  Perform analysis
-- All of your other classes.
+  - All of your other classes.
 -  Present analysis in a usable form
-- Create summaries, plots, tables, figures and interpretation.
+  - Create summaries, plots, tables, figures and interpretation.
 
 Components of ensuring correctness
 ==============================
@@ -50,7 +50,8 @@ Components of ensuring correctness
 Consistency
 =====
   
-  Three aspects of consistency
+Three aspects of consistency
+
 - Within-record - No contradictory information in any single record
 - Cross-record - Statistical summaries do not conflict
 - Cross-dataset - Different datasets of similar samples have similar results.
@@ -68,12 +69,12 @@ Missing values
 =========
 incremental:true
 
-- Ideally NA - The type of data is known but the value is not.
+- Ideally `NA` - The type of data is known but the value is not.
 - What are other options in common use?
-- Replaces missing values with a 0
-- Blank
-- 99 or 9999
-- Unknown
+  - Replaces missing values with a 0
+  - Blank
+  - 99 or 9999
+  - Unknown
 
 What are the effects?
 ===============
