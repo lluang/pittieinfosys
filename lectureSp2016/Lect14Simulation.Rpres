@@ -3,6 +3,9 @@ Simulation
 author: IE0015 Information Systems Engineering
 date: April 2016
 
+```
+library(foreach)
+```
 
 Simulation
 =============
@@ -16,6 +19,73 @@ incremental:true
 -  Simulation is the use of sampling through random numbers to obtain a distribution of a dependent variable.
 -  e.g. Discrete event simulation (IE 1083), Monte Carlo simulation
 -  Useful when we do not have a direct way of determining the value of a dependent variable.
+
+Some types of computer simulation
+================
+
+-  Monte Carlo
+-  Bootstrap (resampling)
+-  Discrete event simulation
+-  Continuous simulation
+-  Agent based simulation
+
+Monte Carlo
+=====================
+type:section
+
+Monte Carlo Simulation
+==============
+
+-  Based on repeated use of random numbers.
+  -  Name refers to the casinos in Monte Carlo by France
+-  If the problem can be stated as the interaction of independent random numbers
+- Often used for integration type problems. (area under the curve or probability)
+
+
+Random numbers in R
+===================
+
+
+
+Example of Monte Carlo
+=================
+
+$$x^2 + y^2 <=1$$
+
+```{r}
+library(foreach)
+maxi = 1000
+i = (1:maxi)
+x <- runif(maxi)
+y <- runif(maxi)
+incircle <- ifelse(x^2 + y^2 <= 1, 1.0, 0.0)
+ratio <- unlist(foreach(i=2:maxi) %do% mean(incircle[1:i]))
+```
+
+Monte Carlo
+============
+
+```{r}
+head(ratio)
+```
+
+- What is this doing?
+
+
+Monte Carlo convergence
+======================
+
+-  Run Monte Carlo until the confidence interval of the estiate of the mean is within a certain tolerance.
+-  Take the first 30 iterations (Monte Carlo runs are fast)
+-  Compute the sample standard deviation $s$.
+-  Solve for $n$
+
+$$CI = z_{\alpha/2} s/\sqrt{n}$$
+
+
+Bootstrap
+======
+type:section
 
 Resampling methods
 ==============================
@@ -251,7 +321,7 @@ Summary
 -  Simulation often used when some data is unobservable.
   -  Ask the question: could I have seen the result I saw if *X* was true?
 -  Resampling can be used for hypothesis testing in the case of little data or if normal assumption is not true.
-  -  Bootstrapping can be used to identify what the 
+  -  Bootstrapping can be used to identify what the system would look like if more data were available or if the source population changes.
 
 
 
