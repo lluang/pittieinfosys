@@ -1,15 +1,16 @@
 ---
 title: 'Lab 12: Regression'
 author: "IE 0015 Information Systems Engineering"
-date: "April 2015"
+date: "April 2016"
 output: pdf_document
 ---
 
 ```{r loadlibraries,  warning=FALSE}
 options(digits = 3, scipen=4)
-library(RSQLite, quietly = TRUE)
-library(ggplot2)
-library(VIM, quietly = TRUE)
+library(RSQLite, quietly=TRUE, warn.conflicts = FALSE)
+library(ggplot2, quietly = TRUE, )
+library(VIM, quietly=TRUE, warn.conflicts = FALSE)
+
 titanic <- read.csv("../data/titanictrain.csv",
                     header=TRUE, sep=",")
 # From Lab on working with characters and regular expressions
@@ -35,11 +36,9 @@ You think that the age is dependent on the following
 
   i.  Sex
   ii.  Pclass
-  iii.  Title
-  iv.  Fare
-(Note: so few people have SibSp or Parch that you are going to ignore these)
+  iii.  Title (Note: code to extract the title from the name field is at the top)
+  iv.  Fare (Note: so few people have SibSp or Parch that you are going to ignore these)
 
   a.  Develop a multiple linear regression model for the age based on these characteristics for use in missing value imputation.
   b.  Display the summary and the analysis of variance tables for this model. Comment on each of the four predictors that are in your model and make corrections as needed.
   c.  Display diagnostics plots. Discuss the three assumptions of regression models.
-  
