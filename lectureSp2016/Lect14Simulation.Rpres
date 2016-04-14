@@ -4,7 +4,9 @@ author: IE0015 Information Systems Engineering
 date: April 2016
 
 ```
+library(ggplot2)
 library(foreach)
+library(desolve)
 ```
 
 Simulation
@@ -53,6 +55,7 @@ Example of Monte Carlo
 $$x^2 + y^2 <=1$$
 
 ```{r}
+library(ggplot2)
 library(foreach)
 maxi = 1000
 i = (1:maxi)
@@ -75,7 +78,7 @@ head(ratio)
 Monte Carlo convergence
 ======================
 
--  Run Monte Carlo until the confidence interval of the estiate of the mean is within a certain tolerance.
+-  Run Monte Carlo until the confidence interval of the estimate of the mean is within a certain tolerance.
 -  Take the first 30 iterations (Monte Carlo runs are fast)
 -  Compute the sample standard deviation $s$.
 -  Solve for $n$
@@ -133,17 +136,21 @@ Standard error example
 -  Look at a sample where the underling population is normally distributed $X \sim N(\mu=3, \sigma=1)$.
 -  Look at $\bar{x}$
 -  We know that $\bar{x} \sim N(\mu, 1/\sqrt{n})$
-
+-  Take mean of 25 samples $N(3,1)$ (sd = $1/\sqrt{25}$)
+-  1000 samples
 
 Example
 =====
 
-```{r}
+
+```{r, echo=FALSE}
 options(digits=2)
 srs <- rnorm(25, mean = 3)
 resamps <- replicate(1000, sample(srs, 25, TRUE), simplify = FALSE)
 xbarstar <- sapply(resamps, mean, simplify = TRUE)
-hist(xbarstar, breaks = 40, prob = TRUE, xlim=c(2, 4))
+hist(xbarstar, breaks = 40, prob = TRUE, xlim=c(2, 4),
+  main="Mean of 25 N(3,1) distributions, 1000 replications",
+  xlab="Mean of replication")
 curve(dnorm(x, 3, 0.2), add = TRUE)
 ```
 
@@ -314,6 +321,64 @@ t.test(x=azt300, y=azt600)
 ```
 
 -  Why the difference?
+
+Other types of simulation
+========
+type:section
+
+Continuous simulation
+=================
+
+- AKA system dynamics
+- Change in system state described by differential equations
+- Simulate by advancing state of system in time steps
+$$\frac{dx}{dt} = x (\alpha - \beta y)$$
+$$\frac{dy}{dt} = -y (\gamma - \delta x)$$
+- e.g. predator prey dynamics
+  - Prey population based on birthrate and amount of predators
+  - Predator population based on eating prey
+
+
+```{r}
+library(deSolve)
+ 
+LotVmod <- function (Time, State, Pars) {
+    with(as.list(c(State, Pars)), {
+        dx = x*(alpha - beta*y)
+        dy = -y*(gamma - delta*x)
+        return(list(c(dx, dy)))
+    })
+}
+ 
+Pars <- c(alpha = 2, beta = .5, gamma = .2, delta = .6)
+State <- c(x = 10, y = 10)
+Time <- seq(0, 100, by = 1)
+out <- as.data.frame(ode(func = LotVmod, y = State, parms = Pars, times = Time))
+```
+
+Predator-prey example
+===========
+```{r, echo=FALSE}
+predprey <- ggplot(out, aes(x = time)) + geom_line(aes(y=x, color="Foxes")) + geom_line(aes(y=y, color="Rabbits")) + scale_color_manual("", breaks=c("Foxes", "Rabbits"), values = c("Red", "Blue")) + ylab("Population") + xlab("Time") + ggtitle("Foxes and Rabbit Interactions")
+predprey 
+```
+
+Discrete event simulation
+=============
+
+- Create entities that interact with each other.
+- Simulation advanced based on when the next interaction will be (discrete time step)
+- In R, use the `simmer` package.
+- This will be covered IE 1083
+  - Models tend to be easier to build using a package like Arena or Simio.
+  - Programming language based simulation more flexible in analysis.
+
+Agent based simulation
+==================
+
+- Entities in system (agents) have information.
+- At each interaction, the agents involved use the information they have to make a decision on what to do next.
+- E.g. disease modeling. If two people interact, check to see if one is already infected, then determine if the infection spreads.
 
 Summary
 ======
