@@ -1,0 +1,160 @@
+---
+title: "Spring 2016 Final review"
+author: "Louis Luangkesorn"
+date: "April 18, 2016"
+output: html_document
+---
+
+-  `plyr`
+
+Final topics
+=============
+
+- 1 crib sheet (letter size, both sides)
+- CoNVO statement
+- Visualization: Interpretation and design
+- Algorithm - Process
+  -  Aggregation/summary
+  -  Cleaning data
+  -  Missing Values Imputation
+  -  Linear Regression
+
+Data manipulation
+=================
+
+1.  Filter (`subset`)
+2.  Arrange (`sort`)
+3.  Select columns (`merge` or conditional columns)
+5.  Distinct rows (`unique`)
+6.  Mutate (create a calculated value in a data frame)
+7.  Summarize (`plyr`)
+8.  Random sample (`sample`)
+
+Aggregation using Plyr
+=============
+type:section
+
+Aggregation
+===============
+
+- Aggregation or summarizing is a common data manipulation task.
+  -  Mean, standard deviation, counts
+- Many ways of doing this
+  -  `aggegate`
+  -  `table`
+  -  `plyr`
+  -  `apply`
+- We will cover `plyr`
+-  Readings
+  -  *GGplot book* - Chapter 9.1
+  -  *Split-apply-combine* article linked in Courseweb announcement posted March 18
+    [The Split-Apply-Combine Strategy for Data Analysis](https://www.jstatsoft.org/article/view/v040i01)
+
+Split-apply-combine
+----------
+
+-  A common data analysis pattern.
+  -  `pattern` - A structure that is used to approach types of problems
+  -  Originated in architecture, often used in fields that involved developing and implementing creative solutions.
+-  Break up a problem into manageable pieces.
+-  Operate on each piece independently.
+-  Re-combine the pieces with the results.
+-  e.g. calculating marginal statistics based on grouping the data based on a factor.
+
+
+Naming of plyr functions
+----------
+
+- Functions in `plyr` are named based on
+  -  The type of input it accepts
+  -  The type of output it produces
+
+- Types
+  - `a` = array (includes matrices and vectors)
+  - `d` = data frame
+  - `l` = list
+  - `_` = Output is discarded
+
+Arguments
+----------
+
+-  Functions have two or three main arguments, depending on type of input.
+  -  `a*ply(.data, .margins, .fun, ..., .progress="none")`
+  -  `d*ply(.data, .variables, .fun, ..., .progress="none")`
+  -  `l*ply(.data, .fun, ..., .progress="none")`
+- Components
+  - `.data` - dataset that will be broken up
+  - `.margins` - What axis will be used to summarize over (1 = row, 2=column)
+  - `.variables` - What variable will be used to groups (similar to GROUP BY in SQL)
+  - `.fun` - What function will be used on each element of the list, row of data.frame, or across axis of an array.
+  - `...` - any additional arguments that may be needed by the function specified in `.fun` 
+
+- This will result in a much reduced, aggregated dataset.
+
+Common `.fun`
+----------
+
+- Note: in all cases, the `...` is replaced by a statement, or it can be a function that returns the value needed.
+-  `subset` Filter data based on a logical statement.
+-  `summarize` Apply a summary function to the group identified by the `.variables`
+-  `transform` Apply a function to each item
+
+Some examples
+============
+
+```{r}
+library(ggplot2)
+library(plyr)
+data(diamonds)
+summary(diamonds)
+```
+
+
+Count observations
+--------------------
+
+- `ddply` takes a data.frame and returns a data.frame
+- `.(color)`  identifies the variable to summarize over. Paranthesis here tells R that this is a variable from the data frame.
+- `length` is the length of the data frame after choosing by `color`. Used to count observations.
+
+```{r}
+ddply(diamonds, .(color), summarize, count=length(carat))
+```
+
+Select smallest (min)
+----------------
+- `subset` is the function to apply (in this case as a filter)
+- Everything else are argumenents to the function being applied
+  - `carat==min(carat)`
+```{r}
+head(ddply(diamonds, .(color), subset, carat == min(carat)),10)
+```
+
+Select 2 smallest for each cut
+-----------
+
+-  Something more sophisticated
+-  Use order function to sort (smallest to largest) then pick 2
+```{r}
+head(ddply(diamonds, .(color), subset, order(carat) <= 2), 10)
+```
+
+Calculate average size by cut and color
+------
+
+- `summarize` applies a summary function to each group
+
+```{r}
+head(ddply(diamonds, .(cut, color), summarize, mean =mean(carat, na.rm=TRUE)), 20)
+```
+
+
+Select largest 1% of each cut
+-----------
+
+```{r}
+head(ddply(diamonds, .(cut), subset, carat > quantile(carat, 0.99)), 10)
+```
+
+
+
