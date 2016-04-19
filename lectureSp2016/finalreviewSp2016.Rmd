@@ -150,11 +150,330 @@ head(ddply(diamonds, .(cut, color), summarize, mean =mean(carat, na.rm=TRUE)), 2
 
 
 Select largest 1% of each cut
------------
+c
 
 ```{r}
 head(ddply(diamonds, .(cut), subset, carat > quantile(carat, 0.99)), 10)
 ```
 
+
+Cleaning data
+============
+
+
+Steps in the value chain
+----------------------
+  
+-  Read in raw data
+-  Transform it into technically correct data
+-  Correct it into consistent data
+-  Perform analysis
+-  Present analysis in a usable form
+
+***
+  
+![Statistical analysis value chain](figures/analysisvaluechain.png)
+
+The steps in the value chain
+----------------------
+  
+  
+-  Read in raw data
+  - Take the source data and bring it in to the data analysis tool.
+-  Technically correct
+  - Put the data into a form that is usable by the data analysis tool.
+-  Consistent data
+  - Ensure correctness of the data prior to analysis.
+-  Perform analysis
+  - All of your other classes.
+-  Present analysis in a usable form
+  - Create summaries, plots, tables, figures and interpretation.
+
+Components of ensuring correctness
+----------------------
+  
+- Making data consistent
+-  Handling special values
+-  Identifying and handling errors
+-  Identifying and handling outliers
+-  Handling missing values.
+
+Outliers
+=========
+incremental: true
+
+-  An observation or set of observations which appear to be inconsistent with that set of data.
+-  How do you know that they are inconsistent?
+-  Subject expertise.
+-  Clustering (machine learning)
+-  Box and whiskers
+-  `boxplot.stats()` function
+
+Box and whiskers
+------------
+
+Example: On Base Percentage of hitters based on position.
+
+1.  Load data and group positions into categories: infield, outfield, pitcher, catcher
+```{r}
+library(openintro)
+data("mlbBat10")
+mlbBat10$posgroup <- as.factor(ifelse(mlbBat10$position %in% c("1B", "2B", "3B", "SS"), "IF",
+                                ifelse(mlbBat10$position=="P", "P",
+                                       ifelse(mlbBat10$position=="C", "C", 
+                                              ifelse(mlbBat10$position=="OF", "OF", 
+                                                     ifelse(mlbBat10$position=="DH", "DH", NA))))))
+                               
+summary(mlbBat10$posgroup)
+box <-  boxplot(x)
+obpbox <- boxplot(OBP ~ posgroup, data=mlbBat10, 
+                  main="OBP by position", ylab="OBP")
+```
+
+1.  Determine the median
+2.  Determine the 25 and 75 quartiles.
+3.  Calculate the Inter Quartile Range (IQR) (this defines the box)
+4.  Extend the box by 1.5 X IQR. Furthest points within this range are the whiskers.
+5.  Anything beyond the whiskers are outliers.
+
+Output of boxplot
+-----------
+
+- `obpbox$stats` Returns a array with a row for each group with five items each
+  1. Lower whisker
+  2. Lower hinge (25\% quantile)
+  3. Median
+  4. Upper hinge (75\% quantile)
+  5. Upper whisker
+- `obpbox$out` returns all outliers (beyond the lower or upper whisker)
+- `df[df$x $in$ boxplot$out,]`  will list elements in the dataframe that are listed among the outliers.
+
+```{r}
+obpIF <- boxplot(mlbBat10[mlbBat10$posgroup=="IF","OBP"], 
+                 main="OBP for infielders",ylab="OBP")
+obpIF$stats
+head(obpIF$out)
+obpIFout <- mlbBat10[(mlbBat10$posgroup=="IF" & mlbBat10$OBP %in% obpIF$out),]
+obpIFout
+```
+
+Handling outliers
+===================
+  
+- Determine what kind of outliers they are:
+  -  Is something changing the process that does not occur regularly?
+    - Then remove it
+  -  It is because there is an occasional event that recurs?
+    - Keep it in the data set
+
+Obvious inconsistencies
+------------
+  
+-  Variable values that cannot occur in a single observation.
+-  Examples
+  -  Age cannot be negative
+  -  A male cannot be pregnant
+  -  Create a function that checks for these
+-  Check using a conditional and assigning a value
+
+
+Missing value imputation
+==========================
+type:section
+
+Imputation
+------------
+
+-  *Imputation* is the estimating or deriving values when data is missing.
+-  Characteristics to consider
+  1. Is it fair to replace a value by a summary value?
+  2. Do you need to maintain variability in the final dataset?
+  3. Are you going to make decisions on individuals or groups? 
+    - If you make decisions on groups, it is acceptable to impute using methods that include randomness.
+    - If you make decisions on individuals, you must make sure that the imputation does not harm the individual.
+  
+
+Method for imputation
+------------
+  
+-  Which method to use for imputation depends on what information is available and what is the relationship between samples.
+-  Summary functions (mean, median)
+-  *k* Nearest Neighbors
+-  Hot deck imputation
+-  Minimal value adjustment
+-  Linear regression
+
+
+  
+Using summary functions
+------------
+
+-  Assign to the missing value the value of the mean or another summary function.
+-  mean, median
+-  The mean could be conditional based on some other variable.
+
+Imputing with the mean
+------------
+
+Some of our baseball players did not have positions assigned.
+
+
+```{r}
+mlbI <- mlbBat10$position=="-"
+mlbBat10[mlbI,"position"]<-NA
+mlbBat10[mlbI,]
+```
+
+- Now, assign the mean to the missing values
+- Identify which ones are missing values
+- Calculate the mean of the rest (most common value)
+
+```{r}
+mlb1 <- mlbBat10
+mlb1[which(is.na(mlb1$position)),] <- mean(x, na.rm=TRUE)
+```
+
+Linear regression imputation
+------------
+  
+-  Use a linear regression model to impute a missing value
+$$y_i = \beta_0 + \beta_1 y_{1,i} + \beta_2 y_{2,i} + ...$$
+  -  In **R**
+  -  Develop the linear regression model using `lm`
+-  Impute the missing value using `predict`
+
+Ratio imputation
+------------
+  
+- One variable is a multiple of another
+
+Iris example
+------------
+  
+- Three species of iris  
+- Petal and Sepal length and width data of irises
+- Often the Sepal.Length is missing
+
+```{r}
+data(iris)
+iris$Sepal.Length[1:10] <- NA
+I <- is.na(iris$Sepal.Length)
+iris[I,]
+```
+
+Ratio imputation
+------------
+  
+```{r}
+R = sum(iris$Sepal.Length[!I])/sum(iris$Petal.Length[!I])
+iris$Sepal.Length[I] <- R * iris$Petal.Length[I]
+iris[I,]
+```
+
+
+Use linear regression
+------------
+
+```
+model <- lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = iris)
+```
+-  Use a linear regression model to relate Sepal Width to Petal Width
+- Note the notation is like what we use in `ggplot`
+- Left side is the dependent variable, right side are the predictors.
+- Use `+` to separate predictors that are independent of each other.
+-  Use that model with the observations with a missing value
+
+Linear model implementation
+------------
+
+```{r}
+iris$Sepal.Length[1:10] <- NA
+I <- is.na(iris$Sepal.Length)
+model <- lm(Sepal.Length ~ Sepal.Width + Petal.Width, data = iris)
+iris$Sepal.Length[I] <- predict(model, newdata = iris[I, ])
+iris[I,]
+```
+
+Hot deck imputation
+------------
+  
+-  Assign to the missing value a random draw from the other samples.
+-  Can be conditional on other variables.
+-  Note that it maintains the distribution of values for the variable
+
+Hot deck example
+------------
+
+```{r}
+iris$Sepal.Length[1:10] <- NA
+I <- is.na(iris$Sepal.Length)
+hotdecksepal = function(petal){
+  fillin <- sample(iris[iris$Petal.Length==petal &
+                          !is.na(iris$Sepal.Length), 'Sepal.Length'],1)
+}
+for (i in which(I)){
+  iris$Sepal.Length[i] = hotdecksepal(iris$Petal.Length[i])
+}
+iris[I,]
+```
+
+
+K Nearest Neighbors
+------------
+  
+-  Compute a degree of dissimilarity.
+-  based on defining a *distance* function
+-  Identify the nearest *k* samples to the one to be filled in.
+-  Take the average value of the missing variable among the *k* nearest samples.
+
+Gower's distance
+------------
+
+-  Difference between two variables as a fraction of the maximum such distance
+$$d_g(i,j) = \frac{\sum_k w_{ijk}d_k(i,j)}{\sum_k w_{ijk}}$$
+-  If $k$ is categorical, $d_g(i,j)=0$ if $k$ are the same, 1 otherwise.
+-  If $k$ is numeric, $d_g(i,j) = \frac{1-(x_i-x_j)}{max(x) - min(x)}$
+
+kNN implementation
+------------
+
+-  Take the Iris data, and randomly create some empty values
+```{r}
+library(VIM)
+set.seed(1234)
+data(iris)
+n <- nrow(iris)
+# provide some empty valuesx
+for (i in 1:ncol(iris)) {
+  iris[sample(1:n, 10, replace = FALSE), i] <- NA
+}
+iris[1:10,]
+```
+
+
+kNN results
+------------
+Use kNN to fill in the empty values
+```{r}
+iris2 <- kNN(iris)
+iris2[1:10, c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species', 'Sepal.Length_imp')]
+```
+
+Minimal value adjustment
+------------
+
+-  Missing value imputation methods may lead to inconsistent data.
+-  Adjust the added values the minimal amount needed to be consistent.
+- Remember, you have a function that checks for inconsistent data
+-  Usually use a weighted Euclidean distance in the case where more than one missing value has been added.
+$$\sum_i w_i (x_i-x_i^0)^2$$
+
+Considerations
+------------
+
+-  What type of analysis will be done next?
+-  Does the information that you do have tend to suggest a value to replace the missing value with?  Is there a mechanism that leads to a relationship?
+-  Is there a conservative direction a value can take?
+  - Conservative: Maintain the status quo. If you are going to err, err in the direction of not making changes.
 
 
