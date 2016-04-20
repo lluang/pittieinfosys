@@ -5,7 +5,11 @@ date: "April 18, 2016"
 output: html_document
 ---
 
+Libraries
+
 -  `plyr`
+-  `openintro`
+-  `VIM`
 
 Final topics
 =============
@@ -218,6 +222,7 @@ Example: On Base Percentage of hitters based on position.
 ```{r}
 library(openintro)
 data("mlbBat10")
+mlbNames <- c("name", "team", "position", "G", "AB", "R", "H", "RBI", "BB", "SO", "SB", "OBP", "SLG", "AVG")
 mlbBat10$posgroup <- as.factor(ifelse(mlbBat10$position %in% c("1B", "2B", "3B", "SS"), "IF",
                                 ifelse(mlbBat10$position=="P", "P",
                                        ifelse(mlbBat10$position=="C", "C", 
@@ -225,7 +230,6 @@ mlbBat10$posgroup <- as.factor(ifelse(mlbBat10$position %in% c("1B", "2B", "3B",
                                                      ifelse(mlbBat10$position=="DH", "DH", NA))))))
                                
 summary(mlbBat10$posgroup)
-box <-  boxplot(x)
 obpbox <- boxplot(OBP ~ posgroup, data=mlbBat10, 
                   main="OBP by position", ylab="OBP")
 ```
@@ -321,7 +325,7 @@ Some of our baseball players did not have positions assigned.
 ```{r}
 mlbI <- mlbBat10$position=="-"
 mlbBat10[mlbI,"position"]<-NA
-mlbBat10[mlbI,]
+mlbBat10[mlbI, mlbNames]
 ```
 
 - Now, assign the mean to the missing values
@@ -330,7 +334,8 @@ mlbBat10[mlbI,]
 
 ```{r}
 mlb1 <- mlbBat10
-mlb1[which(is.na(mlb1$position)),] <- mean(x, na.rm=TRUE)
+mlb1[which(is.na(mlb1$position)),"position"] <- names(which.max(table(mlb1$position)))
+mlb1[mlbI,mlbNames]
 ```
 
 Linear regression imputation
@@ -404,17 +409,19 @@ Hot deck imputation
 Hot deck example
 ------------
 
+Let's impute the position condition on players that are close in batting average (AVG)
+
 ```{r}
-iris$Sepal.Length[1:10] <- NA
-I <- is.na(iris$Sepal.Length)
-hotdecksepal = function(petal){
-  fillin <- sample(iris[iris$Petal.Length==petal &
-                          !is.na(iris$Sepal.Length), 'Sepal.Length'],1)
+mlb2 <- mlbBat10
+mlb2[mlbI,mlbNames]
+hotdeckmlb = function(battingavg){
+  fillin <- sample(mlb2[((mlb2$AVG< (mlb2$AVG+.1)) & (mlb2$AVG > (mlb2$AVG-.1)) &
+                          !is.na(mlb2$position)), "position"],1)
 }
-for (i in which(I)){
-  iris$Sepal.Length[i] = hotdecksepal(iris$Petal.Length[i])
+for (i in which(mlbI)){
+  mlb2$position[i] = hotdeckmlb(mlb2$AVG[i])
 }
-iris[I,]
+mlb2[mlbI,mlbNames]
 ```
 
 
@@ -441,13 +448,7 @@ kNN implementation
 ```{r}
 library(VIM)
 set.seed(1234)
-data(iris)
-n <- nrow(iris)
-# provide some empty valuesx
-for (i in 1:ncol(iris)) {
-  iris[sample(1:n, 10, replace = FALSE), i] <- NA
-}
-iris[1:10,]
+mlbBat10[mlbI,mlbNames]
 ```
 
 
@@ -455,8 +456,8 @@ kNN results
 ------------
 Use kNN to fill in the empty values
 ```{r}
-iris2 <- kNN(iris)
-iris2[1:10, c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'Species', 'Sepal.Length_imp')]
+mlb3 <- kNN(mlbBat10)
+mlb3[mlbI, mlbNames]
 ```
 
 Minimal value adjustment
