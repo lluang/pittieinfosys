@@ -11,6 +11,28 @@ Libraries
 -  `openintro`
 -  `VIM`
 
+Announcements
+=============
+
+-  OMET evaluation 
+-  Presentations
+  -  Bring two hard copies of your slides.
+  -  Load slides onto computer right before class. (note: If your slides are in the cloud, download them onto the class computer)
+-  Senior Design EXPO
+  -  6PM - 8:30 PM Soldiers and Sailors Memorial Hall 
+
+Next steps
+============
+
+- Programming in R
+  -  Introduction to R - manual in the Help section of R Studio
+  -  Microsoft EdX, Introduction to R Programming
+- Using R in statistics
+  -  Introduction to Probability and Statistics using R (IPSUR package)
+  -  R Commander GUI (RCmdr, RCmdrPlugin.IPSUR) (creates a log of R commands that correspond to the menu items shown)
+- Data manipulation
+  - Grolemnd, Wickham, 2016, R for Data Science, http://r4ds.had.co.nz/
+  
 Final topics
 =============
 
@@ -154,7 +176,7 @@ head(ddply(diamonds, .(cut, color), summarize, mean =mean(carat, na.rm=TRUE)), 2
 
 
 Select largest 1% of each cut
-c
+-------------------
 
 ```{r}
 head(ddply(diamonds, .(cut), subset, carat > quantile(carat, 0.99)), 10)
@@ -204,7 +226,6 @@ Components of ensuring correctness
 
 Outliers
 =========
-incremental: true
 
 -  An observation or set of observations which appear to be inconsistent with that set of data.
 -  How do you know that they are inconsistent?
@@ -222,14 +243,14 @@ Example: On Base Percentage of hitters based on position.
 ```{r}
 library(openintro)
 data("mlbBat10")
-mlbNames <- c("name", "team", "position", "G", "AB", "R", "H", "RBI", "BB", "SO", "SB", "OBP", "SLG", "AVG")
+mlbNames <- c("name", "team", "position", "G", "AB", "R", "H", "RBI", "BB", "SO", "SB", "CS", "OBP", "SLG", "AVG")
 mlbBat10$posgroup <- as.factor(ifelse(mlbBat10$position %in% c("1B", "2B", "3B", "SS"), "IF",
-                                ifelse(mlbBat10$position=="P", "P",
-                                       ifelse(mlbBat10$position=="C", "C", 
-                                              ifelse(mlbBat10$position=="OF", "OF", 
-                                                     ifelse(mlbBat10$position=="DH", "DH", NA))))))
+                          ifelse(mlbBat10$position=="P", "P",
+                             ifelse(mlbBat10$position=="C", "C", 
+                                ifelse(mlbBat10$position=="OF", "OF", 
+                                   ifelse(mlbBat10$position=="DH", "DH", NA))))))
                                
-summary(mlbBat10$posgroup)
+table(mlbBat10$posgroup)
 obpbox <- boxplot(OBP ~ posgroup, data=mlbBat10, 
                   main="OBP by position", ylab="OBP")
 ```
@@ -258,7 +279,7 @@ obpIF <- boxplot(mlbBat10[mlbBat10$posgroup=="IF","OBP"],
 obpIF$stats
 head(obpIF$out)
 obpIFout <- mlbBat10[(mlbBat10$posgroup=="IF" & mlbBat10$OBP %in% obpIF$out),]
-obpIFout
+head(obpIFout)
 ```
 
 Handling outliers

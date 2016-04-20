@@ -1,0 +1,32 @@
+---
+title: "Allegheny Crash Data"
+author: "Louis Luangkesorn"
+date: "April 20, 2016"
+output: html_document
+---
+
+
+```{r}
+library(plyr)
+library(ggplot2)
+library(ggmap)
+library(maptools)
+library(sp)
+library(gpclib)
+```
+
+```{r loadneighborhoods}
+neighborhood_shp <- readShapePoly("./neighborhood/Neighborhood.shp", 
+                                  proj4string = CRS("+proj=longlat + datum=NAD_1983"))
+neighborhood_df <- fortify(neighborhood_shp)
+```
+```{r}
+crash2014 <- read.csv("../data/2014alcocrash.csv")
+policeagency <- read.csv("../data/policeagencycodes.csv")
+municipality <- read.csv("../data/municipalitycodes.csv")
+datadict <- read.csv("../data/crashdatadictionary.csv")
+```
+
+```{r plotneighborhoods}
+ggplot(neighborhood_shp, aes(x=long, y=lat, group=group)) + geom_path()
+```
