@@ -17,16 +17,41 @@ library(gpclib)
 
 ```{r loadneighborhoods}
 neighborhood_shp <- readShapePoly("./neighborhood/Neighborhood.shp", 
-                                  proj4string = CRS("+proj=longlat + datum=NAD_1983"))
+                                  proj4string = CRS("+proj=longlat + datum=WGS84"))
 neighborhood_df <- fortify(neighborhood_shp)
 ```
 ```{r}
+agcyformat <- function(t) substr(t,regexpr("[^0]",t),nchar(t))
 crash2014 <- read.csv("../data/2014alcocrash.csv")
+crash2014$POLICE_AGCY <- as.factor(agcyformat(as.character(crash2014$POLICE_AGCY)))
+#crash2014sample <- crash2014[sample(nrow(crash2014), 1000),]
+crash2014$LATITUDE <- as.numeric(crash2014$LATITUDE)
+crash2014$LONGITUDE <- as.numeric(crash2014$LONGITUDE)
 policeagency <- read.csv("../data/policeagencycodes.csv")
+policeagency$Code <- as.factor(policeagency$Code)
 municipality <- read.csv("../data/municipalitycodes.csv")
 datadict <- read.csv("../data/crashdatadictionary.csv")
+crash2014m <- merge(crash2014, municipality, by.x='MUNICIPALITY', by.y='Code', all.x=TRUE)
+crash2014p <- merge(crash2014m, policeagency, by.x='POLICE_AGCY', by.y='Code', all.x=TRUE)
 ```
 
-```{r plotneighborhoods}
-ggplot(neighborhood_shp, aes(x=long, y=lat, group=group)) + geom_path()
+```{plotneighborhoods}
+ggplot() + 
+  geom_path(data=neighborhood_df, aes(x=long, y=lat, group=group)) + 
+  geom_point(data=crash2014, aes(x=DEC_LONG, y=DEC_LAT), color="red")
+```
+
+
+```{googlemappittsburgh}
+set.seed(500)
+df <- round(data.frame(
+x = jitter(rep(-95.36, 50), amount = .2),
+y = jitter(rep( 29.76, 50), amount = .2)
+), digits = 2)
+pghgooglemap <- get_googlemap('pittsburgh', markers = df, path = df, scale = 2)
+ggmap(pghgooglemap, extent = 'device')
+```
+
+```{r pittpolice}
+pittcrash <- crash2014[crash2014$POLICE.AGENCY=="2506",]
 ```
