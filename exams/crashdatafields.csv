@@ -1,0 +1,293 @@
+Column Name,Description
+ACCESS_CTRL,Access Control Code
+ADJ_RDWY_SEQ,Adjusted Roadway Sequence Number
+AGGRESSIVE_DRIVING,Aggressive Driving Indicator
+ALCOHOL_RELATED,Alcohol Related Indicator
+AUTOMOBILE_COUNT,Total Amount of Automobiles Involved
+BELTED_DEATH_COUNT,Total Deaths  of belted occupants 
+BELTED_MAJ_INJ_COUNT,Total Major Injuries of belted occupants 
+BICYCLE,Bicycle Indicator
+BICYCLE_COUNT,Total amount of Bicycles involved
+BICYCLE_DEATH_COUNT,Total amount of Bicyclist Fatalities
+BICYCLE_MAJ_INJ_COUNT,Total amount of Bicyclist Major Injuries
+BUS_COUNT,Total amount of Buses involved
+CELL_PHONE,Driver Using Cell Phone Indicator
+COLLISION_TYPE,Collision category that defines the crash
+,
+,
+,
+,
+,
+,
+,
+,
+,
+COMM_VEH_COUNT,Total Commercial vehicles involved
+COMM_VEHICLE,Crash has at least 1 involved Commercial Vehicle
+CONS_ZONE_SPD_LIM,Speed limit for the Construction Zone
+COUNTY,County Code Number where crash occurred
+CRASH_CRN,Crash Record Number
+CRASH_MONTH,Month when the crash occurred
+CRASH_YEAR,Year when the crash occurred
+CRN,Crash Record Number
+CROSS_MEDIAN,Cross Median Indicator
+CURVE_DVR_ERROR,Curve in Road Driver Error Indicator
+CURVED_ROAD,Curve in Road
+DAY_OF_WEEK,Day of the Week code when crash occurred
+,
+,
+,
+,
+,
+,
+DEC_LAT,Decimal Latitude for SR’s
+DEC_LONG,Decimal Longitude for SR’s
+DEER_RELATED,Deer Related Indicator
+DISTRACTED,Distracted Driver Indicator
+DISTRICT,District Number where crash occurred
+DRINKING_DRIVER,Drinking Driver Indicator
+DRIVER_16YR,Driver is 16 Years of Age Indicator
+DRIVER_17YR,Driver is 17 Years of Age Indicator
+DRIVER_65_74YR,Driver is between 65 and 74 Indicator
+DRIVER_75PLUS,Driver is 75 Years of Age Plus Indicator
+DRIVER_COUNT_16YR,Total amount of 16 year old drivers
+DRIVER_COUNT_17YR,Total amount of 17 year old drivers
+DRIVER_COUNT_65_74YR,Total amount of 65 to 74 year old drivers
+DRIVER_COUNT_75PLUS,Total amount of drivers ages 75 and up
+FATAL,Fatality Indicator
+FATAL_COUNT,Total amount of fatalities involved
+FATAL_OR_MAJ_INJ,Fatality or Major Injury Indicator
+FATIGUE_ASLEEP,Fatigue or Asleep Indicator
+FIRE_IN_VEHICLE,At least 1 Vehicle with Fire Damage
+FLAG_CRN,Crash Record Number
+HAZARDOUS_TRUCK,At least one Heavy Truck carrying Hazardous Material
+HEAVY_TRUCK_COUNT,Total amount of Heavy Trucks involved
+HIT_BARRIER,Hit Barrier Indicator
+HIT_BRIDGE,Hit Bridge Indicator
+HIT_DEER,Hit Deer Indicator
+HIT_EMBANKMENT,Hit Embankment Indicator
+HIT_FIXED_OBJECT,Hit Fixed Object Indicator
+HIT_GDRAIL,Hit Guide Rail Indicator
+HIT_GDRAIL_END,Hit Guide Rail End Indicator
+HIT_POLE,Hit Pole Indicator
+HIT_TREE_SHRUB,Hit Tree or Shrub Indicator
+HO_OPPDIR_SDSWP,Head on or Side Swipe Indicator
+HOUR_OF_DAY,The hour of Day when the crash occurred
+HVY_TRUCK_RELATED,Heavy Truck Related Indicator
+ICY_ROAD,Icy Road Indicator
+ILLEGAL_DRUG_RELATED,At Least 1 Driver or Pedestrian had reported or suspected Illegal Drug Use
+ILLUMINATION,Code that defines lighting  at crash scene
+,
+,
+,
+,
+,
+,
+,
+ILLUMINATION_DARK,Illumination Indicates that the Crash Scene Lighting was Dark
+IMPAIRED_DRIVER,At least One Driver was Impaired by Drugs or Alcohol
+INJURY,Injury Indicator
+INJURY_COUNT,Total count of all injuries sustained 
+INJURY_OR_FATAL,At least 1 Person Was Injured or Killed in the Crash
+INTERSECT_TYPE,Code that defines the Intersection Type
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+,
+INTERSECTION,Intersection Indicator
+INTERSTATE,Non-Turnpike Interstate Indicator
+LANE_CLOSED,Was there a lane closure? (Y/N)
+LN_CLOSE_DIR,Direction of traffic in closed lane (s)
+LANE_COUNT,Travel Lane Count
+LATITUDE,GPS Coordinates from Police if present
+LIMIT_65MPH,65MPH Speed Limit Indicator
+LOCAL_ROAD,Local Road Indicator
+LOCAL_ROAD_ONLY,Local Road Only Indicator
+LOCATION_TYPE,Code that defines the crash location
+,
+,
+,
+,
+,
+,
+,
+,
+,
+LONGITUDE,GPS Coordinates from Police if present
+MAJ_INJ_COUNT,Total amount of Major Injuries involved
+MAJOR_INJURY,At least 1 Person Sustained a Major Injury
+MAX_SEVERITY_LEVEL,Injury severity level of the crash
+,
+,
+,
+,
+,
+,
+MC_DRINKING_DRIVER,At least 1 Motorcycle driver has reported or suspected Alcohol Use
+MCYCLE_DEATH_COUNT,Total amount of Motorcyclist fatalities
+MCYCLE_MAJ_INJ_COUNT,Total amount of Motorcyclist Major Injuries
+MIN_INJ_COUNT,Total amount of Minimal Injuries
+MINOR_INJURY,At least 1 Person Sustained a Minor Injury
+MOD_INJ_COUNT,Total amount of Moderate Injuries
+MODERATE_INJURY,At least 1 Person Sustained a Moderate Injury
+MOTORCYCLE,Motorcycle Indicator
+MOTORCYCLE_COUNT,Total amount of Motorcycles Involved
+MUNICIPALITY,County Municipality Code
+NHTSA_AGG_DRIVING,The Crash meets the NHTSA definition of Aggressive Driving
+NO_CLEARANCE,No Clearance Indicator
+NON_INTERSECTION,Non Intersection Indicator
+NTFY_HIWY_MAINT,PENNDOT highway maintenance notified?
+OFFSET,Offset Number
+OVERTURNED,Overturned Vehicle Indicator
+PED_COUNT,Total amount of Pedestrians involved
+PED_DEATH_COUNT,Total amount of Pedestrian fatalities
+PED_MAJ_INJ_COUNT,Total amount of Pedestrian Major Injuries
+PEDESTRIAN,Pedestrian Indicator
+PERSON_COUNT,Total amount of people involved
+PHANTOM_VEHICLE,Phantom Vehicle Indicator
+POLICE_AGCY,Code of the reporting Police Agency
+PROPERTY_DAMAGE_ONLY,Property Damage Only Indicator
+PSP_REPORTED,Crash Investigated by the Pennsylvania State Police
+RDWY_ORIENT,Roadway Orientation Code
+RDWY_SEQ_NUM,Crash Roadway Sequence Number
+RDWY_SURF_TYPE_CD,Code for the Roadway surface type
+,
+,
+,
+,
+,
+,
+REAR_END,Rear End Collision Indicator
+RELATION_TO_ROAD,Code for the crash’s relativity to the road
+,
+,
+,
+,
+,
+,
+,
+ROAD_CONDITION,Roadway Surface Condition Code
+,
+,
+,
+,
+,
+,
+,
+,
+,
+ROAD_OWNER,Road OWNER
+,
+,
+,
+,
+,
+,
+,
+ROADWAY_COUNTY,County Code Number where crash occurred
+ROADWAY_CRN,Crash Record Number
+ROUTE,Route Number
+RUNNING_RED_LT,Driver Running Red Light Indicator
+RUNNING_STOP_SIGN,Driver Running Stop Sign Indicator
+SCH_BUS_IND,Did the crash involve a School Bus? (Y/N)
+SCH_ZONE_IND,Did the crash occur in a School Zone? (Y/N)
+SCHOOL_BUS,School Bus Indicator
+SCHOOL_ZONE,School Zone Indicator
+SEGMENT,Segment Number
+SHLDR_RELATED,Shoulder Related Indicator
+SIGNALIZED_INT,Signalized Intersection Indicator
+SMALL_TRUCK_COUNT,Total amount of Small Trucks involved
+SNOW_SLUSH_ROAD,Snow Slush Road Indicator
+SPEC_JURIS_CD,Special Jurisdiction Code
+,
+,
+,
+,
+,
+,
+,
+SPEED_LIMIT,Speed Limit
+SPEEDING,Speeding Indicator
+SPEEDING_RELATED,Speeding Related Indicator
+STATE_ROAD,State Road Indicator
+STOP_CONTROLLED_INT,Stop Controlled Intersection Indicator
+STREET_NAME,Name of the Roadway
+SUDDEN_DEER,Sudden Deer Indicator
+SUV_COUNT,Total count of sport utility vehicles involved
+SV_RUN_OFF_RD,Single Vehicle Run Off Road Indicator
+TAILGATING,Tailgating Indicator
+TCD_FUNC_CD,Code for Traffic Control Device state
+,
+,
+,
+,
+,
+TCD_TYPE,Code that defines the Traffic Control Device
+,
+,
+,
+,
+,
+,
+,
+,
+,
+TFC_DETOUR_IND,Was the Traffic Detoured? (Y/N)
+TIME_OF_DAY,The time of day when the crash occurred
+TRAIN,Train Indicator
+TRAIN_TROLLEY,Train or Trolley Indicator
+TROLLEY,Trolley Indicator
+TURNPIKE,Turnpike Indicator
+UNB_DEATH_COUNT,No. of people  killed not wearing a seatbelt
+UNB_MAJ_INJ_COUNT,Total # of unbelted sustaining Major Injuries
+UNBELTED,Anyone in crash unbelted indicator
+UNBELTED_OCC_COUNT,Total count of all unbelted occupants
+UNDERAGE_DRNK_DRV,Under Age drinking driver Indicator
+UNK_INJ_DEG_COUNT,No. of injuries with unknown severity
+UNK_INJ_PER_COUNT,No. of people  that are unknown if injured
+UNLICENSED,Unlicensed Driver Indicator
+UNSIGNALIZED_INT,Unsignalized Intersection Indicator
+URBAN_RURAL,Code to classify crash as Urban or Rural
+,
+,
+,
+VAN_COUNT,Total amount of vans involved
+VEHICLE_COUNT,Total amount of all vehicles involved
+VEHICLE_FAILURE,Vehicle Failure Indicator
+VEHICLE_TOWED,Vehicle Towed Indicator
+WEATHER,Code for the weather type at time of crash
+,
+,
+,
+,
+,
+,
+,
+,
+WET_ROAD,Wet Road Indicator
+WORK_ZONE,Work Zone Indicator
+WK_ZONE_IND,Did the crash occur in a work zone (Y/N)
+WORK_ZONE_LOC ,The Work Zone Location Code
+,
+,
+,
+,
+,
+WORK_ZONE_TYPE ,Code to define the type of Work Zone
+,
+,
+WORKERS_PRES ,Were construction personnel present? (Y/N)
+WZ_CLOSE_DETOUR ,Was traffic rerouted due to work zone?(Y/N)
+WZ_FLAGGER ,Did Work zone have a flagman? (Y/N)
+WZ_LAW_OFFCR_IND ,Did Work zone have a patrolman? (Y/N)
+WZ_LN_CLOSURE ,Did Work zone have a lane closure? (Y/N)
+WZ_MOVING ,Was there moving work in the zone? (Y/N)
+WZ_OTHER ,Was this a special type of work zone? (Y/N)
+WZ_SHLDER_MDN ,Was a median/shoulder in the zone? (Y/N)
