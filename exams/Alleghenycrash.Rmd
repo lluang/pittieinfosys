@@ -53,5 +53,7 @@ ggmap(pghgooglemap, extent = 'device')
 ```
 
 ```{r pittpolice}
-pittcrash <- crash2014[crash2014$POLICE.AGENCY=="2506",]
+collegepolice <- c("2504", "2506", "2507", "2508", "2509")
+pittcrash <- crash2014p[crash2014p$POLICE_AGCY=="2506",]
+collegecrash <- crash2014p[crash2014p$POLICE_AGCY %in% collegepolice,]
 ```

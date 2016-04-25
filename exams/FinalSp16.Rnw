@@ -197,5 +197,50 @@ I would use kNN. Read as many years of data as possible so that you will likely 
 \end{solution}
 
 \end{parts}
+
+\question
+There are a number of university campus police departments which work within the city of Pittsburgh. Each school has a department responsible for government relations and seeks to demonstrate that they contribute to the well being of the surrounding community.   Assume that the crash data be entered into a data frame {\tt accrash}. Also, {\tt accrash\$POLICE\_AGCY} is the police agency code that corresponds to {\tt policeagency\$Code} from the Police Agency table.  The campus police entries of Police Agency table are shown in Table \ref{tbl:campuspolice}.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll}
+  \hline
+Code & Policy.Agency \\ 
+  \hline
+2504 &  Carnegie Mellon University \\ 
+2506 &  University Of Pittsburgh \\ 
+2507 &  Chatham College Police \\ 
+2508 &  Duquesne University \\ 
+2509 &  Robert Morris University \\ 
+   \hline
+\end{tabular}
+\caption{University police in Pittsburgh. \label{tbl:campuspolice}}
+\end{table}
+
+\begin{parts}
+\part[10]
+Design the process to add the names of the police agency in the {\tt accrash} data frame.
+
+\part[15]
+Design the process that generates the list of all crashes in the Allegheny County Crash Data where the responding police agency was a campus police department.
+
+\end{parts}
+\begin{solution}[5in]
+\begin{itemize}
+\item Read in data into {\tt accrash} and {\tt policeagency}.
+\item Set both {\tt accrash\$POLICE\_AGCY} and {\tt policeagency\$Code} to be factors.
+\item Use merge to add a column to the crash data with the name of the police agency responding based on setting the Policy\_AGCY to the Code in the policeagency table.
+
+{\tt crash2014p <- merge(crash2014m, policeagency, 
+   by.x='POLICE\_AGCY', by.y='Code', all.x=TRUE)}
+\item Create a list of codes of campus police agencies.
+
+{\tt collegepolice <- c("2504", "2506", "2507", "2508", "2509")}
+\item Select from the {\tt accrash} data rows where the agency code is in the list of campus police agencies.
+
+{\tt crash2014p <- merge(crash2014m, policeagency, 
+  by.x='POLICE\_AGCY', by.y='Code', all.x=TRUE)}
+\end{itemize}
+\end{solution}
 \end{questions}
 \end{document}
