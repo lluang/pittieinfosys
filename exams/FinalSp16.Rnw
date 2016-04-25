@@ -1,4 +1,4 @@
-\documentclass[12pt, addpoints]{exam}
+\documentclass[12pt, addpoints, answers]{exam}
 \usepackage{Sweave}
 \usepackage{amssymb}
 
@@ -170,7 +170,32 @@ Penn Avenue & 1800 & 2014\\
 \end{parts}
 
 \question
-In a
+In many cases of the crash report the road segment (the block number) is blank.  This is needed to correctly determine if the crash site occured at a place with bike infracture (e.g. bike lanes). 
 
+\begin{parts}
+\part{5}
+Evaluate (1-3 sentences) the following missing value imputation methods for their usefulness in this setting. Remember to address the question in parenthesis.
+
+\begin{enumerate}
+i. Mean value (what variable will you condition taking the mean?)
+ii. kNN (how will you define *nearest*?)
+iii. Hot deck imputation (what variable will you condition the subset from where you will draw from?)
+\end{enumerate}
+
+\begin{solutionordottedlines}{3in}
+i. Mean value imputation would probably be condition on the street name. However this will always give a location in the middle of the length of the street, and bike lanes may not extend the entire street, so it would not locate the crash correctly.
+ii. kNN. Nearest could be a combination of street name and latitude and longitude. This has the best chance of working if there are other crashes that are on the same street (it would take a value in the middle of the nearby ones, which would at minimum be pretty close)
+iii. Hot Deck. I would subset on the street name. This could place the crash anywhere on the road. It probably would have on average the correct number of crashes with bike infrasture, but is not promising to get an individual imputed data point correct.
+\end{solutionordottedlines}
+
+\part{20}
+Draw a flow chart/process map of the process needed to perform the missing value imputation. Begin with reading in the crash data.
+
+\begin{solution}[3in]
+I would use kNN. Read as many years of data as possible so that you will likely get crashes on that street.  Normalize distances, so street name is more important than the distance in lat/long (because N/S street numbers are radically different than W/E street numbers).
+
+\end{solution}
+
+\end{parts}
 \end{questions}
 \end{document}
