@@ -35,14 +35,14 @@ crash2014m <- merge(crash2014, municipality, by.x='MUNICIPALITY', by.y='Code', a
 crash2014p <- merge(crash2014m, policeagency, by.x='POLICE_AGCY', by.y='Code', all.x=TRUE)
 ```
 
-```{plotneighborhoods}
+```
 ggplot() + 
   geom_path(data=neighborhood_df, aes(x=long, y=lat, group=group)) + 
   geom_point(data=crash2014, aes(x=DEC_LONG, y=DEC_LAT), color="red")
 ```
 
 
-```{googlemappittsburgh}
+```
 set.seed(500)
 df <- round(data.frame(
 x = jitter(rep(-95.36, 50), amount = .2),
