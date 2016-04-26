@@ -1,7 +1,7 @@
 \documentclass[12pt, addpoints, answers]{exam}
 \usepackage{Sweave}
 \usepackage{amssymb}
-
+\usepackage{graphicx}
 \usepackage{makeidx}
 
 \usepackage[colorlinks]{hyperref}
@@ -103,12 +103,14 @@ A}
 \item  You have 2 hours for the exam.
 \item  Staple crib sheet to the exam when you turn it in.
 \end{enumerate}
+
+\gradetable
 \newpage
 \begin{questions}
 \question
 {Allegheny Crash}
 
-Bike Pittsburgh is an advocacy organization that promotes the use of bicycles for transportation for commuting and residential use. Over the last few years, Pittsburgh bicycling environment has changed dramatically including infrastructure improvements such as creating bicyling lanes on many major commuting routes and the introduction of the Healty Ride bike sharing system. 
+Bike Pittsburgh is an advocacy organization that promotes the use of bicycles for transportation for commuting and residential use. Over the last few years, Pittsburgh bicycling environment has changed dramatically including infrastructure improvements such as creating bicycling lanes on many major commuting routes and the introduction of the Healthy Ride bike sharing system. 
 
 \begin{quote}
 {\bf Our Vision}
@@ -146,18 +148,18 @@ Penn Avenue & 1800 & 2014\\
 \end{table}
 
 \begin{parts}
-\part[12] Write a CoNVO statement for Bike Pittsburgh desire to understand the impact of introducing bike lanes on bicycle accidents on the streets were bike lanes were introduced.  Note that the entirety of the Allegheny County Crash Data is available to you.  Assume that you are able to accurately place and associate crashes to a specific block on Allegheny County streets.
+\part[8] Write a CoNVO statement for Bike Pittsburgh desire to understand the impact of introducing bike lanes on bicycle accidents on the streets were bike lanes were introduced.  Note that the entirety of the Allegheny County Crash Data is available to you.  Assume that you are able to accurately place and associate crashes to a specific block on Allegheny County streets.
 
 \begin{solutionordottedlines}[4in]
 \begin{itemize}
-\item Context - Bike Pittsburgh is a bike advocacy agency that is interested in promoting a safe bicycle communiting environment.
+\item Context - Bike Pittsburgh is a bike advocacy agency that is interested in promoting a safe bicycle commuting environment.
 \item Need - Determine the impact of bicycle lanes on accidents.
 \item Vision - There needs to be a comparison - So something like show the rate of accidents per year before and after the bike lane was installed.
 \item Outcome - example Identify if there are specific areas that need to be resigned to help protect against accidents.
 \end{itemize}
 \end{solutionordottedlines}
 
-\part[12] Evaluate the crash and bike lane data according to Volume, Variety, Velocity, Veracity
+\part[8] Evaluate the crash and bike lane data according to Volume, Variety, Velocity, Veracity
 
 \begin{solutionordottedlines}[4in]
 \begin{itemize}
@@ -170,25 +172,27 @@ Penn Avenue & 1800 & 2014\\
 \end{parts}
 
 \question
-In many cases of the crash report the road segment (the block number) is blank.  This is needed to correctly determine if the crash site occured at a place with bike infracture (e.g. bike lanes). 
+In many cases of the crash report the road segment (the block number) is blank.  This is needed to correctly determine if the crash site occurred at a place with bike infrastructure (e.g. bike lanes). 
 
 \begin{parts}
-\part{5}
+\part[10]
 Evaluate (1-3 sentences) the following missing value imputation methods for their usefulness in this setting. Remember to address the question in parenthesis.
 
 \begin{enumerate}
-i. Mean value (what variable will you condition taking the mean?)
-ii. kNN (how will you define *nearest*?)
-iii. Hot deck imputation (what variable will you condition the subset from where you will draw from?)
+\item Mean value (what variable will you condition taking the mean?)
+\item kNN (how will you define *nearest*?)
+\item Hot deck imputation (what variable will you condition the subset from where you will draw from?)
 \end{enumerate}
 
-\begin{solutionordottedlines}{3in}
-i. Mean value imputation would probably be condition on the street name. However this will always give a location in the middle of the length of the street, and bike lanes may not extend the entire street, so it would not locate the crash correctly.
-ii. kNN. Nearest could be a combination of street name and latitude and longitude. This has the best chance of working if there are other crashes that are on the same street (it would take a value in the middle of the nearby ones, which would at minimum be pretty close)
-iii. Hot Deck. I would subset on the street name. This could place the crash anywhere on the road. It probably would have on average the correct number of crashes with bike infrasture, but is not promising to get an individual imputed data point correct.
+\begin{solutionordottedlines}[3in]
+\begin{enumerate}
+\item Mean value imputation would probably be condition on the street name. However this will always give a location in the middle of the length of the street, and bike lanes may not extend the entire street, so it would not locate the crash correctly.
+\item kNN. Nearest could be a combination of street name and latitude and longitude. This has the best chance of working if there are other crashes that are on the same street (it would take a value in the middle of the nearby ones, which would at minimum be pretty close)
+\item Hot Deck. I would subset on the street name. This could place the crash anywhere on the road. It probably would have on average the correct number of crashes with bike infrastructure, but is not promising to get an individual imputed data point correct.
+\end{enumerate}
 \end{solutionordottedlines}
 
-\part{20}
+\part[20]
 Draw a flow chart/process map of the process needed to perform the missing value imputation. Begin with reading in the crash data.
 
 \begin{solution}[3in]
@@ -221,7 +225,7 @@ Code & Policy.Agency \\
 \part[10]
 Design the process to add the names of the police agency in the {\tt accrash} data frame.
 
-\part[15]
+\part[14]
 Design the process that generates the list of all crashes in the Allegheny County Crash Data where the responding police agency was a campus police department.
 
 \end{parts}
@@ -242,5 +246,48 @@ Design the process that generates the list of all crashes in the Allegheny Count
   by.x='POLICE\_AGCY', by.y='Code', all.x=TRUE)}
 \end{itemize}
 \end{solution}
+
+\question
+Pittsburgh has 6 police zones (Figure \ref{fig:policezones}), where each zone is comprised of a number of neighborhoods.  In addition to the crash data, you have census data with the population for every neighborhood (i.e. there are two fields, census$neighborhood and census$population) and a function that identifies which neighborhood a crash occurs in based on either latitude and longitude or street address (so you can easily connect it with the crash data). A Pittsburgh City Councilman has requested that a graphic of crashes, crashes with injuries, and crashes with fatalities per capita (number divided by population) for the past five years by police zone be provided to show the distribution of crashes across the city. Assume that population is relatively static over the five years.
+
+\begin{parts}
+\part[12]
+What type of graph should be used to show this information and why? (Your answer should discuss and compare at a minimum; pie charts, some version of bar chart, some version of line chart.  Remember to include your choice.)
+
+
+\begin{solutionordottedlines}[3in]
+\begin{itemize}
+\item Pie charts show ratios, but unless you size them by number of incidents, are not useful for comparing across different areas. If you do size them, size is a very difficult to interpret visual cue.
+\item You could have a bar charts with four bars, crashes per capita with no injuries, crashes per capita with fatalities, no injured, crashes per capita with injuries, no fatalities, and crashes per capita with both injuries and fatalities over five years.  But this would require faceting to show this over time. Or you could do it the other way, four charts, each shows one variable over time. This would show trends.
+\item You could have four time series lines on a chart. This would show each of the four data series and their changes over time.
+\end{itemize}
+
+The main point is that you have to choose a visualization that allows you to show both ratio and magnitude, and demonstrates change over time.
+\end{solutionordottedlines}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.6\textwidth]{../data/09_police_zone_map}
+\caption{Pittsburgh Police Zones. \label{fig:policezones}}
+\end{figure}
+
+\part[18]
+Sketch a visualization and write out the flow chart/process map that would create that visualization starting from reading data tables.
+
+\begin{solution}[4in]
+Solution should include 
+\begin{itemize}
+\item Read in crime and population tables.
+\item Identify neighborhood from lat/long or street address.
+\item Tag each crash as no injury, injuries, fatalities, injuries and fatalities based on fields.
+\item Group crashes by neighborhood.
+\item Count crashes in each category by neighborhood and year.
+\item Sum crashes by category over neighborhoods in a police zone.
+\item Sum population of neighborhoods by police zone
+\item Divide number of crashes by population of police zone.
+\item Generate plot for each police zone showing crash rates per capita changing over time.
+\end{itemize}
+\end{solution}
+\end{parts}
 \end{questions}
 \end{document}
