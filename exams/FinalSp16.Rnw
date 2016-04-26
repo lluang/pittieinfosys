@@ -1,4 +1,5 @@
-\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, addpoints]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
 \usepackage{Sweave}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -96,19 +97,26 @@ A}
 
 
 \begin{enumerate}
-\item  There are four questions (4 pages) and an article (2 pages) for this exam.  Each question has multiple parts to answer indicated by capital letters. Start your answer for each question on a new page in your exam blue book.
-\item  You may have a double sided, hand-written page of notes (crib sheet)
-\item  You may have a stand-alone calculator (e.g. not your cell phone). If you do not have a calculator, when you have a calculation you may set up the calculation and provide an approximation of the answer for full credit.
-\item  Answer questions in the space provided. You may also use the back of the paper if needed.
+\item  There are four questions (4 pages) and an article with data dictionary (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  You may have a double sided sheet of paper for notes (crib sheet).
+\item  The phrase {\em describe the process} can be answered using any of the following:
+  \begin{enumerate}
+    \item Pseudo-SQL
+    \item Pseudocode
+    \item Flow chart/process map
+  \end{enumerate}
+\item  Answer questions in the space provided. You may also use the back of a sheet in the exam if needed.
 \item  You have 2 hours for the exam.
 \item  Staple crib sheet to the exam when you turn it in.
 \end{enumerate}
 
+\centering
 \gradetable
+
 \newpage
 \begin{questions}
 \question
-{Allegheny Crash}
+{Allegheny Crash Data analysis}
 
 Bike Pittsburgh is an advocacy organization that promotes the use of bicycles for transportation for commuting and residential use. Over the last few years, Pittsburgh bicycling environment has changed dramatically including infrastructure improvements such as creating bicycling lanes on many major commuting routes and the introduction of the Healthy Ride bike sharing system. 
 
@@ -120,6 +128,7 @@ Pittsburgh's bright future is built on a diverse transportation network that saf
 Among other data, the Allegheny County Crash data includes the fields in Table \ref{tbl:bicycle} for all years from 2004-2014.
 
 \begin{table}
+\centering
 \begin{tabular}{ll}
 Field & Description\\
 \hline
@@ -133,7 +142,8 @@ BICYCLE\_MAJ\_INJ\_COUNT	& Total amount of Bicyclist Major Injuries\\
 
 Bike Pittsburgh is interested in the effect of introducing bike lanes.  They maintain a database that includes when bike lanes were introduced by block and street, as shown in Table \ref{tbl:bikelane}.
 
-\begin{table}
+\begin{table}[b]
+\centering
 \begin{tabular}{ccc}
 Street & Block & Year\\
 \hline
@@ -148,7 +158,7 @@ Penn Avenue & 1800 & 2014\\
 \end{table}
 
 \begin{parts}
-\part[8] Write a CoNVO statement for Bike Pittsburgh desire to understand the impact of introducing bike lanes on bicycle accidents on the streets were bike lanes were introduced.  Note that the entirety of the Allegheny County Crash Data is available to you.  Assume that you are able to accurately place and associate crashes to a specific block on Allegheny County streets.
+\part[8] Write a CoNVO statement for Bike Pittsburgh desire to understand the impact of introducing bike lanes on bicycle accidents on the streets were bike lanes were introduced.  Note that the entirety of the Allegheny County Crash Data is available to you.  Assume that you are able to accurately place and associate crashes to a specific block on Allegheny County streets.Dr. John Craig Hammond
 
 \begin{solutionordottedlines}[4in]
 \begin{itemize}
@@ -163,7 +173,7 @@ Penn Avenue & 1800 & 2014\\
 
 \begin{solutionordottedlines}[4in]
 \begin{itemize}
-\item Volume - Some thing about lines of crash data and bike lane data.
+\item Volume - Something about lines of crash data and bike lane data.
 \item Variety - Location, type of vehicles involved, driver, road conditions, traffic conditions, police agency, bike involved, arresting authority.
 \item Velocity - Should say that bike lanes and bike sharing should change the data over time.
 \item Veracity - Should allow that both bike lane and crash data require that data was entered in correctly.
@@ -172,28 +182,30 @@ Penn Avenue & 1800 & 2014\\
 \end{parts}
 
 \question
+{Filling in crash locations}
+
 In many cases of the crash report the road segment (the block number) is blank.  This is needed to correctly determine if the crash site occurred at a place with bike infrastructure (e.g. bike lanes). 
 
 \begin{parts}
 \part[10]
-Evaluate (1-3 sentences) the following missing value imputation methods for their usefulness in this setting. Remember to address the question in parenthesis.
+Evaluate (1-3 sentences) the following missing value imputation methods for their usefulness in this setting. Remember to identify any needed parameters and to address the question in parenthesis.
 
 \begin{enumerate}
 \item Mean value (what variable will you condition taking the mean?)
-\item kNN (how will you define *nearest*?)
+\item kNN (how will you define {\em nearest}?)
 \item Hot deck imputation (what variable will you condition the subset from where you will draw from?)
 \end{enumerate}
 
 \begin{solutionordottedlines}[3in]
 \begin{enumerate}
-\item Mean value imputation would probably be condition on the street name. However this will always give a location in the middle of the length of the street, and bike lanes may not extend the entire street, so it would not locate the crash correctly.
+\item Mean value imputation would probably be conditioned on the street name. However this will always give a location in the middle of the length of the street, and bike lanes may not extend the entire street, so it would not locate the crash correctly.
 \item kNN. Nearest could be a combination of street name and latitude and longitude. This has the best chance of working if there are other crashes that are on the same street (it would take a value in the middle of the nearby ones, which would at minimum be pretty close)
 \item Hot Deck. I would subset on the street name. This could place the crash anywhere on the road. It probably would have on average the correct number of crashes with bike infrastructure, but is not promising to get an individual imputed data point correct.
 \end{enumerate}
 \end{solutionordottedlines}
 
 \part[20]
-Draw a flow chart/process map of the process needed to perform the missing value imputation. Begin with reading in the crash data.
+Describe the process needed to perform the missing value imputation. Begin with reading in the crash data.
 
 \begin{solution}[3in]
 I would use kNN. Read as many years of data as possible so that you will likely get crashes on that street.  Normalize distances, so street name is more important than the distance in lat/long (because N/S street numbers are radically different than W/E street numbers).
@@ -203,6 +215,8 @@ I would use kNN. Read as many years of data as possible so that you will likely 
 \end{parts}
 
 \question
+{University police activity}
+
 There are a number of university campus police departments which work within the city of Pittsburgh. Each school has a department responsible for government relations and seeks to demonstrate that they contribute to the well being of the surrounding community.   Assume that the crash data be entered into a data frame {\tt accrash}. Also, {\tt accrash\$POLICE\_AGCY} is the police agency code that corresponds to {\tt policeagency\$Code} from the Police Agency table.  The campus police entries of Police Agency table are shown in Table \ref{tbl:campuspolice}.
 
 \begin{table}[ht]
@@ -248,11 +262,21 @@ Design the process that generates the list of all crashes in the Allegheny Count
 \end{solution}
 
 \question
-Pittsburgh has 6 police zones (Figure \ref{fig:policezones}), where each zone is comprised of a number of neighborhoods.  In addition to the crash data, you have census data with the population for every neighborhood (i.e. there are two fields, census$neighborhood and census$population) and a function that identifies which neighborhood a crash occurs in based on either latitude and longitude or street address (so you can easily connect it with the crash data). A Pittsburgh City Councilman has requested that a graphic of crashes, crashes with injuries, and crashes with fatalities per capita (number divided by population) for the past five years by police zone be provided to show the distribution of crashes across the city. Assume that population is relatively static over the five years.
+{Pittsburgh Police Zones}
+
+Pittsburgh has 6 police zones (Figure \ref{fig:policezones}), where each zone is comprised of a number of neighborhoods.  In addition to the crash data, you have:
+\begin{itemize}
+\item Census data with the population for every neighborhood (i.e. there are two fields, census\$neighborhood and census\$population).
+\item A table that identifies which neighborhoods are in police zone.
+\item A function that identifies which neighborhood a crash occurs in based on either latitude and longitude or street address (so you can easily connect it with the crash data).
+\item A file with the map of neighborhoods along with methods needed to match and display data to the neighborhood or place graphics on top of the map.
+\end{itemize}
+
+A Pittsburgh City Councilwoman has requested that a graphic of crashes, crashes with injuries, and crashes with fatalities per capita (number divided by population) for the past five years by police zone be provided to show the distribution of crashes across the city. Assume that population is effectively unchanged over the past five years.
 
 \begin{parts}
 \part[12]
-What type of graph should be used to show this information and why? (Your answer should discuss and compare at a minimum; pie charts, some version of bar chart, some version of line chart.  Remember to include your choice.)
+What type of visualization should be used to show this information and why? (Your answer should discuss and compare at a minimum; pie charts, some version of bar chart, some version of line chart.  Remember to include your choice.)
 
 
 \begin{solutionordottedlines}[3in]
@@ -267,12 +291,13 @@ The main point is that you have to choose a visualization that allows you to sho
 
 \begin{figure}
 \centering
-\includegraphics[width=0.6\textwidth]{../data/09_police_zone_map}
-\caption{Pittsburgh Police Zones. \label{fig:policezones}}
+\includegraphics[width=0.6\textwidth]{../data/zonemap}
+%\includegraphics[width=0.6\textwidth]{../data/09_police_zone_map}
+\caption{Pittsburgh Police Zones. Note: Precise boundaries are not signficant. \label{fig:policezones}}
 \end{figure}
 
 \part[18]
-Sketch a visualization and write out the flow chart/process map that would create that visualization starting from reading data tables.
+Sketch a visualization and describe the process that would create that visualization starting from reading data tables.
 
 \begin{solution}[4in]
 Solution should include 
