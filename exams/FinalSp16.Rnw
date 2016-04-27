@@ -14,7 +14,7 @@
 \newcommand{\bs}{\texorpdfstring{\char`\\}{}}
 
 \newcommand{\docversion}{2.5}
-\newcommand{\docdate}{May 7, 2015}
+\newcommand{\docdate}{April 27, 2016}
 %\newcommand{\docdate}{\today}
 
 %--------------------------------------------------------------------
@@ -88,15 +88,13 @@
 
 \title{IE 0015 Intro to Info Systems Final}
 
-\author{Spring 2016\\
-A}
-
+\author{Spring 2016}
 \date{\docdate}
-
 \maketitle
 
 
 \begin{enumerate}
+\item  Write your name at the top of this page.
 \item  There are four questions (4 pages) and an article with data dictionary (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
 \item  You may have a double sided sheet of paper for notes (crib sheet).
 \item  The phrase {\em describe the process} can be answered using any of the following:
@@ -158,7 +156,7 @@ Penn Avenue & 1800 & 2014\\
 \end{table}
 
 \begin{parts}
-\part[8] Write a CoNVO statement for Bike Pittsburgh desire to understand the impact of introducing bike lanes on bicycle accidents on the streets were bike lanes were introduced.  Note that the entirety of the Allegheny County Crash Data is available to you.  Assume that you are able to accurately place and associate crashes to a specific block on Allegheny County streets.Dr. John Craig Hammond
+\part[8] Write a CoNVO statement for Bike Pittsburgh desire to understand the impact of introducing bike lanes on bicycle accidents on the streets were bike lanes were introduced.  Note that the entirety of the Allegheny County Crash Data is available to you.  Assume that you are able to accurately place and associate crashes to a specific block on Allegheny County streets.
 
 \begin{solutionordottedlines}[4in]
 \begin{itemize}
