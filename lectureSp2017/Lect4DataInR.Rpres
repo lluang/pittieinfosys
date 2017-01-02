@@ -1,0 +1,526 @@
+Data In R
+========================================================
+author: IE 0015
+date: Spring 2016
+
+Note: It will help to have R Studio open and follow along in this lecture.
+
+Data analysis language
+========================================================
+
+**R** is a Data analysis language
+
+-  Reading in data in various formats.
+-  Manipulating data.
+-  Exploratory data analysis.
+-  Graphical display.
+
+Reading in data
+=================
+
+Data exists in various forms
+
+-  Text files
+  -  (Comma) delimited (csv)
+  -  Tabular (fixed format) text (tab)
+-  Excel spreadsheets
+-  Databases
+  -  Local (MS Access, SQLite)
+  -  Server (Oracle, IBM DB2, MySQL)
+-  Web API
+  - Twitter, Facebook, Google, Quandl
+  
+Why do we want to use to the data
+==================================
+incremental: true
+
+- We have a question that needs to be answered.
+- We have a decision that needs to be made.
+- We will do something when we observe an event.
+
+Working in R
+===============
+type: section
+
+Starting R
+==========
+
+-  R is a data analysis environment
+  -  The programming language
+  -  The system of libraries and books around it.
+-  R Studio is an Integrated Development environment.
+  -  If you are already a computer programmer, you can use your editing tools to work in R.
+  -  R Studio includes an editor, console, environment viewer, history
+  -  Access to help files
+  
+Interactive R
+===============
+
+R can be used as a calculator
+
+```{r calculator}
+3+5
+```
+
+
+Get help
+==========
+```{r help}
+help(rnorm)
+```
+
+Run a function
+===============
+
+```{r rnorm}
+x = rnorm(20)
+y = rexp(20)
+plot(x,y)
+```
+
+Some data types
+===============
+
+Some standard data types
+
+- Integers, floats
+- Characters, strings
+- Dates
+- When is a number not a number?  Factors
+
+Some data structures
+======================
+
+-  Vectors (numbers)
+-  You can apply functions over entire vectors (vectorization)
+
+```{r vector}
+a <- c(3, 5, 3, 7, 10)
+b = c(1, 2, 3, 4, 5)
+1/b
+sum((a-mean(a))^2)/(length(a)-1)
+var(a)
+```
+
+Sequences
+============
+
+You can construct a sequence like a for loop
+
+```{r sequence}
+seq(-5, 5, by=2)
+seq(-5, 5, 2)
+```
+
+
+Matrices
+===========
+
+You can create matrices all at once, or by having vectors as columns or rows.
+
+```{r matrixexample}
+mat <- matrix(nrow = 3, ncol = 2, c(1,2,3,4,5,6))
+mat2 <- cbind(1:4, c("dog", "cat", "bird", "dog"))
+mat3 <- rbind(c(1,2,4,5), c(6,7,0,4))
+mat
+mat2
+mat3
+```
+
+Data frames
+=============
+
+- Data frames are the primary data structure you will work with.
+- Like a matrix, but you can have different data types.
+- Maintain relationship between rows and columns.
+- The better **R** packages all work on data frames.
+  -  ggplot2, plyr, reshape, dplyr
+  
+```{r dataframe1}
+students <- data.frame(c("Cedric","Fred","George","Cho","Draco","Ginny"),
+                       c(3,2,2,1,0,-1),
+                       c("H", "G", "G", "R", "S", "G"))
+names(students) <- c("name", "year", "house") # name the columns
+class(students)
+class(students$name)
+class(students$year)
+class(students$house)
+students
+dim(students)
+```
+
+Dataframes from vectors
+========================
+You can also create a dataframe from a set of vectors
+
+```{r dataframevectors}
+hogwartstudents <- data.frame(name = students$name, year = students$year, house = students$house)
+hogwartstudents
+```
+
+
+Reading from a file
+====================
+
+- The standard way of creating a data frame is to read in table data from somewhere else
+
+```
+read.table("hogwarts.tab")
+read.csv("hogwarts.csv")
+readWorksheetFromFile("hogwarts.xlsx", sheet="Sheet1")
+read.fwf("hogwarts.dat")
+```
+
+
+Reading from databases
+======================
+
+-  **R** has a standard format for accessing databases.
+-  You need a database driver, create a connection, then send SQL to the database.
+-  Database driver is in the *RSQLite* package.
+
+Packages
+===========
+
+-  Most functionality in **R** (or any other data analysis environment) is in the form of *packages* or *libraries*.
+-  Packages are created to do a specific task or type of analysis.
+-  The *RSQLite* package handles connection to SQLite databases.
+-  Other packages include *XLConnect* (for Excel spreadsheets), *ggplot2* (for charts), and *plyr* and *reshape* (for data manipulation)
+
+Reading from a database
+=======================
+
+```{r readingsqlite}
+library(RSQLite)
+con <- dbConnect(SQLite(), "../data/acs1yrPittsburgh01701.sqlite")
+sql <- "SELECT *      
+        FROM ss12hpa"
+acs01701 <- dbGetQuery(con, sql)
+```
+
+Using SQL from R
+=================
+
+This is a very large dataset. Maybe we should have taken only a small number of columns.
+
+```{r selectsql}
+sql <- "SELECT
+        SERIALNO, ST, PUMA, 
+        NP, TYPE, ACR, BATH, BDSP, BLD,
+        MRGP, RNTP, TEN, YBL
+        FROM SS12HPA"
+acshousing <- dbGetQuery(con, sql)
+summary(acshousing)
+```
+
+What to the codes mean?
+=======================
+
+Look up the code in the data dictionary.
+  
+```{r tenure}
+tenure <- as.data.frame(
+           rbind(c("","NA"),
+                 c("b","N/A  (GQ/vacant)"),
+                 c("1", "Owned with mortgage or loan (include home equity loans)"),
+                 c("2","Owned free and clear"),
+                 c("3","Rented"),
+                 c("4","Occupied without payment of rent"))
+           )
+colnames(tenure) <- c("key", "description")
+```
+
+You can write a function to look up the value for each survey answer
+=====================================================================
+
+```{r gettenure}
+gettenure <- function(x){
+description <- tenure[tenure$key==x,]$description
+description
+}
+acshousing$tenurevalue <- sapply(acshousing$TEN, gettenure)
+head(acshousing$tenurevalue)
+```
+
+Reading data from an Excel spreadsheet
+======================================
+
+- Excel spreadsheets can be read using the package *readxl*
+
+```{r readxl}
+library(readxl)
+```
+
+Using *readxl*
+=================
+
+-  You can load a workbook (Excel file)
+-  Then read a worksheet
+```{r loadworkbook}
+pregnancydata<- read_excel("../data/FemPregSheet.xlsx", "FemPreg")
+head(pregnancydata)
+class(pregnancydata)
+summary(pregnancydata)
+```
+
+
+General procedure for getting data into **R**
+===============================================
+
+-  Determine data source
+-  Load package(library) that works with that data source
+-  Connect to data source
+-  Determine options (column titles in first row, delimiters, named)
+-  Read data into data frame
+-  Find data dictionary to translate column names into real names.
+
+The functions and libraries we need
+===========================
+
+- read.csv - comma separated values
+- read.fwf - Fixed width formatted data
+- read.table - Text data tables
+- read.delim - like read.csv, except you declare the delimiter
+- readxl - Microsoft Excel
+
+Things that we need to be able to do with data
+===============================================
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+Filter
+========
+
+```{r filtergryffindor}
+hogwartstudents[hogwartstudents$house=="G",]
+```
+
+Arrange
+==========
+```{r sorthogwarts}
+hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
+```
+
+Select columns
+==============
+
+```{r columnshogwarts}
+hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
+```
+
+
+Mutate
+========
+```
+acshousing$tenurevalue <- sapply(acshousing$TEN, gettenure)
+```
+
+Summarize (Group By)
+====================
+```{r summarizehogwarts}
+library(plyr)
+ddply(hogwartstudents,~house,summarise,count=length(name))
+```
+
+Random sample
+====================
+```{r studentsrandom}
+hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
+```
+
+Plotting with ggplot2
+=======================
+type: section
+
+
+qplot introduction
+==================
+
+A plot is composed of:
+-  Data
+-  aesthetic - Indicates the data
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
+
+
+Packages
+========
+
+-  `Packages` are libraries that contain functionality for R
+-  These libraries include the machine learning and text processing methods that we will use.
+
+```{r}
+library(ggplot2)
+```
+
+Random numbers
+==============
+
+-  We use random numbers to sample from data (smaller datasets are often more manageable) or to create data to test methods on or for simulation.
+```{r}
+set.seed(1234)
+runif(n=4, 0, 1)
+```
+
+Some examples
+=============
+
+-  Take some samples from the `diamonds` dataset that comes with `ggplot2`
+-  Note the `,` which indicates that you are getting all of the columns.
+
+```{r}
+set.seed(1410)
+dsmall = diamonds[sample(nrow(diamonds),200),]
+```
+
+qplot
+=====
+
+-  `qplot` is the quick version of `ggplot`
+-  Base use, `x, y, data=data.frame`
+
+```{r}
+qplot(carat, price, data=dsmall)
+```
+
+plotting transforms
+===================
+
+-  You can transform the data using calculations
+```{r}
+qplot(log(carat), log(price), data=dsmall)
+```
+
+Aesthetics - appearance
+=======================
+
+- Change the appearance of data elements using aesthetics.
+- Color, shape, size, transparency (alpha), etc.
+- Each aesthetic displays an additional aspect of the data.
+
+```{r}
+qplot(carat, price, data = dsmall, shape = cut, colour = color)
+```
+
+geom - plot type
+================
+
+- The type of plot is set using `geom`
+- `points` - Scatterplots, 
+- `path` and `line` connect points.
+- `smooth` - draw a smoother to the data
+- `histogram`, `boxplot`, `density`, `bar`
+
+```{r}
+qplot(carat, price, data = dsmall, geom = c("point", "smooth"))
+```
+
+Boxplots
+========
+
+```{r}
+qplot(color, price / carat, data = dsmall, geom = "boxplot")
+```
+
+Jitter
+======
+
+- `jitter` shifts data points that would otherwise be on top of each other.
+```{r}
+qplot(color, price / carat, data = dsmall, geom = "jitter", 
+  alpha = I(1/ 5))
+```
+
+alpha
+======
+
+- `alpha` adjusts the transparency, so it is more apparent that multiple data points overlap.
+```{r}
+qplot(color, price / carat, data = diamonds, geom = "jitter", 
+  alpha = I(1/ 25))
+```
+
+Histograms
+==========
+
+-  Histograms and density show distributions.
+
+```{r}
+qplot(carat, data = dsmall, geom = "histogram")
+```
+
+Density plot
+============
+
+-  Histograms and density show distributions.
+
+```{r}
+qplot(carat, data = dsmall, geom = "density")
+```
+
+
+Plots and aesthetics
+====================
+
+-  Aesthetics can be used to create subplots
+
+```{r}
+qplot(carat, data = dsmall, geom = "density", colour = color)
+```
+
+Barcharts and aesthetics
+========================
+
+```{r}
+qplot(color, data = diamonds, geom = "bar", weight = carat) +
+  scale_y_continuous("carat")
+```
+
+
+Time series
+===========
+
+-  Look at time series with a new dataset
+```{r}
+qplot(date, unemploy / pop, data = economics, geom = "line")
+```
+
+Time series path plot
+=======================
+
+-  We can put multiple time series on the same plot.
+
+```{r}
+year <- function(x) as.POSIXlt(x)$year + 1900
+qplot(unemploy / pop, uempmed, data = economics,
+  geom = "path", colour = year(date)) + scale_size_area()
+```
+
+
+Faceting
+========
+
+-  `facets` creates a series of side by side plots where categories of data each get their own plot
+```{r}
+qplot(carat, data = diamonds, facets = color ~ .,
+geom = "histogram", binwidth = 0.1, xlim = c(0, 3))
+```
+
+qplot summary
+===============
+
+A plot is composed of:
+
+-  Data
+-  aesthetic - Indicates the data
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
+
+More can be found in *ggplot2: Elegant graphics for data analysis*
+
