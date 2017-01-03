@@ -1,7 +1,10 @@
-Course Introduction
-========================================================
-author: IE 0015
-date: Spring 2016
+---
+title: "Course Introduction"
+author: "IE 0015"
+date: "Spring 2017"
+output:
+  slidy_presentation: default
+---
 
 Notecard
 =========
@@ -13,7 +16,6 @@ Notecard
 
 Course Outline
 ==============
-type: section
 
 
 Course goals - Working with data
@@ -116,7 +118,7 @@ Communication
 
 MS Access
 =========
-type: section
+
 
 Learning MS Access
 ==================
@@ -162,7 +164,7 @@ Interfaces to other data sources
 
 Introduction to R and R Studio
 ==============================
-type: section
+
 
 Introduction to R
 =================

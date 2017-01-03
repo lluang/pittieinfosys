@@ -9,8 +9,8 @@ output: pdf_document
 
 2.  Find and open the document *A (very) short introduction to R* by Paul Torfs and Claudia Brauer. it is on the http://cran.r-project.org website. Look at the left side navigation bar under Documentation -> Contributed. It will be in the section titled *Short Documents and Reference Cards*.
 
-3.  Start a new R Markdown document (in R Studio File -> New File -> R Script).  Note that you should change the header information as appropriate.
+3.  Start a new R Markdown document (in R Studio File -> New File -> R Markdown).  Note that you should change the header information as appropriate.
 
 4.  Starting in section 3 and working your way through the end of section 8, you should type in and run the code in each box of *A (very) short introduction to R*.  Type each box into its own R Markdown code chunk.
 
-5.  Submit a printout of the Knitted (with your name) output for credit on this lab.
+5.  Submit a printout of the Knitted (with your name in the header) output for credit on this lab.

@@ -86,6 +86,7 @@ The following are resources we will use.  ggplot2: Elegant Graphics for Data Ana
 
 a. an ability to apply knowledge of mathematics, science, and engineering;
 c. an ability to identify, formulate, and solve engineering problems;
+i. recognition of the need for and an ability to engage in life-long learning.
 k. an ability to use the techniques, skills, and modern engineering tools necessary for engineering practice.
 
 
