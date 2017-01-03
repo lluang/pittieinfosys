@@ -1,0 +1,55 @@
+---
+title: "Tidy Data"
+author: "IE 0015"
+date: "January 2017"
+output:
+  slidy_presentation: default
+---
+
+Introduction
+============
+
+- 80% of data analysis is spent on the process of cleaning and preparing data.
+- Tidy data provides a standard way to organizae data values within a dataset.
+- Standard facilitates initial exploration and analysis of data.
+- Simplifies the development of data analysis tools taht work well together.
+  - You do not have to take the output of one tool, then manipulate it into the input of the next.
+- Understanding tidy data should also improve your spreadsheets.
+  - Design your spreadsheets knowing that you will use it as a data source in addition to an analysis tool.
+  
+Relationship to databases
+=========================
+
+- Similar to Codd's relational algebra and relational databases.
+  - This is covered this in IE 1014 Database design.
+- Presenation is focused on the need to make data analysis tools work together.
+
+
+Definitions
+==================
+
+- Most statistical datasets are rectangular tables made up of *rows* and *columns*.
+- A dataset is a collection of values
+  - Each value belongs to an *observation* and *variable*
+  - A *variable* contains all values that measure the same underlying attribute across observational units.
+  - An *observation* contains all values measured on the same unit.
+  
+Tidy data rules
+==========
+
+1.  Each variable must have its own column.
+2.  Each observation must have its own row.
+3.  Each value must have its own cell.
+
+Implications
+===========
+
+1. Put each dataset has its own data.frame.
+2. Put each variable in a column.
+
+Benefits to tidy data
+=====================
+
+1.  Having one consistent way of storing data leads you to learn a standard set of tools and methods to work with them (i.e. patterns)
+2.  If variables are in columns, then you can use vectorized methods. (vectorized methods are a hallmark of data focused programming environments like R, Matlab, and Python)
+3.  The R packages you will learn this semester (ggplot2, dplyr) are designed to work with tidy data.

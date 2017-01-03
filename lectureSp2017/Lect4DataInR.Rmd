@@ -1,7 +1,10 @@
-Data In R
-========================================================
-author: IE 0015
-date: Spring 2016
+---
+title: "Data In R"
+author: "IE 0015"
+date: "January 2017"
+output:
+  slidy_presentation: default
+---
 
 Note: It will help to have R Studio open and follow along in this lecture.
 

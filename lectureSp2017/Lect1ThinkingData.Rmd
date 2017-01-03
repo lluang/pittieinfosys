@@ -1,11 +1,15 @@
-Thinking About Data
-========================================================
-author: IE 0015
-date: Spring 2016
+---
+title: "Thinking About Data"
+author: "IE 0015"
+date: "January 2017"
+output:
+  slidy_presentation: default
+---
+
 
 Thinking about data
 ========================================================
-type: section
+
 
 Thinking about data
 ===================
@@ -16,7 +20,6 @@ Thinking about data
 
 Data as storytelling
 ====================
-incremental: true
 
 -  Our goal is looking at data is insight.
 -  The alternative to looking at data is _____.
@@ -27,7 +30,6 @@ incremental: true
 
 Scoping a data project
 ======================
-incremental: true
 
 -  **Co**ntext
 -  **N**eeds
@@ -36,11 +38,9 @@ incremental: true
 
 Context
 =======
-type: subsection
 
 Context
 =======
-incremental: true
 
 - Context is the frame that is apart from the particular problem we are trying to solve.
 - *The big picture*
@@ -63,7 +63,7 @@ Example
 
 Needs
 ======
-type: subsection
+
 
 Needs
 ======
@@ -74,7 +74,6 @@ Needs
 
 How can data fill needs
 =======================
-incremental: true
 
 -  Create knowledge.
 -  Understand some part of how the world works.
@@ -83,7 +82,6 @@ incremental: true
 
 Learning what the needs are
 ===========================
-incremental: true
 
 -  Talking to people.
 -  Ask for stories about what the people involved care about, what they work on, what they are stuck on.
@@ -92,7 +90,6 @@ incremental: true
 
 What makes a good need
 ======================
-incremental: true
 
 -  Relates directly to an action that depends on having good information.
 -  Information will inform an action.
@@ -102,7 +99,7 @@ incremental: true
 
 Vision
 ======
-type: section
+
 
 Vision
 ======
@@ -145,7 +142,7 @@ This defines how simple or complext the data analysis needs to be.
 
 Outcome
 =======
-type: subsection
+
 
 Outcome
 =======
@@ -177,7 +174,7 @@ What do we hope will change after we finish the work?
 
 Course datasets
 ===============
-type: section
+
 
 Titanic dataset
 ===============
