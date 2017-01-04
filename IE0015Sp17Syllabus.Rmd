@@ -15,6 +15,11 @@ Office Hours:
 - lluangkesorn@pitt.edu
 - Hours: TBD
 
+TA:
+
+- Matt Abbott - mla44@pitt.edu
+- Elizabeth Palko - eap65@pitt.edu
+
 Course goals
 ============
 
@@ -35,7 +40,7 @@ Major Topics
 
 ## Software
 
-1.  R -  http://cran.r-project.org  Follow the appropriate download link for your platform
+1.  R -  https://mran.microsoft.com/open/  Follow the appropriate download link for your platform
 
 2.  R Studio - An Integrated Development Environment (IDE). A basic environment (editor, console) comes with R, so this is optional, however, highly recommended as it will be much easier with this. 
 
