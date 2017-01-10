@@ -7,66 +7,80 @@ output: pdf_document
 
 Note: * indicates items that need to be part of your submission of this lab.
 
-1.  Download the Titanic data from Courseweb and look at it using a text editor (Notepad or the R Studio editor).
+1. [1] Download the Titanic data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
 
-2.  (*) What separates fields in this file?  What identifies text that should be kept in the same data field?  What would happen if you did not identify text that should be kept together?
+What character separates fields in this file?  What character identifies text that should be kept in the same data field?  What would happen if you did not identify text that should be kept together?
 
 
 comma, "", the name would be broken into two columns.
 
-3.  (*) What field would be guaranteed to uniquely identify each row? (Note: it is not the Name).  This will be referred to later as the "Primary Key".
+2. [1]  Using the MS Access, import the Titanic data. How many rows and columns are in the resulting table?  
 
-PassengerID
+1309 rows, 14 columns. (15 if you added a primary key)  Can look at the bottom of the table to get the number of rows. You could count the number of columns by hand. 
+
+Note: If you get 1310 that means you didn't select the first rows as field name. Remember to select first row as field name when you importing csv into database.
 
 
-4.  (*)  Using the SQLite Browser, create an SQLite database and import the Titanic data into SQLite using the Import menu.   What messages did you see, if any?  How many rows and columns are in the resulting table?  Explain how you determined this.
+3. [1]  There are generally commas in the name and the home.dest field data.  Why did these not cause the data to be divided into two different columns.
 
-891 rows, 12 columns. (13 if you did not assign PassengerID as the primary key)  Can look at the bottom of the table to get the number of rows. You could count the number of columns by hand. 
+The double quotes keep the text together.
 
-Note: If you get 892 that means you didn't select the first rows as field name. Remember to select first row as field name when you importing csv into database.
+4.  [2] Create an SQL query to determine, from each port of embarkation, how many females (women and girls) survived and perished.
 
-5.  (*) Download and look at the data from the National Survey of Family Growth using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
+Your answer should include a table with the answer (note that you should name the cities) and the resulting SQL query that allowed you to answer the question.
 
-comma, "", first field.
+CountOfID	survived	sex
+127	0	female
+682	0	male
+339	1	female
+161	1	male
 
-Note: CaseID cannot be used as primary key since each women has one CaseID even if she had pregnanted for more than one times. In short, the CaseID is not unique.
 
-6.  (*)  Create an SQLite database in SQLite and Import the data. What messages did you see, if any? * How many rows and columns are in the resulting table?  Explain how you determined this.
-
-288 columns and 20492 rows. You can get number of columns in RStudio.
-
-      
-7.  (*) Download and look at the codebook from the NSFG.  How do you determine if the responder is pregnant at the time of the survey?  What is the current length of pregnancy for the first survey response where the responder is currently pregnant?
-
-If the HOWPREG_N and HOWPREG_P values are numbers, the responder is currently pregnant, otherwise, they will be NA
-
-Row 37, 16 weeks.
-
-8.  (*) How do you determine the end result of the pregnancy (in the case where the mother was not currently pregnant)?  What are the first 10 outcomes? (answer using the word meaning, not the code that is in the database)
-
-Refer to codebook, look at the PREGEND1 field.
-
-- 2 miscarriage
-- 3 abortions
-- 1 live birth through Cesarean section
-- 4 live birth by vaginal delivery
-
-9.  Open the Titanic database.
-10.  (*) Create an SQL query to determine how many women who boarded at Southampton (embarkation = "S") survived and perished.
-    a. Answer with both the SQL query(ies) and the answers to the question.
-    
 ```
-SELECT Name, Age
-FROM titanictrain
-WHERE embarked="S" AND Sex = "female" AND survived="0"
+SELECT Count(Titanic3.[ID]) AS CountOfID, Titanic3.[survived], Titanic3.[sex]
+FROM Titanic3
+GROUP BY Titanic3.[survived], Titanic3.[sex];
 ```
-63 perished
-```
-SELECT Name, Age
-FROM titanictrain
-WHERE embarked="S" AND Sex = "female" AND survived="1"
-```
-140 survived
+
+5. [1] Download and look at the data from the two American Community Servey (ACS) Pittsburgh North (01701) using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
 
 
-(After lab)  Using R and R Studio, work through Learn X in Y Minutes (X=R) http://learnxinyminutes.com/docs/r/
+comma, "", 
+first field, PK_UID
+
+
+6. [*] Load both tables into MS Access.  What error messages did you see?
+
+The personal file does not load because it has more than 255 columns
+
+
+7. [1] In the ACS Household survey data, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own).
+
+ANSWERS
+
+- TEN identifies type of ownership
+- NP identifies people in household
+
+8.  [2] Determine the number of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for housing and compare this to the total population (calculate the percent of total of each category, you may calculate this separate from the SQL query).  Include query(ies), the resulting table, and the percentages of people in each category. Note that the table should use words to indicate tenure (the type of ownership)
+
+```
+SELECT Ss12hpa.TEN, Count(Ss12hpa.SERIALNO) AS CountOfSERIALNO, Sum(Ss12hpa.NP) AS SumOfNP
+FROM Ss12hpa
+GROUP BY Ss12hpa.TEN;
+```
+
+```
+TEN	CountOfSERIALNO	SumOfNP
+	458	387 GQ
+1	219	507
+2	155	272
+3	407	707
+4	16	36
+```
+Tenure | Number of households | People in households | Percent total
+-----|-----|----|---
+"GQ" |   "458"	| "387" | 0.203
+"Own(Mortgage)" |	"219"	| "507" | 0.266
+"Own (no mortgage)"	| "155"	| "272" | 0.142
+"Rent"	| "407"	| "707" | 0.371
+"Occupied (no rent)"	| "16"	| "36" | 0.019

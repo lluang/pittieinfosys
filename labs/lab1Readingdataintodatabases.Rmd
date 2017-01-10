@@ -7,40 +7,23 @@ output: pdf_document
 
 Note: * indicates items that need to be part of your submission of this lab.
 
-1.  Download the Titanic data from courseweb and look at it using a text editor (Notepad or the R Studio editor).
+1. [1] Download the Titanic data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
 
-2. [*] What character separates fields in this file?  What character identifies text that should be kept in the same data field?  What would happen if you did not identify text that should be kept together?
+What character separates fields in this file?  What character identifies text that should be kept in the same data field?  What would happen if you did not identify text that should be kept together?
 
-3. [*] What field would be guaranteed to uniquely identify each row? (Note: it is not the Name).  This will be referred to later as the "Primary Key".
+2. [1]  Using the MS Access, import the Titanic data. How many rows and columns are in the resulting table?  
 
-4. [*]  Using the SQLite Browser, create an SQLite database and import the Titanic data into SQLite using the Import menu.   What messages did you see, if any?  How many rows and columns are in the resulting table?  Explain how you determined this.
+3. [1]  There are generally commas in the name and the home.dest field data.  Why did these not cause the data to be divided into two different columns.
 
-5. [*] Download and look at the data from the National Survey of Family Growth using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
+4.  [2] Create an SQL query to determine, from each port of embarkation, how many females (women and girls) survived and perished.
 
-6. [*]  Create an SQLite database in SQLite and Import the data. What messages did you see, if any? * How many rows and columns are in the resulting table?  Explain how you determined this.
+Your answer should include a table with the answer (note that you should name the cities) and the resulting SQL query that allowed you to answer the question.
 
-7. [*] Download and look at the codebook from the NSFG.  How do you determine if the responder is pregnant at the time of the survey?  What is the current length of pregnancy for the first survey response where the responder is currently pregnant?
+5. [1] Download and look at the data from the two American Community Servey (ACS) Pittsburgh North (01701) using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
 
-8. [*] How do you determine the end result of the pregnancy (in the case where the mother was not currently pregnant)?  What are the first 10 outcomes? (answer using the word meaning, not the code that is in the database)
+6. [1] Load both tables into MS Access.  What error messages did you see?
 
-Note: The full version of an SQL query is:
-
-```
-SELECT columns
-FROM table
-WHERE condition
-GROUP BY columns
-HAVING condition
-ORDER BY column [ASC|DESC]
-LIMIT offset, count;
-```
-
-While the SELECT and FROM clauses are mandatory, the other clauses (lines above) are only included if you need them.
+7. [1] In the ACS Household survey data, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own).
 
 
-9.  Open the Titanic database.
-10.  [*] Create an SQL query to determine how (i) many women who boarded at Southampton (embarkation = "S") survived and (ii) perished.
-    Answer with both the SQL query(ies) and the answers to the question.
-    
-    
-(After lab)  Using R and R Studio, work through Learn X in Y Minutes (X=R) http://learnxinyminutes.com/docs/r/
+8.  [2] Determine the number of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for housing and compare this to the total population (calculate the percent of total of each category, you may calculate this separate from the SQL query).  Include query(ies), the resulting table, and the percentages of people in each category.
