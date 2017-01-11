@@ -1,11 +1,13 @@
 ---
 title: "Reading data into databases"
 author: "IE0015 Lab 1"
-date: "January 7/8, 2015"
-output: pdf_document
+date: "January 12/13, 2017"
+output:
+  word_document: default
+  pdf_document: default
 ---
 
-Note: * indicates items that need to be part of your submission of this lab.
+Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.
 
 1. [1] Download the Titanic data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
 
@@ -17,13 +19,13 @@ What character separates fields in this file?  What character identifies text th
 
 4.  [2] Create an SQL query to determine, from each port of embarkation, how many females (women and girls) survived and perished.
 
-Your answer should include a table with the answer (note that you should name the cities) and the resulting SQL query that allowed you to answer the question.
+Your answer should include a table with the answer (note that you should name the cities, not only the initial) and the final SQL query that allowed you to answer the question.
 
-5. [1] Download and look at the data from the two American Community Servey (ACS) Pittsburgh North (01701) using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
+5. [1] Download and look at the data from the two American Community Survey (ACS) Pittsburgh North (01701) tables using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
+
 
 6. [1] Load both tables into MS Access.  What error messages did you see?
 
-7. [1] In the ACS Household survey data, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own).
-
+7. [1] In the ACS Household survey data, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own) You will need to access the ACS Codebook/Data Dictionary from the ACS website.
 
 8.  [2] Determine the number of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for housing and compare this to the total population (calculate the percent of total of each category, you may calculate this separate from the SQL query).  Include query(ies), the resulting table, and the percentages of people in each category.

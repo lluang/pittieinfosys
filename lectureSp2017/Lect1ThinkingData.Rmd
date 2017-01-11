@@ -3,6 +3,7 @@ title: "Thinking About Data"
 author: "IE 0015"
 date: "January 2017"
 output:
+  beamer_presentation: default
   slidy_presentation: default
 ---
 
@@ -202,6 +203,6 @@ American Community Survey
 =========================
 
 - Sample of approximately 1/40 households per year.
-- Public Use Microdata Area - Pittsburgh north of the Monoghohela River.
+- Public Use Microdata Area (PUMA) - Pittsburgh north of the Monoghohela River.
 - Survey includes demographics, employment, educational, housing, health, questions.
 - Because we have the raw survey results, we can look at cross correlations.
