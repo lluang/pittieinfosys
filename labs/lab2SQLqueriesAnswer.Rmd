@@ -1,97 +1,103 @@
 ---
 title: 'Lab 3: SQL Joins'
 author: "IE 0015 Information Systems Engineering"
-date: "01/21/2015"
-output: pdf_document
+date: "01/19/2017"
+output:
+  html_document: default
+  pdf_document: default
 ---
 
-This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh (North) (Public Use Microdata Area 01701).  The data dictionary is at 
-http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html
+This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh (North) (Public Use Microdata Area 01701) for 2012.  The data dictionary is at 
+http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html.  You should open up the data dictionary in a searchable format to do this lab.
 
-NOTE:  To force a number that is stored as a string to behave like a number, use CAST.
+1. [1] In Lab 1, you determined that MS Access was not able to import the Person record of the ACS PUMS because of the number of columns in the person record.  We will break the table into two tables and use queries to connect them together and with the Household record.
 
-```
-SELECT p.SERIALNO, p.AGEP, h.FPARC, h.FES
-FROM ss12ppa AS p JOIN ss12hpa as h
-ON p.SERIALNO=h.SERIALNO
-WHERE cast(p.AGEP as INTEGER) BETWEEN 0 AND 18
-AND h.FPARC IN ("1", "2", "3")
-AND h.FES IN ("5", "6", "7", "8")
-```
-
-
-1. [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own).
+In the Person Record (ss12ppa) what fields uniquely identify each row and what kinds of values do they take? (remember, you should look at the data dictionary to identify what the codes in the database stand for. This dataset is from 2012, but the field names and definitions do not change much over time.) Hint: start using the data dictionary by searching for 'PERSON RECORD'
 
 ANSWERS
 
-- TEN identifies type of ownership
-- NP identifies people in household
+SERIALNO   7      
+    Housing unit/GQ person serial number    
+           0000001..9999999 .Unique identifier
 
-2.  [2] Determine the number of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for housing and compare this to the total population (calculate the percent of total of each category, you may calculate this separate from the SQL query).  Include query(ies), the resulting table, and the percentages of people in each category.
+SPORDER    2      
+    Person number
+           01..20 .Person number
+
+
+2. [1] You will create two tables from the Person Record so you can import them separately, then you will combine them.  For the Person Record, it turns out that the last batch of columns are 'weights' that are used in statistical analysis of population data. How can you recognize them? How many such columns are there (look at the data dictionary)? 
+
+ANSWER
+THere are 80 columns, each of which has a name starting with 'PWGTP'
+
+3.  [3] To split the person record in MS Excel, make two additional spreadsheet tabs. Give them meaningful names (e.g. the name of your ss12ppa with part1 or part2 appended). You want to create links in each to the original data (i.e. write a formula, do not cut and paste values, '=ss12ppaPittsburgh01701!A1'). The first columns for each should be the columns identified in answer 1 which will be used to link the two tables together. In Excel, these columns should be formatted as text. The remaining columns are links to the Excel cells you need copies of.
+
+After you are done, create tables in your MS Access database by importing each tab. Make sure that the columns identified in question 1 are of type 'short text' (not a number).  Then create a query that includes:
+
+1. The columns from question 1
+2. Each person's age
+3. Each person's grade attending
+5. The first weight value that you put in the second table in question 2
+
+Save this query as 'agesandgrades'. Copy the resulting SQL and the top four rows of the resulting query to turn in.
+
+ANSWER
 
 ```
-SELECT TEN, count(SERIALNO), sum(NP) 
-FROM ss12hpa
-GROUP BY TEN
+SELECT ss12ppapt1.SERIALNO, ss12ppapt1.SPORDER, ss12ppapt1.AGEP, ss12ppapt1.SCHG, ss12ppapt1.DDRS, ss12ppapt2.pwgtp1
+FROM ss12ppapt1 INNER JOIN ss12ppapt2 ON (ss12ppapt1.SPORDER = ss12ppapt2.SPORDER) AND (ss12ppapt1.SERIALNO = ss12ppapt2.SERIALNO);
 ```
 
-Tenure | Number of households | People in households | Percent total
------|-----|----|---
-"GQ" |   "458"	| "387" | 0.203
-"Own(Mortgage)" |	"219"	| "507" | 0.266
-"Own (no mortgage)"	| "155"	| "272" | 0.142
-"Rent"	| "407"	| "707" | 0.371
-"Occupied (no rent)"	| "16"	| "36" | 0.019
-
-1909 people
+SERIALNO |	SPORDER | AGEP |	SCHG	| DDRS |	pwgtp1
+--|--|--|--|--|--
+2647	| 1	| 55	| 0	| 2	| 109
+2647	| 2	| 51	| 0	| 2	| 94
+2647	| 3	| 14	| 10	| 2	| 99
+2647	| 4	| 22	| 16	| 2	| 122
 
 
-3.  [3] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Pittsburgh (North)? 
-  a.  What field identifies age of child?
-  b.  What field identifies if the child is in school?
-  c.  Generate a query that identifies the school status of 4 and 5 year olds. Do not include children in Kindergarden should not be counted (because they have finished eligibility for Pre-school)
-  d.  What is the fraction of 4 and 5 year olds are in pre-school? (Note: you will be able to calculate this with the results of part (c))
+3.  [2] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Pittsburgh (North)? 
+  a.  How do you identify if a child is in preschoool? In Kindergarten?
+  b.  Generate a query that identifies the school status of 4 and 5 year olds. Do not include children currently in Kindergarden  (because they have finished eligibility for Pre-school)
+  c.  What is the fraction of 4 and 5 year olds are in pre-school? (Note: you will be able to calculate this with the results of part (a))
   
 ANSWERS
 
-  a.  p.AGEP where p is ss12ppa
-  b.  p.SCH or p.SCHG for which grade
-  c.  
+  a.  
 
 ```
-SELECT count(p.SERIALNO), p.SCHG
-FROM ss12ppa AS p 
-WHERE cast(p.AGEP as INTEGER) BETWEEN 4 AND 5
-AND cast(P.SCHG as INTEGER) < 2
-GROUP BY p.SCHG
+SELECT ss12ppapt1.SCHG, Count(ss12ppapt1.SERIALNO) AS CountOfSERIALNO
+FROM ss12ppapt1
+WHERE (((ss12ppapt1.AGEP)=4)) OR (((ss12ppapt1.AGEP)=5))
+GROUP BY ss12ppapt1.SCHG, ss12ppapt1.SCHG
+HAVING (((ss12ppapt1.SCHG)<>2));
 ```
 
-  d.
+  b.
 
   14/22
   0.636 (or 63%)
 
-4.  [4] What fraction of pre-school age children (under 6) live in households with a grandparent?
-  a.  What field in what table identifies households with children?
-  b.  What field in what table identifies if grandparents are living with grandchildren in the household?
-  c.  What query determines how many children under 6 are living in a household?
+4.  [3] What fraction of pre-school age children (under 6) live in households with a grandparent?
+  a.  What field and values in what table identifies the presence and age of children under 6 in a household?
+  b.  What field in what table identifies if a  grandparent living with grandchildren the household?
+  c.  Create a query determines how many children under 6 are living in a household?  Note: the query you created in question 3 is available to you just like any table.
   d.  Determine what fraction of children of pre-school age (under 6) live in households with a grandparent.
   
   
   
 ANSWERS
 
-  a.  HUPAC in the household table (=1, 3 if children under 6 present)
+  a.  HUPAC in the household table (=1, 3 if children under 6 present) Remember 3 indicates children under 6 and children over 6.
   b.  HUGCL in the household table (=1 if grandparents with grandchildren)
-  c.  Note that the count has to come from the personal survey table, as the household table only indicates that children are present, not how many. (you could get number of people in the household, but you would not know which ones were children)  
+  c.  Note that the count has to come from a field in the person record, as the household record only indicates that children are present, not how many. (you could get number of people in the household, but you would not know which ones were children)  
   
 ```
-SELECT count(p.SERIALNO), h.HUGCL
-FROM ss12ppa AS p 
-JOIN ss12hpa as h
-ON p.SERIALNO=h.SERIALNO
-WHERE cast(p.AGEP as INTEGER) BETWEEN 0 AND 5
-GROUP BY h.HUGCL
+SELECT Ss12hpaPittsburgh01701.HUGCL, Count(ss12ppapt1.SERIALNO) AS CountOfSERIALNO
+FROM Ss12hpaPittsburgh01701 INNER JOIN ss12ppapt1 ON Ss12hpaPittsburgh01701.SERIALNO = ss12ppapt1.SERIALNO
+WHERE (((Ss12hpaPittsburgh01701.HUPAC)="1") AND ((ss12ppapt1.AGEP)<6)) OR (((Ss12hpaPittsburgh01701.HUPAC)="3"))
+GROUP BY Ss12hpaPittsburgh01701.HUGCL;
+
 ```
 
 d.  
@@ -101,5 +107,5 @@ Number children under 6 | Grandparents present
 "85" |  "0"
 "6"	| "1"
 
-0.066 (or 6.6%)
+6/(85+6) = 0.066 (or 6.6%)
 
