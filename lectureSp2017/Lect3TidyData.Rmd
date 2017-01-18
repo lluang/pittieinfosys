@@ -10,19 +10,23 @@ Introduction
 ============
 
 - 80% of data analysis is spent on the process of cleaning and preparing data.
-- Tidy data provides a standard way to organizae data values within a dataset.
+- Tidy data provides a standard way to organize data values within a data set.
 - Standard facilitates initial exploration and analysis of data.
-- Simplifies the development of data analysis tools taht work well together.
+- Simplifies the development of data analysis tools that work well together.
   - You do not have to take the output of one tool, then manipulate it into the input of the next.
 - Understanding tidy data should also improve your spreadsheets.
   - Design your spreadsheets knowing that you will use it as a data source in addition to an analysis tool.
+
+Where data manipulation fits in the workflow
+=======================
+![Data analysis workflow](figures/data-science-communicate.png)
   
 Relationship to databases
 =========================
 
-- Similar to Codd's relational algebra and relational databases.
+- Tidy data is similar to Codd's normal forms in relational algebra and relational databases.
   - This is covered this in IE 1014 Database design.
-- Presenation is focused on the need to make data analysis tools work together.
+- Presentation is focused on the need to make data analysis tools work together.
 
 
 Definitions
@@ -33,7 +37,9 @@ Definitions
   - Each value belongs to an *observation* and *variable*
   - A *variable* contains all values that measure the same underlying attribute across observational units.
   - An *observation* contains all values measured on the same unit.
-  
+- A *tibble*  is an immutable data frame 
+  - *immutable* cannot be changed. This is an aspect of functional (as opposed to procedural or object oriented) programming. You can use a data frame where R4DS says tibble.
+
 Tidy data rules
 ==========
 
@@ -53,3 +59,7 @@ Benefits to tidy data
 1.  Having one consistent way of storing data leads you to learn a standard set of tools and methods to work with them (i.e. patterns)
 2.  If variables are in columns, then you can use vectorized methods. (vectorized methods are a hallmark of data focused programming environments like R, Matlab, and Python)
 3.  The R packages you will learn this semester (ggplot2, dplyr) are designed to work with tidy data.
+
+Tidy data
+============
+
