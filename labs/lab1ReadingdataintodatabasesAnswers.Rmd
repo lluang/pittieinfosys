@@ -29,25 +29,33 @@ The double quotes keep the text together.
 
 Your answer should include a table with the answer (note that you should name the cities, not only the initial) and the final SQL query that allowed you to answer the question.
 
-CountOfID |	survived |	sex
----|---|---
-127 |	0 |	female
-682	| 0	| male
-339	| 1	| female
-161	| 1	| male
+CountOfID	| embarked |	sex	| survived | Port name (not from SQl query)
+---|---|---|---|-
+2	| |	female |	1 | None
+11	| C	| female	| 0 | Cherbourg
+102	| C	| female	| 1 | Cherbourg
+23	| Q	| female	| 0 | Queenstown
+37	| Q	| female	| 1 | Queenstown
+93	| S	| female	| 0 | Southampton
+198	| S	| female	| 1 | Southampton
 
 
 ```
-SELECT Count(Titanic3.[ID]) AS CountOfID, Titanic3.[survived], Titanic3.[sex]
+SELECT Count(Titanic3.ID) AS CountOfID, Titanic3.embarked, Titanic3.sex, Titanic3.survived
 FROM Titanic3
-GROUP BY Titanic3.[survived], Titanic3.[sex];
+GROUP BY Titanic3.embarked, Titanic3.sex, Titanic3.survived
+HAVING (((Titanic3.sex)="female"));
 ```
 
 5. [1] Download and look at the data from the two American Community Survey (ACS) Pittsburgh North (01701) tables using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
 
 
 comma, "", 
-first field, PK_UID
+
+SERIALNO (for household record) Alternative PK_UID
+ 
+SERIALNO and SPORDER (for person record, do not take off if they did not get this)
+
 
 
 6. [*] Load both tables into MS Access.  What error messages did you see?

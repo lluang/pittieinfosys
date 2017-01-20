@@ -60,6 +60,21 @@ Benefits to tidy data
 2.  If variables are in columns, then you can use vectorized methods. (vectorized methods are a hallmark of data focused programming environments like R, Matlab, and Python)
 3.  The R packages you will learn this semester (ggplot2, dplyr) are designed to work with tidy data.
 
-Tidy data
-============
+Introduction to R
+=================
+
+- R is a data analysis environment.
+- Includes the tools for working with data using data frames.
+- Anything that you can do in a database, you can do with a data frame.
+- Usually, the reason you use a database is to ensure data integrity and availability.
+
+Data types in R
+===============
+
+- R tries to automatically recognize data types, but you can tell R that a data frame variable is of a specific data type.
+- as.integer()
+- as.double()
+- as.character()
+- as.factor()
+- as.ordered()
 
