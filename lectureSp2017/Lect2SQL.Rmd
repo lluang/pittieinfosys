@@ -3,8 +3,8 @@ title: "Data Queries and SQL"
 author: "IE 0015"
 date: "January 2017"
 output:
-  pdf_document: default
   slidy_presentation: default
+  pdf_document: default
 ---
 
 What is SQL

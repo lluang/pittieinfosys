@@ -1,38 +1,45 @@
 ---
-title: 'Lab 3: SQL Joins'
+title: 'Lab 2: SQL Joins'
 author: "IE 0015 Information Systems Engineering"
-date: "01/21/2015"
-output: pdf_document
+date: "01/19/2017"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
 ---
 
-This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh (North) (Public Use Microdata Area 01701).  The data dictionary is at 
-http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html
+This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh (North) (Public Use Microdata Area 01701) for 2012.  The data dictionary is at 
+http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html.  You should open up the data dictionary in a searchable format to do this lab.
 
-NOTE:  To force a number that is stored as a string to behave like a number, use CAST.
+1. [1] In Lab 1, you determined that MS Access was not able to import the Person record of the ACS PUMS because of the number of columns in the person record.  We will break the table into two tables and use queries to connect them together and with the Household record.
 
-```
-SELECT p.SERIALNO, p.AGEP, h.FPARC, h.FES
-FROM ss12ppa AS p JOIN ss12hpa as h
-ON p.SERIALNO=h.SERIALNO
-WHERE cast(p.AGEP as INTEGER) BETWEEN 0 AND 18
-AND h.FPARC IN ("1", "2", "3")
-AND h.FES IN ("5", "6", "7", "8")
-```
+In the Person Record (ss12ppa) what fields uniquely identify each row and what kinds of values do they take? (remember, you should look at the data dictionary to identify what the codes in the database stand for. This dataset is from 2012, but the field names and definitions do not change much over time.) Hint: start using the data dictionary by searching for 'PERSON RECORD'.
 
 
-1. [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own).
+2. [1] You will create two tables from the Person Record so you can import them separately, then you will combine them.  For the Person Record, it turns out that the last batch of columns are 'weights' that are used in statistical analysis of population data. How can you recognize them? How many such columns are there (look at the data dictionary)? 
 
-2.  [2] Determine the number of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for housing and compare this to the total population (calculate the percent of total of each category, you may calculate this separate from the SQL query).  Include query(ies), the resulting table, and the percentages of people in each category.
+3.  [3] To split the person record in MS Excel, make two additional spreadsheet tabs. Give them meaningful names (e.g. the name of your ss12ppa with part1 or part2 appended). You want to create links in each to the original data (i.e. write a formula, do not cut and paste values, '=ss12ppaPittsburgh01701!A1'). The first columns for each should be the columns identified in answer 1 which will be used to link the two tables together. In Excel, these columns should be formatted as text. The remaining columns are links to the Excel cells you need copies of.
 
-3.  [3] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Pittsburgh (North)? 
-  a.  What field identifies age of child?
-  b.  What field identifies if the child is in school?
-  c.  Generate a query that identifies the school status of 4 and 5 year olds. Do not include children in Kindergarden should not be counted (because they have finished eligibility for Pre-school)
-  d.  What is the fraction of 4 and 5 year olds are in pre-school? (Note: you will be able to calculate this with the results of part (c))
+After you are done, create tables in your MS Access database by importing each tab. Make sure that the columns identified in question 1 are of type 'short text' (not a number).  Then create a query that joins the two tables and includes:
 
-4.  [4] What fraction of pre-school age children (under 6) live in households with a grandparent?
-  a.  What field in what table identifies households with children?
-  b.  What field in what table identifies if grandparents are living with grandchildren in the household?
-  c.  What query determines how many children under 6 are living in a household?
+1. The columns from question 1
+2. Each person's age
+3. Each person's grade attending
+5. The first weight value that you put in the second table in question 2
+
+Save this query. Copy the resulting SQL and the top four rows of the resulting query to turn in.
+
+
+3.  [2] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Pittsburgh (North)? 
+  a.  How do you identify if a child is in preschoool? In Kindergarten?
+  b.  Generate a query that identifies the school status of 4 and 5 year olds. Do not include children currently in Kindergarden  (because they have finished eligibility for Pre-school)
+  c.  What is the fraction of 4 and 5 year olds who are in pre-school? (Note: you will be able to calculate this with the results of part (a))
+  
+
+
+4.  [3] What fraction of pre-school age children (under 6) live in households with a grandparent?
+  a.  What field and values in what table identifies the presence and age of children under 6 in a household?
+  b.  What field in what table identifies if a  grandparent living with grandchildren the household?
+  c.  Create a query determines how many children under 6 are living in a household?  Note: the query you created in question 3 is available to you just like any table.
   d.  Determine what fraction of children of pre-school age (under 6) live in households with a grandparent.
   
