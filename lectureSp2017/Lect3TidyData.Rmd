@@ -3,6 +3,7 @@ title: "Tidy Data"
 author: "IE 0015"
 date: "January 2017"
 output:
+  pdf_document: default
   slidy_presentation: default
 ---
 
@@ -77,4 +78,177 @@ Data types in R
 - as.character()
 - as.factor()
 - as.ordered()
+
+```{r, echo=FALSE}
+library(tidyverse)
+```
+
+Three versions of a table, what makes it not tidy?
+- Country, year, population, cases
+
+Version 1
+===========
+```{r, echo=FALSE}
+table2
+```
+
+Version 2
+==========
+```{r, echo=FALSE}
+table3
+```
+
+Version 3
+==========
+```{r, echo=FALSE}
+table4a
+```
+```{r, echo=FALSE}
+table4b
+```
+
+Version 4
+=========
+```{r, echo=FALSE}
+table1
+```
+
+Benefits - Vectorized operations %>% operator
+=================================
+
+- %>% (pipe) operator works on each row of a data frame.
+- Take something on the left side and perform the function on the right side to each element.
+- Alternative - ???
+
+```{r}
+table1 %>% 
+  mutate(rate = cases / population * 10000)
+```
+
+Why may data be provided in other forms?
+===========================
+
+- Data may be organized for another purpose? e.g. making collection easy.
+- People who do not work with data may not appreciate the need to make it easy.
+
+Ways data may be badly organized
+============================
+
+- There may be a variable spread among multiple columns (e.g. class1, class2, class3)
+- One observation may be spread among multiple rows.
+
+Basic operations to correct this
+=================================
+
+- *gather* - Column names are actually values not variables, need to break them into rows of individual values.
+- *spread* - One observation is on multiple rows, collect rows and use columns to hold variables.
+- use the package `tidyr` (part of `tidyverse`)
+
+Gather
+===========
+
+- Take a table where values are spread over two columns
+- Create rows that give a year and number of cases.
+- Columns should be: Country, year, cases
+```{r}
+table4a
+```
+
+gather()
+========
+```{r}
+help(gather)
+```
+
+
+using gather
+===========
+```{r}
+ head(gather(table4a, `1999`, `2000`, key = "year", value = "cases"),6)
+```
+
+Same thing using pipes
+============
+```{r}
+table4a %>% gather(`1999`, `2000`, key = "year", value = "cases") %>% head(6)
+```
+
+Do the same thing with the population table and save the results
+=================
+
+```{r}
+tidy4a <- table4a %>% gather(`1999`, `2000`, key = "year", value = "cases") %>% head(6)
+tidy4b <- table4b %>% gather(`1999`, `2000`, key = "year", value = "population")
+```
+```{r}
+tidy4b %>% head(4)
+```
+
+With tidy data, now other operations become easier
+================
+
+- We will cover relational operations in the next lecture.
+
+```{r}
+tidy4 <- left_join(tidy4a, tidy4b, by=c('country', 'year'))
+head(tidy4, 4)
+```
+
+Spread
+=======
+
+- Data on a single observation is spread on two rows.
+- Often used to make data readable on a single sheet of paper.
+- You need to combine rows for a single observation into a single row.
+
+Example
+=====
+
+- For each country and year, have cases and population.
+- Then you can easily calculate a rate or proportion of population.
+```{r}
+table2%>% head(4)
+```
+
+Using spread
+==========
+
+- Key is the column with the variable names (which were split into different rows)
+- Value is the column with the value of the variable for that observation.
+
+```{r}
+help(spread)
+```
+
+spread
+========
+```{r}
+tidy2 <- table2 %>% spread(key=type, value=count)
+tidy2 %>% head(4)
+```
+
+Separate
+========
+
+- Separate is when two values are kept in a single column.
+- Often seen in Excel spreadsheets where 2 values are put in a single cell to mimic a table.
+- `separate` will split on a non-alpha numeric character
+
+```{r}
+help(separate)
+```
+
+Separate example
+========
+
+
+```{r}
+table3 %>% head(2)
+```
+
+===========
+```{r}
+tidy3 <- table3 %>% separate(col='rate', into=c('cases', 'population'), sep='/')
+head(tidy3, 4)
+```
 
