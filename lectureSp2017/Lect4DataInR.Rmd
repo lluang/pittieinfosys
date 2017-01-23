@@ -3,6 +3,7 @@ title: "Data In R"
 author: "IE 0015"
 date: "January 2017"
 output:
+  pdf_document: default
   slidy_presentation: default
 ---
 
@@ -355,14 +356,7 @@ Plotting with ggplot2
 type: section
 
 
-qplot introduction
-==================
 
-A plot is composed of:
--  Data
--  aesthetic - Indicates the data
--  geom - Indicates the type of plot
--  facets - Indicates multiple plots
 
 
 Packages
@@ -403,12 +397,13 @@ Introduction to ggplot
 -  Allows for quick replacement of data using same parameters or exploring different representations of the same data.
 
 Introduction to ggplot
-=====
+==================
 
--  Compents of a ggplot
-  - data
-  - aesthetic mapping between data variables and visual properties
-  - a layer which describes how to render each observation
+A plot is composed of:
+-  Data
+-  aesthetic - Indicates the data
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
   
 ```{r}
 ggplot(dsmall, aes(x=carat, y=price)) + geom_point()
