@@ -1,94 +1,60 @@
 ---
-title: "Lab 3: Reading data into R"
+title: 'Lab 3: Tidy data in R'
 author: "IE 0015"
-date: "January 27, 2015"
-output: pdf_document
+date: "January 26, 2017"
+output:
+  html_document: default
+  pdf_document: default
 ---
 
-Note: Statements that are Commonly used for reading data into R
-```{r,eval=FALSE} 
-- scan()
-- read.table()
-- read.fwf()
-- read.csv()
-- read.csv2()
-- read.delim()
-- read.delim2()
+Note: this lab should be written using R Markdown.  The lab is provided as an R Markdown file for your convenience as a starting point. You should change the author and date appropriately. For the final submission, you should render (Knit) this as either a Word or PDF document and print that output.
+
+In the `tidyr` package there are two Tubeculosis data sets `who` and `population`.  Look at the `tidyr` help files (R Studio -> Packages tab -> tidyr) to see what each contains. To load and view the last few rows of the datasets, you should enter:
+
+```{r}
+library(tidyverse)
+data(who)
+tail(who)
+```
+```{r}
+data(population)
+tail(population)
 ```
 
-1.  Reading csv files.  Load the titanictrain.csv file into R. Use the `summary()` to calculate the summary of all of the variables.  Report the code you used and identify the categorical variables in the dataset that you can use for classification. (you can ignore SibSp and Parch for now)
+1. [3] Look the `who` file (which has cases by age), what represents a single observation?  What makes the `who` dataset NOT comply with the Tidy data rules?  Why do you think this table is organized the way it is?
 
 **ANSWER**
 
-```{r titanicdata}
-titanic <- read.csv("../data/titanictrain.csv")
-summary(titanic)
+A single observation is the number of cases within a specific age range in a single country in a single year.
+
+Each row in the who dataset has several values that refer to different populations (age ranges). Tidy data, each row is a single observation.
+
+The data is organized so that the reader can see all information about a country and year in a single row.
+
+2. [4]  What steps need to be taken make the who data tidy? Do so using R and save the results to the data frame `tidywho`. (note: you may leave the labels as they are, you do not have to rewrite the age ranges)  Display the last 10 rows.
+
+To save effort, only use the variables corresponding to new positive pulmonary smear.
+
+Note, your first line should select the columns that you are interested in.
+```{r}
+who_new_sp <- who[,c("country", "iso2", "iso3", "year", "new_sp_m014",  "new_sp_m1524","new_sp_m2534", "new_sp_m3544", "new_sp_m4554", "new_sp_m5564", "new_sp_m65", "new_sp_f014", "new_sp_f1524", "new_sp_f2534", "new_sp_f3544", "new_sp_f4554", "new_sp_f5564", "new_sp_f65")]
 ```
-
-Categorical values reported are the sex, and port of embarkation. Accept responses of Cabin, Ticket, and Name. Not age.
-
-Note:   a) This question mainly ask when you are reading summary() in R, how can you tell which column are being recognized as factor(or categorical). R tries to guess which class each columns should be, and you don't knows whether it's right this time before you look it up.
-        b) Before you do anything in R, please use one of the three ways below to set working directory in order to ease the path writing in your following works.
-                c.1) In the top of RStudio, Session- Set working directory- Choose directory.
-                c.2) use setwd() 
-                c.3) In the “files” tab in the right hand side of the Rstudio, go to the folder you want to set, and click  More - Set as        Working Directory.
-
-
-2.  Identify if any numerical variables should be categorical variables (factors). If so, change the data type using `as.factor()` and run `summary()` on that variable.  Report the code and summary of the variables you changed.
-
 **ANSWER**
+Gather. From each row, take each value, and create a row with the country, year, age range, and value.
 
-Passenger class and survived are summarized as numerical variables but should be categories/factors
-```{r titaniccategory}
-titanic$Pclass <- as.factor(titanic$Pclass)
-titanic$Survived <- as.factor(titanic$Survived)
-summary(titanic$Pclass)
-summary(titanic$Survived)
+```{r}
+tidywho <- who_new_sp %>% gather(`new_sp_m014`,  `new_sp_m1524`, `new_sp_m2534`, `new_sp_m3544`, `new_sp_m4554`, `new_sp_m5564`, `new_sp_m65`,   `new_sp_f014`, `new_sp_f1524`, `new_sp_f2534`, `new_sp_f3544`, `new_sp_f4554`, `new_sp_f5564`, `new_sp_f65`, key = "agerange", value="cases")
+tidywho %>% tail(10)  
 ```
-Note:   a) Data Frame's name (e.g. titanic) must be added in order to tell R which table does field belongs to. 
-        b) use "<-"" to feed the changed data back to the same field in data frame in order to keep the result in it. (e.g. titanic$Survived <- ... )
-       
-        
-        
-3.  Load the SQLite file from the National Survey for Family Growth Female Pregnancy File that you created in Lab 1 into R. Show the code that does this and report the numbers of entries.  
 
-**ANSWER**
-
-```{r connectnsfg}
-library(RSQLite)
-conn <- dbConnect(SQLite(), "../data/nsfg.sqlite")
-```
-```{r getdata}
-sql <- "SELECT *  
-        FROM FemPreg"
-nsfg <- dbGetQuery(conn, sql)
-summary(nsfg$pregordr)
-```
-Note:   a) The question require to use SQL database as a source.
-        b) Connection between R and the nsfg data base is made in "dbConnect". "sql" itself is a character variable with a string ("SELECT *  
-        FROM FemPreg"). dbGetQuery() will use the command line inside "sql" to make a query in SQL data base, return the result table as data frame.  
-        c) In "dbConnect()", you should make sure the file path and file name exactly the same as that of the sql data base file, which is                                                                         given when you create the data base. You might had given it a name "nsfg" rather than "nsfg.sqlite". 
-
-4.  The data is read into R as characters, but the data should be analyzed as factors. Convert the pregnancy order (*pregorder*) and birthweight (*BIRTHWGT_LB1*) fiels to numbers using `as.numeric()` and end result (*PREGEND1*) fields to a factor using `as.factor()`. Show the code that does this and the summaries for all three variables.
+3. [3] Using the original WHO data, use the `who` and `population` tables together to create a table with the name of the country, iso3, year and population.  Display the last 6 rows of the table (which should be Zimbabwe)
 
 
 **ANSWER**
+```{r}
+who %>% 
+  left_join(population) %>%
+    select(country, iso3, year, population) %>%
+      tail()
 
-```{r summarizensfg}
-nsfg$pregordr <- as.numeric(nsfg$pregordr)
-nsfg$BIRTHWGT_LB1 <- as.numeric(nsfg$BIRTHWGT_LB1)
-nsfg$PREGEND1 <- as.factor(nsfg$PREGEND1)
-summary(nsfg$pregordr)
-summary(nsfg$BIRTHWGT_LB1)
-summary(nsfg$PREGEND1)
 ```
-Note:   a) Data frame's name (e.g. titanic$) should be added in order to tell R which table does the column belongs to. If you didn't add table name, R will create a new vector(e.g. with name pregordr) rather than change the "pregordr" column inside the data frame
-        "pregordr" means a new variance with name "pregordr", and "nsfg$pregordr" means the column "pregordr" in data frame nsfg
-
-
-5.  In the NSFG Female Pregnancy data codebook, how can you tell if the data should be converted into a number or a factor.  Why should PREGEND1 be recorded as a factor instead of a number?
-
-**ANSWER**
-
-Numbers are identified as the description as (NUMBER) while factors are not.
-PREGEND1 is a factor since the numerical descriptions are not intended to be computed.
