@@ -226,7 +226,7 @@ Reading data from an Excel spreadsheet
 
 - Excel spreadsheets can be read using the package *readxl* (included in `tidyverse`)
 
-```{r readxl}
+```{r readxl, warning=FALSE}
 library(tidyverse)
 ```
 

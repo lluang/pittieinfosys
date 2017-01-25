@@ -11,7 +11,7 @@ Note: this lab should be written using R Markdown.  The lab is provided as an R 
 
 In the `tidyr` package there are two Tubeculosis data sets `who` and `population`.  Look at the `tidyr` help files (R Studio -> Packages tab -> tidyr) to see what each contains. To load and view the last few rows of the datasets, you should enter:
 
-```{r}
+```{r, warning=FALSE}
 library(tidyverse)
 data(who)
 tail(who)
@@ -33,9 +33,10 @@ The data is organized so that the reader can see all information about a country
 
 2. [4]  What steps need to be taken make the who data tidy? Do so using R and save the results to the data frame `tidywho`. (note: you may leave the labels as they are, you do not have to rewrite the age ranges)  Display the last 10 rows.
 
-To save effort, only use the variables corresponding to new positive pulmonary smear.
+To save effort, only use the variables corresponding to new positive pulmonary smears.
 
-Note, your first line should select the columns that you are interested in.
+Note, your first line should select the columns that you are interested in. Hint: do your work with only two or three columns. After you get it working, add in the other columns.
+
 ```{r}
 who_new_sp <- who[,c("country", "iso2", "iso3", "year", "new_sp_m014",  "new_sp_m1524","new_sp_m2534", "new_sp_m3544", "new_sp_m4554", "new_sp_m5564", "new_sp_m65", "new_sp_f014", "new_sp_f1524", "new_sp_f2534", "new_sp_f3544", "new_sp_f4554", "new_sp_f5564", "new_sp_f65")]
 ```
@@ -47,7 +48,7 @@ tidywho <- who_new_sp %>% gather(`new_sp_m014`,  `new_sp_m1524`, `new_sp_m2534`,
 tidywho %>% tail(10)  
 ```
 
-3. [3] Using the original WHO data, use the `who` and `population` tables together to create a table with the name of the country, iso3, year and population.  Display the last 6 rows of the table (which should be Zimbabwe)
+3. [3] Using the original WHO data, use the `who` and `population` tables together to create a table with the name of the country, iso3, year and population.  Display the last 6 rows of the table (which should be Zimbabwe). Hint: draw a process map to understand what you need to do, then work on one step at a time, and feed the result to the next step.
 
 
 **ANSWER**
