@@ -12,7 +12,9 @@ Note: this lab should be written using R Markdown.  The lab is provided as an R 
 In the `tidyr` package there are two Tubeculosis data sets `who` and `population`.  Look at the `tidyr` help files (R Studio -> Packages tab -> tidyr) to see what each contains. To load and view the last few rows of the datasets, you should enter:
 
 ```{r}
-library(tidyverse)
+library(tidyr)
+library(magrittr)
+library(dplyr)
 data(who)
 tail(who)
 ```
@@ -52,9 +54,8 @@ tidywho %>% tail(10)
 
 **ANSWER**
 ```{r}
-who %>% 
+whopop <- who %>% 
   left_join(population) %>%
-    select(country, iso3, year, population) %>%
-      tail()
-
+    select(country, iso3, year, population) 
+whopop %>% tail()
 ```

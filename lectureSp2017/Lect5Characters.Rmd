@@ -3,11 +3,12 @@ title: "Character Manipulation and Regular Expressions"
 author: "IE 0015"
 date: "January 2017"
 output:
-  pdf_document: default
+  word_document: default
   slidy_presentation: default
+  pdf_document: default
 ---
 ```{r}
-library(magrittr)
+library(tidyverse)
 ```
 
 Working with Characters
@@ -20,6 +21,21 @@ Working with Characters
   -  Combine strings
   -  Match strings
   -  Search and replace
+  
+What this course is not covering in class
+======================
+
+- This course is not covering
+  - Text mining
+  - Text analysis
+  - e.g. what Google, Amazon.com, etc. do
+- If your project requires it:
+  - Text mining with R 
+    - http://tidytextmining.com/
+    - This book is written in the same spirit as R for Data Science.
+  - `tm` package in R
+    - The package vignette is a good introduction to text mining and methods of text analysis
+    - https://cran.r-project.org/web/packages/tm/vignettes/tm.pdf
   
 Basics of working with characters
 ==================
@@ -300,9 +316,11 @@ Better will be to find all examples and where they are
 
 ```{r}
 regexprresult <- regexpr('Marinere', rime)
-regexprresult
+regexprresult  %>% head()
+```
+```{r}
 gregexprresult <- gregexpr('Marinere', rime)
-gregexprresult
+gregexprresult %>% head()
 ```
 
 
@@ -355,27 +373,27 @@ a b c d e f g h i j k l m n o p q r s t u v w x y z
 Look for a specific class
 ============
 ```{r}
-gregexpr("[aeiou]", characters)
+gregexpr("[aeiou]", characters) %>% head()
 ```
 
 Or everything else
 ==============
 ```{r}
-gregexpr("[^aeiou]", characters)
+gregexpr("[^aeiou]", characters) %>% head()
 ```
 
 Try groups of characters
 =====================
 
 ```{r}
-gregexpr("[0-3]", characters)
-gregexpr("[6-9]", characters)
+gregexpr("[0-3]", characters) %>% head()
+gregexpr("[6-9]", characters) %>% head()
 ```
 
 Combine them
 =====
 ```{r}
-gregexpr("[0-36-9]", characters)
+gregexpr("[0-36-9]", characters)  %>% head()
 ```
 
 Unicode characters are often used for non-standard characters
@@ -391,7 +409,7 @@ Searching for unicode characters
 
 -  Include a '\u' in front of the 4-digit unicode number
 ```{r}
-regexpr("\u6c60", basho)
+regexpr("\u6c60", basho) %>% head()
 ```
 
 Some punctuation characters are also unicode characters
@@ -401,8 +419,8 @@ Some punctuation characters are also unicode characters
 -  \u2014
 -  \u2013
 ```{r}
-regexpr("\u2014", basho)
-regexpr("\u2013", basho)
+regexpr("\u2014", basho) %>% head()
+regexpr("\u2013", basho) %>% head()
 basho
 ```
 
