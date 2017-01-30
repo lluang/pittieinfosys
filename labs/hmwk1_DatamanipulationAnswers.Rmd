@@ -21,7 +21,7 @@ data(population)
 tail(population)
 ```
 
-1. [3] Look the `who` and `population` data sets from the `tidyr` package (the information files are in the `tidyr` package help files).  Make the `who` dataset tidy data (Note: see lab 3) with the following columns:  Country, iso2, year, subgroup, cases.  For `subgroup`, the value should be what are currently column headings. (in lab 3 you used `agerange`)
+1. [4] Look the `who` and `population` data sets from the `tidyr` package (the information files are in the `tidyr` package help files).  Make the `who` dataset tidy data (Note: see lab 3) with the following columns:  Country, iso2, year, subgroup, cases.  For `subgroup`, the value should be what are currently column headings. (in lab 3 you used `agerange`) Similarly to lab 3, the following code is provided as a starting point.
 
 
 ```{r}
@@ -42,10 +42,15 @@ key = "subgroup", value="cases")
 tidywho %>% tail(10)  
 ```
 
-2.  [6] In the subgroup column, there are actually three pieces information: the mode of diagnosis,  gender, and the age range.
+2.  [10] In the subgroup column, there are actually three pieces information: the mode of diagnosis,  gender, and the age range.
   a. Draw a process map for the steps to take to extract age range, diagnosis mode, and gender by year from the original column names. Note: in a process map, each function in (b) should correspond to a block on the process map.
   b. In R, create three new columns 'agerange', 'gender', 'diagnosismode' and populate them based on the current value of subgroup. (note: 'agerange' is going to be the hardest of the three, I suggest starting with 'gender'). Print out the last 6 rows of Country, iso3, year, agerange, gender, diagnosismode, cases.
-  
+
+Notes: 
+  1. To split a string by character position, use `substring`
+  2. The total number of characters in a string can be found by `length(stringname)`
+  3. `strsplit` takes a string and splits it using a character to split the string.
+  4. `strsplit` returns a list of length
   
 **ANSWER**
 
@@ -59,6 +64,14 @@ tidywho %>% tail(10)
   6b. If there are 4 digits, the first two digits is the beginning and the last two digets are the end of the range
   6c. If there are 2 digits, the digits represent the beginning of the age range.
 
+
+```{r}
+tidywho$subgroup <- substring(tidywho$subgroup, 4, length(tidywho$subgroup))
+subgroupsplit <- strsplit(tidywho$subgroup[1], split= "_")
+diagnosismode <- subgroupsplit[[1]][length(subgroupsplit[[1]])-1]  
+gender <- substring(subgroupsplit[[1]][length(subgroupsplit[[1]])], 1, 1)
+
+```
 
 3.  [6] You need a table of rates of annual diagnosis by country for the last 5 years (2009-2013).
   a. Draw a process map that creates a table with the total rate (per 100,000) of new diagnosis for each country for each year by diagnosis mode. Note: it this table should be tidy.
