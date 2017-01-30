@@ -149,7 +149,7 @@ Backslashes can be used to turn a modifier into a literal character.
 Literal characters
 =============
 
--  Matched exactly
+- Matched exactly
 
 Character classes
 =============
