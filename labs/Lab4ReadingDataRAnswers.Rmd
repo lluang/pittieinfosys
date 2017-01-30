@@ -1,5 +1,5 @@
 ---
-title: 'Lab 3: Tidy data in R'
+title: 'Lab 4: Tidy data in R'
 author: "IE 0015"
 date: "January 26, 2017"
 output:
