@@ -92,3 +92,15 @@ tidywho %>%
           mutate(rate=newcases/population*100000) %>%
             head(15)
 ```
+```
+tidygroupedrates <-  tidywho %>% 
+  filter(year>2008) %>%
+    group_by(country, year) %>%
+      summarize(newcases=sum(cases, na.rm=TRUE)) %>%
+        left_join(population) %>%
+          mutate(rate=newcases/population*100000) %>%
+            head(15)
+```
+
+tidywhobyyear <- filter(tidywho, year)
+groupedtidy <- 
