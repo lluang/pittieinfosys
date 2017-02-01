@@ -21,7 +21,7 @@ data(population)
 tail(population)
 ```
 
-1. Look the `who` and `population` data sets from the `tidyr` package (the information files are in the `tidyr` package help files).  Make the `who` dataset tidy data (Note: see lab 3) with the following columns:  Country, iso2, year, subgroup, cases.  For `subgroup`, the value should be what are currently column headings. (in lab 3 you used `agerange`)
+1. Look the `who` and `population` data sets from the `tidyr` package (the information files are in the `tidyr` package help files).  Make the `who` dataset tidy data (Note: see lab 3) with the following columns:  Country, iso2, year, subgroup, cases.  For `subgroup`, the value should be what are currently column headings. (in lab 3 you used `agerange`). Similarly to lab 3, the following code is provided as a starting point.
 
 
 ```{r}
