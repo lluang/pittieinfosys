@@ -49,8 +49,10 @@ tidywho %>% tail(10)
 Notes: 
   1. To split a string by character position, use `substring`
   2. The total number of characters in a string can be found by `length(stringname)`
-  3. `strsplit` takes a string and splits it using a character to split the string.
-  4. `strsplit` returns a list of length
+  3. `strsplit` takes a string and splits it using a character to split the string. e.g.
+  `splittedstring <- strplit(stringname, split="_")
+  4. `strsplit` returns a list of length 1, and it accessed by `splittedstring[[1]]`
+  
   
 **ANSWER**
 
