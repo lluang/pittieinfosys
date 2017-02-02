@@ -112,7 +112,7 @@ tidywho2010 %>% tail(15)
 
 Make a table of total diagnosis by country, then combine it with the population table, then get rates.
 ```{r}
-tidywho20 %>% 
+tidywho2010 %>% 
   filter(year>2010) %>%
     group_by(country, year) %>%
       summarize(newcases=sum(cases, na.rm=TRUE)) %>%
