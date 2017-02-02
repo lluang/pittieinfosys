@@ -21,31 +21,33 @@ data(population)
 tail(population)
 ```
 
-1. Look the `who` and `population` data sets from the `tidyr` package (the information files are in the `tidyr` package help files).  Make the `who` dataset tidy data (Note: see lab 3) with the following columns:  Country, iso2, year, subgroup, cases.  For `subgroup`, the value should be what are currently column headings. (in lab 3 you used `agerange`). Similarly to lab 3, the following code is provided as a starting point.
+1. [4] Look the `who` and `population` data sets from the `tidyr` package (the information files are in the `tidyr` package help files).  Make the `who` dataset tidy data (Note: see lab 3) with the following columns:  Country, iso2, year, subgroup, cases.  For `subgroup`, the value should be what are currently column headings. (in lab 3 you used `agerange`) Similarly to lab 3, the following code is provided as a starting point.
 
 
 ```{r}
-who_new_sp <- who[,c("country", "iso2", "iso3", "year", "new_sp_m014",  "new_sp_m1524","new_sp_m2534", "new_sp_m3544", "new_sp_m4554", "new_sp_m5564", "new_sp_m65", "new_sp_f014", "new_sp_f1524", "new_sp_f2534", "new_sp_f3544", "new_sp_f4554", "new_sp_f5564", "new_sp_f65",  
+who_new <- who[who$year>2010,c("country", "iso2", "iso3", "year", "new_sp_m014",  "new_sp_m1524","new_sp_m2534", "new_sp_m3544", "new_sp_m4554", "new_sp_m5564", "new_sp_m65", "new_sp_f014", "new_sp_f1524", "new_sp_f2534", "new_sp_f3544", "new_sp_f4554", "new_sp_f5564", "new_sp_f65",  
 "new_sn_m014",  "new_sn_m1524", "new_sn_m2534", "new_sn_m3544", "new_sn_m4554", "new_sn_m5564","new_sn_m65",   "new_sn_f014",  "new_sn_f1524", "new_sn_f2534", "new_sn_f3544", "new_sn_f4554","new_sn_f5564", "new_sn_f65",   
 "new_ep_m014",  "new_ep_m1524", "new_ep_m2534", "new_ep_m3544","new_ep_m4554", "new_ep_m5564", "new_ep_m65",   "new_ep_f014",  "new_ep_f1524", "new_ep_f2534","new_ep_f3544", "new_ep_f4554", "new_ep_f5564", "new_ep_f65",   
 "newrel_m014",  "newrel_m1524","newrel_m2534", "newrel_m3544", "newrel_m4554", "newrel_m5564", "newrel_m65",   "newrel_f014","newrel_f1524", "newrel_f2534", "newrel_f3544", "newrel_f4554", "newrel_f5564", "newrel_f65")]
 ```
 
+2.  [10] In the subgroup column, there are actually three pieces information: the mode of diagnosis,  gender, and the age range.
+  a. Draw a process map for the steps to take to extract age range, diagnosis mode, and gender by year from the original column names. Note: in a process map, each function in (b) should correspond to a block on the process map.
+  b. In R, create three new columns 'agerange', 'gender', 'diagnosismode' and populate them based on the current value of subgroup. (note: 'agerange' is going to be the hardest of the three, I suggest starting with 'gender'). Print out the last 20 rows of Country, iso3, year, agerange, gender, diagnosismode, cases.  Note: because of the size of the dataset, start by making a dataframe with the last 15 rows of tidywho where the year is after 2008 (i.e. 2009-2014).
 
-2.  In the subgroup column, there are actually three pieces information: the mode of diagnosis,  gender, and the age range.
-  a. Draw a process map for the steps to take to extract age range, diagnosis mode, and gender from the original column names. Note: in a process map, each function in (b) should correspond to a block on the process map.
-  b. In R, create three new columns 'agerange', 'gender', 'diagnosismode' and populate them based on the current value of subgroup. (note: 'agerange' is going to be the hardest of the three, I suggest starting with 'gender'). Print out the last 6 rows of the table with country, iso3, year, agerange, gender, diagnosismode, cases.
-
-Notes:
-
+Notes: 
   1. To split a string by character position, use `substring`
   2. The total number of characters in a string can be found by `length(stringname)`
   3. `strsplit` takes a string and splits it using a character to split the string. e.g.
   `splittedstring <- strplit(stringname, split="_")
   4. `strsplit` returns a list of length 1, and it accessed by `splittedstring[[1]]`
+
+```{r}
+tidywho2010 <- tidywho %>% filter(year>2010)
+```
   
-3.  You need a table of rates of annual diagnosis by country for the last 5 years (2009-2013).
+
+3.  [6] You need a table of rates of annual diagnosis by country for the last 3 years (2011-2013).
   a. Draw a process map that creates a table with the total rate (per 100,000) of new diagnosis for each country for each year by diagnosis mode. Note: it this table should be tidy.
   b. Implement the procedure, then you should have a table with: Country, iso3, diagnosismode, rate.  Note that this requires combining the data elements for gender and age ranges.
-  c. Display the first 15 rows (3 countries).
-  
+  c. Display the last 15 rows (5 countries).
