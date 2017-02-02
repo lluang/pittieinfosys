@@ -54,7 +54,7 @@ Notes:
   4. `strsplit` returns a list of length 1, and it accessed by `splittedstring[[1]]`
 
 ```{r}
-tidywho2010 <- tidywho %>% filter(year>2010)
+tidywho2011 <- tidywho %>% filter(year>2010)
 ```
   
   
@@ -72,11 +72,11 @@ tidywho2010 <- tidywho %>% filter(year>2010)
 
 
 ```{r}
-tidywho2010$subgroup <- substring(tidywho2010$subgroup, 4, length(tidywho2010$subgroup))
+tidywho2011$subgroup <- substring(tidywho2011$subgroup, 4, length(tidywho2011$subgroup))
 diagnosismode <- c()
 gender <- c()
 agerange <- c()
-for(newrange in tidywho2010$subgroup){
+for(newrange in tidywho2011$subgroup){
   subgroupsplit <- strsplit(newrange, split= "_")
   diagnosismode <- append(diagnosismode,  subgroupsplit[[1]][length(subgroupsplit[[1]])-1])
   subgrouplast <- subgroupsplit[[1]][length(subgroupsplit[[1]])]
@@ -97,10 +97,10 @@ for(newrange in tidywho2010$subgroup){
           )
   )
 }
-tidywho2010$diagnosismode <- diagnosismode
-tidywho2010$gender <- gender
-tidywho2010$agerange <- agerange
-tidywho2010 %>% tail(15)
+tidywho2011$diagnosismode <- diagnosismode
+tidywho2011$gender <- gender
+tidywho2011$agerange <- agerange
+tidywho2011 %>% tail(15)
 ```
 
 3.  [6] You need a table of rates of annual diagnosis by country for the last 3 years (2011-2013).
@@ -112,8 +112,7 @@ tidywho2010 %>% tail(15)
 
 Make a table of total diagnosis by country, then combine it with the population table, then get rates.
 ```{r}
-tidywho2010 %>% 
-  filter(year>2010) %>%
+tidywho2011 %>% 
     group_by(country, year) %>%
       summarize(newcases=sum(cases, na.rm=TRUE)) %>%
         left_join(population) %>%
