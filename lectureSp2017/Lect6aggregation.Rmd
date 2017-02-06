@@ -1,0 +1,351 @@
+---
+title: "Lecture 6: Data Aggregation"
+author: "IE 0015 Spring 2017"
+date: "February 2017"
+output:
+  pdf_document: default
+  slidy_presentation: default
+---
+
+
+Functional programming
+=========
+
+- In data analysis, one of the most common tasks is to perform an operation on every line.
+- When this is done, every line's operations is independent of every other line.
+- This is a tenent of functional programming (as opposed to procedural programming (what you learned in Matlab or C)) or object oriented programming (if you learned objects in C++).
+- The focus is on performing an action on data (functions are verbs) as opposed to identifying objects and their attributes and capabilities (objects are nouns with member attributes and member functions.)
+
+Aggregating data
+================
+
+-  We often want to look at summarized data across groups, not individual data points.
+-  e.g. count instances, summations
+-  `table` function accomplishes this goal.
+-  `apply` family of functions can be used to work on arrays or lists.
+
+Issues
+======
+
+-  Aggregating data hides information in the data, so typically do this after you have determined what aggregation is useful.
+-  We aggregate to reduce the number of dimensions being presented, so do this because there are more dimensions to be analyzed than can be understood easily.
+-  Aggregation is done because you have something that needs to be communicated and you are attempting to remove extra detail through summaries.  Make sure that what is removed is extra.
+
+>  Everything should be a simple as possible, but no simpler.
+>       - Einstein (paraphrase)
+
+
+
+table
+=====
+
+-  Creates an array of values and counts
+-  Can be turned into a `data.frame`
+
+Use ACS as an example
+============
+
+```{r readingsqlite}
+library(RSQLite)
+library(tidyr)
+library(dplyr)
+
+acsh <- read.csv("../data/ss12hpaPittsburgh01701.csv")
+acsp <- read.csv("../data/ss12ppaPittsburgh01701.csv")
+```
+
+table summaries
+=================
+
+- the `table` function creates a formatted summary output of a list.
+- Look at travel arrangements
+
+```{r}
+carpool <- acsp$JWRIP
+cptable <- table(carpool)
+cptable
+```
+
+Or make the table summary a data frame
+==================
+
+```{r}
+as.data.frame(cptable)
+```
+
+
+Diversion:  recode variables
+=======================
+
+- In the ACS data, many of the variables are coded as integers ("1", "2", "3", etc)
+- We would want to recode them with their values in English
+- Use ``merge`` to do an operation similar to join
+
+
+```{r}
+worktransportation = data.frame(
+              JWTR = c("bb", "01", "02", "03", "04", "05", "06",
+                     "07", "08", "09", "10", "11", "12"), 
+              worktransportation = c(NA, 
+                    "Car, truck, or van",
+                    "Bus or trolley bus",
+                    "Streetcar", "Subway",
+                    "Railroad", "Ferryboat",
+                    "Taxicab", "Motorcycle",
+                    "Bicycle", "Walked",
+                    "Worked at home", "Other"))
+
+acsp <- merge(acsp, worktransportation, all.x=TRUE, by='JWTR')
+commutetable <- table(acsp$worktransportation)
+as.data.frame(commutetable)
+```
+
+
+
+
+Thinking about aggregation
+========================
+
+-  What are the groups that are useful to aggregate on?
+-  What is the nature of data to be operated on?
+-  What is the desired end result.
+
+The `apply` family of functions
+=============================
+
+-  In programming languages that have functional features (e.g. R, Matlab), we generally do not use `for` loops to loop through data.
+-  If data is organized in a matrix, array, or vector, we can **map** a function to the data structure.
+-  Apply the function to each element in the data structure.
+
+The `for loop` counterpart
+==========================
+
+- If you cannot get this to work, but you remember how to do `for loops`, you can do the same by:
+  - creating an empty list to save the results
+  - Write a for loop that iterates through the data and appends an element for each row of data.
+
+```{r}
+# create a matrix of 10 rows x 2 columns
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+# mean of the rows, 
+rowmean <- c()
+for (i in 1:dim(m)[1]){
+  rowmean <- append(rowmean, mean(m[i,]))
+}
+rowmean
+```
+
+
+
+Some members of the apply family of functions
+===========================
+
+Function name  | Description
+--------------------|------------------
+apply  |  Apply function over array margin
+by     | Apply function to a data frame split by factors
+lapply | Apply function over a list or vector (returns list)
+sapply | Apply function over a list or vector (returns vector or matrix)
+aggregate | Summaries over columns of a data frame.
+tapply | Apply function over a ragged array
+
+apply: 
+=======
+
+-  Apply function over array margins
+-  *Margins* are the dimensions of the array (row = 1, columns = 2)
+
+```{r}
+# create a matrix of 10 rows x 2 columns
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+# mean of the rows
+apply(m, 1, mean)
+# mean of the columns
+apply(m, 2, mean)
+# divide all values by 2
+apply(m, 1:2, function(x) x/2)
+```
+
+by: data frame split by factors
+======
+
+-  Summarize data frame split by factors
+
+```{r}
+# Mean household income split by housing Tenure
+tenurevalues <- data.frame(
+                  TEN = c("", 1, 2, 3, 4), 
+                  tenurevalues = c(NA, 
+                                 "Owned with mortgage or loan",
+                                 "Owned free and clear",
+                                 "Rented",
+                                 "Occupied without payment of rent"))
+acsh <- merge(acsh, tenurevalues, by='TEN')
+acsh$watercost <- as.numeric(acsh$WATP)
+acsh$householdincome <- as.numeric(acsh$HINCP)
+acsh$numpeople <- as.numeric(acsh$NP)
+```
+
+Results of grouping by a factor
+=====
+```{r}
+by(acsh[,c('householdincome', 'numpeople', 'watercost')], acsh$tenurevalues, colMeans)
+```
+
+lapply
+======
+- Returns a list resulting from applying a function to the corresponding element of X
+
+```{r}
+# create a list with 2 elements
+l <- list(a = 1:10, b = 11:20)
+# the mean of the values in each element
+l.mean <-lapply(l, mean)
+typeof(l.mean)
+l.mean[['a']]
+```
+
+sapply
+======
+
+- like `lapply` but returns a vector or matrix
+
+```{r}
+l.mean <- sapply(l, mean)
+typeof(l.mean)
+l.mean['a']
+l.mean[1]
+```
+
+vapply
+======
+
+- `vapply` is similar to `sapply`, but has a prespecified type of return value.
+- e.g. `fivenum` returns a summary of min, 1Q, median, 3Q, max
+
+```{r}
+l.fivenum <- vapply(l, fivenum, c(Min.=0, "1st Qu."=0, Median=0, "3rd Qu."=0, Max.=0))
+class(l.fivenum)
+l.fivenum
+```
+
+mapply
+======
+
+-  Multivariate version of `sapply`.  Applies the function to the first elements of each arguement, second element, etc.
+
+```{r}
+l1 <- list(a = c(1:10), b = c(11:20))
+l2 <- list(c = c(21:30), d = c(31:40))
+# sum the corresponding elements of l1 and l2
+mapply(sum, l1$a, l1$b, l2$c, l2$d)
+```
+
+
+Groups based on one or more group variables
+==============
+
+- `aggregate`
+- `tapply`
+
+aggregate
+==========
+
+-  Summarize a columns based on defined groups
+
+```{r}
+library(reshape2)
+library(ggplot2) #loads reshape2 package
+data(diamonds)
+summary(diamonds)
+aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean)
+```
+
+tapply
+======
+
+-  Processes a single vector based on the values of one or more grouping vectors
+
+```{r}
+maxcarat <- tapply(diamonds$carat, diamonds$color, max)
+maxcarat
+```
+Mapping a function to a vector or list
+====================
+
+- `lapply` - Returns output as a list
+-  `sapply` - returns output as a vector or matrix (if possible)
+-  Note: returning a vector implies that order is important, e.g. the results are matched to another vector.
+
+Example for a mapping
+=============
+
+-  Break out individual words for each sentence.
+-  Unknown number of words in each sentence, so use a list for each sentence.
+
+```{r}
+text = c("R is a free environment for statistical analysis",
+ "It compiles and runs on a variety of platforms",
+ "Visit the R home page for more information")
+result = strsplit(text, " ")
+result
+typeof(result)
+```
+
+Now, take the list and get the length of each sentence
+==================
+
+- Because we want the length to be associated with the sentence, use `sapply`
+
+```{r}
+nwords = sapply(result, length)
+nwords
+```
+
+Mapping a function to a matrix or array
+=====================
+
+-  Because we often do analysis based on each element in a data frame, we often use `apply` on data frames.
+-  Income per family member
+-  Note that we are passing in a data frame (which is a list of lists (of columns)) and getting a list back (which we add as a column in the data frame.)
+
+```{r}
+familypercapita <- function(acs){
+  percapita <- as.numeric(acs[["HINCP"]])/as.numeric(acs[["NP"]])
+}
+acsh$FINCP <- as.numeric(acsh$FINCP)
+acsh$HINCP <- as.numeric(acsh$HINCP)
+acsh$NP <- as.integer(acsh$NP)
+acsh$percapita <- apply(acsh, 1, familypercapita)
+summary(acsh$percapita)
+```
+
+
+Mapping a function based on groups
+=====
+
+-  `aggregate`  for data frames
+-  `tapply` for vectors
+
+Returning multiple values
+==========================
+
+- In most programming languages, a function can return one value.
+- To get around this, you can return a data structure
+  - e.g. in C, you can create and return a `struct`
+  - In R, you generally return a list of values
+  
+```{r}
+# create a matrix of 10 rows x 2 columns
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+doublehalfsumrow <- function(element){
+  doublerow <- sum(element)*2
+  halfrow <- sum(element)/2
+  c(doublerow, halfrow)
+}
+mframe <- data.frame(col1 = m[,1], col2 =m[,2])
+rowreturn <- apply(m, 1, doublehalfsumrow)
+mframe$doublerow <- rowreturn[1,]
+mframe$halfrow <- rowreturn[2,]
+mframe
+```
