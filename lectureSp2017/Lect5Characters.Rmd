@@ -249,15 +249,24 @@ We can use it to find records in a data frame
 Titanic personal title example
 =====
 ```{r loadtitanic, echo=FALSE}
-titanic <- read.csv("../data/titanictrain.csv")
+titanic <- read.csv("../data/titanic3.csv")
 ```
 
 ```{r}
-womentitanic <- (titanic[grep('Mrs\\.|Miss\\.|Ms\\.|Mme\\.|Mlle\\.',
-                              titanic$Name), 
-                         'Name'])
+womentitanic <- (titanic[grep("Mrs.|Miss.|Ms.|Mme.|Mlle.",
+                              titanic$name), 
+                         'name'])
 head(womentitanic)
 length(womentitanic)
+```
+
+
+```{r}
+data = titanic$name[5]
+startpoint = regexpr(", [A-Z][a-z]*\\.", data)
+attributes(startpoint)
+attr(startpoint, 'match.length')
+title = substr(data, startpoint+2, startpoint + attr(startpoint, 'match.length')-1)
 ```
 
 The Rime of the Ancient Mariner

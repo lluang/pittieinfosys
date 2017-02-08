@@ -72,30 +72,16 @@ tidywho2011 <- tidywho %>% filter(year>2010)
 
 
 ```{r}
-tidywho2011$subgroup <- substring(tidywho2011$subgroup, 4, length(tidywho2011$subgroup))
+tidywho2011$subgroup1 <- substring(tidywho2011$subgroup, 4, length(tidywho2011$subgroup))
 diagnosismode <- c()
 gender <- c()
 agerange <- c()
-for(newrange in tidywho2011$subgroup){
+for(newrange in tidywho2011$subgroup1){
   subgroupsplit <- strsplit(newrange, split= "_")
   diagnosismode <- append(diagnosismode,  subgroupsplit[[1]][length(subgroupsplit[[1]])-1])
   subgrouplast <- subgroupsplit[[1]][length(subgroupsplit[[1]])]
   gender <- append(gender, substring(subgrouplast, 1, 1))
-  ifelse(nchar(subgrouplast)==3,
-         {
-           agerange <- append(agerange, paste(substring(subgrouplast, 2,3), "+", sep="")) 
-         },
-         ifelse(nchar(subgrouplast)==4,
-                {agerange <- append(agerange, paste(substring(subgrouplast, 2,2), "-", substring(subgrouplast, 3,4)) )
-                }
-                ,
-                #nchar(subgrouplast)==5
-                {
-                  agerange <- append(agerange, paste(substring(subgrouplast, 2,3), "-", substring(subgrouplast, 4,5)) )
-                  
-                }
-          )
-  )
+  agerange <- append(agerange, substring(subgrouplast, 2, nchar(subgrouplast)))
 }
 tidywho2011$diagnosismode <- diagnosismode
 tidywho2011$gender <- gender

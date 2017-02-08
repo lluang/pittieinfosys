@@ -31,7 +31,7 @@ The title is completed with a period.
 
 ```{r}
 getTitle <- function(data) {
-  title.dot.start <- regexpr("\\,[A-Z ]*\\.", data$name, TRUE)
+  title.dot.start <- regexpr("\\,[ ][A-Z][a-z]*\\.", data$name, ignore.case=FALSE)
   title.comma.end <- title.dot.start+ attr(title.dot.start, "match.length")
   data$Title <- substr(data$name, title.dot.start+2, title.comma.end-1)
   return (data$Title)

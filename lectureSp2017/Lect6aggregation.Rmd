@@ -49,8 +49,8 @@ Use ACS as an example
 library(tidyr)
 library(dplyr)
 
-acsh <- read.csv("../data/ss12hpaPittsburgh01701.csv")
-acsp <- read.csv("../data/ss12ppaPittsburgh01701.csv")
+acsh <- read.csv("../data/ss12hpa.csv")
+acsp <- read.csv("../data/ss12ppa.csv")
 ```
 
 table summaries
