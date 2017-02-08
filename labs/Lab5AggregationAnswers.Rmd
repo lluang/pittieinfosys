@@ -1,12 +1,14 @@
 ---
-title: 'Lab 9:  Aggregation'
+title: 'Lab 5:  Aggregation'
 author: "IE 0015 Information Systems Engineering"
-date: "03/31/2016"
-output: pdf_document
+date: "February 2017"
+output: html_document
 ---
 
 ```{r loadlibraries, warning=FALSE}
-FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
+library(dplyr)
+# NSFG data in Courseweb
+FemPreg <- read.csv("../data/nsfgFemPreg.csv",
                     header=TRUE, sep=",")
 FemPreg$BIRTHORD <- as.factor(FemPreg$BIRTHORD)
 FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
@@ -57,9 +59,15 @@ completebf <- FemPreg[!(FemPreg$BFEEDWKS %in% c(NA, 994, 995)),]
 completebf$BFEEDWKS <- as.numeric(completebf$BFEEDWKS)
 # Optional solutions:
 aggregate(completebf[,c('BFEEDWKS')],by=list(completebf$education),mean,na.rm=TRUE)
+```
+```{r}
 # tapply mostly works on vector, so it will need two lines, each for one vector. 
 tapply(completebf$BFEEDWKS,completebf$education,mean)
-
+```
+```{r}
+filter(FemPreg, !BFEEDWKS %in% c(NA, 994, 995)) %>%
+  group_by(education) %>%
+    summarise(avgweeks = mean(BFEEDWKS))
 ```
 
 
@@ -69,11 +77,20 @@ ANSWER
 ```{r, warnings=FALSE}
 aggregate(completebf[,c('BFEEDWKS')],by=list(completebf$education, completebf$marital),mean,na.rm=TRUE)
 ```
+
+Alternative using `dplyr` verbs
+```{r}
+by_education <- group_by(completebf, education, marital)
+summarise(by_education, avgweeks = mean(BFEEDWKS))
+```
+```{r}
+group_by(completebf, education, marital) %>%
+  summarise(avgweeks=mean(BFEEDWKS))
+```
 Remark:   
 1) When there is Error message like "Error: could not find function "cast" ", possible reason is that you haven't 
-activate the library or haven't install it. Install or activate the library should fix the problem.       
+loaded the library or haven't installed it. Installing or loading the library should fix the problem.       
 
-2) Note: we did not get to reshape in lecture, so I removed it from the lab. My solution is based on aggregate instead.
-Melt function is used for preparing data for cast function. For the melt command above, it will extract 4 columns from "completebf". For each row of the data frame, the melt command will create two new rows containing the information from the 4 blocks being extracted. For example, a row containing "BACHELOR,MARRIED,4,10" in "completebf"" will be represented by 2 rows "BACHELOR,MARRIED,BFEEDWKS,4" and "BACHELOR,MARRIED,MATLEAVE,10" in the melted dataframe.   
+
 
 

@@ -1,0 +1,101 @@
+---
+title: "If else functions"
+author: "ie0015"
+date: "February 8, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Problem
+
+You need to create a calculated variable to add to a data frame, and it is a conditional calculation.
+
+# Solution
+
+An if-else statement that is applied to the entire data frame.
+
+##  Three variations
+
+###  For loop with if...else
+
+This version is similar to what you saw in C or Matlab, and in Lab 0.
+
+1.  Create an empty vector to hold the new values.
+2.  Create a for loop to loop through the elements of the data frame.
+3.  Use an if...else statements to identify the condition, then return a value
+
+```{r}
+library(tidyr)
+library(dplyr)
+
+acsh <- read.csv("../data/ss12hpa.csv")
+acsp <- read.csv("../data/ss12ppa.csv")
+```
+
+Example. For every household, identify if there are an 'EVEN' or 'ODD' number of people in the household.
+
+```{r}
+evennumber <- c()
+numhouseholds <- nrow(acsh)
+for (household in 1:numhouseholds){
+  if (acsh[household, 'NP'] %% 2 ==0){
+    # multiple statements
+    evennumber <- append(evennumber, 'EVEN')
+  } else {
+    evennumber <- append(evennumber, 'ODD')
+  }
+}
+acsh$evennumber <- evennumber
+table(acsh[,c('NP', 'evennumber')])
+```
+
+###  Vectorized ifelse
+
+The `if_else` function comes with dplyr and can only be used on data frames.  note that there is also an `ifelse` function that can be used on any vector. If you are using data frames, `if_else` is optimized (is faster).
+
+```{r}
+numhouseholds <- nrow(acsh)
+evennumberif_else <- if_else (acsh[, 'NP'] %% 2 ==0,{
+                              # multiple statements
+                              'EVEN'
+                            },{ 
+                              # multiple statements
+                              'ODD'
+                            }
+)
+acsh$evennumberif_else <- evennumberif_else
+table(acsh[,c('NP', 'evennumberif_else')])
+```
+
+Same thing with the base `ifelse`.
+
+```{r}
+numhouseholds <- nrow(acsh)
+evennumberifelse <- ifelse (acsh[, 'NP'] %% 2 ==0,{
+                              # multiple statements
+                              'EVEN'
+                            },{ 
+                              # multiple statements
+                              'ODD'
+                            }
+)
+acsh$evennumberifelse <- evennumberifelse
+table(acsh[,c('NP', 'evennumberifelse')])
+```
+
+### using sapply and a function
+
+```{r}
+evenhousehold <- function(numpeople){
+  if (numpeople %% 2 ==0){
+    'EVEN'
+  } else {
+    'ODD'
+  }
+}
+acsh$evenapply <- sapply(acsh[,'NP'], evenhousehold)
+table(acsh[,c('NP', 'evenapply')])
+```

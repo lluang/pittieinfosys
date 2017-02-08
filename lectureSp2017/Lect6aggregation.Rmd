@@ -45,8 +45,7 @@ table
 Use ACS as an example
 ============
 
-```{r readingsqlite}
-library(RSQLite)
+```{r}
 library(tidyr)
 library(dplyr)
 
