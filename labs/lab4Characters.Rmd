@@ -1,0 +1,23 @@
+---
+title: 'Lab 4: Character Strings'
+author: "IE 0015 Information Systems"
+date: "01/25/2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r loadtitanic}
+titanic <- read.csv("../data/titanic3.csv")
+```
+1.  (3 pts) The Titanic accident was in a time when people were identified by their titles. In the Titanic data, How do you identify the title (Mr., Mrs., Miss. etc) of a person. Draw a process map.
+
+2.  (6 pts) Read in the titanic data and extract the title of each person.  Make a list of unique titles.
+
+    Notes:
+  
+  - How do you find the first letter? how do you know the title is complete? 
+  - The Countess is a special case, don't worry about getting her territory right, just her title.
+  - In a regular expression, you need to escape the punctuation with a backslash, and you need to escape the backslash with another backslash (i.e. two backslashes before a punctuation mark. See your lecture notes.)
+  
+3.  (1 pts) How many passengers have each title? (hint: declare the list of titles to be a factor and take the summary)

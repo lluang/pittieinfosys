@@ -1,0 +1,54 @@
+---
+title: 'Lab 5:  Aggregation'
+author: "IE 0015 Information Systems Engineering"
+date: "February 2017"
+output: html_document
+---
+
+```{r loadlibraries, warning=FALSE}
+library(dplyr)
+# NSFG data in Courseweb
+FemPreg <- read.csv("../data/nsfgFemPreg.csv",
+                    header=TRUE, sep=",")
+FemPreg$BIRTHORD <- as.factor(FemPreg$BIRTHORD)
+FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
+```
+
+```{r}
+# level of education
+education <- data.frame(
+          HIEDUC=c("5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"),
+          education = c("9TH GRADE","10TH GRADE",
+             "11TH GRADE", "12TH GRADE",
+             "HIGH SCHOOL", "SOME COLLEGE",
+             "ASSOCIATE", "BACHELOR",
+             "MASTER", "DOCTORATE", "PROFESSIONAL DEGREE"))
+# informal marital status
+FemPreg <- merge(FemPreg, education, all.x=TRUE, by="HIEDUC")
+marital <- data.frame(RMARITAL=c(1, 2, 3, 4, 5, 6),
+                      marital = c("MARRIED",
+                                 "LIVING WITH PARTNER",
+                                 "WIDOWED",
+                                 "DIVORCED",
+                                 "SEPARATED",
+                                 "NEVER BEEN MARRIED"))
+FemPreg <- merge(FemPreg, marital, all.x=TRUE, by="RMARITAL")
+```
+
+1.  Using the female pregnancy data, create a table in the form of a data frame that shows the distribution of respondents by level of education. Note that there is more than one way to approach this. (Note that the above code takes ACS data and replaces the education code with the meaning of the code, similar to the aggegation code in lecture.)
+
+
+2.  Find the mean of number of weeks of breastfeeding  by level of education of the mother. (Note that the code above merges the ACS coded level of education with its meaning.) 
+  i.  Create a data frame that only includes women who have completed breastfeeding (hint: remove those for which are not applicable, still breastfeed, or never breastfeed based on the BFEEDWKS field, use the `!(FemPreg$BFEEDWKS %in% c( . . .))` to select from the data frame. The Female pregnancy data codebook identifies the codes used in the `BFEEDWKS` variable.)
+  ii.  Take the mean number of weeks of breastfeeding by education (of mother) (note: to ignore NA's, use the argument `na.rm=TRUE` if you are using the `colMeans` or other aggregation functions.)
+
+
+3.  Find the average number of weeks of breastfeeding and weeks of maternity leave based on education and informal marital status (`education` and `marital`)
+
+Remark:   
+1) When there is Error message like "Error: could not find function "cast" ", possible reason is that you haven't 
+loaded the library or haven't installed it. Installing or loading the library should fix the problem.       
+
+
+
+
