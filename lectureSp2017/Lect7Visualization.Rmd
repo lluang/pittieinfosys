@@ -4,6 +4,7 @@ author: "IE 0015 Spring 2017"
 date: "February 2017"
 output:
   pdf_document: default
+  html_document: default
   slidy_presentation: default
 ---
 
@@ -84,8 +85,6 @@ Scales dictate where in the dimensions the data maps to.
 
 Using visualization
 ===================
-type:section
-
 
 Data exploration questions to ask?
 ==================================
@@ -95,15 +94,21 @@ Data exploration questions to ask?
 -  Which visualization methods should you use?
 -  What do you see and does it make sense?
 
-Exploring through visualization
-===============================
+Choosing a visualization
+=========================
 
-![Data exploration](figures/visualizationexploration.jpg)
+-  What is the main point of the chart?
+    - Explain or recommend?
+-  What question are you trying to answer?
+    - Who, what, where, when, why, how
+-  How many dimensions are we trying to communicate?
+    - One, two, many
 
-The range of types of visualizations (more seriously)
+Thinking about types of visualizations to
 ====================================
 
-![Chart Types](figures/ChartsuggestionsTosi2009.jpg)
+![Chart Types](figures/clidechooser1pageAbela2015.png)
+
 
 
 Visualizing categorical data
