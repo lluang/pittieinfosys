@@ -99,6 +99,7 @@ Data exploration questions to ask?
 
 Choosing a visualization
 =========================
+<<<<<<< HEAD
 
 -  What is the main point of the chart?
     - Comparison, relationship, distribution, composition
@@ -110,11 +111,10 @@ Choosing a visualization
     - Few data points, many data points?
     - Continuous, discrete?
 
-Thinking about types of visualizations to
+Thinking about types of visualizations
 ====================================
 
 ![Chart Types](figures/chart-suggestion-infographic.jpg)
-
 
 
 Visualizing categorical data
