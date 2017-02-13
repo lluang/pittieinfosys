@@ -3,8 +3,11 @@ title: "Visualization"
 author: "IE 0015 Spring 2017"
 date: "February 2017"
 output:
-  pdf_document: default
   slidy_presentation: default
+  pdf_document: default
+  html_document:
+    fig_height: 4
+    fig_width: 6
 ---
 
 
@@ -49,20 +52,21 @@ Visualization components
 Visualization components
 ========================
 
-.
+
 ![Visualization components](figures/visualizationcomponents.jpg)
 
 
 Visual cues
 ===========
 
-.
+
 ![Visual cues](figures/visualcues.jpg)
 
 Ranking visual cues
 ===================
 
 Some visual cues are more clear than others
+
 
 ![Ranking visual cues](figures/visualcuesranked.jpg)
 
@@ -71,7 +75,7 @@ Coordinate systems
 
 Coordinate systems dictate the dimensions of the visualization.
 
-.
+
 ![Coordinate systems](figures/coordinatesystems.jpg)
 
 Scales
@@ -79,13 +83,11 @@ Scales
 
 Scales dictate where in the dimensions the data maps to.
 
-.
+
 ![Scales](figures/visualscales.jpg)
 
 Using visualization
 ===================
-type:section
-
 
 Data exploration questions to ask?
 ==================================
@@ -95,21 +97,30 @@ Data exploration questions to ask?
 -  Which visualization methods should you use?
 -  What do you see and does it make sense?
 
-Exploring through visualization
-===============================
+Choosing a visualization
+=========================
 
-![Data exploration](figures/visualizationexploration.jpg)
+-  What is the main point of the chart?
+    - Comparison, relationship, distribution, composition
+-  How many dimensions are we trying to communicate?
+    - One, two, many
+-  How do values change?
+    - Over time, among items, static?
+-  How much data is there?
+    - Few data points, many data points?
+    - Continuous, discrete?
 
-The range of types of visualizations (more seriously)
+Thinking about types of visualizations to
 ====================================
 
-![Chart Types](figures/ChartsuggestionsTosi2009.jpg)
+![Chart Types](figures/chart-suggestion-infographic.jpg)
+
 
 
 Visualizing categorical data
 ============================
 
-.
+
 ![Visualizing categorical data](figures/visualizationcategorical.jpg)
 
 
@@ -127,21 +138,21 @@ Time series
 
 How does your data change over time?
 
-.
+
 ![Time series](figures/visualizationtimeseries.jpg)
 
 Visualizing spatial data
 ========================
 
-.
-![Time series](figures/visualizationspatial.jpg)
+
+![Spatial data](figures/visualizationspatial.jpg)
 
 Combining components
 ====================
 
 By combining components, graphs are richer and can display many relationships at once.
 
-.
+
 ![Combining components](figures/visualcombinations.jpg)
 
 
@@ -150,7 +161,7 @@ Multiple variables
 
 There is no hard limit to how many variables can be in one visualization
 
-.
+
 ![Multiple views](figures/visualizationmultiple.jpg)
 
 Data distribution
@@ -164,8 +175,7 @@ Data distribution
 Visualizing distributions
 =========================
 
-.
-![Distributions](figures/visualizationdistributions.jpg)
+![Visualizing distributions](figures/visualizationdistributions.jpg)
 
 
 Comparisons
@@ -173,8 +183,7 @@ Comparisons
 
 One thing that visualizations should do is show how things change.
 
-.
-![Comparisons](figures/visualcomparisons.jpg)
+![Ways to show comparisons](figures/visualcomparisons.jpg)
 
 Color scales
 ============
@@ -183,7 +192,7 @@ Color scales
 -  Diverging
 -  Qualitative
 
-![Colorscales](figures/visualizationcolorscales.jpg)
+![Color scales](figures/visualizationcolorscales.jpg)
 
 
 Highlighting
@@ -191,20 +200,22 @@ Highlighting
 
 Emphasize a particular data point or series to place focus
 
-![Highlighting](figures/visualizationhighlighting.jpg)
+![Highlighting data points](figures/visualizationhighlighting.jpg)
 
 Annotation
 ==========
 
 Give context to data or explain boundary cases.
 
-.
-![Annotation example](figures/visualannotations.jpg)
+
+![Point out odd data points](figures/visualannotations.jpg)
 
 Making things pretty
 ====================
 
-![Making things pretty](figures/visualizationwind.jpg)
+- Thinking about aesthetics helps tell the story.
+
+![Wind contour map](figures/visualizationwind.jpg)
 
 Summary
 =======

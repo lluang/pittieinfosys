@@ -1,0 +1,639 @@
+---
+title: 'Lecture 8: More Visualization'
+author: "IE 0015 Information Systems"
+date: "February 2017"
+output: pdf_document
+---
+
+
+Overview of Grammar of Graphics
+============
+
+A plot is composed of:
+
+-  data
+-  aesthetic - How the data will be plotted
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
+-  scaling - How data layout
+-  statistic - Transformation of the data
+-  position adjustment - To avoid overplotting
+
+```{r}
+library(ggplot2)
+dsmall = diamonds[sample(nrow(diamonds),200),]
+```
+
+
+Aesthetics - appearance
+=======================
+
+- Change the appearance of data elements using aesthetics.
+- Color, shape, size, transparency (alpha), etc.
+- Each aesthetic displays an additional aspect of the data.
+***
+```{r}
+ggplot(dsmall, aes(carat, price, shape=cut, color=color)) + geom_point()
+```
+
+
+geom - plot type
+================
+
+- The type of plot is set using `geom`
+- `points` - Scatterplots, 
+- `path` and `line` connect points.
+- `smooth` - draw a smoother to the data
+- `histogram`, `boxplot`, `density`, `bar`
+***
+```{r}
+ggplot(dsmall, aes(carat, price, shape=cut, color=color)) + geom_point()
+```
+
+Faceting
+==========
+
+-  How data will be divided among multiple plots
+-  Note the use of the function format
+   *y ~ x*
+***
+```{r}
+ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(color ~ .)
+```
+
+Faceting horizontally
+=====
+
+
+-  Change the order of the function in the facet_grid to layout facets horizontally
+```{r}
+ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(. ~ color)
+```
+
+Scaling
+=========
+
+-  Horizontal (x), vertical (y) positioning and color.
+  -  Linear
+  -  Log transforms
+-  Coordinate system
+  -  Cartesian (rectangular)
+  -  Polar
+  -  Spherical
+  
+
+
+Layering
+======
+
+-  The mechanism by which we add data elements to a plot.
+-  In qplot, each layer must come from a single dataset and single set of aesthetic mappings.
+-  In ggplot, layers can come from different datasets and aesthetic mappings.
+- `layer(geom, geom_params, stat, stat_params, data, mapping)` 
+  -  *mapping*
+  -  *data* (if not the default from the call to *ggplot*)
+  -  *geom* and *stat* - There is a default *stat* for each *geom*, and a default *geom* for each *stat*, so you only need to define one.
+  -  *position*
+  
+Position adjustments
+============
+
+-  `dodge` - Dodge overlaps to the side
+-  `fill` - Stack overlapping objects and 
+-  `identity` - Don't adjust position
+-  `jitter` - Jitter points to avoid overplotting
+-  `stack` - Stack overlapping objects on top of each other
+
+
+Putting together a plot
+============
+
+- Build plots layer by layer
+- Start with identifying the data frame.
+- (Note nothing happens)
+
+```{r}
+p = ggplot(dsmall)
+```
+
+Identify how the data will be displayed (aesthetic)
+====================
+
+- Using *aes*, identify which data elements will be chosen.
+- First attribute is the x-axis (if only one, then it is a histogram or density plot)
+- Second attribute is the y-axis.
+- Additional attributes need to be mapped to other visual cues (color, size, shape, etc)
+- Note: you can build plots by building on the plot object.
+
+```{r}
+p1 = p + aes(x = carat)
+```
+
+Declare the type of plot (geom)
+======================
+
+-  Add the plot layer, which includes the *geom* of the plot, i.e. the type of plot.
+-  **Now** the plot can be displayed
+
+```{r}
+p2 = p1 +  geom_histogram()
+p2
+```
+
+Same thing, but with density
+==========
+```{r}
+p3 = p1 + geom_density()
+p3
+```
+
+Same thing, but using different layer (and attributes)
+============
+```{r}
+dbar = ggplot(dsmall, aes(x = carat, y = price)) + geom_point()
+show(dbar)
+```
+
+Let's add in some options such as a statistic
+=================
+
+- stat = bin identifies how grouping will be done for the bar (histogram)
+
+```{r}
+dbar = ggplot(dsmall) + aes(x = carat) + 
+  geom_histogram(binwidth = 0.1)
+dbar
+```
+
+Plot geom examples
+=====
+
+Layer shortcuts can specify the geom separately
+===========
+
+-  `geom_area()`
+-  `geom_point()`
+-  `geom_path()`
+-  `geom_line()`
+-  `geom_smooth()`
+-  `geom_abline()`
+-  `geom_bar()`
+-  `geom_histogram()`
+-  `geom_density()`
+-  `geom_abline()`
+-  `geom_violin()`
+
+
+Geom and stat
+===========
+
+-  Each geometry has a counterpart default statistics
+-  Each statistic has a default geometry
+-  They can be specified
+
+Examples of stat
+========
+
+-  `stat_bin()` -  `stat_bin2d()`
+-  `stat_bindot()`
+-  `stat_binhex()`
+-  `stat_boxplot()`
+-  `stat_contour()`
+-  `stat_density()`
+-  `stat_density2d()`
+-  `stat_qq()`
+-  `stat_quantile()`
+-  `stat_smooth()`
+-  `stat_function()`
+-  `stat_sum()`
+-  `stat_summary()`
+-  `stat_summary_hex()`
+-  `stat_summary2d()`
+
+Some basic examples of ggplot
+===========
+
+- `ggplot` requires a dataframe with data, and can take data labels
+- We can create a number of different plots by identifying the data and aesthetic, then applying different geometries to them.
+
+
+```{r}
+df <- data.frame(
+x = c(3, 1, 5), y = c(2, 4, 6), label = c("a","b","c")
+)
+p <- ggplot(df, aes(x, y, label = label)) + xlab(NULL) + ylab(NULL)
+```
+
+Scatter plot using geom_point
+======
+
+```{r}
+p + geom_point() + ggtitle("geom_point") + aes(size=4)
+```
+
+Bar plot using geom_bar
+======
+- Note: stat="identity" used to provide the y-value
+
+```{r}
+p + geom_bar(stat="identity") + ggtitle("geom_bar(stat=\"identity\")")
+```
+
+Line plot using geom_line
+======
+
+```{r}
+p + geom_line() + labs(title = "geom_line")
+```
+
+Filled line plot using geom_area
+======
+
+```{r}
+p + geom_area() + labs(title = "geom_area")
+```
+
+Pathway plot using geom_path
+======
+
+Contrast this to the standard line plot. Order matters
+
+```{r}
+p + geom_path() + labs(title = "geom_path")
+```
+
+Use text to label the data points using geom_text
+======
+
+```{r}
+p + geom_text() + labs(title = "geom_text")
+```
+
+Data elements using regions instead of points using geom_tile
+======
+
+```{r}
+p + geom_tile() + labs(title = "geom_tile")
+```
+
+Generate a polygon by specifying the corners using geom_polygon
+======
+
+```{r}
+p + geom_polygon() + labs(title = "geom_polygon")
+```
+
+Point
+====
+-  Show x, y relationships
+
+```{r}
+p = ggplot(dsmall, aes(carat, price)) + geom_point()
+show(p)
+```
+```{r}
+p = ggplot(dsmall,aes(carat, price, color = color, shape=cut)) + geom_point()
+show(p)
+```
+
+Bar charts
+=====
+left:
+
+```{r}
+p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
+p + geom_bar() + labs(title="Default for bar plots is to stack")
+```
+***
+```{r}
+p + geom_bar(position="identity") + labs(title="Otherwise they hide each other")
+```
+
+More bar chart styles
+=====
+left:
+
+```{r}
+p + geom_bar(position="fill") + labs(title="A fill shows percentages of each classification")
+```
+***
+```{r}
+p + geom_bar(position="dodge") + labs(title="dodge puts the bars next to each other")
+```
+
+Pie charts
+====
+
+Pie charts are like bar charts on polar coordinates.
+
+```{r}
+p = ggplot(diamonds, aes(x=factor(1), fill=cut))
+p + geom_bar(width=1,position="fill") + coord_polar(theta="y") + labs(title="Fraction of sample with each quality of cut", ylab="")
+```
+
+Pie charts - 2
+======
+
+- But you can use the size of the pie slice to communicate other information
+
+```{r}
+p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
+p + geom_bar(width=1) + coord_polar() + labs(title="Number of samples with each type of cut by level of clarity")
+```
+
+Area
+===
+left:
+
+```{r}
+d <- ggplot(diamonds, aes(carat)) 
+d + stat_bin(aes(ymax = ..count..), binwidth = 0.1, geom = "area")
+```
+***
+```{r}
+d + stat_bin(aes(size = ..density..), binwidth = 0.1, geom = "point", position="identity")
+```
+
+Histograms and density
+===================
+left:
+
+```{r, echo=FALSE}
+d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
+```
+
+```{r}
+d + geom_histogram(aes(y=..density..), binwidth=0.25) + labs(title="Histograms")
+d + geom_histogram(aes(y=..density..), binwidth=0.25, colour="black", fill="white") + labs(title="Histograms")
+```
+***
+```{r}
+d + geom_density() + labs(title="Density-moving window")
+```
+
+Adding to aesthetics
+=====
+left:
+
+```{r}
+d + geom_histogram(aes(y=..density..), binwidth=0.25) + labs(title="Histograms")
+```
+***
+```{r}
+d + geom_histogram(aes(y=..density..), binwidth=0.25, colour="black", fill="white") + labs(title="Histograms")
+```
+
+
+Box and whiskers and violin plots
+===========
+left: 
+
+```{r, echo=FALSE}
+d <- ggplot(diamonds, aes(x=color,y = carat))
+```
+```{r}
+d + geom_boxplot()
+```
+***
+
+```{r}
+d + geom_violin() 
+```
+
+
+Density functions
+=================
+left:
+
+```{r, echo=FALSE}
+d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
+```
+```{r}
+d + geom_density() + labs(title="Density - Moving window")
+```
+***
+```{r}
+d + stat_ecdf() + labs(title="Cumulative distribution")
+```
+
+Two-dimensional plotting
+==============
+
+-  Sometimes, the data is best represented as located on a two dimensional axis, then a third dimension is needed to display the data.
+-  e.g. events in time that are on both daily and weekly cycles.
+-  Contours
+-  Heat maps (2-D bins)
+
+```{r}
+d <- ggplot(diamonds, aes(x = carat, y = clarity))
+d + geom_bin2d()
+```
+
+2-D density plots
+====
+```{r}
+diamonds$price = as.numeric(diamonds$price)
+d <- ggplot(diamonds, aes(x = carat, y = depth))
+d + geom_density2d()
+```
+
+
+Contour data
+=====
+
+```{r}
+# Generate data
+library(reshape2) # for melt
+volcano3d <- melt(volcano)
+names(volcano3d) <- c("x", "y", "z")
+v <- ggplot(volcano3d, aes(x, y, z = z))
+```
+***
+```{r}
+v + stat_contour()
+```
+
+Use bins to modify the contour statistics
+==========
+left:
+
+```{r}
+v + stat_contour(bins=2)
+```
+***
+```{r}
+v + stat_contour(bins=5)
+```
+
+Or specify the binwidth
+====
+Use bins to modify the contour statistics
+==========
+left:
+
+```{r}
+v + stat_contour(binwidth=10)
+```
+***
+```{r}
+v + stat_contour(binwidth=25)
+```
+
+
+Other appearances
+======
+type:section
+
+Scales
+=====
+
+- We can set the scales for any visual cue to represent the data.
+
+Types of scales
+===
+
+-  `scale_area()`
+-  `scale_color_gradient()`
+-  `scale_color_hue()`
+-  `scale_color_grey()`
+-  `scale_shape()`
+-  `scale_size()`
+-  `scale_x_datetime()`
+
+
+
+Faceting
+======
+
+-  Using the same dataset, create a set of graphs for different selections of the data.
+
+```{r}
+d <- ggplot(diamonds, aes(x = carat)) + geom_density() 
+d + facet_grid(. ~ clarity)
+```
+
+Or arrange the facets into rows and columns
+=====
+```{r}
+d + facet_wrap(~ clarity)
+```
+
+Themes
+======
+
+-  The default ggplot theme is meant for working on screen.
+-  Can change individual elements or create a theme for everything other than the data
+-  Example: black and white backgrounds
+
+```{r}
+t = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
+```
+***
+```{r}
+show(t)
+```
+
+Black and white and gray
+=====
+
+```{r}
+t+theme_bw()
+```
+
+Review of Grammar of Graphics
+============
+
+A plot is composed of:
+-  data
+-  aesthetic - How the data will be plotted
+-  geom - Indicates the type of plot
+-  facets - Indicates multiple plots
+-  scaling - How data layout
+-  statistic - Transformation of the data
+-  position adjustment - To avoid overplotting
+-  theme - How it looks
+
+Building the plot
+================
+
+- Start from the simplist possible plot, then add details.
+
+```{r}
+t = ggplot(dsmall,aes(carat, price, color = color)) 
+t1 = t + geom_point()
+t2 = t1 + theme_bw()
+```
+***
+```{r, echo=FALSE}
+show(t2)
+```
+
+Plotting multiple elements
+================
+
+- Use multiple geom statements in the same plot using different data.
+
+```{r}
+u = ggplot(dsmall)
+u1 = u + geom_point(aes(table/50, price), color="red")
+u2 = u1 + geom_point(aes(carat, price), color="blue") + xlab("Table/50 or Carat")
+show(u1)
+```
+
+Multiple dimensions on a single plot
+===================
+
+- Add aesthetics that represent different variables in the data.
+- Make relationships or correlation visually apparent.
+- Start with carat (weight) vs. price, add color and cut.
+
+```{r}
+p = ggplot(dsmall, aes(carat, price)) + geom_point()
+show(p)
+```
+
+Add diamond color and cut to the plot
+===
+```{r}
+p = ggplot(dsmall,aes(carat, price, color = color, shape=cut)) + geom_point()
+show(p)
+```
+
+Summarizing on top of data
+====
+
+-  Create a dataframe with an associated summary (we will cover dplyr next week)
+-  Use multiple geom statements (specify that you are using a new data frame)
+
+```{r}
+library(dplyr)
+dsmallsummarize<- group_by(dsmall, cut) %>%
+  summarize(meanprice = mean(price, na.rm=TRUE), sdprice = sd(price, na.rm=TRUE))
+```
+
+Plot by using multiple geom statements
+==================
+
+-  geom statement can specify another dataset
+
+```{r}
+v = ggplot(dsmallsummarize, aes(x=cut))
+v = v+ geom_errorbar(aes(ymin=meanprice-sdprice, 
+                    ymax=meanprice+sdprice), width=0.25)  +
+  ggtitle("Price of diamonds grouped by cut")
+show(v)
+```
+
+Add the points in addition to summary
+==========
+
+- Visualize what color diamonds cause the outliers.
+- Consider if color should be considered along with cut.
+
+```{r}
+v1 = v+  geom_point(data=dsmall, aes(x=cut, y=price, color = clarity), size = 1, alpha=.2) +
+  ggtitle("Price of diamonds by cut")
+show(v1)
+```
+
+
