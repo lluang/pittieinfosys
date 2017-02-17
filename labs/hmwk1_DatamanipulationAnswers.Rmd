@@ -62,10 +62,10 @@ tidywho2011 <- tidywho %>% filter(year>2010)
 
 1. From subgroup, remove the first three characters `new`
 2. Split subgroup by `_`
-3. Note  that there are 2 groups formed by the split (if you removed `new` first)
+3. Check if there are two or three subgroups
 4. The first character of the last subgroup is the gender
-5. The first subgroup is the diagnosis mode
-6. The age range comes after the 1st character of the last subgroup
+5. If there are three subgroups, the second subgroup is the diagnosis mode.  If there are two subgroups, the diagnosis mode is "rel".
+6. The age range comes after the 1st character of the last subgroup.  They can either use all of the numbers to identify the age range, or they can try to pull out the beginning and end.
   6a. If there are 3 digits, the first digit is the beginning and the last two digits are the end of the range
   6b. If there are 4 digits, the first two digits is the beginning and the last two digets are the end of the range
   6c. If there are 2 digits, the digits represent the beginning of the age range.
@@ -96,7 +96,18 @@ tidywho2011 %>% tail(15)
   
 **ANSWER**
 
-Make a table of total diagnosis by country, then combine it with the population table, then get rates.
+Make a table of total diagnosis by country, then combine it with the population table, then get rates.  Note: students may or may not include diagnosismode in their answer.
+
+```{r}
+tidywho2011 %>% 
+    group_by(country, year, diagnosismode) %>%
+      summarize(newcases=sum(cases, na.rm=TRUE)) %>%
+        left_join(population) %>%
+          mutate(rate=newcases/population*100000) %>% tail(15)
+```
+
+Alternative without the diagnosismode column.
+
 ```{r}
 tidywho2011 %>% 
     group_by(country, year) %>%
