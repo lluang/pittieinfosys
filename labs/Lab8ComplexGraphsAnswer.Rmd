@@ -3,21 +3,19 @@ complex graphs with ggplot2 Answer
 author: Shi Tang
 date: January, 2015
 
-```{r loadlibraries}
+```{r loadlibraries, warning=FALSE}
 library(ggplot2)
-library(plyr)
 library(dplyr)
 library(mgcv)
-#library(RSQLite)
-#conn <- dbConnect(SQLite(), "../data/nsfg.sqlite")
 ```
 ```{r, loaddata}
-#sql <- "SELECT *
-#        FROM FemPreg"
-#FemPreg <- dbGetQuery(conn, sql)
-FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
+FemPreg <- read.csv("../data/nsfgFemPreg.csv",
                     header=TRUE, sep=",")
 ```
+
+
+1.  [3] One question when looking at population demographics is if all parts of the population have the same distribution. 
+
 
 Add an aesthetic attribute
 =============================================
@@ -26,8 +24,12 @@ Add an aesthetic attribute
 <small>*Hint:* Use RACE as a factor</small>
 
 Answer:
-```{r, echo = FALSE}
-qplot(BIRTHWGT_LB1, data = FemPreg, geom = "histogram", fill = as.factor(RACE), binwidth = 1, xlim = c(0,14))
+```{r}
+ggplot(FemPreg[FemPreg$BIRTHWGT_LB1<98,], aes(as.numeric(BIRTHWGT_LB1), ..density..,  linetype=as.factor(RACE), fill=as.factor(RACE))) + 
+  geom_histogram(center=2, bins=10, position="dodge") +
+  scale_x_discrete(limits=c(2,12), breaks=c(2,4,6,8,10,12), name="Birthweight (lbs)") +
+  scale_y_continuous(labels= scales::percent)
+
 ```
 
 

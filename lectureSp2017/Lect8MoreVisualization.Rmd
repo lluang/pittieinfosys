@@ -11,6 +11,13 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+## Overview
+
+-  Geometries and statistical summaries
+-  Scales, Axis, and Legends
+-  Colors
+
+
 ## Geometries and statistics
 
 ## Geom
@@ -291,6 +298,25 @@ Name of scale functions
   - Name of scale (e.g. `continuous`, `discrete`, `brewer`)
     - `brewer` indicates a color scale.
     
+Scale commands
+=====
+
+```
+scale_x_continuous(name, breaks, labels, limits, trans)
+```
+
+- name : x or y axis labels
+- breaks : control the breaks in the guide (axis ticks, grid lines, …). Among the possible values, there are :
+    - NULL : hide all breaks
+    - waiver() : the default break computation
+    - a character or numeric vector specifying the breaks to display
+- labels : labels of axis tick marks. Allowed values are :
+    - NULL for no labels
+    - waiver() for the default labels
+    - character vector to be used for break labels
+- limits : a numeric vector specifying x or y axis limits (min, max)
+trans for axis transformations. Possible values are “log2”, “log10”, “sqrt”, etc
+
 Short cuts for axis
 ==============
 
@@ -421,8 +447,8 @@ Scale transformations
 ```{r}
 ggplot(dsmall, aes(carat, price)) +
   geom_point() +
-  scale_x_continuous(trans="log10") + 
-  scale_y_continuous(trans="log10")
+  scale_x_continuous(name = "log10(carat)", trans="log10") + 
+  scale_y_continuous(name = "log10(price)", trans="log10")
 ```
 
 Colors
@@ -460,8 +486,8 @@ Continuous color gradients
 ```{r}
 erupt <- ggplot(faithfuld, aes(waiting, eruptions, fill=density)) + 
   geom_raster() + 
-  scale_x_continuous(NULL, expand=c(0,0)) +
-  scale_y_continuous(NULL, expand=c(0,0)) + 
+  scale_x_continuous( expand=c(0,0)) +
+  scale_y_continuous(expand=c(0,0)) + 
   theme(legend.position="none")
 ```
 
