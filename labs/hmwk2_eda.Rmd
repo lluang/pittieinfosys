@@ -77,5 +77,6 @@ aseanrates <- whoasean %>%
 
   a.  Draw a process map to create the dataset with country and diagnosis mode by year.
   b.  Design a visualization and explain the criteria you used. (one paragraph)
-  d.  Write the code that will implement the data manipulation then visualization you drew out in a and b, and c. Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words.  The data dictionary is at http://www.who.int/tb/country/data/download/en/
+  c.  Write the code that will implement the data manipulation then visualization you drew out in a and b. Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words.  The data dictionary is at http://www.who.int/tb/country/data/download/en/
+
   
