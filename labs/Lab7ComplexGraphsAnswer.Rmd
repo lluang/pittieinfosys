@@ -1,0 +1,115 @@
+---
+title: "Lab 7: Complex graphs"
+author: "IE 0015 Information Systems"
+date: "February 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r loadlibraries, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+```
+```{r, loaddata}
+FemPreg <- read.csv("../data/nsfgFemPreg.csv",
+                    header=TRUE, sep=",")
+```
+
+
+1.  [3] One question when looking at population demographics is if all parts of the population have the same distribution. Using the Female Pregnancy Data from the National Survey of Population Growth, create a graph that shows the distribution of the birthweight of newborn babies, separated by race (Note: use HISPRACE for this purpose).  
+
+Note: 
+
+  1.  You will need both a way to display distributions, and a way to show each race in a single plot. 
+  2.  Race should be identified in the plot as a label, not as a number. (which is how it is presented in the Female Pregnancy data table.)
+  3. The code below converts numeric values into their codes (see Lecture 4: Data in R). You will need to something similar later.
+  4. Because you are getting distributions by race, you should convert counts into percentages using `y=..density..` within the `aes()` function. 
+
+```{r}
+raceorigin <- as.data.frame(
+           rbind(c("1", "Hispanic"),
+                 c("2", "Non-Hispanic White"),
+                 c("3", "Non-HIspanic Black"),
+                 c("4", "Non-HIspanic Other"))
+           )
+colnames(raceorigin) <- c("HISPRACE", "raceorigin")
+FemPreg$HISPRACE <- as.factor(FemPreg$HISPRACE)
+FemPreg <- FemPreg %>% 
+  left_join(raceorigin)
+```
+
+**Answer**
+
+Points for 
+
+1. using a distribution type plot (histogram or bins).
+2. Specifying the color scheme
+3. Using density and 
+
+
+```{r}
+FemPreg$BIRTHWGT_LB1 <- as.numeric(FemPreg$BIRTHWGT_LB1)
+ggplot(FemPreg[FemPreg$BIRTHWGT_LB1<98,], aes(x=BIRTHWGT_LB1, y=..density..,  linetype=raceorigin, fill=raceorigin)) + 
+  geom_histogram(center=2, bins=10, position="dodge") +
+  scale_fill_brewer(palette="YlGnBu") +
+  scale_x_discrete(limits=c(2,12), name="Birthweight (lbs)")
+```
+
+2.  (6) The American Academy of Pediatrics recommends that infants are breastfed exclusively for about the first 6 months and that breastfeeding continue for at least 12 months.  Plot the average duration of breastfeeding (including none) according to both race (HISPRACE) and level of education of the mother (HIEDUC.  Make sure that the plot can be understood when printed in black and white and that the axis names are meaningful and legible. (i.e. translate the numerical values to the descriptions)
+
+Notes: 
+
+  1. Use AGEQTNURN1 indicate length of breastfeeding.  
+  2. Think about what NA means for this variable.
+  3. Aggregations and summaries were covered in Lecture 6: Aggregation
+
+  a.  What kind of plot will you choose and why?
+  b.  Create the plot using ggplot.  Make sure you have meaningful and legible axis titles.
+  
+  
+**ANSWER**
+
+a.  Summary_2d (heatmap), because it shows three dimensions where race/origin will be one axis and the education level will be the other axis.  
+
+b.  Points for merging in written descriptions for race and education level, grouping/aggregating on racial origen in education level, then a summary for average months of breastfeeding. Remember to include `na.rm=True` in the call to `mean()` in `summarize()`, or the summarize function will return NA (and you will have a blank chart).
+
+```{r}
+FemPreg$HIEDUC <- as.ordered(FemPreg$HIEDUC)
+highesteducation <- as.data.frame(
+                     rbind(c("5", "9TH GRADE OR LESS"),
+                            c("6", "10TH GRADE"),
+                            c("7", "11TH GRADE"),
+                            c("8", "12TH GRADE, NO DIPLOMA (NOR GED)"),
+                            c("9", "HIGH SCHOOL GRADUATE (DIPLOMA OR GED)"),
+                            c("10", "SOME COLLEGE BUT NO DEGREE"),
+                            c("11", "ASSOCIATE DEGREE IN COLLEGE/UNIVERSITY"),
+                            c("12", "BACHELOR'S DEGREE"),
+                            c("13", "MASTER'S DEGREE"),
+                            c("14", "DOCTORATE DEGREE"),
+                            c("15", "PROFESSIONAL DEGREE")
+                     )
+           )
+colnames(highesteducation) <- c("HIEDUC", "highesteducation")
+highesteducation$HIEDUC <- as.ordered(highesteducation$HIEDUC)
+FemPreg <- FemPreg %>% 
+  left_join(highesteducation)
+```
+  
+```{r}
+breastfeeding <- FemPreg %>% 
+                    group_by(raceorigin, highesteducation) %>%
+                      summarize(avgmonths = mean(AGEQTNUR1, na.rm=TRUE))
+```
+
+                    
+```{r}
+ggplot(breastfeeding) +
+  stat_summary_2d(aes(raceorigin, highesteducation, z=avgmonths)) +
+  scale_fill_distiller(palette="Blues", guide = guide_legend(title = "Average Months")) +
+  theme(axis.text.x = element_text(angle=90)) +
+  xlab("Race of mother") +
+  ylab("Highest level of mother's education") +
+  ggtitle("Average months breastfeeding by race and education of mother") 
+```
