@@ -107,7 +107,7 @@ breastfeeding <- FemPreg %>%
 ```{r}
 ggplot(breastfeeding) +
   stat_summary_2d(aes(raceorigin, highesteducation, z=avgmonths)) +
-  scale_fill_distiller(palette="Blues", guide = guide_legend(title = "Average Months")) +
+  scale_fill_distiller(palette="Greys", guide = guide_legend(title = "Average Months")) +
   theme(axis.text.x = element_text(angle=90)) +
   xlab("Race of mother") +
   ylab("Highest level of mother's education") +
