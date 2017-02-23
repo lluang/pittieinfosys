@@ -1,0 +1,61 @@
+---
+title: 'Homework 2: EDA'
+author: "IE 0015"
+date: "March 15, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+For the homework assignments, code and narrative should be written using R Markdown.  Process maps can be written on separate pieces of paper. You should render the R Markdown as PDF or Word, print the output, and staple with the process maps for the complete submission.
+
+In the `tidyr` package there are two Tubeculosis data sets `who` and `population` (you used them in Lab 3).  Look at the `tidyr` help files (R Studio -> Packages tab -> tidyr) to see what each contains. To load and view the last few rows of the datasets, you should enter:
+
+```{r, warning=FALSE}
+library(dplyr)
+library(tidyr)
+library(magrittr)
+data(who)
+data(population)
+```
+The following code is provided as a starting point from homework 1.
+
+```{r}
+who_new <- who[who$year>2005,c("country", "iso2", "iso3", "year", "new_sp_m014",  "new_sp_m1524","new_sp_m2534", "new_sp_m3544", "new_sp_m4554", "new_sp_m5564", "new_sp_m65", "new_sp_f014", "new_sp_f1524", "new_sp_f2534", "new_sp_f3544", "new_sp_f4554", "new_sp_f5564", "new_sp_f65",  
+"new_sn_m014",  "new_sn_m1524", "new_sn_m2534", "new_sn_m3544", "new_sn_m4554", "new_sn_m5564","new_sn_m65",   "new_sn_f014",  "new_sn_f1524", "new_sn_f2534", "new_sn_f3544", "new_sn_f4554","new_sn_f5564", "new_sn_f65",   
+"new_ep_m014",  "new_ep_m1524", "new_ep_m2534", "new_ep_m3544","new_ep_m4554", "new_ep_m5564", "new_ep_m65",   "new_ep_f014",  "new_ep_f1524", "new_ep_f2534","new_ep_f3544", "new_ep_f4554", "new_ep_f5564", "new_ep_f65",   
+"newrel_m014",  "newrel_m1524","newrel_m2534", "newrel_m3544", "newrel_m4554", "newrel_m5564", "newrel_m65",   "newrel_f014","newrel_f1524", "newrel_f2534", "newrel_f3544", "newrel_f4554", "newrel_f5564", "newrel_f65")]
+
+tidywho <- who_new %>% gather(`new_sp_m014`,  `new_sp_m1524`, `new_sp_m2534`, `new_sp_m3544`, `new_sp_m4554`, `new_sp_m5564`, `new_sp_m65`,   `new_sp_f014`, `new_sp_f1524`, `new_sp_f2534`, `new_sp_f3544`, `new_sp_f4554`, `new_sp_f5564`, `new_sp_f65`, 
+`new_sn_m014`,  `new_sn_m1524`, `new_sn_m2534`, `new_sn_m3544`, `new_sn_m4554`, `new_sn_m5564`,`new_sn_m65`,   `new_sn_f014`,  `new_sn_f1524`, `new_sn_f2534`, `new_sn_f3544`, `new_sn_f4554`,`new_sn_f5564`, `new_sn_f65`,   
+`new_ep_m014`,  `new_ep_m1524`, `new_ep_m2534`, `new_ep_m3544`,`new_ep_m4554`, `new_ep_m5564`, `new_ep_m65`,   `new_ep_f014`,  `new_ep_f1524`, `new_ep_f2534`,`new_ep_f3544`, `new_ep_f4554`, `new_ep_f5564`, `new_ep_f65`,   
+`newrel_m014`,  `newrel_m1524`,`newrel_m2534`, `newrel_m3544`, `newrel_m4554`, `newrel_m5564`, `newrel_m65`,   `newrel_f014`,`newrel_f1524`, `newrel_f2534`, `newrel_f3544`, `newrel_f4554`, `newrel_f5564`, `newrel_f65`,
+key = "subgroup", value="cases")
+
+tidywho$subgroup1 <- substring(tidywho$subgroup, 4, length(tidywho$subgroup))
+diagnosismode <- c()
+gender <- c()
+agerange <- c()
+for(newrange in tidywho$subgroup1){
+  subgroupsplit <- strsplit(newrange, split= "_")
+  diagnosismode <- append(diagnosismode,  subgroupsplit[[1]][length(subgroupsplit[[1]])-1])
+  subgrouplast <- subgroupsplit[[1]][length(subgroupsplit[[1]])]
+  gender <- append(gender, substring(subgrouplast, 1, 1))
+  agerange <- append(agerange, substring(subgrouplast, 2, nchar(subgrouplast)))
+}
+tidywho$diagnosismode <- diagnosismode
+tidywho$gender <- gender
+tidywho$agerange <- agerange
+#The ASEAN Nations are: 
+aseancountries <- c("Brunei", "Cambodia", "Indonesia", "Lao", "Malaysia", "Myanmar", "Philippines", "Singapore", "Thailand", "Vietnam")
+library(countrycode)
+aseaniso2 <- countrycode(aseancountries, "country.name", "iso2c")
+```
+
+```{r}
+aseanwho <- tidywho %>% 
+              filter(iso2 %in% aseaniso2) %>%
+                group_by(country, iso2, diagnosismode, gender, year) %>%
+                  summarize(cases = sum(cases))
+
+```
