@@ -25,7 +25,7 @@ Note:
   1.  You will need both a way to display distributions, and a way to show each race in a single plot. 
   2.  Race should be identified in the plot as a label, not as a number. (which is how it is presented in the Female Pregnancy data table.)
   3. The code below converts numeric values into their codes (see Lecture 4: Data in R). You will need to something similar later.
-  4. Because you are getting distributions by race, you should convert counts into percentages using `y=..density..` within the `aes()` function. 
+  4. Because you are getting distributions by race, you should convert counts into percentages using `y=..count../sum(..count..)` within the `aes()` function. 
 
 ```{r}
 raceorigin <- as.data.frame(
