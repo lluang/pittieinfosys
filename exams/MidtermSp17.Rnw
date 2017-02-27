@@ -77,7 +77,7 @@
 \makebox[\textwidth]{Name:\enspace\hrulefill}
 
 \centering
-{\bf IE 0015 Spring 2016 Midterm}
+{\bf IE 0015 Spring 2017 Midterm}
 
 \centering
 {\bf A}
@@ -88,6 +88,7 @@ library(xtable)
 library(dplyr)
 library(tidyr)
 library(magrittr)
+library(readr)
 library(ggplot2)
 @
 
@@ -110,6 +111,8 @@ library(ggplot2)
 
 \begin{questions}
 
+\question[35]
+
 The Pittsburgh Citizen Police Review Board (CPRB) is an independent agency of the City of Pittsburgh set up to investigate citizen complaints about improper police conduct. It is made up of representives appointed by either the City Council or the Mayor. 
 
 One of the responsibilities of the CPRB is to represent the interests of the general public in investigations of police misconduct, and to provide transparancy into Police activity.  The CPRB has available all police incident and arrest reports, which includes all incidents that involve subject resistance and police use of force.
@@ -118,34 +121,40 @@ On January 31, 2016, Mr. Bruce T. Kelley Jr. and another man were involved in a 
 
 (Note: In reality, the CPRB does not have jurisdiction over the Port Authority officers, so was not involved in the actual case.)
 
-\question[35]  Create a CoNVO statement from the point of view of an analyst preparing a report as a consultant for the CPRB (i.e. you represent the CPRB).
 
+\begin{parts}
+\part   Create a CoNVO statement from the point of view of an analyst preparing a report as a consultant for the CPRB (i.e. you represent the CPRB).
 
-\begin{solution}[3in]
+\begin{solution}[4in]
 
-- Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.  
+  \begin{itemize}
+    \item Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.  
 
 Here, the context is the CPRB wants to investigate a specific police action.
 
--  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
+  \item  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
 
 Here, the Need is to look at incidents in the region where the subject actions are similar to the subject actions in the case and compare the police action in those cases.
 
--  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all." Another common mistake is to be too vague. The Vision in particular needs to be concrete enough so that a potential client has a picture of what she will be getting at the end of an analysis project and how she can use it.
+  \item  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all." Another common mistake is to be too vague. The Vision in particular needs to be concrete enough so that a potential client has a picture of what she will be getting at the end of an analysis project and how she can use it.
 
 Because the goal is to compare the actions taken by police with similar cases, the vision should involve filtering arrests for similar offensives or filtering incidents to similar incidents (e.g. public drunkenness) to determine how common it was for subjects to resist arrests.  Reports could discuss police approaches to the suspects to determine if this was common or if this was done in a manner not usual.  And if the approach was common, if the response was normal or not (and if police response to the escalation of violence was consistent.)  Another way of looking at the data is focusing on the police response to the subject resistance, if the police escalated in a way consistent with other incidents that did not result in a fatality, or if this pathway commonly resulted in subject injury or fatality.
-
--  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context and lead to the decision identified in the Need. There should be more than one possible outcome (if not, there is no reason to do the project, the organization should take that route now). One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.  
+  
+  \item  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context and lead to the decision identified in the Need. There should be more than one possible outcome (if not, there is no reason to do the project, the organization should take that route now). One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.  
 
 Here, the CPRB could find that the police acted within their procedure or that the police did not. Also they could find that the police procedures are flawed and need revision.
 
+  \end{itemize}
+
 Note: for grading I don't expect anyone to be that nuanced.  You should have either filtered incident data on something, or filtered subject resistance on something for the vision. And the outcome should have had more than one possible result.
 \end{solution}
+
+\end{parts}
 \pagebreak
 
-\question[35] Data Analysis
+\question Data Analysis
 
-The CPRB wants to investigate claims that the Pittsburgh Police Department provides better services to some of Pittsburgh's 99 neighborhoods compared to others. 
+The Pittsburgh Citizens Police Review Board (CPRB) wants to investigate claims that the Pittsburgh Police Department provides better services to some of Pittsburgh's 99 neighborhoods compared to others. 
 Specifically, that the rate of incidents compared to arrests for different categories of crimes is different accross neighborhoods.
 
 Using the Police Blotter and the Police Incident data and the data, answer the following.
@@ -167,88 +176,64 @@ Using the Police Blotter and the Police Incident data and the data, answer the f
 
 1. The Offenses column has multiple data points in the column.  The offenses column also has both the numerical code as well as the descriptor in the column.
 2. The following:
-
-  i.  Split the offenses column by the '|'.
-  ii.  Create a new row with each new offense and the original incident number (CCR).
-  iii.  Split the Offense number from the text using the first space.
-  iv. 
+  \begin{itemize}
+  \item  Split the offenses column by the '|'.
+  \item  Create a new row with each new offense and the original incident number (CCR).
+  \item  Split the Offense number from the text using the first space.
+  \end{itemize} 
 
 3.  Process map follows:
 
-  i. Mutate: add a column to the arrest data table by joining the arrest table to the heirarchy table using the offense number.
-  ii. For both arrest and blotter table, group by heirarchy and police zone.
-  iii.  For both arrest and blotter table, summarize by counting the number of arrests/incidents for each combination of heirarchy and police zone. This gives the raw number.
-  iv.  For each combination of heirarchy and police zone, divide the number of arrests by the number of incidents. This gives the ratio of arrests to incidents for each police zone.
-
+  \begin{itemize}
+  \item Mutate: add a column to the arrest data table by joining the arrest table to the heirarchy table using the offense number.
+  \item For both arrest and blotter table, group by heirarchy and police zone.
+  \item  For both arrest and blotter table, summarize by counting the number of arrests/incidents for each combination of heirarchy and police zone. This gives the raw number.
+  \item  For each combination of heirarchy and police zone, divide the number of arrests by the number of incidents. This gives the ratio of arrests to incidents for each police zone.
+  \end{itemize}
 
 4.  Starting with the number of arrests and incidents and their ratio.
 
-  i. For each police zone, order the heirarchies by the number of incidents.
-  ii. For each police zone, filter by the top 5 heirarchies.
-  iii.  For a visualization, I would use a map of Pittsburgh that had the police zones identified. In each, I would put in a bar chart that depicted the total number of incidents behind the total number of arrests, so the two bars would total to the number of incidents, and the bars could be defined as arrests vs incidents in excess of arrests. This would show both proportion and the amount.  
+  \begin{itemize}
+  \item For each police zone, order the heirarchies by the number of incidents.
+  \item For each police zone, filter by the top 5 heirarchies.
+  \item  For a visualization, I would use a map of Pittsburgh that had the police zones identified. In each, I would put in a bar chart that depicted the total number of incidents behind the total number of arrests, so the two bars would total to the number of incidents, and the bars could be defined as arrests vs incidents in excess of arrests. This would show both proportion and the amount.
+  \end{itemize}
 \end{solution}
 
 \end{parts}
+\end{questions}
 \pagebreak
 
 \begin{center}
 \gradetable[v][questions]
 \end{center}
-\question[30] Data visualization
-
-FedEx Ground is considering adding another distribution center in the southwest Pennsylvania region.  However, like other companies that have large numbers of distribution centers around the country (e.g. UPS, Amazon.com), FedEx Ground finds that finding labor to staff its distribution centers is an issue.  Assume that U.S. Census data and American Community Survey data is available.
-
-\begin{parts}
-\part Sketch as data presentation (tables or charts/graphs) that can relate unemployment to the road network (interstate highways).  Include a title and legend/axis labels as appropriate.
-\part Write a description of your sketch using visual cues. There should be a description of at least three visual cues in your description. (Note: since it is unlikely that you brought colored pencils, use shading or shapes where you would normally use colors.)
-\end{parts}
-
-\begin{solution}[3in]
-The solution is likely going to be a map with the road network, and southwest Pennyslvania divided into something like counties. And some charting of unemployment levels (raw numbers) superimposed on the map. (It is very hard to answer a question involving location without using a map as a visual cue).  Another difficulty was using an overall summary instead of discussing specific areas. As the question was about finding specific locations and overall summary is not helpful. Similarly using percentages when an employer would be interested in the actual size of a workforce. (which requires knowing what the actual value of unemployment was.)
-
-Common issue was trying to add percentages that were based on different baselines (e.g. percentage of employees of different contracters living in a certain area.)
-\end{solution}
-
-\end{questions}
 \pagebreak
 
 \begin{landscape}
 This exam will make use of the data from the gun violence archive on mass shootings, child injuries, and child deaths.  A sample from each of these tables is below. Note that if an incident involved a child killed and a child injured, that incident would appear in both Table 1 and Table 2.
 
 <<echo=False>>=
-massshooting <- read.csv("gva_massshooting.csv")
-childinjury <- read.csv("gva_childreninjured.csv")
-childdeath <- read.csv("gva_childrenkilled.csv")
-accidentinjury <- read.csv("gva_accidentalinjuries.csv")
-accidentdeath <- read.csv("gva_accidentaldeaths.csv")
+Blotter <- read_csv("~/courses/datascience/infosys2015/data/PittsburghPoliceBlotter.csv")
+Arrest <- read_csv("~/courses/datascience/infosys2015/data/PittsburghPoliceArrest.csv")
+
 @
 
 \centering
-{Table 1. Children Killed}
+{Table 1. Incidents from Blotter}
 <<echo=FALSE, results = tex>>=
-childdeathtop <- childdeath[1:7,-7]
-childinjurytop <- childinjury[1:7,-7]
-massshootingtop <- massshooting[1:7,-7]
-childdeathtab <- xtable(childdeathtop, caption="Children Killed", label="tbl:killed")
-childinjurytab <- xtable(childinjurytop, caption="Children Injured", label="tbl:injured")
-massshootingtab <- xtable(massshootingtop, caption="Mass shootings", label="tbl:massshootings")
-print(childdeathtab, floating=FALSE, include.rownames = FALSE)
+Pittsburghblotter <- Blotter[1:7,]
+Pittsburharrest <- Arrest[1:7,]
+blottertab <- xtable(Pittsburghblotter, caption="Archived Incidents", label="tbl:blotter")
+arresttab <- xtable(Pittsburghblotter, caption="Arrests", label="tbl:arrests")
+print(blottertab, floating=FALSE, include.rownames = FALSE)
 @
 
 
 \centering
-{Table 2. Children Injured}
+{Table 2. Arrests}
 
 <<echo=FALSE, results = tex>>=
-print(childinjurytab, floating=FALSE, include.rownames = FALSE)
-@
-
-
-\centering
-{Table 3. Mass Shootings}
-
-<<echo=FALSE, results = tex>>=
-print(massshootingtab, floating=FALSE, include.rownames = FALSE)
+print(arresttab, floating=FALSE, include.rownames = FALSE)
 @
 
 \end{landscape}

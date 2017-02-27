@@ -1,5 +1,5 @@
 ---
-title: 'Homework 2:  Exploratory Data Analysis'
+title: 'Homework 2: Exploratory Data Analysis'
 author: "IE 0015"
 date: "March 22, 2017"
 output:
@@ -24,11 +24,7 @@ data(population)
 
 This lab will use the tuberculosis dataset and focus on the 10 countries that are part of the Association of South East Asian Nations (ASEAN):   Brunei, Cambodia, Indonesia, Laos, Malaysia, Myanmar (Burma), the Philippines, Singapore, Thailand, and Vietnam. The provided code will pick up from Homework 1, by combining the TB and population data, then breaking out the diagnosis, gender, and age range.
 
-
-
-
 The following code is provided as a starting point from homework 1.
-
 
 ```{r}
 who_new <- who[,c("country", "iso2", "iso3", "year", "new_sp_m014",  "new_sp_m1524","new_sp_m2534", "new_sp_m3544", "new_sp_m4554", "new_sp_m5564", "new_sp_m65", "new_sp_f014", "new_sp_f1524", "new_sp_f2534", "new_sp_f3544", "new_sp_f4554", "new_sp_f5564", "new_sp_f65",  
@@ -56,32 +52,6 @@ aseancountries <- c("Brunei", "Cambodia", "Indonesia", "Lao", "Malaysia", "Myanm
 aseaniso2 <- countrycode(aseancountries, "country.name", "iso2c")
 ```
 
-**ANSWER**
-
-```{r}
-whoasean <- tidywho %>% 
-              filter(iso2 %in% aseaniso2)
-```
-
-The following code will take `whoasean` and generate columns for the diagnosismode, agerange, and gender (i.e. what you did in homework 1)
-
-```{r}
-whoasean$subgroup1 <- substring(whoasean$subgroup, 4, length(whoasean$subgroup))
-diagnosismode <- c()
-gender <- c()
-agerange <- c()
-for(newrange in whoasean$subgroup1){
-  subgroupsplit <- strsplit(newrange, split= "_")
-  diagnosismode <- append(diagnosismode,  subgroupsplit[[1]][length(subgroupsplit[[1]])-1])
-  subgrouplast <- subgroupsplit[[1]][length(subgroupsplit[[1]])]
-  gender <- append(gender, substring(subgrouplast, 1, 1))
-  agerange <- append(agerange, substring(subgrouplast, 2, nchar(subgrouplast)))
-}
-whoasean$diagnosismode <- diagnosismode
-whoasean$gender <- gender
-whoasean$agerange <- agerange
-```
-
 2.  [10] Group and plot the total rate of diagnosis of TB per year for each country in a form that is comparable. 
 
   a. Draw a process map that illustrates how to do this.
@@ -93,28 +63,15 @@ Note:
   ii. You should also make sure that the country data visualizations are comparable, meaning that you should be using rates and the axis should align.
   iii. The code below is based on the solution from Homework 1 and you can use this as a starting point.  You can also use this code to get your process map started (each line corresponds to a box in your process map.)
   iv. Throughout this assignment, you may use ISO2 codes instead of the country names.
-  
+
 ```{r}
 aseanrates <- whoasean %>% 
-  filter(year>2000, year<2012) %>%
+  filter(year>2000, year<2013) %>%
     group_by(country, iso2, year) %>%
       summarize(newcases=sum(cases, na.rm=TRUE)) %>%
         left_join(population) %>%
           mutate(rate=newcases/population*100000)
 ```
-
-**ANSWER**
-
-```{r}
-ggplot(aseanrates, aes(year, rate)) + geom_line() +
-  facet_grid(iso2~ .)
-```
-
-```{r}
-ggplot(aseanrates, aes(year, rate, color=iso2)) + geom_line() +
-  scale_color_brewer(palette = "Paired") + theme_bw()
-```
-
 
 3.  [13] You are interested in how the different countries have been changing the ratio of use of the various diagnosis modes have been changing per year.
 
@@ -123,23 +80,3 @@ ggplot(aseanrates, aes(year, rate, color=iso2)) + geom_line() +
   c.  Write the code that will implement the data manipulation then visualization you drew out in a and b. Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words.  The data dictionary is at http://www.who.int/tb/country/data/download/en/
 
   
-**ANSWER**
-  
-```{r}
-aseanmodes <- whoasean %>% 
-  filter(year>2000, year<2012) %>%
-    group_by(country, iso2, diagnosismode, year) %>%
-      summarize(newcases=sum(cases, na.rm=TRUE)) %>%
-        left_join(population) %>%
-          mutate(rate=newcases/population*100000)
-```
-
-```{r}
-ggplot(aseanmodes, aes(year, rate, color=diagnosismode)) +
-  geom_point() + geom_line() +
-  scale_x_discrete(breaks = c(2002, 2004, 2006, 2008, 2010, 2012)) +
-  scale_color_brewer(palette="Set2") +
-  scale_y_continuous(name = "rate per 100,000") +
-  facet_grid(. ~ iso2) +
-  theme(axis.text.x = element_text(angle=90))
-```
