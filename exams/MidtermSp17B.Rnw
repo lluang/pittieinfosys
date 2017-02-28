@@ -80,17 +80,7 @@
 {\bf IE 0015 Spring 2017 Midterm}
 
 \centering
-{\bf A}
-
-
-<<echo=FALSE>>=
-library(xtable)
-library(dplyr)
-library(tidyr)
-library(magrittr)
-library(readr)
-library(ggplot2)
-@
+{\bf B}
 
 
 
@@ -118,17 +108,15 @@ library(ggplot2)
 
 \question[35]
 
-The Pittsburgh Citizen Police Review Board (CPRB) is an independent agency of the City of Pittsburgh set up to investigate citizen complaints about improper police conduct. It is made up of representatives appointed by either the City Council or the Mayor. 
+The Alliance of Police Accountability (APA) is a grassroots organization dedicated to criminal justice reform, specializing in improving community and police relations through advocacy, education, and policy.
 
-One of the responsibilities of the CPRB is to represent the interests of the general public in investigations of police misconduct and to provide transparency into police activity.  The CPRB has available all police incident and arrest reports, which includes all incidents that involve subject resistance and police use of force.
+One event where the APA becomes involved is when police action leads to a civilian fatality in a case where there is a perception that there was no threat to life due to the suspect.
 
-On January 31, 2016, Mr. Bruce T. Kelley Jr. and another man were involved in a fight with Port Authority officers who were confronting them while drinking in a Port Authority Subway shelter in Wilkinsburg, PA . Two officers were injured, and in the ensuing pursuit and confrontation, Mr. Kelley was shot and killed after killing a Port Authority K-9.  As part of the investigation the CPRB is interested in being able to compare the actions taken by Port Authority  officers compared to other incidents where suspects resist police action. 
-
-(Note: In reality, the CPRB does not have jurisdiction over the Port Authority officers, so was not involved in the actual case.)
+On January 31, 2016, Mr. Bruce T. Kelley Jr. and another man were involved in a fight with Port Authority officers who were confronting them while drinking in a Port Authority Subway shelter in Wilkinsburg, PA . Two officers were injured, and in the ensuing pursuit and confrontation, Mr. Kelley was shot and killed after killing a Port Authority K-9. The APA is interested in arguing that the subjects actions did not in themselves normally result in the police use of lethal force.  The APA has available all police incident and arrest reports after identifying information has been removed.  It would also have access to incident reports that involve subject resistance and police use of force.
 
 
 \begin{parts}
-\part   Create a CoNVO statement from the point of view of an analyst preparing a report as a consultant for the CPRB (i.e. you represent the CPRB).
+\part   Create a CoNVO statement from the point of view of an analyst preparing a report as a consultant for the APA (i.e. you represent the APA).
 
 \begin{solution}[3in]
 
@@ -159,16 +147,18 @@ Note: for grading I don't expect anyone to be that nuanced.  You should have eit
 
 \question Tidy data
 
-The Pittsburgh Citizens Police Review Board (CPRB) wants to investigate claims that the Pittsburgh Police Department provides better services to some of Pittsburgh's 99 neighborhoods compared to others. 
+The  (CPRB) is an independent agency of the City of Pittsburgh set up to investigate citizen complaints about improper police conduct. It is made up of representatives appointed by either the City Council or the Mayor. 
+
+The CPRB wants to investigate claims that the Pittsburgh Police Department provides better services to some of Pittsburgh's 99 neighborhoods compared to others. 
 Specifically, that the ratio of arrests to incidents for different categories of crimes is different across neighborhoods.
 
-Using the Police Blotter, answer the following.
+Using the Police Arrest data, answer the following.
 
 \begin{parts}
 
-\part[5]  Currently, the "Offenses" column in the police blotter is not tidy. How is it not tidy?
+\part[5]  Currently, the "Offenses" column in the arrest data is not tidy. How is it not tidy?
 
-\part[10]  Create a process map that will modify the police blotter to make it tidy. Note that as part of this you should separate the code given in the "Offenses" column from the description.
+\part[10]  Create a process map that will modify the arrest data to make it tidy. Note that as part of this you should separate the code given in the "Offenses" column from the description.
 
 
 
@@ -223,10 +213,5 @@ Using the Police Blotter and the Police Incident data and the data, answer the f
 \end{parts}
 \end{questions}
 
-
-<<echo=FALSE>>=
-#PittsburghPoliceArrest <- read_csv("../data/PittsburghPoliceArrest.csv")
-#PittsburghPoliceBlotter <- read_csv("../data/PittsburghPoliceBlotter.csv")
-@
 
 \end{document}
