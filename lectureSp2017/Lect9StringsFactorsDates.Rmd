@@ -10,13 +10,12 @@ output:
 
 ```{r, echo=FALSE, warnings=FALSE}
 library(ggplot2)
-FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
+FemPreg <- read.csv("../data/nsfgFemPreg.csv",
                      header=TRUE,sep=",")
 ```
 
 Dates
 =======
-type: section
 
 Date and time formats
 =====================
@@ -341,15 +340,21 @@ Using factors
 Example of factors
 ====================
 ```{r}
-qplot(as.factor(pregordr), BIRTHWGT_LB1, data = FemPreg[FemPreg$BIRTHWGT_LB1<99,], geom = "boxplot", xlab="Pregnancy order", ylab = "Birthweight (lbs)", main = "Birthweight by pregnancy order")
+ggplot(FemPreg[(FemPreg$BIRTHWGT_LB1<99 & !is.na(FemPreg$BIRTHWGT_LB1)),], aes(as.factor(pregordr), BIRTHWGT_LB1)) +
+  geom_boxplot() + xlab("Pregnancy order") + ylab("Birthweight (lbs)") + ggtitle("Birthweight by pregnancy order as factor")
 ```
-
+```{r}
+ggplot(FemPreg[(FemPreg$BIRTHWGT_LB1<99 & !is.na(FemPreg$BIRTHWGT_LB1)),], aes(as.integer(pregordr), BIRTHWGT_LB1, group=pregordr)) +
+  geom_boxplot() + xlab("Pregnancy order") + ylab("Birthweight (lbs)") + ggtitle("Birthweight by pregnancy order as integer")
+```
 Summarizing factor variables
 ===========
 
 ```{r}
-summary(FemPreg$pregordr)
-unique(FemPreg$pregordr)
+summary(as.factor(FemPreg$pregordr))
+```
+```{r}
+summary(as.integer(FemPreg$pregordr))
 ```
 
 Renaming factors
