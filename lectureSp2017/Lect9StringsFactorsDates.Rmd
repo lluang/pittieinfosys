@@ -4,12 +4,16 @@ author: "IE 0015 Information Systems"
 date: "March 2017"
 output:
   pdf_document: default
+  html_document: default
   beamer_presentation: default
   slidy_presentation: default
 ---
 
 ```{r, echo=FALSE, warnings=FALSE}
 library(ggplot2)
+library(readxl)
+library(magrittr)
+library(dplyr)
 FemPreg <- read.csv("../data/nsfgFemPreg.csv",
                      header=TRUE,sep=",")
 ```
@@ -326,6 +330,26 @@ Division also works
 (today() %--% next_year) %/% ddays(1)
 ```
 
+Making bins
+================
+
+- If you need to take dates and group them (e.g. into months) you can use the `cut()` function with dates. (actually, uses `cut.Date` when `cut` recognizes it is being used with `Date` formatted data)
+
+
+```{r}
+HealthyHarborWaterWheelTotals2017_1 <- read_excel("../data/HealthyHarborWaterWheelTotals2017-1.xlsx",
+skip = 1)
+waterwheeldata <- HealthyHarborWaterWheelTotals2017_1 %>% 
+  filter(!is.na(Dumpster))
+waterwheeldata$monthly <- as.Date(cut.Date(as.Date(waterwheeldata$Date), breaks="month"))
+```
+```{r}
+waterwheeldata <- waterwheeldata %>%
+  group_by(monthly, Date) %>%
+  summarize(Dailyweight = sum(`Weight (tons)`), Dailyvolume = sum(`Volume (cubic yards)`))
+```
+
+
 Factors
 =======
 
@@ -448,3 +472,88 @@ Defining breakpoints
 quarters = cut(everyday, breaks="3 months", labels = paste('Q', 1:5, sep=''))
 tail(quarters)
 ```
+
+Strings
+=========
+
+stringr package
+=============
+
+- the `stringr` package makes working with strings easier
+- Includes functions for:
+  i. Character manipulation
+  ii. Whitespace tools
+  iii. Locale specific
+  iv. Pattern matching
+  
+Character manipulation
+===============
+
+Things you may want to do:
+
+  1. Find the length of a string
+  2. Get or set individual characters
+  3. Modify substrings
+  
+Manipulating strings
+============
+
+```{r}
+library(stringr)
+str_length("abc")
+x <- c("abcde", "ghifjk")
+# the 3rd character of each item in x
+str_sub(x,  3, 3)
+# the 2nd to 2nd to last character of each item in x
+str_sub(x, 2, -2)
+```
+
+Whitespace
+=================
+
+You can add, remove or modify whitespace
+
+- `str_pad()` pads a string by adding whitespace to left, right or both sides to make the string a specific length
+```{r}
+str_pad(x, 10)
+str_pad(x, 10, "right")
+str_pad(x, 10, "both")
+```
+
+- You can also use other characters besides a space
+
+```{r}
+str_pad(x, 10, pad = "0")
+```
+
+Locale sensitive
+================
+
+- Some parts of the world/publications use different capitalization rules for titles and sorting
+
+Capitalization
+==============
+
+```{r}
+horses <- "I like horses"
+str_to_upper(horses)
+str_to_title(horses)
+str_to_lower(horses)
+str_to_lower(horses, locale="tr") # Turkish i without a dot
+```
+String ordering and sorting
+=========================
+
+```{r}
+someletters <- c("y", "i", "k")
+str_sort(someletters)
+str_sort(someletters, locale="lt") # Lithuanian
+```
+
+Pattern Matching
+==============
+
+- Uses regular expressions (like `regexpr` and `gregexpr`)
+
+```{r}
+

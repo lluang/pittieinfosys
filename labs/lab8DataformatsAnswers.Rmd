@@ -1,0 +1,83 @@
+---
+title: 'Lab 8: Data formats'
+author: "IE 0015 Information Systems"
+date: "Spring 2017"
+output:
+  html_document: default
+---
+
+For all questions, answer with both the answer and the code used to determine the answer.
+
+Read in the `beavers` data that is included in R as well as the help file (search for `beaver` in Help.  The data was taken in 1990 in Wisconsin. For both the `beaver1` and `beaver2` dataset, the `day` field is days since the beginning of 1990.  The `time` field is the digits from a 24 hour clock.
+
+```{r}
+data(beavers)
+summary(beaver1)
+summary(beaver2)
+```
+
+1. [3]  For each dataset, calculate the date for each data record. What dates are represented in each data file? (ideally, this should be within the data frame, but we will not take points off if this is a vector that corresponds to the dataset). (Hint:  add days to December 31, 1989)
+
+```{r}
+beaver1$date <- as.Date("1989-12-31") + beaver1$day # January 1, 1990 should be day 1
+beaver2$date <- as.Date("1989-12-31") + beaver2$day 
+unique(beaver1$date)
+unique(beaver2$date)
+```
+
+2. [2] Look at the time stamps. What makes this hard to work with. Write out an algorithm (in pseudocode or a process map) that would converts this time into the R time format.  Then code this
+
+**ANSWER**
+```
+Discuss the fact that the time stamps are of varying length, 3 or 4 numbers
+
+  i. Add zeros in front of the time (leading zeros) as needed to make the time stamps four characters
+  ii. Read in data using strftime as %H%M (note no punctuation).  
+  
+  
+Alternatively (most people will probably do this)
+
+  i. Count how many digits are in the time stamp
+  ii. If 4, split so that the first two are the hours and the last two are minutes
+  iii. If 3, split so tha the first one is the hours and the last two are minutes
+  iv. If 1 or 2, the hours is 0 (12 AM) and the digits are the minutes
+```
+```{r}
+library(stringr)
+library(lubridate)
+beaver1$time1 <- str_pad(beaver1$time, 4, pad="0")
+beaver1$time1 <- strftime(strptime(beaver1$time1, tz="America/New_York", format="%H%M"),format="%H:%M")
+head(beaver1$time1)
+tail(beaver1$time1)
+```
+
+Questions 3 and 4 use the Titanic data set. Note: The data dictionary is in Courseweb -> Course Documents -> data.
+```{r titanicdata}
+titanic <- read.csv("../data/titanic3.csv")
+```
+
+3.[2]  In the Titanic data, write and run the code that list the people with the following characteristics: 
+  -  Embarked in Queenstown
+  -  Female
+  -  Known to be under the age of 19 (i.e. 18 and under)
+
+**ANSWER**
+```{r}
+ titanic[titanic$embarked=="Q" & titanic$sex=="female" & titanic$age < 19 & !is.na(titanic$age),"name"]
+```
+
+```{r}
+titanic %>%
+  filter(embarked=="Q", sex=="female", age<19) %>%
+    select(name)
+```
+
+4. [3] In the Titanic data, plot a histogram of ages in 5 year increments separated by Sex (gender) include a meaningful plot title, and x and y axis labels. Note: Look at the help file for `g`. You want to use the titanic data set, the geometry is `geom_histogram`, to separate histograms by Sex, you use `facet_grid(Sex ~ .)`  (include the period) To force the size of a histogram width you use `binwidth=#`. To set the left edge of a bin on an integer, use `boundary=0`
+
+**ANSWER**
+```{r}
+library(ggplot2)
+ggplot(titanic, aes(age)) + geom_histogram(binwidth=5, boundary=0) + 
+  facet_grid(sex ~ .) + ggtitle("Age of Titanic passengers by gender") + 
+  xlab("Number of passengers") +ylab("Age")
+```
