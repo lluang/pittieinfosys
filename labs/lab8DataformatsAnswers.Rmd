@@ -45,6 +45,8 @@ Alternatively (most people will probably do this)
 ```{r}
 library(stringr)
 library(lubridate)
+library(magrittr)
+library(dplyr)
 beaver1$time1 <- str_pad(beaver1$time, 4, pad="0")
 beaver1$time1 <- strftime(strptime(beaver1$time1, tz="America/New_York", format="%H%M"),format="%H:%M")
 head(beaver1$time1)
@@ -68,7 +70,9 @@ titanic <- read.csv("../data/titanic3.csv")
 
 ```{r}
 titanic %>%
-  filter(embarked=="Q", sex=="female", age<19) %>%
+  filter(embarked=="Q") %>%
+  filter(sex=="female") %>%
+  filter(age<19) %>%
     select(name)
 ```
 
@@ -78,6 +82,6 @@ titanic %>%
 ```{r}
 library(ggplot2)
 ggplot(titanic, aes(age)) + geom_histogram(binwidth=5, boundary=0) + 
-  facet_grid(sex ~ .) + ggtitle("Age of Titanic passengers by gender") + 
+  facet_grid(sex ~ .) + ggtitle("Ag+++++++++++++++++++++++++++++++++++e of Titanic passengers by gender") + 
   xlab("Number of passengers") +ylab("Age")
 ```
