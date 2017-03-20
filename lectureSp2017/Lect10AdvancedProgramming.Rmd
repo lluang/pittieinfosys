@@ -1,0 +1,387 @@
+---
+title: 'Lecture 10: Advanced programming concepts'
+author: "IE 0015 Information Systems"
+date: "March 20, 2017"
+output:
+  pdf_document: default
+  html_document: default
+  slidy_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Advanced programming concepts for data analysis
+
+- To perform data analysis beyond the surface, you need to be able to program.
+- Programming is communication
+  - You telling the computer what to do
+  - You telling others what you did
+  
+![Programming as communication](./figures/data-science-communicate.png)
+
+Software engineering goals
+========================
+
+- Software engineering is about how to organize programming better.
+- Balancing the need to architect large structures but having to manage small details.
+- Communicating with people who are imprecise using language written for computers that is precise.
+
+Four tools
+=============
+
+- Pipes
+- Functions
+- Vectors
+- Iterations
+
+
+Pipes
+==========
+
+- Pipes are a tool for clearly expressing a series of expressions.
+- You have used them as part of `dplyr` in sequencing the standard data manipulation verbs.
+
+Example:
+
+```
+tidywho2011 %>% 
+    group_by(country, year) %>%
+      summarize(newcases=sum(cases, na.rm=TRUE)) %>%
+        left_join(population) %>%
+          mutate(rate=newcases/population*100000)
+```
+
+Four ways to do the same thing
+====================
+
+1. Save each intermediate step as a new object.
+2. Overwrite the original object many times.
+3. Compose functions.
+4. Use the pipe.
+
+Using intermediate steps as a new object
+=================================
+
+```
+tidy1 <- group_by(tidywho2011, country, year) 
+tidy2 <- summarize(tidy1, newcases=sum(cases, na.rm=TRUE))
+tidy3 <- left_join(tidy2, population)
+tidy4 <- mutate(tidy3, rate=newcases/population*100000)
+```
+
+Problems
+
+1. The code is cluttered with variable names that are not important.
+2. To follow the code, you have to follow a carefully thought out rule in creating variable names (and do so throughout the script)
+
+Overwrite the original
+=================
+
+```
+tidywho2011 <- group_by(tidywho2011, country, year) 
+tidywho2011 <- summarize(tidywho2011, newcases=sum(cases, na.rm=TRUE))
+tidywho2011 <- left_join(tidywho2011, population)
+tidywho2011 <- mutate(tidywho2011, rate=newcases/population*100000)
+```
+
+Problems:
+
+1. Debugging is painful: if you make a mistake you’ll need to re-run the complete pipeline from the beginning.
+
+2. The repetition of the object being transformed (we’ve written foo_foo six times!) obscures what’s changing on each line.
+
+
+Function composition
+====================
+
+```
+tidywho <- mutate(
+                left_join(
+                    summarize(
+                      group_by(tidywho2011, country, year) , 
+                      newcases=sum(cases, na.rm=TRUE)), 
+                    population),
+                rate=newcases/population*100000)
+```
+
+Problems:
+
+1. Here the disadvantage is that you have to read from inside-out, from right-to-left, 
+2. Function arguments end up spread far apart (evocatively called the Dagwood sandwich problem). 
+
+Pipes
+=======
+
+```
+tidywho <- tidywho2011 %>% 
+    group_by(country, year) %>%
+      summarize(newcases=sum(cases, na.rm=TRUE)) %>%
+        left_join(population) %>%
+          mutate(rate=newcases/population*100000)
+```
+
+Benefits of pipes
+=================
+
+1. Focus is on verbs (actions), not nouns.
+2. You can read the code like a series of commands (which is how the computer should understand it)
+
+When pipes do not work
+======================
+
+1. Pipes are long (e.g. longer than 10 steps). If so, break the pipe into segments, with each intermediate statements generating objects with meaningful names.
+2. You have multiple inputs or outputs. e.g. you are combining multiple objects together (note that a `join` is an exception to this)
+3. The process is not a linear construct.
+4. If you are working with functions that do not have a data-frame API (the first argument of the function is not `.data`)
+
+Functions
+============
+
+
+Functions
+============
+
+1.  Functions are the first form of abstraction that you learn in programming.
+  - An abstraction is a way of expressing a concept that does not require that you discuss all of the details.
+2.  Functions are especially useful when you have to repeat a process for many data sets.
+
+
+Benefits of functions
+==================
+
+1.  You can give a function an evocative name that makes your code easier to understand.
+2.  As requirements change, you only need to update code in one place, instead of many.
+3. You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
+
+When should you write a function
+================
+
+1. You should consider writing a function whenever you’ve copied and pasted a block of code more than twice.
+
+
+What does this do?
+=================
+```
+df <- data.frame(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+df$a <- (df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b <- (df$b - min(df$b, na.rm = TRUE)) / 
+  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$c <- (df$c - min(df$c, na.rm = TRUE)) / 
+  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d <- (df$d - min(df$d, na.rm = TRUE)) / 
+  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
+```
+
+Convert this to a function
+================
+
+Ask some questions?
+
+1. First analyse the code. How many inputs does it have?
+  -  Sometimes, it may make sense to create a variable with a general name.
+2. Think of opportunities to create variables with names for intermediate steps.
+3. Check that it still works.
+
+Three key steps to creating a new function
+===========
+
+1. You need to pick a name for the function. Here I’ve used `rescale01` because this function rescales a vector to lie between 0 and 1.
+
+2. You list the inputs, or arguments, to the function inside function. Here we have just one argument. If we had more the call would look like `function(x, y, z)`.
+
+3. You place the code you have developed in body of the function, a `{` block that immediately follows `function(...)`.
+
+Hint
+=======
+
+-  Make a function after figuring out how to make it work with a simple input. 
+- It’s easier to start with working code and turn it into a function than   to create a function and then try to make it work.
+
+Function version of above
+===============
+
+```
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+rescale01(c(0, 5, 10))
+```
+
+Testing the function
+===========
+```
+df$a <- rescale01(df$a)
+df$b <- rescale01(df$b)
+df$c <- rescale01(df$c)
+df$d <- rescale01(df$d)
+```
+
+Functions are for people and computers
+=========================
+
+- Note: the computer does not care what you call your function or the names of the variables, but your teammates will when they try to understand what you did.
+- So will you a month from now. Or six months from now. Or next year.
+- Names of functions or variables should clearly explain its meaning.
+  - RStudio and other programmer's tools have autocomplete, don't worry about typing in long names.
+- Generally, function names should be verb phrases, variable names should be noun phrases.
+  - Exception, a lot of your functions seem to start with the same verb.
+
+Have a convention for multi-word names
+=================
+
+1. Underscore_between_words
+2. CamelCase
+3. If functions do similar things, give them similar names.
+
+```
+input_select()
+input_checkbox()
+input_text()
+```
+
+4.  Avoid using existing function and variable names.
+
+Comments
+==============
+
+-  Comments are used to explain the *why* of your code.
+-  You should not use comments to explain *what* or *how*.
+  - Your code should do that itself.
+  - Exception: you are specifying the algorithm that you are implementing.
+  - If the code is not understandable, rewrite it. Use more explanatory variable names, break out code
+-  Use comments to break code into chunks
+  - e.g. use comments that have `-` characters to draw a line in your code file
+  
+Conditional execution (control flow)
+============================
+
+- If statement
+
+```
+if (condition) {
+  # code executed when condition is TRUE
+} else {
+  # code executed when condition is FALSE
+}
+```
+
+Conditions
+===========
+
+- A *condition* must evaluate as *TRUE* or *FALSE*
+- If the condition is a vector, you get a warning
+- If the condition is `NA`, you get an error.
+
+A vector as a condition
+=================
+
+- If your condition is a vector, 
+
+1. Determine if it should have been a vector (i.e. a mistake earlier)
+2. Use `any()` or `all()` to collapse the vector of *TRUE/FALSE* into a single *TRUE* or *FALSE*
+
+
+For multiple conditions
+===========
+
+- Use `||` (or) or `&&` (and)
+  - Note that `|` and `&` are vectorized operators
+
+Testing for equality
+=============
+
+- Note that `==` is vectorized, so collapse with `all()` or `any()`
+- If you want to check if two vectors are identical, use `identical()`, which returns a single *TRUE* or *FALSE*
+- Be careful of comparing floating point numbers to anything, because numerical operations cause rounding.
+  - Especially floating point numbers to integers
+  
+Multiple conditions
+==================
+
+``` 
+if (this) {
+  # do that
+} else if (that) {
+  # do something else
+} else {
+  # 
+}
+```
+
+Switch instead of chaining if-else
+=================
+
+```
+function(x, y, op) 
+   switch(op,
+     plus = x + y,
+     minus = x - y,
+     times = x * y,
+     divide = x / y,
+     stop("Unknown op!")
+   )
+}
+```
+
+Function arguments
+========
+
+- Functions have two types of arguments
+  1. data
+  2. details
+- e.g. for log function
+  - `x` data
+  - `base` the base of the logarithm
+- e.g. for mean
+  - `x` data
+  - `trim` fraction of extreme observations to remove
+  - `na.rm` if `NA` values should be removed before computing.
+- Data elements should go first
+- Detail arguments should have default values
+  - Should be common values
+  - Should enable safety (i.e. do not silently ignore missing values)
+    
+Common variable names (don't use them for other things)
+=============
+
+The names of the arguments are also important. R doesn’t care, but the readers of your code (including future-you!) will. Generally you should prefer longer, more descriptive names, but there are a handful of very common, very short names. It’s worth memorizing these:
+
+```
+x, y, z: vectors.
+w: a vector of weights.
+df: a data frame.
+i, j: numeric indices (typically rows and columns).
+n: length, or number of rows.
+p: number of columns.
+```
+
+Function return values
+===================
+
+Two considerations
+
+19.6 Return values
+
+Figuring out what your function should return is usually straightforward: it’s why you created the function in the first place! There are two things you should consider when returning a value:
+
+1.  Does returning early make your function easier to read? (usually, it is the last computation)
+2.  Can you make your function pipeable? 
+
+Pipeable functions
+==============
+
+1. Transformative functions - take a data frame, return a modified version of the data frame
+2. Side-effect - Take a data frame, do something, pass the original data frame for the next function. (e.g. `print` or `head`)
+  - Use `invisible(df)` to pass the function along without extraneous printing.
+  
+

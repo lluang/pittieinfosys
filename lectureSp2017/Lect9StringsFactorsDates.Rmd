@@ -3,9 +3,9 @@ title: 'Data Formats: Dates and factors'
 author: "IE 0015 Information Systems"
 date: "March 2017"
 output:
+  slidy_presentation: default
   pdf_document: default
   beamer_presentation: default
-  slidy_presentation: default
 ---
 
 ```{r, echo=FALSE, warnings=FALSE}
@@ -16,7 +16,6 @@ FemPreg <- read.csv("../data/2006_2010_FemPreg.csv",
 
 Dates
 =======
-type: section
 
 Date and time formats
 =====================
