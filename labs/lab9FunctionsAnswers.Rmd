@@ -1,0 +1,71 @@
+---
+title: 'Lab 9: Advanced Programming'
+author: "IE 0015 Information Systems"
+date: "March 2017"
+output:
+  html_document: default
+---
+
+For all questions, answer with both the answer and the code used to determine the answer.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(purrr)
+```
+
+A common inventory policy is an $(S,s)$ policy, where if the inventory, $I$, falls below $s$ due to the day's demand $d$, the store will order quantity $q$ so that the inventory level is $S$, i.e. $q = S-I$. The costs from the policy are based on the inventory at the end of the period, any costs from ordering inventory, and any shortage (i.e. if the demand $d$ causes inventory to be below zero before the order is made).
+
+1.[4] Write a function that takes as parameters the parameters $S$, $s$, a starting inventory $I$, and the day's demand $d$, returns (i) the final inventory, (ii) order quantity, (iii) shortage quantity (if the demand causes the inventory to dip below zero)
+
+**ANSWER**
+
+```{r}
+sspolicy <-function(S, s, I, d){
+  finali = I-d
+  if (finali <0){
+    shortage= -finali
+  } else{
+    shortage=0
+  }
+  if (finali < s){
+    orderq = S-finali
+    order = 1
+    endi = S
+  } else {
+    orderq = 0
+    order = 0
+    endi = finali
+  }
+  result <- c(endi, orderq, shortage)
+  result
+}
+ssresult1 <- sspolicy(5, 3, 4, 2)
+print(ssresult1)
+ssresult2 <- sspolicy(5, 3, 4, 8)
+print(ssresult2)
+```
+
+2.  A common need is to test a range of S, s policies to determine their performance, meaning the average inventory level and shortages. (you would not consider orders because these are needed to meet demand)  This can be done by simulating the effects of various policies.  Write functions required to:
+  i. Iterate through four $(S, s)$ policies over 100 days: (8, 2), (8, 4), (10, 2), (10,4).  Let the daily demand = uniform from 1 through 10 (`sample(10,1)`). Let the initial inventory = $S$ 
+  ii. For each policy, calculate the average inventory and total number of shortages over the 100 days.
+
+Hints:
+
+i. Create a data structure with the values for $S$ and $s$.
+ii. Create a function to evaluate each $S,s$ policy.
+iii. Within each function, create a list to record the 100 days of inventories and shortages to operate on later.
+
+
+**ANSWER**
+
+```{r}
+policy <- data.frame(S = c(8,8,10,10),
+                     s = c(2, 4, 2, 4))
+evaluation <- function(S, s){
+  initialI <- S
+  for (day in 1:100){
+    
+  } 
+}
+```

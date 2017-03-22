@@ -518,7 +518,7 @@ Negative valued indices drop the elements at the specified positions
 x[c(-1, -3, -5)]
 ```
 - But you should not try to mix positive and negative values. Either pick elements or discard, but not both.
-```{r}
+```
 x[c(1, -1)]
 ```
 
@@ -764,3 +764,9 @@ You can pass additional parameters after the function name
 map_dbl(df, mean, trim = 0.5)
 map_dbl(df, mean, rm.na = TRUE)
 ```
+
+Purpose of advanced programming methods
+================
+
+- Efficiency - R is very good at some things (e.g. vectors and matrices) and not good at others (for loops). Advanced programming constructs focus on what R is good for.
+- Expressiveness - Expressive syntax make R code match the way you think about operations.
