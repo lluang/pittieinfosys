@@ -66,7 +66,27 @@ Transforming data
 - Relative difference - Use log(x/y) instead of the actual values x and y. (note: this is better than x/y because it is symmetric, the order of x and y does not matter)
 - Integrating or differentiating to transform variables.  E.g. transform distance and time to speed or acceleration.
 - Cartesian (rectangular) to/from polar coordinates
-- Centering and scaling (e.g. converting to standard normal subtracting from a mean and dividing by standard deviation)
+- Centering and scaling 
+  - Converting to standard normal subtracting from a mean and dividing by standard deviation
+  - Converting point to a percentile of the entire range
+  
+Rescale example from last lecture
+==========
+
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+rescale01(c(0, 5, 10))
+```
+
+Note: statistical software and rescaling
+==============
+
+- R, SAS, SPSS do this automatically in their statistical routines.
+- For other statistical software, the accuracy of results may be improved if you do this.
+
 
 In dplyr
 ============
@@ -74,7 +94,7 @@ In dplyr
 - Use group_by and summarize to calculate needed summary statistics
 - Use mutate to do the transformation
 
-Use baseball example
+Use diamonds example
 ==============
 
 Show how summary statistics can be used to explain odd data.
@@ -85,21 +105,21 @@ Modeling
 The Art of Modeling
 ===================
 
-## Art of modeling
-
 > -  We use models in an attempt to gain insights about some aspects of the real world.
 > -  Assumes *a priori* the existence of *ground truth* which an impartial and omniscient observers would agree upon.
 > -  We start by deciding what aspect of the real world we are interested in.
   -  Narrow the focus of the model.
 
-##  Some definitions
+Some definitions
+============
 
 > -  *System* is a set of elements that interact or interrelate in some fashion.
 > -  *Entities* are elements that make up the system
 > -  If an element does not interact or interrelate with other elements of the system, it is irrelevant to our goal.
 > -  A system may be made up of *sub-systems*, and may be a sub-system for another system.
 
-##  What is a model
+What is a model
+==========
 
 -  A *model* is a system we use to study in place of another system.
 -  The cost of building and studying a model is often a small fraction of the cost of experimenting with the real system.
@@ -107,14 +127,16 @@ The Art of Modeling
 	-  Mitigate risk
 	-  Cause events to occur on demand to develop experience
 
-##  Types of models
+Types of models
+==========
 
 -  Physical models - Wind tunnels.  Concept cars.
 -  Mechanical models - Anatomy models for medicine.
 -  Mathematical equations - e.g. trajectory of a falling object.
 -  *Computer simulation* - A model that is implemented as a computer program.
 
-##  Purpose of models
+Purpose of models
+===========
 
 > -  To mimic or describe the behavior of the system being modeled.
 > -  It can be *simplified* or *abstracted*
@@ -125,8 +147,8 @@ The Art of Modeling
 > -  The model is thus created to address a specific question.
 > -  Insight, not numbers
 
-##  Models for inference
-
+Models for inference
+=========
 
 \begin{figure}
 \includegraphics[width = 0.6\textwidth]{figures/modelinsight}
@@ -134,28 +156,36 @@ The Art of Modeling
 \end{figure}
 
 
-##  Modeling for data analysis
+Modeling for data analysis
+===============
 
 - Remove the so-what factor
 - Identify effects beyond what is known
 
-##  Diamond example
+Diamond example
+===========
 
 -  Look at plot of carat vs price
 -  Look at log-log plot of carat vs price (transform) to make it linear
 -  So we know that carat (size) is a determinant of price, but what about other things?
 -  Let's remove the effect of carat
 
-##  Linear modeling
+Linear modeling
+============
 
-##  Visualizing models
+Visualizing models
+===========
 
 -  Look at clarity
 
-##  Model summaries
+Model summaries
+=============
+
 -  Look at points that do not fit the model
 -  glance
 
-## Ordering based on model fit using reorder
+Ordering based on model fit using reorder
+===============
 
-## Ordering based on fit
+Ordering based on fit
+===============
