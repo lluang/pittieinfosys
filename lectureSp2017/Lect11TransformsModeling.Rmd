@@ -1,0 +1,161 @@
+---
+title: 'Lecture 11: Transformations and Modeling'
+author: "IE 0015"
+date: "March 23, 2017"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Transforming data
+============================
+
+- We transform data because it allows us to more clearly identify patterns in the data.
+- We think there is a relationship, a transform allows us to see if the relationship is strong.
+- Many numerical methods (e.g. linear regression) can work better if the model is transformed.
+
+Some transforms you already know
+===========================
+
+- Filtering - Examine a specific part of the dataset or remove outlier cases.
+  - Or filter to look at outliers more closely.
+
+
+```{r, echo=FALSE}
+library(ggplot2, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
+```
+```{r}
+data(diamonds)
+nrow(diamonds)
+ggplot(diamonds, aes(x,y)) + geom_bin2d() 
+```
+
+```{r}
+diamonds_ok <- filter(diamonds, x>0, y>0, y < 20)
+ggplot(diamonds_ok) + geom_bin2d(aes(x,y)) + geom_abline(slope=1, color="white", alpha=0.5)
+```
+
+Logical operators for filters
+===========
+
+- `x==y`: x and y are equal.
+- `x!=y`: x and y are not equal.
+- `x %in% c("a", "b", "c")`: x is one of the values in the set right hand side.
+- `x > y, x >= y, x < y, x <= y`: greater than, greater than or equal to, less than, less than or equal to.
+
+
+
+And combine them with logical operators:
+======
+
+- `!x` - Not x, flips TRUE and FALSE
+- `x&y`: TRUE if both x and y are TRUE.
+- `x|y`: TRUE if either x or y (or both) are TRUE.
+- `xor(x,y)`: TRUE if either x or y are TRUE, but not both (exclusive or).
+
+Transforming data
+=================
+
+- Some typical transformations
+
+- Log transforms - turns multiplicative (compounding) relationships into additive relationships.
+  - Often used to compress data that ranges over several orders of magnitude.
+- Relative difference - Use log(x/y) instead of the actual values x and y. (note: this is better than x/y because it is symmetric, the order of x and y does not matter)
+- Integrating or differentiating to transform variables.  E.g. transform distance and time to speed or acceleration.
+- Cartesian (rectangular) to/from polar coordinates
+- Centering and scaling (e.g. converting to standard normal subtracting from a mean and dividing by standard deviation)
+
+In dplyr
+============
+
+- Use group_by and summarize to calculate needed summary statistics
+- Use mutate to do the transformation
+
+Use baseball example
+==============
+
+Show how summary statistics can be used to explain odd data.
+
+Modeling
+===========
+
+The Art of Modeling
+===================
+
+## Art of modeling
+
+> -  We use models in an attempt to gain insights about some aspects of the real world.
+> -  Assumes *a priori* the existence of *ground truth* which an impartial and omniscient observers would agree upon.
+> -  We start by deciding what aspect of the real world we are interested in.
+  -  Narrow the focus of the model.
+
+##  Some definitions
+
+> -  *System* is a set of elements that interact or interrelate in some fashion.
+> -  *Entities* are elements that make up the system
+> -  If an element does not interact or interrelate with other elements of the system, it is irrelevant to our goal.
+> -  A system may be made up of *sub-systems*, and may be a sub-system for another system.
+
+##  What is a model
+
+-  A *model* is a system we use to study in place of another system.
+-  The cost of building and studying a model is often a small fraction of the cost of experimenting with the real system.
+-  Benefits
+	-  Mitigate risk
+	-  Cause events to occur on demand to develop experience
+
+##  Types of models
+
+-  Physical models - Wind tunnels.  Concept cars.
+-  Mechanical models - Anatomy models for medicine.
+-  Mathematical equations - e.g. trajectory of a falling object.
+-  *Computer simulation* - A model that is implemented as a computer program.
+
+##  Purpose of models
+
+> -  To mimic or describe the behavior of the system being modeled.
+> -  It can be *simplified* or *abstracted*
+> -  It should describe the *essential* characteristics of the system.
+> -  We evaluate the model on how well its *outputs* match the observed outputs of reality.
+> -  Then, we want to see how the model responds when we make changes.
+> -  So we want to *observe* outputs and be able to *control* the model through inputs.
+> -  The model is thus created to address a specific question.
+> -  Insight, not numbers
+
+##  Models for inference
+
+
+\begin{figure}
+\includegraphics[width = 0.6\textwidth]{figures/modelinsight}
+\caption{A model yields insights and inferences}
+\end{figure}
+
+
+##  Modeling for data analysis
+
+- Remove the so-what factor
+- Identify effects beyond what is known
+
+##  Diamond example
+
+-  Look at plot of carat vs price
+-  Look at log-log plot of carat vs price (transform) to make it linear
+-  So we know that carat (size) is a determinant of price, but what about other things?
+-  Let's remove the effect of carat
+
+##  Linear modeling
+
+##  Visualizing models
+
+-  Look at clarity
+
+##  Model summaries
+-  Look at points that do not fit the model
+-  glance
+
+## Ordering based on model fit using reorder
+
+## Ordering based on fit
