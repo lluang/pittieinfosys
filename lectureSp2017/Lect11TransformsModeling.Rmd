@@ -166,18 +166,105 @@ Diamond example
 ===========
 
 -  Look at plot of carat vs price
--  Look at log-log plot of carat vs price (transform) to make it linear
--  So we know that carat (size) is a determinant of price, but what about other things?
--  Let's remove the effect of carat
+-  Is this linear
+> - Look at the distributions on both axis and the relationship?
+> - What would make it linear?
+
+
+```{r}
+dplot <- ggplot(diamonds)
+dplot + geom_point(aes(x=carat, y=price))
+```
+
+Log-log plot
+===============
+
+- Plot with log of carat for x axis, log of price for y axis
+
+```{r}
+dplot + geom_point(aes(x=log(carat), y=log(price)))
+```
+
+Using dplyr (if the transform was not this easy)
+=================
+
+- Add in a linear model (lm) to the curve
+```{r}
+diamonds2<-diamonds %>% 
+  mutate(lcarat = log2(carat), lprice = log2(price))
+ggplot(diamonds2, aes(x=lcarat, y=lprice)) + 
+  geom_bin2d() +
+  geom_smooth(method="lm", se=FALSE, size=2, color="yellow")
+```
 
 Linear modeling
 ============
+
+- The other use of models is to account for aspects that you already know are true, but you want to examine the influence of other variables.
+-  Let's look at clarity
+```
+a measurement of how clear the diamond is (I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))
+```
+```{r}
+dplot+geom_boxplot(aes(x=clarity, y=price))
+```
+
+Removing the influence of known predictors
+==============================
+
+-  Condition on another variable (carat)
+-  In design of experiments, this is called *blocking*
+-  We use linear regression models to analyze this type of experiment.
+
+Experimental design
+===================
+
+Randomized experiments are built on four principles. If we cannot make a perfect experiment, we have to think about how violating these principles effects our analysis of data.
+
+- Controlling - We assign observations to treatment groups, and try to control for differences in groups.
+- Randomization - Randomize assignments of observations to treatment groups.
+- Replication - Observe more cases so that we can more accurately estimate the effect of explanatory variables on response.
+- Blocking - If we suspect that variables, other than the treatment, influence the response, we may group observations by this variable and then randomize assignment of these observations to treatment groups.
+
+Linear models
+================
+
+- Multiple linear regression
+- Response (dependent) variable
+- Explanatory (independent, treatment) variable
+- Blocking (independent, but not treatment)
+
+$$y = Ax + b$$
+
+Implementing linear models in R
+============
+
+- `lm` function
+- Takes a model as input
+  - `response ~ explanatory variables`
+  - Left unsaid is a constant term
+  - `response ~ explanatory variables - constant`
+
+```{r}
+lmcarat <- lm(lprice ~ lcarat, diamonds2)
+summary(lmcarat)
+```
 
 Visualizing models
 ===========
 
 -  Look at clarity
+```{r}
+dplot+geom_boxplot(aes(x=clarity, y=price))
+```
 
+Account for carat
+==================
+
+```{r}
+lmclarity <- lm(lprice ~ lcarat + clarity, diamonds2)
+summary(lmclarity)
+```
 Model summaries
 =============
 
