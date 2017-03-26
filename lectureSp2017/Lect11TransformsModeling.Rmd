@@ -9,6 +9,30 @@ output: slidy_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+Notes on programming
+====================
+
+Three key steps to creating a new function
+===========
+
+1. You need to pick a name for the function. Here I’ve used `rescale01` because this function rescales a vector to lie between 0 and 1.
+
+2. You list the inputs, or arguments, to the function inside function. Here we have just one argument. If we had more the call would look like `function(x, y, z)`.
+
+3. You place the code you have developed in body of the function, a `{` block that immediately follows `function(...)`.
+
+Starting points
+=======
+
+-  Write a process map. The process map covers the logic of the function. Make sure you understand the logic, then try to figure out the details in implementing it.
+-  Make a function after figuring out how to make it work with a simple input. 
+  -  Start a code block that you will turn into a function by assigning values to what will be the parameters
+  -  Make this work, then try it with different parameter inputs
+  -  For testing, make each possible outcome occur, so you know it works every time.
+- It’s easier to start with working code and turn it into a function than   to create a function and then try to make it work.
+- Note: If you know how to use debugging tools from other IDE (e.g. MS Visual Studio, Eclipse), they are available in R Studio as well.
+  -  If you do not, adding print statements to show the parameters being passed to functions that are not working is helpful.
+
 Transforming data
 ============================
 
@@ -269,10 +293,59 @@ Model summaries
 =============
 
 -  Look at points that do not fit the model
--  glance
+-  See if errors are related to a specific factor
 
-Ordering based on model fit using reorder
-===============
+```{r}
+diamonds2 %>%
+  add_residuals(lmcaret, "lresiduals")
+ggplot(diamonds2, aes(lcarat, lresid)) + 
+  geom_bin2d()
+```
 
-Ordering based on fit
-===============
+Look to see if residuals correspond to a specific variable
+====
+```{r}
+ggplot(diamonds2, aes(cut, lresid)) + geom_boxplot()
+```
+```{r}
+ggplot(diamonds2, aes(color, lresid)) + geom_boxplot()
+```
+```{r}
+ggplot(diamonds2, aes(clarity, lresid)) + geom_boxplot()
+```
+
+Put everything into a single model
+====
+```{r}
+mod_diamond2 <- lm(lprice ~ lcarat + color + cut + clarity, data = diamonds2)
+```
+
+Plot the effects of each individual factor after all other variables are accounted for
+====
+
+-  For each variable, `grid` assumes that the other variables are at their median value
+-  What is the predicted value of an observation with that variable of the treatment variable being examined
+
+```{r}
+gridcut <- diamonds2 %>% 
+  data_grid(cut, .model = mod_diamond2) %>% 
+  add_predictions(mod_diamond2)
+gridcut
+```
+
+Now the same for color and clarity
+=====
+
+```{r}
+gridcolor <- diamonds2 %>% 
+  data_grid(color, .model = mod_diamond2) %>% 
+  add_predictions(mod_diamond2)
+gridcolor
+```
+
+```{r}
+gridclarity <- diamonds2 %>% 
+  data_grid(clarity, .model = mod_diamond2) %>% 
+  add_predictions(mod_diamond2)
+gridclarity
+```
