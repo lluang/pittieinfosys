@@ -415,7 +415,7 @@ Vector basics
 -  *Atomic* vectors - Six types: **logical, integer, double, character, complex**, and **raw**
 -  *Lists*.  Note: Lists can contain other lists
 -  *Atomic* vectors are *homogeneous*, the can only contain one data type.
--  *Lists can be heterogenous, they can contain multiple data types.
+-  *Lists can be heterogeneous, they can contain multiple data types.
 -  'NULL' is the absence of a vector.  Compare with 'NA' which is the absence of a value.
 
 Vector properties
@@ -446,7 +446,7 @@ Numeric vectors
 
 -  Numbers in R are doubles by default.
 -  To make an integer, include a `L` after a number, or use `as.integer`
--  Identify either intergers or doubles by using `is.numeric()`
+-  Identify either integers or doubles by using `is.numeric()`
 
 ```{r}
 print(typeof(2))
@@ -456,7 +456,7 @@ print(typeof(2L))
 Integers vs doubles
 ======================
 
--  All floating point numbers (doubles) are appproximations. Integers can be exact.
+-  All floating point numbers (doubles) are approximations. Integers can be exact.
 -  Integers can have only one special value `NA`
 -  Doubles can have `NA`, `NaN`, `Inf`, `-Inf`
   - zero divided by zero results in `NaN`
@@ -467,7 +467,7 @@ Integers vs doubles
 Character vectors
 ================
 
--  Each element of a chacter vector is a string
+-  Each element of a character vector is a string
   - Strings can contain an arbitrary amount of data (can be of any length)
 
 
@@ -487,7 +487,7 @@ is_list()
 is_vector()
 ```
 
-Scalers and recycling
+Scalars and recycling
 =====================
 
 - If you try to run an operation on vectors that are not of same length, R will *recycle* vectors.
@@ -541,7 +541,7 @@ Iterations
 
 - Another method of reducing duplication in code is *iteration*
 - Do the same thing to multiple inputs
-- Two programming pardigms apply differnt forms of iteration
+- Two programming paradigms apply different forms of iteration
   - *Imperative programming* (this is what you learned in Matlab and C)
   - *Functional programming*
 
@@ -628,7 +628,7 @@ Over names or indices
 Over unknown output length
 ==========================
 
-- use concatonate `c()` to add to the vector with each iteration
+- use concatenate `c()` to add to the vector with each iteration
 ```{r}
 means <- c(0, 1, 2)
 
@@ -645,7 +645,7 @@ str(output)
 Using a list
 ==================
 
-- Better to creat a list, then combine into a single vector when done
+- Better to create a list, then combine into a single vector when done
 
 ```{r}
 out <- vector("list", length(means))
@@ -656,7 +656,7 @@ for (i in seq_along(means)) {
 str(out)
 str(unlist(out))
 ```
-- The vector is createed using `unlist(out)` which takes a list of vectors and flattens them into a single vector.
+- The vector is created using `unlist(out)` which takes a list of vectors and flattens them into a single vector.
 
 Unknown sequence length
 ================
@@ -690,7 +690,7 @@ col_mean <- function(df) {
 
 Removing duplicates
 ===================
-- If functions are very much identical, you could add an arguement that captures the difference
+- If functions are very much identical, you could add an argument that captures the difference
 ```
 f1 <- function(x) abs(x - mean(x)) ^ 1
 f2 <- function(x) abs(x - mean(x)) ^ 2
@@ -758,7 +758,7 @@ You can pass additional parameters after the function name
 ==================
 
 - If a function requires additional parameters, you add them after the function name.
-  - Arguements are data, function name, other parameters
+  - Arguments are data, function name, other parameters
 
 ```{r}
 map_dbl(df, mean, trim = 0.5)

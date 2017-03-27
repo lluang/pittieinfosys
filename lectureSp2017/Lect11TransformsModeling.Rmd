@@ -1,8 +1,10 @@
 ---
 title: 'Lecture 11: Transformations and Modeling'
 author: "IE 0015"
-date: "March 23, 2017"
-output: slidy_presentation
+date: "March 25, 2017"
+output: 
+  pdf_document: default
+  slidy_presentation: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +17,7 @@ Notes on programming
 Three key steps to creating a new function
 ===========
 
-1. You need to pick a name for the function. Here I’ve used `rescale01` because this function rescales a vector to lie between 0 and 1.
+1. You need to pick a name for the function. Here I used `rescale01` because this function rescales a vector to lie between 0 and 1.
 
 2. You list the inputs, or arguments, to the function inside function. Here we have just one argument. If we had more the call would look like `function(x, y, z)`.
 
@@ -50,6 +52,7 @@ Some transforms you already know
 ```{r, echo=FALSE}
 library(ggplot2, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
+library(modelr) # this is in tidyverse, but we have not used it before
 ```
 ```{r}
 data(diamonds)
@@ -171,6 +174,19 @@ Purpose of models
 > -  The model is thus created to address a specific question.
 > -  Insight, not numbers
 
+Effectiveness of models
+=====================
+
+-  The model is a representation of the real system.
+
+-  By necessity, the model is a simplification
+        - *The best material model for a cat is another cat* - Wiener and
+Rosenblueth
+        - *All models are wrong, some models are useful* - George Box
+        -  *The purpose of computing is insight, not numbers* - Richard Hamming
+
+-  Our goal is make models that are useful for a particular purpose.
+
 Models for inference
 =========
 
@@ -185,6 +201,17 @@ Modeling for data analysis
 
 - Remove the so-what factor
 - Identify effects beyond what is known
+
+Creating a model
+===============
+
+1. Model family
+  - Express a pattern you want to capture
+  - e.g. *linear*, *quadratic*, *exponential*, *linear program*
+  - e.g. System structure (*queue*, *inventory*)
+2. Fitting model
+  - Take a generic model family and make it specific
+  - Determine parameters
 
 Diamond example
 ===========
@@ -296,22 +323,23 @@ Model summaries
 -  See if errors are related to a specific factor
 
 ```{r}
-diamonds2 %>%
-  add_residuals(lmcaret, "lresiduals")
-ggplot(diamonds2, aes(lcarat, lresid)) + 
+diamonds2$lresiduals <- lmcarat$residuals
+#diamonds2 %>%
+#  add_residuals(lmcaret, "lresiduals") # add_residuals is in modelr
+ggplot(diamonds2, aes(lcarat, lresiduals)) + 
   geom_bin2d()
 ```
 
 Look to see if residuals correspond to a specific variable
 ====
 ```{r}
-ggplot(diamonds2, aes(cut, lresid)) + geom_boxplot()
+ggplot(diamonds2, aes(cut, lresiduals)) + geom_boxplot()
 ```
 ```{r}
-ggplot(diamonds2, aes(color, lresid)) + geom_boxplot()
+ggplot(diamonds2, aes(color, lresiduals)) + geom_boxplot()
 ```
 ```{r}
-ggplot(diamonds2, aes(clarity, lresid)) + geom_boxplot()
+ggplot(diamonds2, aes(clarity, lresiduals)) + geom_boxplot()
 ```
 
 Put everything into a single model
@@ -323,7 +351,7 @@ mod_diamond2 <- lm(lprice ~ lcarat + color + cut + clarity, data = diamonds2)
 Plot the effects of each individual factor after all other variables are accounted for
 ====
 
--  For each variable, `grid` assumes that the other variables are at their median value
+-  For each variable, `data_grid` (from `modelr` library) assumes that the other variables are at their median value
 -  What is the predicted value of an observation with that variable of the treatment variable being examined
 
 ```{r}

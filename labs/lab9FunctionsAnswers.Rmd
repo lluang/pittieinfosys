@@ -8,36 +8,51 @@ output:
 
 For all questions, answer with both the answer and the code used to determine the answer.
 
-```{r}
-library(dplyr)
-library(ggplot2)
-library(purrr)
+```{r, echo=FALSE, warning=FALSE}
+library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
+library(ggplot2, warn.conflicts = FALSE, quietly = TRUE)
+library(purrr, warn.conflicts = FALSE, quietly = TRUE)
 ```
 
 A common inventory policy is an $(S,s)$ policy, where if the inventory, $I$, falls below $s$ due to the day's demand $d$, the store will order quantity $q$ so that the inventory level is $S$, i.e. $q = S-I$. The costs from the policy are based on the inventory at the end of the period, any costs from ordering inventory, and any shortage (i.e. if the demand $d$ causes inventory to be below zero before the order is made).
 
-1.[4] Write a function that takes as parameters the parameters $S$, $s$, a starting inventory $I$, and the day's demand $d$, returns (i) the final inventory, (ii) order quantity, (iii) shortage quantity (if the demand causes the inventory to dip below zero)
+1.[4] Write a function that takes as parameters the parameters $S$, $s$, a starting inventory $I$, and the day's demand $d$, and returns (i) the final inventory, (ii) order quantity, (iii) shortage quantity (if the demand causes the inventory to dip below zero)
+
+ie
+```
+sspolicy <- function(S, s, I, d){
+  
+  code
+  
+  result <- list(endi, orderq, shortageq)
+}
+```
+
+Hint:
+
+i. There should be at least two if else statements, one for determining if there is a shortage, another to determine if there is an order.
+ii. You should create test data to make sure your function works.
 
 **ANSWER**
 
 ```{r}
 sspolicy <-function(S, s, I, d){
-  finali = I-d
+  finali <- as.integer(I)-as.integer(d)
   if (finali <0){
-    shortage= -finali
+    shortage <- -finali
   } else{
-    shortage=0
+    shortage <- 0
   }
   if (finali < s){
-    orderq = S-finali
-    order = 1
-    endi = S
+    orderq <- S-finali
+    order <- 1
+    endi <- S
   } else {
-    orderq = 0
-    order = 0
-    endi = finali
+    orderq <- 0
+    order <- 0
+    endi <- finali
   }
-  result <- c(endi, orderq, shortage)
+  result <- list(endi, orderq, shortage)
   result
 }
 ssresult1 <- sspolicy(5, 3, 4, 2)
@@ -46,15 +61,18 @@ ssresult2 <- sspolicy(5, 3, 4, 8)
 print(ssresult2)
 ```
 
-2.  A common need is to test a range of S, s policies to determine their performance, meaning the average inventory level and shortages. (you would not consider orders because these are needed to meet demand)  This can be done by simulating the effects of various policies.  Write functions required to:
+2.[6]  A common need is to test a range of S, s policies to determine their performance, meaning the average inventory level and shortages. (you would not consider orders because these are needed to meet demand)  This can be done by simulating the effects of various policies.  Write functions required to:
   i. Iterate through four $(S, s)$ policies over 100 days: (8, 2), (8, 4), (10, 2), (10,4).  Let the daily demand = uniform from 1 through 10 (`sample(10,1)`). Let the initial inventory = $S$ 
   ii. For each policy, calculate the average inventory and total number of shortages over the 100 days.
-
+  iii.  For each policy, plot the daily inventory using line plot (time series) and the daily shortage using a bar graph. Each plot should state the policy used for that plot.
+  
 Hints:
 
-i. Create a data structure with the values for $S$ and $s$.
-ii. Create a function to evaluate each $S,s$ policy.
-iii. Within each function, create a list to record the 100 days of inventories and shortages to operate on later.
+i. Create a data frame with the values for $S$ and $s$.
+ii. Create a function to evaluate each policy. This function will call the function to evaluate the policy for each day that you created in (1).
+iii. For each day, the final inventory of one day will be the initial inventory for the next day.
+iv. Within the $S,s$ policy evaluation function, create lists to record the 100 days of inventories, orders, and shortages to operate on later.  Then `unlist` the final result and save them into a single data frame to return as a result.
+v. Because I did not ask you to set the random number seed, each of you will get slightly different answers.
 
 
 **ANSWER**
@@ -62,10 +80,46 @@ iii. Within each function, create a list to record the 100 days of inventories a
 ```{r}
 policy <- data.frame(S = c(8,8,10,10),
                      s = c(2, 4, 2, 4))
-evaluation <- function(S, s){
-  initialI <- S
-  for (day in 1:100){
-    
+evaluation <- function(S, s, days=100){
+  inventorynew <- S
+  inventory <- vector("list", length(days))
+  orderq <- vector("list", length(days))
+  shortage <- vector("list", length(days))
+  for (day in 1:days){
+    demand = sample(10, 1)
+    ssoutput <- sspolicy(S, s, inventorynew, demand)
+    inventory[[day]] <- ssoutput[1]
+    orderq[[day]] <- ssoutput[2]
+    shortage[[day]] <- ssoutput[3]
+    inventorynew = inventory[[day]]
   } 
+  data.frame(day = 1:100, inventory = unlist(inventory), orderq = unlist(orderq), shortageq = unlist(shortage)) 
 }
 ```
+
+```{r}
+ss1 = evaluation(policy$S[1], policy$s[1], 100)
+print(paste("Average inventory = ", mean(ss1$inventory)))
+print(paste("Total shortage = ", sum(ss1$shortage)))
+ggplot(ss1) + geom_line(aes(x=day, y=inventory, label="Inventory")) + geom_bar(stat="identity", aes(x=day, y=shortageq, label="Shortages")) + ggtitle("S=8, s = 2, policy inventory and shortages") + ylab("Daily Quantity")
+```  
+
+```{r}
+ss2 = evaluation(policy$S[2], policy$s[2], 100)
+print(paste("Average inventory = ", mean(ss1$inventory)))
+print(paste("Total shortage = ", sum(ss1$shortage)))
+ggplot(ss2) + geom_line(aes(x=day, y=inventory, label="Inventory")) + geom_bar(stat="identity", aes(x=day, y=shortageq, label="Shortages")) + ggtitle("S=8, s = 4, policy inventory and shortages") + ylab("Daily Quantity")
+```  
+
+```{r}
+ss3 = evaluation(policy$S[3], policy$s[3], 100)
+print(paste("Average inventory = ", mean(ss1$inventory)))
+print(paste("Total shortage = ", sum(ss1$shortage)))
+ggplot(ss3) + geom_line(aes(x=day, y=inventory, label="Inventory")) + geom_bar(stat="identity", aes(x=day, y=shortageq, label="Shortages")) + ggtitle("S=10, s = 2, policy inventory and shortages") + ylab("Daily Quantity")
+```  
+```{r}
+ss4 = evaluation(policy$S[4], policy$s[4], 100)
+print(paste("Average inventory = ", mean(ss1$inventory)))
+print(paste("Total shortage = ", sum(ss1$shortage)))
+ggplot(ss4) + geom_line(aes(x=day, y=inventory, label="Inventory")) + geom_bar(stat="identity", aes(x=day, y=shortageq, label="Shortages")) + ggtitle("S=10, s = 4, policy inventory and shortages") + ylab("Daily Quantity")
+```  

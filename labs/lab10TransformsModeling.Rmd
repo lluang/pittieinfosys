@@ -1,0 +1,52 @@
+---
+title: 'Lab 10: Transforms and modeling'
+author: "IE 0015 Information Systems"
+date: "March 2017"
+output:
+  html_document: default
+---
+
+For all questions, answer with both the answer and the code used to determine the answer.
+
+```{r, echo=FALSE, warning=FALSE}
+library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
+library(ggplot2, warn.conflicts = FALSE, quietly = TRUE)
+library(purrr, warn.conflicts = FALSE, quietly = TRUE)
+library(modelr)
+library(readr)
+ss12ppa <- read_csv("../data/ss12ppa.csv")
+```
+
+
+You believe that income (PINCP) may be related to citizenship status (ACS Person record - CIT).  But it is clearly also a function of age, education, and potentially of gender, race and the class of worker (type of employer).
+
+1. [2] Convert Educational attainment into years of school.  For Primary-secondary school, use the grade last attained (up to 12). For any version of High school diploma (including GED) use 12. For years of college but no degree, use 13 (i.e. one year past high school.  For associates degree, use 14, Bachelor, use 16, Masters 18, Professional degree beyond bachelor's degree use 19, Doctorate, 21)
+
+2. [3] Filter on individuals who are employed (based on COW field and PINCP > 1). Transform the following variables.
+
+  i. PINCP - Take the log of the PINCP
+  ii. Educational attainment (SCHL). Convert using standard normal - number of standard deviations from the mean.
+  iii. Age - Convert to a 0-1 range
+
+3. [5] Create a model for income using the all variables mentioned and the transformed variables where applicable from (2).  Plot the effects of citizenship status on income. Comment on the original statement.
+
+Note: Factors from the ACS Person Record
+
+SCHL - educational attainment
+AGEP - age
+cow - class of worker (type of employment)
+SEX - gender
+RAC1P - Race code (use only this code)
+PINCP - Personal income
+CIT - Citizenship status
+
+
+
+CIT 1
+Citizenship status
+1 .Born in the U.S.
+2 .Born in Puerto Rico, Guam, the U.S. Virgin Islands, or the
+ .Northern Marianas
+3 .Born abroad of American parent(s)
+4 .U.S. citizen by naturalization
+5 .Not a citizen of the U.S.
