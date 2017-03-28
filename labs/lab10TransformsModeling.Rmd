@@ -6,47 +6,131 @@ output:
   html_document: default
 ---
 
-For all questions, answer with both the answer and the code used to determine the answer.
+For all questions, answer with both the answer and the code used to determine the answer.  Start by loading necessary libraries and the ACS Personal Record from Course Documents - Data.
 
 ```{r, echo=FALSE, warning=FALSE}
 library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
 library(ggplot2, warn.conflicts = FALSE, quietly = TRUE)
 library(purrr, warn.conflicts = FALSE, quietly = TRUE)
-library(modelr)
-library(readr)
+library(modelr, quietly = TRUE)
+library(readr, quietly = TRUE)
 ss12ppa <- read_csv("../data/ss12ppa.csv")
 ```
 
 
 You believe that income (PINCP) may be related to citizenship status (ACS Person record - CIT).  But it is clearly also a function of age, education, and potentially of gender, race and the class of worker (type of employer).
 
-1. [2] Convert Educational attainment into years of school.  For Primary-secondary school, use the grade last attained (up to 12). For any version of High school diploma (including GED) use 12. For years of college but no degree, use 13 (i.e. one year past high school.  For associates degree, use 14, Bachelor, use 16, Masters 18, Professional degree beyond bachelor's degree use 19, Doctorate, 21)
+1. [2] 
+  a. Convert Educational attainment (SCHL) into years of school.  For Primary-secondary school, use the grade last attained (up to 12). Use 0 for those who did not complete Grade 1. For any version of High school diploma (including GED) use 12. For years of college but no degree, use 13 (i.e. one year past high school).  For associates degree, use 14, Bachelor, use 16, Masters 18, Professional degree beyond bachelor's degree use 19, Doctorate, 21)
+  b.  Convert Citizenship (CIT) into the written description.
 
-2. [3] Filter on individuals who are employed (based on COW field and PINCP > 1). Transform the following variables.
+Note: 
+  i. You will need to look at the data dictionary to interpret the values of SCHL and CIT. Remember that SCHL is of type character. 
+  ii. See Lecture 6 or Lab 5: Aggregation to review how to replace coded data with desired values.
+  iii. You may have to edit the factor names in ss12ppa$citizenship to make this fit table output later.
+  
+** ANSWER **
 
-  i. PINCP - Take the log of the PINCP
-  ii. Educational attainment (SCHL). Convert using standard normal - number of standard deviations from the mean.
-  iii. Age - Convert to a 0-1 range
+```{r}
+education = data.frame(
+              SCHL = c("bb", "01", "02", "03", 
+                      "04", "05", "06", "07", "08", "09", 
+                      "10", "11", "12", "13", "14", "15", 
+                     "16", "17", "18", "19", "20",
+                     "21", "22", "23", "24"), 
+              attainment = c(0, 0, 0, 0,  
+                    1, 2, 3, 4, 5, 6,
+                    7, 8, 9, 10, 11, 12,
+                    12, 12, 12, 13, 14,
+                    16, 18, 19, 21)
+              )
 
-3. [5] Create a model for income using the all variables mentioned and the transformed variables where applicable from (2).  Plot the effects of citizenship status on income. Comment on the original statement.
+ss12ppa <- merge(ss12ppa, education, all.x=TRUE, by='SCHL')
+```
 
-Note: Factors from the ACS Person Record
+```{r}
+citizenship = data.frame(
+              CIT = c(1, 2, 3, 4, 5), 
+              citizenship = c("Born in the U.S.",
+                              "Born in Puerto Rico, Guam, U.S.V.I., or the N. Marianas",
+                              "Born abroad of American parent(s)",
+                              "U.S. citizen by naturalization", 
+                              "Not a citizen of the U.S.")
+              )
 
-SCHL - educational attainment
-AGEP - age
-cow - class of worker (type of employment)
-SEX - gender
-RAC1P - Race code (use only this code)
-PINCP - Personal income
-CIT - Citizenship status
+ss12ppa <- merge(ss12ppa, citizenship, all.x=TRUE, by='CIT')
+```
 
+2. [4]  Filter on individuals who have positive income (PINCP > 1). Transform the following variables and add them to the ACS Personal Record data frame. Plot separate histogrames of each of the new variables
 
+  a. PINCP - Take the log of the PINCP
+  b. Age - Convert to a 0-1 range
+  c. Educational attainment (SCHL). Calculate the Z-score for each observation (standard normal).
+  
+Note:
+  i. The conversion of a vector to a 0-1 range function is in your lecture notes
+  ii. You should write a function to calculate the z score.
+  iii. Write out a process map. You should use `mutate` from `dplyr` to create the transformed variable.
+  iv.  You may have to convert characters to numeric.
+  
+```{r}
+ss12ppa <- ss12ppa %>%
+  filter(PINCP != "bbbbbb" & as.numeric(PINCP)>0 & !is.na(PINCP))
+```
 
-CIT 1
-Citizenship status
-1 .Born in the U.S.
-2 .Born in Puerto Rico, Guam, the U.S. Virgin Islands, or the
- .Northern Marianas
-3 .Born abroad of American parent(s)
-4 .U.S. citizen by naturalization
-5 .Not a citizen of the U.S.
+**ANSWER** 
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+zscore <- function(x){
+  meanx = mean(x)
+  sdx = sd(x)
+  (x-meanx)/sdx 
+}
+ss12ppa <- ss12ppa %>%
+  filter(PINCP != "bbbbbb" & as.numeric(PINCP)>0 & !is.na(PINCP)) %>%
+    mutate(lPINCP = log(as.numeric(PINCP))) %>%  # (a)
+      mutate(age01 = rescale01(as.numeric(AGEP))) %>% # (b)
+        mutate(zSCHL = zscore(attainment)) # (c)
+```
+```{r}
+ppaplot <- ggplot(ss12ppa)
+ppaplot + geom_histogram(aes(x=lPINCP)) + xlab("Log of income")
+```
+```{r}
+ppaplot + geom_histogram(aes(x=age01)) + xlab("Rescaled age")
+```
+```{r}
+ppaplot + geom_histogram(aes(x=zSCHL)) + xlab("Z score of educational attainment")
+```
+
+3. [4] Filter on individuals who are employed (based on PINCP > 0).
+  a. Create a model for personal income (not logarithm) using the all variables mentioned and the transformed variables where applicable from (2).  
+  b. Use `data_grid` from the `modelr` package and the model summary to isolate the effect of citizenship. 
+  c. Comment on the original statement.
+
+Note: 
+  i. Factors from the ACS Person Record that need to be in the model (after transformation) 
+    -  SCHL - educational attainment (use years of school)
+    -  AGEP - age
+    -  cow - class of worker (type of employment)
+    -  SEX - gender (factor)
+    -  RAC1P - Race code (use only this code) (factor)
+    -  PINCP - Personal income
+    -  CIT - Citizenship status (factor)
+  ii. You do not have to merge SEX, RAC1P, SCHL, because these are not explanatory variables.
+  
+** ANSWER **
+
+```{r}
+lmincome <- lm(PINCP ~ citizenship + RAC1P + SEX + COW + age01 + attainment, data=ss12ppa)
+summary(lmincome)
+```
+```{r}
+gridcut <- ss12ppa %>% 
+  data_grid(citizenship, .model = lmincome) %>% 
+  add_predictions(lmincome)
+gridcut[,c('citizenship', 'pred')]
+```
