@@ -82,6 +82,6 @@ titanic %>%
 ```{r}
 library(ggplot2)
 ggplot(titanic, aes(age)) + geom_histogram(binwidth=5, boundary=0) + 
-  facet_grid(sex ~ .) + ggtitle("Ag+++++++++++++++++++++++++++++++++++e of Titanic passengers by gender") + 
+  facet_grid(sex ~ .) + ggtitle("Age of Titanic passengers by gender") + 
   xlab("Number of passengers") +ylab("Age")
 ```

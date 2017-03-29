@@ -29,6 +29,37 @@ Note:
   ii. See Lecture 6 or Lab 5: Aggregation to review how to replace coded data with desired values.
   iii. You may have to edit the factor names in ss12ppa$citizenship to make this fit table output later.
   
+** ANSWER **
+
+```{r}
+education = data.frame(
+              SCHL = c("bb", "01", "02", "03", 
+                      "04", "05", "06", "07", "08", "09", 
+                      "10", "11", "12", "13", "14", "15", 
+                     "16", "17", "18", "19", "20",
+                     "21", "22", "23", "24"), 
+              attainment = c(0, 0, 0, 0,  
+                    1, 2, 3, 4, 5, 6,
+                    7, 8, 9, 10, 11, 12,
+                    12, 12, 12, 13, 14,
+                    16, 18, 19, 21)
+              )
+
+ss12ppa <- merge(ss12ppa, education, all.x=TRUE, by='SCHL')
+```
+
+```{r}
+citizenship = data.frame(
+              CIT = c(1, 2, 3, 4, 5), 
+              citizenship = c("Born in the U.S.",
+                              "Born in Puerto Rico, Guam, U.S.V.I., or the N. Marianas",
+                              "Born abroad of American parent(s)",
+                              "U.S. citizen by naturalization", 
+                              "Not a citizen of the U.S.")
+              )
+
+ss12ppa <- merge(ss12ppa, citizenship, all.x=TRUE, by='CIT')
+```
 
 2. [4]  Filter on individuals who have positive income (PINCP > 1). Transform the following variables and add them to the ACS Personal Record data frame. Plot separate histograms of each of the new variables
 
@@ -47,6 +78,33 @@ ss12ppa <- ss12ppa %>%
   filter(PINCP != "bbbbbb" & as.numeric(PINCP)>0 & !is.na(PINCP))
 ```
 
+**ANSWER** 
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+zscore <- function(x){
+  meanx = mean(x)
+  sdx = sd(x)
+  (x-meanx)/sdx 
+}
+ss12ppa <- ss12ppa %>%
+  filter(PINCP != "bbbbbb" & as.numeric(PINCP)>0 & !is.na(PINCP)) %>%
+    mutate(lPINCP = log(as.numeric(PINCP))) %>%  # (a)
+      mutate(age01 = rescale01(as.numeric(AGEP))) %>% # (b)
+        mutate(zSCHL = zscore(attainment)) # (c)
+```
+```{r}
+ppaplot <- ggplot(ss12ppa)
+ppaplot + geom_histogram(aes(x=lPINCP)) + xlab("Log of income")
+```
+```{r}
+ppaplot + geom_histogram(aes(x=age01)) + xlab("Rescaled age")
+```
+```{r}
+ppaplot + geom_histogram(aes(x=zSCHL)) + xlab("Z score of educational attainment")
+```
 
 3. [4] Filter on individuals who are employed (based on PINCP > 0).
   a. Create a model for personal income (not logarithm) using the all variables mentioned and the transformed variables where applicable from (2).  
@@ -63,4 +121,24 @@ Note:
     -  PINCP - Personal income
     -  CIT - Citizenship status (factor)
   ii. You do not have to merge SEX, RAC1P, SCHL, because these are not explanatory variables.
+  
+** ANSWER **
 
+```{r}
+ss12ppa$RAC1P <- as.factor(ss12ppa$RAC1P)
+ss12ppa$SEX <- as.factor(ss12ppa$SEX)
+ss12ppa$COW <- as.factor(ss12ppa$COW)
+lmincome <- lm(PINCP ~ citizenship + RAC1P + SEX + COW + age01 + attainment, data=ss12ppa)
+summary(lmincome)
+```
+
+Make sure they set other variables to factors. You will be able to tell because the summary will split the values of the factors into a set of binary variables, one corresponding to each possible value of the variable (minus 1, the baseline).
+
+```{r}
+gridcut <- ss12ppa %>% 
+  data_grid(citizenship, .model = lmincome) %>% 
+  add_predictions(lmincome)
+gridcut[,c('citizenship', 'pred')]
+```
+
+Comment should note that those who are citizens by naturalization have higher incomes than all other categories, and may note that those born in the U.S. have lower incomes, after accounting for all of the other factors discussed. They may also note that citizenship is not significant when other factors are taken into account.
