@@ -28,6 +28,16 @@ Project Report
 - Outcome (Visualization and hypothetical Outcome based on actual results)
 - Appendices allowed if needed (does not count against 8 pages).
 
+Project Presentation
+========
+
+- Approximately 8 minutes
+- 8-10 slides
+- Cover CONVO, data source and 4 V's
+  - Vision and Outcome introduced in a pre-project form
+- Process map of data manipulation and data processing
+- Actual visualizations (realization of the V in CoNVO)
+- Hypothetical outcome, given what you actually saw
 
 Linear Regression
 =================
@@ -47,7 +57,8 @@ Implication
 -  For each given value of *x*, we observe a random value of *Y* normally distributed with a mean at the regression line.
 -  Observations at each value of *x* should be independent, and have the same standard deviations.
 
-***
+Distribution of residuals independent of the independent variable
+===========================
 ```{r, echo=FALSE}
  # open window
 plot(c(0,5), c(0,6.5), type = "n", xlab="x", ylab="y")
@@ -73,9 +84,9 @@ How we use linear regression
 ===================
 
 - Hypothesis testing
-- Predictions
-- Analysis of designed experiments
 - Simplifying models
+- Analysis of designed experiments
+- Predictions
 - Missing value imputation
 
 How it works
@@ -104,6 +115,8 @@ Prepare data and specifying the model
 -  model specification is of the form:
   - *dependent ~ independent1 + independent2*
   - *Petal.Width ~ Petal.Length*
+  - Constant is implied. Can be removed by specifying `- 1` in the model
+  - Interaction terms can be included using `independent1:independent2`
 
 Evaluating the model
 ============
@@ -212,6 +225,7 @@ Evaluating predictions
 ===========
 - Question: how good is our estimate of $\mu(x)$ for any given value of $x$?
 - It should be based on the confidence interval of the mean of $\mu(x)$ and the standard deviation of $Y$ at $x$.
+- Usually use 95\% C.I.
 
 Confidence and prediction intervals in R
 ==============
@@ -424,11 +438,10 @@ $$\epsilon \sim mvnorm(mean=0, sigma=\sigma^2 I_{nXn})$$
 Look at the relationships between all variables
 ====================
 ```{r}
-#library(GGally)
 ggpairs(data = iris)
 ```
 
-Try all relationships
+Try a model with all relationships
 =====================
 
 ```{r}
