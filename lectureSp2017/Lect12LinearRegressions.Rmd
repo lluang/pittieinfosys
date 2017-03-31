@@ -398,7 +398,6 @@ cooksD[which(cooksD > F0.50)]
 
 Overview of diagnostics plots
 ===========
-incremental:true
 ```{r, echo=FALSE}
 par(mfrow=c(2,2))
 plot(irispetal)
