@@ -7,21 +7,22 @@ output: pdf_document
 
 ```{r loadlibraries,  warning=FALSE}
 options(digits = 3, scipen=4)
-library(RSQLite, quietly=TRUE, warn.conflicts = FALSE)
-library(ggplot2, quietly = TRUE, )
-library(VIM, quietly=TRUE, warn.conflicts = FALSE)
+library(ggplot2, quietly = TRUE)
+library(dplyr)
+library(modelr)
+#library(VIM, quietly=TRUE, warn.conflicts = FALSE)
 
-titanic <- read.csv("../data/titanictrain.csv",
+titanic <- read.csv("../data/titanic3.csv",
                     header=TRUE, sep=",")
 # From Lab on working with characters and regular expressions
 getTitle <- function(data) {
-  title.dot.start <- regexpr("\\,[A-Z ]*\\.", data$Name, TRUE)
-  title.comma.end <- title.dot.start+ attr(title.dot.start, "match.length")-1
-  data$Title <- substr(data$Name, title.dot.start+2, title.comma.end-1)
+  title.dot.start <- regexpr("\\,[A-Z ]*\\.", data$name, TRUE)
+  title.comma.end <- title.dot.start+ attr(title.dot.start, "match.length")
+  data$Title <- substr(data$name, title.dot.start+2, title.comma.end-1)
   return (data$Title)
 }  
 titanic$Title <- getTitle(titanic)
-#unique(titanic$Title)  
+unique(titanic$Title)  
 ```
 
 # 1.  kNN imputation (3pts).
@@ -41,46 +42,79 @@ head(titanic2[I,])
 The values should feel closer because there is more variety in the imputed records due to the averaging of records that were similar.
 Also, they feel more correct than hot deck imputation because the assignment of an age to a person is based on characteristics.
 
-# 2. Regression (7 pts)
+# 1. Multiple linear regression (4 pts)
 
 You think that the age is dependent on the following
 
   i.  Sex
   ii.  Pclass
-  iii.  Title (Note: code to extract the title from the name field is at the top)
-  iv.  Fare
-(Note: so few people have SibSp or Parch that you are going to ignore these)
 
-  a.  Develop a multiple linear regression model for the age based on these characteristics for use in missing value imputation.
-  b.  Display the summary and the analysis of variance tables for this model. Comment on each of the four predictors that are in your model and make corrections as needed.
+  a.  Remove lines in the data that do not have an age
+  a.  Develop a multiple linear regression model for the age based on these characteristics.
+  b.  Display the summary and the analysis of variance tables for this model. 
   c.  Display diagnostics plots. Discuss the three assumptions of regression models.
+  d.  Do you think this is an adequate model?
   
 ANSWER
 ======
 
 a-b. Model
 ```{r}
-age.lm <- lm(Age ~ Sex + Pclass + Title + Fare, data=titanic)
+titanic <- titanic[!is.na(titanic$age),]
+age.lm <- lm(age ~ sex + pclass, data=titanic)
 summary(age.lm)
 anova(age.lm)
 ```
-
-You should recognize that the Fare should be removed from the model. One issue is that the Fare is more related to the Pclass than the age of the passenger.
-
-```{r}
-age.lm2 <- lm(Age ~ Sex + Pclass + Title, data=titanic)
-summary(age.lm2)
-anova(age.lm2)
-```
-c.  Diagnostics
+c. Diagnostic plots
 ```{r}
 par(mfrow=c(2,2))
-plot(age.lm2)
+plot(age.lm)
 par(mfrow=c(1,1))
 ```
 
 -  Normality (looks pretty good, only breaks off the 45 degree line near the top of the distribution)
 -  Error distribution seems independent (very young and old are different, but that may be because so few points)
 -  Constant variance (only changes as for passengers that are   very young or very old)
+-  Bonus: Cook's distance does not fit inside the boundaries.
+-  You should comment that there are only 6 predicted values.
 
--  Bonus: Cook's distance looks good as no point is in isolation and all are inside the boundaries.
+# 2 Adding to the model.
+There are two variables that are generally present but are not currently in the model: fare and Title. 
+
+a. Plot the residuals of your model against each of these and choose which value should be added to the model.
+b. Create the linear regression model that adds the new variable and print the summary, anova table, and diagnostic plots.
+c. Compare the new model to the original.
+
+
+
+Compare the residuals against the Title.
+
+```{r}
+titanic$lmresiduals <- age.lm$residuals
+ggplot(titanic) + geom_boxplot(aes(Title, lmresiduals))
+```
+
+```{r}
+ggplot(titanic) + geom_point(aes(fare, lmresiduals))
+```
+
+The residuals for each fare seem to have the same range for most values of the fare.  But their are large differences in the boxplots when plotting against the title, so add the title.
+
+```{r}
+age.lm2 <- lm(age ~ sex + pclass + Title, titanic)
+summary(age.lm2)
+anova(age.lm2)
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(age.lm2)
+par(mfrow=c(1,1))
+```
+
+There are more varied predicted values of age. Many of the residuals are very small because of few samples. For those with many samples, the residuals are smaller, and about even.
+
+Note that Cook's distance is now within the lines.
+QQ plot looks better at the top.
+
+Sum of squares residuals much smaller.
