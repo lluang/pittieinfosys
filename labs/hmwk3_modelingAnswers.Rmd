@@ -17,11 +17,13 @@ library(dplyr)
 library(tidyr)
 library(readxl)
 library(magrittr)
+library(lubridate)
+library(HH)
 ```
 
 
 This lab will use data from the following sources:
-  - Monthly sales of company X Jan ’65 – May ’71 C. Cahtfield
+  - Monthly sales of company X Jan ?65 ? May ?71 C. Cahtfield
     - https://datamarket.com/data/set/22q3/monthly-sales-of-company-x-jan-65-may-71-c-cahtfield#!ds=22q3&display=line
 
 
@@ -38,7 +40,7 @@ $Value ~ b0 + b1 * time\_period + b2 * seasonality\_factor$
 Download and load into the R the monthly sales data. Note that as part of importing the data into an R data frame you will need to edit the source file and adjust the parameters. In addition, if you attempt to import from Excel, beware of blank columns. (these are hard to see, best to explicitly delete columns that should be empty in Excel)
 
 ```{r}
-monthly_sales_of_company_x_jan_6 <- read_excel("C:/Users/lol11/Downloads/monthly-sales-of-company-x-jan-6.xlsx", col_names = c("Month", "Sales"), col_types = c("date", "numeric"), skip=13)
+monthly_sales_of_company_x_jan_6 <- read_excel("monthly-sales-of-company-x-jan-6.xlsx", col_names = c("Month", "Sales"), col_types = c("date", "numeric"), skip=13)
 ```
 
   a. [4] You will need to create columns to represent the trend (total number of months) and the seasonality factor (month of the year). Using the Date field, create three fields: the year, the month of year (numeric), and the month of the study (this will go from 1 to 77).
@@ -51,28 +53,132 @@ Notes:
 
 i. We covered dates in lecture 9
 ii. After you create a column for the month of the study, you should look at the data frame to confirm it is working correctly.
+iii. Look at the help page for `lubridate` to see how to pull out the month from the date.  The month of the time series is done for you.
 
 ```{r}
 monthly_sales_of_company_x_jan_6 <- monthly_sales_of_company_x_jan_6 %>%
-  mutate(monthnum = print(Month, format="%M"))
+  filter(!is.na(Month))
+monthly_sales_of_company_x_jan_6$monthnum <- 1:74
 ```
+
+**ANSWER**
+
+```{r}
+
+monthly_sales_of_company_x_jan_6 <- monthly_sales_of_company_x_jan_6 %>%
+  mutate(monthyear = month(Month)) %>%
+  mutate(year = year(Month))
+
+lmmonthly <- lm(Sales ~ monthnum + monthyear, data=monthly_sales_of_company_x_jan_6)
+summary(lmmonthly)
+```
+```{r}
+par(mfrow=c(2,2))
+plot(lmmonthly)
+par(mfrow=c(1,1))
+```
+
+You should comment that the residuals seem to be increasing over time.  the Q-Q plot shows a few point off the line at top and bottom, but there are only around 7 of them. But it looks ok.
+
 2.  [5] Predictions
 
   a.  [3] For the monthly sales of company X, use your model to predict the last two years of the data (from June 1969 through May 1971).  Use the `predict` function with the linear model you made in problem 1 to do this. (See the help file on `predict`)
-  b.  [2] Plot the confidence interval and prediction intervals. Discuss the results
+  b.  [2] Print the confidence interval and prediction intervals for the model from (1). Discuss the results in context of the June 1969 - May 1971 time period.
 
 (Note: in reality, you should have cut the data at May 1969 before making the model, but we will not worry about that for this assignment.)
+
+**ANSWER**
+
+You need to pass in a data set made up of only the last 24 months of data that need to be predicted
+
+```{r}
+newmonths <- monthly_sales_of_company_x_jan_6[51:74, c("monthnum", "monthyear")]
+predict(lmmonthly, newdata = newmonths, interval="confidence")
+predict(lmmonthly, newdata = newmonths, interval="prediction")
+```
+```{r}
+monthly_sales_of_company_x_jan_6$lmresiduals <- lmmonthly$residuals
+ggplot(monthly_sales_of_company_x_jan_6) + geom_point(aes(monthnum, lmresiduals))
+```
+
+You should note that residuals are increasing over time.
 
 3.  [10] Baseball
 
 You would like to predict the number of runs a Major League Baseball (MLB) team scores in a season based on team statistics. The following file has MLB statistics from the 2011 season.
 
+```{r}
 download.file("http://www.openintro.org/stat/data/mlb11.RData", destfile = "mlb11.RData")
 load("mlb11.RData")
-
+```
 This contains several variables traditionally used in evaluating team performance: runs, at-bats, hits, home runs, batting average, strikeouts, stolen bases, and wins. There are also three newer variables: on-base percentage, slugging percentage, and on-base plus slugging.  You are interested in predicting runs.
 
   a. [2] The most obvious predictive variable for runs are the number of team at-bats. (more offensive opportunities yield more scoring opportunities). Create a linear regression model that relates at-bats to runs.
   b. [2]  Evaluate the linear model of at-bats to runs using the summary statistics, ANOVA output, and four diagnostic plots.
   c. [3] Examine the residuals by adding each of the remaining variables in the dataset one at a time.  Discuss the performance of the traditional variables against the three newer variables.  Discuss which variable you would add to the model of at-bats and runs.
   d. [3] Create the new linear regression model relating at-bats to runs, adding the variable you choose in (c).  Print out the summary statistics, ANOVA, and four diagnostic plots and explain how the model is improved or not (or inconclusive).
+
+**ANSWER**
+```{r}
+runsatbats <- lm(runs ~ at_bats, data=mlb11)
+summary(runsatbNats)
+anova(runsatbats)
+```
+```{r}
+par(mfrow=c(2,2))
+plot(runsatbats)
+par(mfrow=c(1,1))
+```
+
+```{r}
+mlb11$abresiduals <- runsatbats$residuals
+```
+```{r}
+mlbplot <- ggplot(mlb11, aes(y=abresiduals))
+mlbplot + geom_point(aes(x=hits))
+```
+```{r}
+mlbplot + geom_point(aes(x=homeruns))
+```
+
+```{r}
+mlbplot + geom_point(aes(x=bat_avg))
+```
+
+```{r}
+mlbplot + geom_point(aes(x=strikeouts))
+```
+
+```{r}
+mlbplot + geom_point(aes(x=stolen_bases))
+```
+
+```{r}
+mlbplot + geom_point(aes(x=wins))
+```
+
+```{r}
+mlbplot + geom_point(aes(x=new_onbase))
+```
+
+```{r}
+mlbplot + geom_point(aes(x=new_slug))
+```
+
+```{r}
+mlbplot + geom_point(aes(x=new_obs))
+```
+
+The new predictors seem to do real well.  Try to add new_obs to the model
+
+```{r}
+lmobs <- lm(runs ~ at_bats + new_obs, mlb11)
+summary(lmobs)
+anova(lmobs)
+```
+```{r}
+par(mfrow=c(2,2))
+plot(lmobs)
+par(mfrow=c(1,1))
+```
+
