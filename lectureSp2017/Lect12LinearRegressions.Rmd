@@ -1,10 +1,11 @@
 ---
-title: "Lecture 12: Linear Regression"
+title: 'Lecture 12: Linear Regression'
 author: "IE0015 Information Systems Engineering"
 date: "April 3, 2017"
 output:
-  html_document: default
   slidy_presentation: default
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r}
@@ -127,15 +128,16 @@ Evaluating the model
 data(iris)
 irispetal <- lm(Petal.Width ~ Petal.Length, data=iris)
 ```
-```{r, echo=FALSE}
+```{r}
 ggplot(iris, aes(x = Petal.Length, y=Petal.Width, color=Species)) + geom_point()
 ```
+
 Model output
 ==========
 ```{r}
 irispetal$coefficients
 ```
-```{r, echo=FALSE}
+```{r}
 ggplot(iris, aes(x = Petal.Length, y=Petal.Width)) + geom_point() + geom_smooth(method='lm', formula=y~x)
 ```
 
@@ -237,22 +239,14 @@ predict(irispetal, newdata=new, interval="confidence")
 predict(irispetal, newdata=new, interval="prediction")
 ```
 
-Confidence and prediction intervals
+Confidence and prediction intervals for iris using `ci.plot`
 ========
+- Prediction intervals are much larger than confidence intervals.
+- Intervals generally curve out as you reach the extremes
 ```{r}
 ci.plot(irispetal) # from HH library
 ```
 
-Confidence interval plot
-================
-- Prediction intervals are much larger than confidence intervals.
-- Intervals generally curve out as you reach the extremes
-
-```{r, echo=FALSE}
-data(cars)
-cars.lm <- lm(dist ~ speed, data = cars)
-ci.plot(cars.lm)
-```
 
 Analysis of Residuals
 ==========
@@ -412,7 +406,7 @@ Iris data
 
 - Maybe we should add another term to the linear regression
 
-```{r, echo=FALSE}
+```{r}
 ggplot(iris, aes(x = Petal.Length, y=Petal.Width, color=Species)) + geom_point()
 ```
 
@@ -427,6 +421,7 @@ par(mfrow=c(2,2))
 plot(irispetal2)
 par(mfrow=c(1,1))
 ```
+
 Multiple linear regression
 ===================
 
@@ -474,8 +469,8 @@ $$S = \sqrt{S^2}$$
 Confidence and prediction intervals
 ====================
 
--  We can get confidence and prediction intervals the same way
-```{r, echo=FALSE}
+-  We can get confidence and prediction intervals for predictions/forecasts on new points using `predict` 
+```{r}
 new <- data.frame(Petal.Length = c(3.5, 4, 4.5), Sepal.Width=c(2.5, 3.0, 3.5),
                   Sepal.Length=c(4.5,5, 5.5), Species=c("versicolor", "versicolor", "versicolor"))
 ```
@@ -483,6 +478,7 @@ new <- data.frame(Petal.Length = c(3.5, 4, 4.5), Sepal.Width=c(2.5, 3.0, 3.5),
 predict(iris.lm, newdata=new, interval="confidence")
 predict(iris.lm, newdata=new, interval="prediction")
 ```
+
 
 Coefficient of determination
 ==================

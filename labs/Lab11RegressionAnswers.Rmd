@@ -7,11 +7,13 @@ output:
   pdf_document: default
 ---
 
+This lab will use the Titanic data. You should modify the `read.csv` function call to correspond to your system.
+
 ```{r loadlibraries,  warning=FALSE}
 options(digits = 3, scipen=4)
-library(ggplot2, quietly = TRUE)
-library(dplyr)
-library(modelr)
+library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
+library(dplyr, quietly = TRUE, warn.conflicts = FALSE)
+library(modelr, quietly = TRUE, warn.conflicts = FALSE)
 
 titanic <- read.csv("../data/titanic3.csv",
                     header=TRUE, sep=",")
@@ -29,7 +31,7 @@ unique(titanic$Title)
 
 # 1. Multiple linear regression (5 pts)
 
-You think that the age is dependent on the following
+You think that the age is related to the following:
 
   i.  Sex
   ii.  Pclass
@@ -52,19 +54,17 @@ anova(age.lm)
 ```
 d. Diagnostic plots
 ```{r}
-par(mfrow=c(2,2))
+par(mfrow=c(2,2)) 
 plot(age.lm)
 par(mfrow=c(1,1))
 ```
 
 -  Normality (looks pretty good, only breaks off the 45 degree line near the top of the distribution)
 -  Error distribution seems independent (very young and old are different, but that may be because so few points)
--  Constant variance (only changes as for passengers that are   very young or very old)
--  Bonus: Cook's distance does not fit inside the boundaries.
+-  Constant variance (only changes as for passengers that are  very young or very old)
+-  Bonus: Cook's distance does not show the outer boundaries, so it passes.
 
-e.
-
--  You should comment that there are only 6 predicted values, so this does not look complete.
+e. You should comment that there are only 6 predicted values, so this does not look complete.
 
 # 2. Adding to the model. (5 pts)
 
@@ -87,7 +87,7 @@ ggplot(titanic) + geom_boxplot(aes(Title, lmresiduals))
 ggplot(titanic) + geom_point(aes(fare, lmresiduals))
 ```
 
-The residuals for each fare seem to have the same range for most values of the fare.  But their are large differences in the boxplots when plotting against the title, so add the title.
+The residuals for each fare seem to have the same range for most values of the fare.  But their are large differences in the boxplots when plotting against the title, indicating that the title is informative, so add the title.
 
 b.
 
@@ -106,7 +106,7 @@ par(mfrow=c(1,1))
 c. 
 There are more varied predicted values of age. Many of the residuals are very small because of few samples. For those with many samples, the residuals are smaller, and about even.
 
-Note that Cook's distance is now within the lines.
-QQ plot looks better at the top.
-
-Sum of squares residuals much smaller.
+- Note that Cook's distance is still within the lines.
+- QQ plot looks better at the upper end of the range.
+- Sum of squares residuals is much smaller. 127776 vs 177602
+- Adjusted R^2 increases from 0.18 to 0.401

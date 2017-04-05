@@ -1,5 +1,5 @@
 ---
-title: 'Homework Transformations and Modeling'
+title: 'Homework 3: Transformations and Modeling'
 author: "IE 0015"
 date: "April 17, 2017"
 output:
@@ -12,18 +12,18 @@ For the homework assignments, code and narrative should be written using R Markd
 Note: The due date on the syllabus is April 13. It is being moved to Monday, April 17.
 
 ```{r, warning=FALSE}
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(readxl)
-library(magrittr)
-library(lubridate)
-library(HH)
+library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
+library(dplyr, quietly = TRUE, warn.conflicts = FALSE)
+library(tidyr, quietly = TRUE, warn.conflicts = FALSE)
+library(readxl, quietly = TRUE, warn.conflicts = FALSE)
+library(magrittr, quietly = TRUE, warn.conflicts = FALSE)
+library(lubridate, quietly = TRUE, warn.conflicts = FALSE)
+library(HH, quietly = TRUE, warn.conflicts = FALSE)
 ```
 
 
 This lab will use data from the following sources:
-  - Monthly sales of company X Jan ?65 ? May ?71 C. Cahtfield
+  - Monthly sales of company X Jan 65 - May 71, C. Cahtfield
     - https://datamarket.com/data/set/22q3/monthly-sales-of-company-x-jan-65-may-71-c-cahtfield#!ds=22q3&display=line
 
 
@@ -33,7 +33,7 @@ One application of linear regression is in forecasting a time series.  Specifica
   ii. Trend
   iii. Seasonal cycles
 
-$Value ~ b0 + b1 * time\_period + b2 * seasonality\_factor$
+$value \sim b0 + b1 * time\_period + b2 * seasonality\_factor$
 
 1.  [10]  Forecast for company X monthly sales
 
@@ -78,7 +78,7 @@ plot(lmmonthly)
 par(mfrow=c(1,1))
 ```
 
-You should comment that the residuals seem to be increasing over time.  the Q-Q plot shows a few point off the line at top and bottom, but there are only around 7 of them. But it looks ok.
+You should comment that the residuals seem to be increasing over time.  the Q-Q plot shows a few point off the line at top and bottom, but there are only around 7 of them. But it looks OK.
 
 2.  [5] Predictions
 
@@ -121,7 +121,7 @@ This contains several variables traditionally used in evaluating team performanc
 **ANSWER**
 ```{r}
 runsatbats <- lm(runs ~ at_bats, data=mlb11)
-summary(runsatbNats)
+summary(runsatbats)
 anova(runsatbats)
 ```
 ```{r}
@@ -169,7 +169,9 @@ mlbplot + geom_point(aes(x=new_slug))
 mlbplot + geom_point(aes(x=new_obs))
 ```
 
-The new predictors seem to do real well.  Try to add new_obs to the model
+The new predictors seem to have an impact when plotting against residuals. Specifically, after accounting for at-bats there seems to have a linear relationship. It is hard to pick against the new predictors, so add any one of them.  Try to add new_obs to the model.
+
+From the old predictors, most of them seem to show independently distributed residuals, meaning that they do not provide information.  Wins and home runs also show linear relationships with the residuals, but because there is a close relationship with runs, that seems to be expected.  The fact that obs, slugging, and onbase show the relationship without being so closely related to the target variable provides useful understanding.
 
 ```{r}
 lmobs <- lm(runs ~ at_bats + new_obs, mlb11)
@@ -181,4 +183,4 @@ par(mfrow=c(2,2))
 plot(lmobs)
 par(mfrow=c(1,1))
 ```
-
+For discussion, the diagnostic plots are still good.  R^2 improved from 0.3505 to 0.9301, Sum of squares of residuals improved from 4419 to 475.
