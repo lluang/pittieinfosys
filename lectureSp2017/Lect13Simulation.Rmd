@@ -10,7 +10,7 @@ output:
 ```{r}
 library(ggplot2)
 library(foreach)
-library(desolve)
+library(deSolve)
 ```
 
 Simulation
@@ -59,6 +59,7 @@ Example of Monte Carlo
 - Test if this is true
  
 $$x^2 + y^2 <=1$$
+
 In R
 ========
 
@@ -264,13 +265,13 @@ Hypothesis testing with simulation
 
 -  Example: the common dosage for an anti-retroviral drug AZT is 300mg. Higher doses are potentially more effective, but also have more side effects. Question: are the side effects significantly higher?
 
-1.  Calculate the difference in means between two groups.
+1.  Calculate the difference in means between two groups: AZT with 300 mg and AZT with 600 mg dose.
 
 ```{r}
 azt300 <- c(284, 279, 289, 292, 287, 295, 285, 279, 306, 298)
 azt600 <- c(298, 307, 297, 279, 291, 335, 299, 300, 306, 291)
-mean(azt300)
-mean(azt600)
+mean(azt300, digits=1)
+mean(azt600, digits=1)
 delta300600 <- mean(azt600) - mean(azt300)
 delta300600
 ```
@@ -279,9 +280,9 @@ Significance with bootstrap
 ===========================
 
 2.  Resample from the data to generate a distribution of differences.
-  -  Presuming there are no differences, sample 10 from the combined data to generate a *a300* group, with the remainder in the *a600* group. (*Q: why 10?*)
+  -  Presuming there are no differences, sample 10 from the *combined* data to generate a *a300* group, with the remainder in the *a600* group. (*Q: why 10?, why the combined group?*)
   -  Calculate and save the differences in mean.
-3.  Draw the *permutation distribution* of these differences. Locate the observed difference (10.9) and determine its *p-value* from the *permutation distribution*. If *p* is small, this is evidence against the null hypothesis
+3.  Draw the *permutation distribution* of these differences. Locate the observed difference that you observed when you had two distinct datasets (300.3-298.4 = 10.9) and determine its *p-value* from the *permutation distribution*. If *p* is small, this is evidence against the null hypothesis
 
 ```{r}
 set.seed(1234)
@@ -298,7 +299,6 @@ permdistfun <- function(azt){
 
 
 Now, apply bootstrap and to get the permutation distribution
-
 =====
 ```{r}
 azt <- c(azt300, azt600)
@@ -322,6 +322,9 @@ pvalue
 Compare to normal hypothesis testing
 ==========================
 
+- the `t.test` function can be used for one or two sample t-tests on vectors of data
+- Q: how would you use this for a paired t-test?
+
 ```{r}
 t.test(x=azt300, y=azt600)
 ```
@@ -337,36 +340,97 @@ Continuous simulation
 - AKA system dynamics
 - Change in system state described by differential equations
 - Simulate by advancing state of system in time steps
-$$\frac{dx}{dt} = x (\alpha - \beta y)$$
-$$\frac{dy}{dt} = -y (\gamma - \delta x)$$
-- e.g. predator prey dynamics
-  - Prey population based on birthrate and amount of predators
-  - Predator population based on eating prey
+- Example: the Susceptible-Infected-Recovered (SIR) model of infectious diseases
+$$\frac{dS}{dt} = -\lambda I S$$
+$$\frac{dI}{dt} = \lambda I S - v I$$
 
+$$\frac{dR}{dT} = vI$$
+
+-Where
+  - $\lambda$ is the force of infection, where $\lambda$ is a function of the contact rate, the probability of transmission per contact, and the total population,
+  - v is the recovery rate, 
+  - S is the number of susceptible individuals at a given time,
+  - I is the number of infected individuals at a given time,
+  - R is the number of recovered individuals at a given time.
+
+Same model in R using the `FME` package
+=======
+
+- The `FME` package is used to solve systems of Ordinary Differential Equations (ODE)
+  - Initial Value Problems - You have a model, and observed data, now you want to find parameters to the model
+  - The general package for differential equations (which is called by `FME`) is `deSolve`
+- Note we do not include $R$ because that is an absorbing state.
 
 ```{r}
-library(deSolve)
- 
-LotVmod <- function (Time, State, Pars) {
-    with(as.list(c(State, Pars)), {
-        dx = x*(alpha - beta*y)
-        dy = -y*(gamma - delta*x)
-        return(list(c(dx, dy)))
-    })
+library("FME") 
+
+twocomp <- function (time, y, parms, ...) {  
+  with(as.list(c(parms, y)), { 
+    dS <- -L*I*S
+    dI <-  L*I*S - v*I  
+    list(c(dS, dI)) 
+  }) 
 }
- 
-Pars <- c(alpha = 2, beta = .5, gamma = .2, delta = .6)
-State <- c(x = 10, y = 10)
-Time <- seq(0, 100, by = 1)
-out <- as.data.frame(ode(func = LotVmod, y = State, parms = Pars, times = Time))
 ```
 
-Predator-prey example
-===========
-```{r, echo=FALSE}
-predprey <- ggplot(out, aes(x = time)) + geom_line(aes(y=x, color="Foxes")) + geom_line(aes(y=y, color="Rabbits")) + scale_color_manual("", breaks=c("Foxes", "Rabbits"), values = c("Red", "Blue")) + ylab("Population") + xlab("Time") + ggtitle("Foxes and Rabbit Interactions")
-predprey 
+Solving for an infection at a school
+===================================
+
+- We will parameterize this system of equations for an epidemic that occured in an English boarding school.
+- Next, we will input the available initial value data. For this model the data given is in increments of days. 
+  - I(t) is given for all days  
+  = S(t) is just given for day 3 (the first day in the data). Hence we use 'NA' in all the remaining S(t).
+
+```{r}
+
+dat <- data.frame(
+  time = seq(3, 14, 1), 
+   I = c(25,75,227,296,258,236,192,126,71,28,11,1),  
+  S = c(738,NA,NA, NA, NA, NA, NA, NA, NA,NA,NA,NA)
+)
 ```
+
+Guess initial parameters
+==============
+
+- Initial guess of the parameters L and v are made. This does not have to be close and can be made from intuition. Then the data is plotted.
+- $lambda=0.005, v = 0.3$
+- Note that we also provided S(1) and I(1)
+
+```{r}
+params <- c(L = 0.005, v = 0.5) 
+times <- seq(0, 14) 
+y0 <- c(S = 762,I  = 1)
+out1 <- ode(y0, times, twocomp, params) 
+plot(out1, obs = dat)
+```
+
+
+Next, the cost function
+============
+```{r}
+cost <- function(p) { 
+  out <- ode(y0, times, twocomp, p) 
+  modCost(out, dat, weight = "none") # try weight = "std" or "mean" 
+}
+```
+
+Fit the model and compare model with fitted parameters against data
+==============
+
+```{r}
+fit <- modFit(f = cost, p = params) 
+summary(fit)
+```
+```{r}
+out1 <- ode(y0, times, twocomp, parms)  
+out2 <- ode(y0, times, twocomp, coef(fit))  
+plot(out1, out2, obs=dat, obspar=list(pch=16, col="red"))
+```
+```{r}
+summary(out2)
+```
+
 
 Discrete event simulation
 =============
@@ -377,6 +441,7 @@ Discrete event simulation
 - This will be covered IE 1083
   - Models tend to be easier to build using a package like Arena or Simio.
   - Programming language based simulation more flexible in analysis.
+  - In R, there is the `simmer` package that implements DES.
 
 Agent based simulation
 ==================
