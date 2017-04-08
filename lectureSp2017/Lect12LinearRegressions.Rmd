@@ -1,9 +1,8 @@
 ---
 title: "Lecture 12: Linear Regression"
 author: "IE0015 Information Systems Engineering"
-date: "April 3, 2017"
+date: "April 2017"
 output:
-  html_document: default
   slidy_presentation: default
 ---
 
@@ -27,12 +26,12 @@ Project Report
 - Data discussion: Volume, Velocity, Variety, Varacity
 - Process - What did you do (discussion and process map)
 - Outcome (Visualization and hypothetical Outcome based on actual results)
-- Appendices allowed if needed (does not count against the 8 pages).
+- Appendices allowed if needed (does not count against 8 pages).
 
 Project Presentation
 ========
 
-- Maximum 8 minutes
+- Approximately 8 minutes
 - 8-10 slides
 - Cover CONVO, data source and 4 V's
   - Vision and Outcome introduced in a pre-project form
@@ -356,13 +355,13 @@ Influential observations
 -  This is a problem, we do not like our procedures to be influenced by the value of a single observation.
 -  If it does, that observation deserves extra attention.
   - What happened?
-
+  
 Measuring the influence of an observations
 =========================
 
 -  Measure the change in the statistic if the observation was removed.
   - DFBETAS
-  - Suspicious if it is greater than $2/\sqrt{n}$ (for large data sets) or 1 (for small data sets)
+  - Suspicious if it is greater than $2/\sqrt{n}$ (for large data sets) or 1 (for small data sets) 
 
 ```{r}
 dfb <- dfbetas(irispetal)
@@ -477,7 +476,7 @@ Confidence and prediction intervals
 
 -  We can get confidence and prediction intervals the same way
 ```{r, echo=FALSE}
-new <- data.frame(Petal.Length = c(3.5, 4, 4.5), Sepal.Width=c(2.5, 3.0, 3.5),
+new <- data.frame(Petal.Length = c(3.5, 4, 4.5), Sepal.Width=c(2.5, 3.0, 3.5), 
                   Sepal.Length=c(4.5,5, 5.5), Species=c("versicolor", "versicolor", "versicolor"))
 ```
 ```{r}
