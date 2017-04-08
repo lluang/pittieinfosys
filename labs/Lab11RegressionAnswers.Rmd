@@ -1,0 +1,112 @@
+---
+title: 'Lab 11: Regression'
+author: "IE 0015 Information Systems Engineering"
+date: "April 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+This lab will use the Titanic data. You should modify the `read.csv` function call to correspond to your system.
+
+```{r loadlibraries,  warning=FALSE}
+options(digits = 3, scipen=4)
+library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
+library(dplyr, quietly = TRUE, warn.conflicts = FALSE)
+library(modelr, quietly = TRUE, warn.conflicts = FALSE)
+
+titanic <- read.csv("../data/titanic3.csv",
+                    header=TRUE, sep=",")
+# From Lab on working with characters and regular expressions
+getTitle <- function(data) {
+  title.dot.start <- regexpr("\\,[A-Z ]*\\.", data$name, TRUE)
+  title.comma.end <- title.dot.start+ attr(title.dot.start, "match.length")
+  data$Title <- substr(data$name, title.dot.start+2, title.comma.end-1)
+  return (data$Title)
+}  
+titanic$Title <- getTitle(titanic)
+unique(titanic$Title)  
+```
+
+
+# 1. Multiple linear regression (5 pts)
+
+You think that the age is related to the following:
+
+  i.  Sex
+  ii.  Pclass
+
+  a.  Remove lines in the data that do not have an age
+  b.  Develop a multiple linear regression model for the age based on these characteristics.
+  c.  Display the summary and the analysis of variance tables for this model. 
+  d.  Display diagnostics plots. Discuss the assumptions of regression models.
+  e.  Do you think this is an adequate model?
+  
+**ANSWER**
+
+
+a-b-c. Model
+```{r}
+titanic <- titanic[!is.na(titanic$age),]
+age.lm <- lm(age ~ sex + pclass, data=titanic)
+summary(age.lm)
+anova(age.lm)
+```
+d. Diagnostic plots
+```{r}
+par(mfrow=c(2,2)) 
+plot(age.lm)
+par(mfrow=c(1,1))
+```
+
+-  Normality (looks pretty good, only breaks off the 45 degree line near the top of the distribution)
+-  Error distribution seems independent (very young and old are different, but that may be because so few points)
+-  Constant variance (only changes as for passengers that are  very young or very old)
+-  Bonus: Cook's distance does not show the outer boundaries, so it passes.
+
+e. You should comment that there are only 6 predicted values, so this does not look complete.
+
+# 2. Adding to the model. (5 pts)
+
+There are two variables that are generally present but are not currently in the model: fare and Title. 
+
+a. Plot the residuals of your model against each of these and choose which value should be added to the model.
+b. Create the linear regression model that adds the new variable and print the summary, anova table, and diagnostic plots.
+c. Compare the new model to the original.
+
+**ANSWER**
+
+a. Compare the residuals against the Title, then fare.
+
+```{r}
+titanic$lmresiduals <- age.lm$residuals
+ggplot(titanic) + geom_boxplot(aes(Title, lmresiduals))
+```
+
+```{r}
+ggplot(titanic) + geom_point(aes(fare, lmresiduals))
+```
+
+The residuals for each fare seem to have the same range for most values of the fare.  But their are large differences in the boxplots when plotting against the title, indicating that the title is informative, so add the title.
+
+b.
+
+```{r}
+age.lm2 <- lm(age ~ sex + pclass + Title, titanic)
+summary(age.lm2)
+anova(age.lm2)
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(age.lm2)
+par(mfrow=c(1,1))
+```
+
+c. 
+There are more varied predicted values of age. Many of the residuals are very small because of few samples. For those with many samples, the residuals are smaller, and about even.
+
+- Note that Cook's distance is still within the lines.
+- QQ plot looks better at the upper end of the range.
+- Sum of squares residuals is much smaller. 127776 vs 177602
+- Adjusted R^2 increases from 0.18 to 0.401

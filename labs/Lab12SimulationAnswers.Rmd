@@ -1,0 +1,48 @@
+---
+title: 'Lab 12: Simulation'
+author: "IE 0015"
+date: "April 14, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Monte Carlo simulation
+
+You want to using Monte Carlo simulation to find the volume of an ellipsoid defined by:
+
+$$\frac{x^2}{16} + \frac{y^2}{36} + \frac{z^2}{9}=1$$
+
+a.  What are the values of three principle axis of the ellipsoid?
+b.  Define a 3-d rectangular box that completely encloses the ellipsoid.
+c.  Write a simulation that uses Monte Carlo to estimate the volume of the ellipsoid.
+d.  Run the simulation for 10,000 iterations 10 times (i.e. find 10 estimates of the volume)
+e.  How many times should the simulation be run to have a 95% confidence interval with a half-width of 5% of the volume?
+
+
+## 2. Hypothesis testing
+
+Assisted Reproductive Technology (ART) is a collection of techniques that help facilityate pregnancy (e.g. in vito fertilization). A 2008 report by the Centers for Disease Control and PRevention estimated that ART has been successful in leading to a live birth in 31% of cases. A new fertility clinic claims that their success rate is higher than average. A random sample of 30 of their patients yielded a success rate of 40%. A consumer watchdog group would like to determine if this provides strong evidence to support the company's claim.
+
+a.  Write the hypothesis ($H0$ and $HA$) to test if the success rate for ART at this clinic is significantly ghigher than the success rate reported by the CDC.
+b.  Write a simulation that models the null hypothesis.
+c.  Run the simulation 10,000 times and plot the result.
+d.  Estimate the p-value of the clinic's claim and evaluate the hypothesis.
+
+
+**ANSWER**
+
+In the simulation, sample 30 times where p= 0.31 (the null hypothesis is generated from the general population).
+Count the success rate for each sample of 30.
+From histogram, find phat = 40
+The p-value is the tail probability at phat = 40.
+
+```{r pressure, echo=FALSE}
+
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
