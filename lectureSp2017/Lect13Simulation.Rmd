@@ -1,8 +1,9 @@
 ---
-Title: "Lecture 13 Simulation"
+Title: Lecture 13 Simulation
 author: "IE0015 Information Systems Engineering"
 date: "April 2017"
 output:
+  pdf_document: default
   html_document: default
   slidy_presentation: default
 ---
@@ -81,6 +82,12 @@ head(ratio)
 
 - What is this doing?
 
+Trend of `mean(incircle[1:i]))`
+==============
+```{r}
+plot(1:maxi, ratio)
+title("mean(incircle[1:i])")
+```
 
 Monte Carlo convergence
 ======================
@@ -92,8 +99,20 @@ Monte Carlo convergence
 
 $$CI = z_{\alpha/2} s/\sqrt{n}$$
 ```{r}
-mean(ratio)
+meanratio <-mean(incircle)
+sdratio <- sd(incircle)
+print(meanratio, sdratio)
 ```
+```{r}
+ci = pnorm(q = 0.975) * sdratio/sqrt(maxi)
+print(ci)
+```
+
+Usually, set ci to be some fraction of mean and solve for n
+==============
+
+$$n = \left(\frac{z_{(1-\alpha/2)} * S}{\bar{x} * 0.05}\right)$$
+
 
 Bootstrap
 ======
@@ -151,7 +170,7 @@ Example
 =====
 
 
-```{r, echo=FALSE}
+```{r}
 options(digits=2)
 srs <- rnorm(25, mean = 3)
 resamps <- replicate(1000, sample(srs, 25, TRUE), simplify = FALSE)
@@ -331,6 +350,58 @@ t.test(x=azt300, y=azt600)
 
 -  Why the difference?
 
+
+Another example - Categorical variables
+====================
+
+- Claim (HA) is that a treatment leads to a change in the population from the control.
+- Null hypothesis is that the treatment has not change.
+- Simulate the sample the size of a treatment, and determine the $p$ that observed values were seen.
+
+Quadcopter rotor blades
+==========
+
+A quadcopter company is considering a new manufacturer
+for rotor blades. The new manufacturer would be more expensive but their higher-quality blades are more reliable, resulting in happier customers and fewer warranty
+claims. However, management must be convinced that the more expensive blades are worth the conversion before they approve the switch. 
+
+If there is strong evidence of a more than 3\% improvement in the percent of blades that pass inspection, management says they will switch suppliers, otherwise they will maintain the current supplier. 
+
+Data
+=======
+
+Rotor blade failures
+
+Group           Pass    Fail
+-------------- ------ --------
+Current         899     101
+Prospective     958     42
+
+```{r}
+rotor <- data.frame(pass = c(899, 958),
+                    fail = c(101, 42))
+pfailnull <- sum(rotor$fail[1])/sum(rotor)
+```
+
+Simulate assuming that all data is from the control group
+==========================
+```{r}
+rotorsim <- function(i){
+              successes <- sum(sample(x=0:1, size = 1000, replace=TRUE, prob=c(pfailnull, (1-pfailnull))))
+}
+rotorout <-sapply(1:10000, rotorsim)
+```
+
+Look at the histogram of the result and find the HA
+======================
+```{r}
+hist(rotorout, breaks = 100)
+```
+
+```{r}
+print(length(rotorout[rotorout>958])/length(rotorout))
+```
+
 Other types of simulation
 ========
 
@@ -341,19 +412,23 @@ Continuous simulation
 - Change in system state described by differential equations
 - Simulate by advancing state of system in time steps
 - Example: the Susceptible-Infected-Recovered (SIR) model of infectious diseases
-$$\frac{dS}{dt} = -\lambda I S$$
-$$\frac{dI}{dt} = \lambda I S - v I$$
+
+SIR model
+===========
+
+$$\frac{dS}{dt} = \frac{-\lambda}{N} I S$$
+$$\frac{dI}{dt} = \frac{-\lambda}{N} I S - v I$$
 
 $$\frac{dR}{dT} = vI$$
 
 -Where
-  - $\lambda$ is the force of infection, where $\lambda$ is a function of the contact rate, the probability of transmission per contact, and the total population,
+  - $\lambda$ is the force of infection, where $\lambda$ is a function of the contact rate and the probability of transmission per contact,
   - v is the recovery rate, 
   - S is the number of susceptible individuals at a given time,
   - I is the number of infected individuals at a given time,
   - R is the number of recovered individuals at a given time.
 
-Same model in R using the `FME` package
+Same model in R as differential equations
 =======
 
 - The `FME` package is used to solve systems of Ordinary Differential Equations (ODE)
@@ -366,9 +441,10 @@ library("FME")
 
 twocomp <- function (time, y, parms, ...) {  
   with(as.list(c(parms, y)), { 
-    dS <- -L*I*S
-    dI <-  L*I*S - v*I  
-    list(c(dS, dI)) 
+    dS <- -L*I*S/N
+    dI <-  L*I*S/N - v*I  
+    dN <- 0
+    list(c(dS, dI, dN)) 
   }) 
 }
 ```
@@ -376,13 +452,12 @@ twocomp <- function (time, y, parms, ...) {
 Solving for an infection at a school
 ===================================
 
-- We will parameterize this system of equations for an epidemic that occured in an English boarding school.
+- We will parameterize this system of equations for an epidemic that occurred in an English boarding school.
 - Next, we will input the available initial value data. For this model the data given is in increments of days. 
   - I(t) is given for all days  
   = S(t) is just given for day 3 (the first day in the data). Hence we use 'NA' in all the remaining S(t).
 
 ```{r}
-
 dat <- data.frame(
   time = seq(3, 14, 1), 
    I = c(25,75,227,296,258,236,192,126,71,28,11,1),  
@@ -398,9 +473,9 @@ Guess initial parameters
 - Note that we also provided S(1) and I(1)
 
 ```{r}
-params <- c(L = 0.005, v = 0.5) 
+params <- c(L = 1.0, v = 0.5) 
 times <- seq(0, 14) 
-y0 <- c(S = 762,I  = 1)
+y0 <- c(S = 762,I  = 1, N=763)
 out1 <- ode(y0, times, twocomp, params) 
 plot(out1, obs = dat)
 ```
@@ -422,22 +497,42 @@ Fit the model and compare model with fitted parameters against data
 fit <- modFit(f = cost, p = params) 
 summary(fit)
 ```
+
+Plot output with the fitted parameters
+============
 ```{r}
-out1 <- ode(y0, times, twocomp, parms)  
+out1 <- ode(y0, times, twocomp, params)  
 out2 <- ode(y0, times, twocomp, coef(fit))  
 plot(out1, out2, obs=dat, obspar=list(pch=16, col="red"))
 ```
+
+What we would be interested in is the maximum infected
+=========
 ```{r}
 summary(out2)
 ```
 
+Now, we can repeat with larger populations
+================
+
+```{r}
+times <- seq(0, 25) 
+y0 <- c(S = 100000,I  = 1, N=100001)
+out3 <- ode(y0, times, twocomp, coef(fit)) 
+plot(out3)
+```
+
+And statistics in the new population
+========================
+```{r}
+summary(out3)
+```
 
 Discrete event simulation
 =============
 
 - Create entities that interact with each other.
 - Simulation advanced based on when the next interaction will be (discrete time step)
-- In R, use the `simmer` package.
 - This will be covered IE 1083
   - Models tend to be easier to build using a package like Arena or Simio.
   - Programming language based simulation more flexible in analysis.
@@ -457,7 +552,3 @@ Summary
   -  Ask the question: could I have seen the result I saw if *X* was true?
 -  Resampling can be used for hypothesis testing in the case of little data or if normal assumption is not true.
   -  Bootstrapping can be used to identify what the system would look like if more data were available or if the source population changes.
-
-
-
-
