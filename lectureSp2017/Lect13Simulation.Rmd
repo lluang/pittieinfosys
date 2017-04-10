@@ -1,12 +1,29 @@
 ---
-Title: Lecture 13 Simulation
+title: "Lecture 13 Simulation"
 author: "IE0015 Information Systems Engineering"
 date: "April 2017"
 output:
-  pdf_document: default
-  html_document: default
   slidy_presentation: default
+  html_document: default
+  pdf_document: default
 ---
+
+Schedule
+=============
+
+- This week: Monte Carlo and Bootstrap simulation
+- Next week: R and the IE curriculum
+    -  Graphic user interfaces:  RCmdr, RCmdr.HH, RCmdr.IPSUR
+    -  Differential equations
+    -  Stochastic methods/Probability
+    -  Linear programming
+    -  Discrete event simulation
+- Datasets for final by Tuesday
+    -  WPRDC - Health data
+- Review for final next Wednesday
+
+Simulation
+=============
 
 ```{r}
 library(ggplot2)
@@ -14,8 +31,6 @@ library(foreach)
 library(deSolve)
 ```
 
-Simulation
-=============
 
 
 Simulation in data analysis
@@ -41,7 +56,7 @@ Monte Carlo Simulation
 ==============
 
 -  Based on repeated use of random numbers.
-  -  Name refers to the casinos in Monte Carlo by France
+    -  Name refers to the casinos in Monte Carlo by France
 -  If the problem can be stated as the interaction of independent random numbers
 - Often used for integration type problems. (area under the curve or probability)
 
@@ -55,8 +70,8 @@ Example of Monte Carlo
 =================
 
 - Generate 1000 x,y pairs where 
-  - $x \sim U(0,1)$
-  - $y \sim U(0,1)$
+    - $x \sim U(0,1)$
+    - $y \sim U(0,1)$
 - Test if this is true
  
 $$x^2 + y^2 <=1$$
@@ -101,7 +116,8 @@ $$CI = z_{\alpha/2} s/\sqrt{n}$$
 ```{r}
 meanratio <-mean(incircle)
 sdratio <- sd(incircle)
-print(meanratio, sdratio)
+print(meanratio, digits = 10)
+print(sdratio, digits = 10)
 ```
 ```{r}
 ci = pnorm(q = 0.975) * sdratio/sqrt(maxi)
@@ -122,9 +138,9 @@ Resampling methods
 
 -  Each determination of the dependent variable (performance measure) based on random simulation is a *sample*.
 -  Results in a *sampling distribution* of the dependent variable.
-  - Note: this is *not* the same as a single, "correct" answer.
-  - Answers in statistics are given as probability distributions.
-    - "There is a 95% probability that the true average is between __ and __"
+    - Note: this is *not* the same as a single, "correct" answer.
+    - Answers in statistics are given as probability distributions.
+        - "There is a 95% probability that the true average is between __ and __"
 -  We assume there is a true underlying distribution. The simulation allows us to have an estimate of it.
 
 Advantages of simulation
@@ -154,8 +170,8 @@ Standard errors
 =================
 
 -  Errors from bootstrapping come from two sources
-  -  The observed data does not the same exact distribution as the population from which it was drawn.
-  -  The resampled sample will have a different distribution than the observed data.
+    -  The observed data does not the same exact distribution as the population from which it was drawn.
+    -  The resampled sample will have a different distribution than the observed data.
   
 Standard error example
 ============================
@@ -185,10 +201,10 @@ Compare simulation to the theoretical mean
 =========================================
 
 -  Expected confidence interval of the mean
-  - $sd/\sqrt{n} = 1/\sqrt{25} = 0.2$
+    - $sd/\sqrt{n} = 1/\sqrt{25} = 0.2$
 ```{r}
-mean(xbarstar)
-sd(xbarstar)
+print(mean(xbarstar), digits=10)
+print(sd(xbarstar), digits=10)
 ```
 -  Within expectation
 
@@ -197,7 +213,7 @@ Improving the errors
 
 -  What would happen if we took more samples?
 -  More samples would make the sample look more like the observed data.
-  - Does not make the observed data closer to the true underlying population distribution.
+    - Does not make the observed data closer to the true underlying population distribution.
   
 Implementing using the boot package
 ===================
@@ -223,13 +239,13 @@ Confidence intervals
 ===================
 
 - Typically, we calculated confidence intervals by assuming that outputs were normally distributed.
-  - e.g. use c.i. as a function of the *t*-distribution.
+    - e.g. use c.i. as a function of the *t*-distribution.
 - Using simulation, we can apply the definition of the c.i. directly.
-  - "95% of the estimates are between __ and __"
-  - Using simulation, use the 0.025 and 0.975 quantiles of the simulation results. (e.g. equal tails)
-  - Another choice if you believe that the distribution is to use the smallest range that gives a 0.95 interval.
-    - Question: Why are these not the same thing?
-  
+    - "95% of the estimates are between __ and __"
+    - Using simulation, use the 0.025 and 0.975 quantiles of the simulation results. (e.g. equal tails)
+    - Another choice if you believe that the distribution is to use the smallest range that gives a 0.95 interval.
+        - Question: Why are these not the same thing?
+    
 C.I. example
 ====================
 
@@ -299,8 +315,8 @@ Significance with bootstrap
 ===========================
 
 2.  Resample from the data to generate a distribution of differences.
-  -  Presuming there are no differences, sample 10 from the *combined* data to generate a *a300* group, with the remainder in the *a600* group. (*Q: why 10?, why the combined group?*)
-  -  Calculate and save the differences in mean.
+    -  Presuming there are no differences, sample 10 from the *combined* data to generate a *a300* group, with the remainder in the *a600* group. (*Q: why 10?, why the combined group?*)
+    -  Calculate and save the differences in mean.
 3.  Draw the *permutation distribution* of these differences. Locate the observed difference that you observed when you had two distinct datasets (300.3-298.4 = 10.9) and determine its *p-value* from the *permutation distribution*. If *p* is small, this is evidence against the null hypothesis
 
 ```{r}
@@ -422,18 +438,18 @@ $$\frac{dI}{dt} = \frac{-\lambda}{N} I S - v I$$
 $$\frac{dR}{dT} = vI$$
 
 -Where
-  - $\lambda$ is the force of infection, where $\lambda$ is a function of the contact rate and the probability of transmission per contact,
-  - v is the recovery rate, 
-  - S is the number of susceptible individuals at a given time,
-  - I is the number of infected individuals at a given time,
-  - R is the number of recovered individuals at a given time.
+    - $\lambda$ is the force of infection, where $\lambda$ is a function of the contact rate and the probability of transmission per contact,
+    - v is the recovery rate, 
+    - S is the number of susceptible individuals at a given time,
+    - I is the number of infected individuals at a given time,
+    - R is the number of recovered individuals at a given time.
 
 Same model in R as differential equations
 =======
 
 - The `FME` package is used to solve systems of Ordinary Differential Equations (ODE)
-  - Initial Value Problems - You have a model, and observed data, now you want to find parameters to the model
-  - The general package for differential equations (which is called by `FME`) is `deSolve`
+    - Initial Value Problems - You have a model, and observed data, now you want to find parameters to the model
+    - The general package for differential equations (which is called by `FME`) is `deSolve`
 - Note we do not include $R$ because that is an absorbing state.
 
 ```{r}
@@ -454,8 +470,8 @@ Solving for an infection at a school
 
 - We will parameterize this system of equations for an epidemic that occurred in an English boarding school.
 - Next, we will input the available initial value data. For this model the data given is in increments of days. 
-  - I(t) is given for all days  
-  = S(t) is just given for day 3 (the first day in the data). Hence we use 'NA' in all the remaining S(t).
+    - I(t) is given for all days  
+    - S(t) is just given for day 3 (the first day in the data). Hence we use 'NA' in all the remaining S(t).
 
 ```{r}
 dat <- data.frame(
@@ -534,9 +550,9 @@ Discrete event simulation
 - Create entities that interact with each other.
 - Simulation advanced based on when the next interaction will be (discrete time step)
 - This will be covered IE 1083
-  - Models tend to be easier to build using a package like Arena or Simio.
-  - Programming language based simulation more flexible in analysis.
-  - In R, there is the `simmer` package that implements DES.
+    - Models tend to be easier to build using a package like Arena or Simio.
+    - Programming language based simulation more flexible in analysis.
+    - In R, there is the `simmer` package that implements DES.
 
 Agent based simulation
 ==================
@@ -549,6 +565,6 @@ Summary
 ======
 
 -  Simulation often used when some data is unobservable.
-  -  Ask the question: could I have seen the result I saw if *X* was true?
+    -  Ask the question: could I have seen the result I saw if *X* was true?
 -  Resampling can be used for hypothesis testing in the case of little data or if normal assumption is not true.
-  -  Bootstrapping can be used to identify what the system would look like if more data were available or if the source population changes.
+    -  Bootstrapping can be used to identify what the system would look like if more data were available or if the source population changes.
