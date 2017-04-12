@@ -1,0 +1,40 @@
+---
+title: "Final topics"
+author: "IE 0015 Information Systems"
+date: "April 12, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## CoNVO statements
+
+- Given a setting, write a CoNVO statement (four paragraphs)
+
+## Strings, Factors, Dates
+
+- Be able to describe the process of taking data and convert it to dates
+    -  Process maps
+
+## Advanced Programming
+
+-  Process maps
+-  Working with pipes
+-  dplyr
+    -  Filter, mutate
+    -  Group by, summarize, join
+-  Writing functions
+-  Conditionals (if)
+-  Loops
+-  Vectorizing
+
+## Transforms and modeling
+
+-  Scaling
+
+## Linear Regression
+
+
+## Simulation

@@ -1,7 +1,7 @@
 ---
 title: 'Lab 12: Simulation'
-author: "IE 0015"
-date: "April 14, 2017"
+author: "IE 0015 Information Systems"
+date: "April 13, 2017"
 output: html_document
 ---
 
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 You want to using Monte Carlo simulation to find the volume of an ellipsoid defined by:
 
-$$\frac{x^2}{4^2} + \frac{y^2}{6^2} + \frac{z^2}{3^2}=1$$
+$$\frac{x^2}{4^2} + \frac{y^2}{6^2} + \frac{z^2}{3^2}\leq1$$
 
 a.  What are the values of three semi-principle axis of the ellipsoid? (the distance from the center to the edges that )
 b.  Define a 3-d rectangular box that completely encloses the ellipsoid.  Find the volume of that box.
@@ -22,9 +22,10 @@ d.  Run the simulation for 10,000 iterations 10 times (i.e. find 10 estimates of
 e.  Calculate the 95% confidence interval of the volume. (Note: see section 8.1 of *Introduction to R* in the Help section. The function you need is qt). You may have to reference your IE 1071 book/notes or the IPSUR book (from the ISPUR package).
 
 **ANSWER**
+
 a. Axis are 4, 6, 3
 b. Ellipsoid is inside the box formed by x from -4 to 4, y from -6 to 6, z from -3 to 3. Note that the total volume is 8 * 12 * 3 =388
-c. 
+c. Simulation of volume of ellipsoid with 10000 samples.
 
 ```{r}
 reps = 10
@@ -42,12 +43,13 @@ ellipsevolume <- function(a, b, c){
   volume
 }
 ```
-d.
+d. Run simulation 10 replications
 ```{r}
-volumeellipse <- replicate(10,ellipsevolume(maxx, maxy, maxz))
+reps = 10
+volumeellipse <- replicate(reps, ellipsevolume(maxx, maxy, maxz))
 volumeellipse
 ```
-e.
+e. Calculate 95\% confidence interval based on 10 replications
 ```{r}
 meanvolume <- mean(volumeellipse)
 sdvolume <- sd(volumeellipse)
@@ -55,8 +57,9 @@ paste(meanvolume, sdvolume)
 ```
 
 ```{r}
-meanvolume + qt(0.975, df=9) * sdvolume/sqrt(10)
-meanvolume - qt(0.975, df=9) * sdvolume/sqrt(10)
+alpha =0.05
+meanvolume + qt((1-alpha/2), df=(reps-1)) * sdvolume/sqrt(reps)
+meanvolume - qt((1-alpha/2), df=(reps-1)) * sdvolume/sqrt(reps)
 ```
 Note: the correct formula for the volume is
 
@@ -67,19 +70,24 @@ $$V = \frac{4}{3} \Pi * A * B * C$$
 
 ## 2. Hypothesis testing
 
-Assisted Reproductive Technology (ART) is a collection of techniques that help facilityate pregnancy (e.g. in vito fertilization). A 2008 report by the Centers for Disease Control and PRevention estimated that ART has been successful in leading to a live birth in 31\% of cases. A new fertility clinic claims that their success rate is higher than average. A random sample of 30 of their patients yielded a success rate of 40\%. 
+Assisted Reproductive Technology (ART) is a collection of techniques that help facilitate pregnancy (e.g. in vitro fertilization). A 2008 report by the Centers for Disease Control and Prevention estimated that ART has been successful in leading to a live birth in 31\% of cases. A new fertility clinic claims that their success rate is higher than average. A random sample of 30 of their patients yielded a success rate of 40\%. 
 A consumer watchdog group would like to determine if this provides strong evidence to support the company's claim.
 
-a.  Write the hypothesis ($H0$ and $HA$) to test if the success rate for ART at this clinic is significantly ghigher than the success rate reported by the CDC.
+a.  Write the hypothesis ($H0$ and $HA$) to test if the success rate for ART at this clinic is significantly higher than the success rate reported by the CDC.
 b.  Write a simulation that models the null hypothesis.
 c.  Run the simulation 10,000 times and plot the result.
-d.  Estimate the p-value of the clinic's claim and evaluate the hypothesis.
+d.  Estimate the p-value of the clinic's result and evaluate the claim that the clinic's success rate is higher than average.
 
 
 **ANSWER**
+a.  H0:  p = 0.31
+    HA:  p > 0.31
+    
+b.
 
 In the simulation, sample 30 times where p= 0.31 (the null hypothesis is generated from the general population).
 Count the success rate for each sample of 30.
+Repeat this 10,000 times.
 From histogram, find phat = 40
 The p-value is the tail probability at phat = 0.40.
 
@@ -88,15 +96,28 @@ clinicsim <- function(i){
               successes <- sum(sample(x=0:1, size = 30, replace=TRUE, prob=c((1-0.31), 0.31)))
               return = successes/30
 }
+```
+
+c. Run simulation and plot result
+
+```{r}
 clinicresults <-sapply(1:10000, clinicsim)
 ```
 
+or
+
 ```{r}
-hist(clinicresults, breaks = 30)
+clinicresults <-  replicate(10000, clinicsim(1))
 ```
+
+```{r}
+hist(clinicresults, main="ART success rate", xlab="Fraction success")
+```
+
+d.  Calculate the p-value
 
 ```{r}
 print(length(clinicresults[clinicresults>0.40])/length(clinicresults))
 ```
 
-This is the p-value, so compare this against a target p-value (usually 0.05)
+This is the p-value, so compare this against a target p-value (usually 0.05).  Because you do not reject the null hypothesis, this result does not support the claim that the clinic success rate is higher than average.
