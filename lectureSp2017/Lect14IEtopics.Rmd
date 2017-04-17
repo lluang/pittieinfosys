@@ -1,0 +1,440 @@
+---
+title: 'Lecture 14: Using R in other settings'
+author: "IE 0015 Information Systems"
+date: "April  2017"
+output:
+  html_document: default
+  slidy_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+R Packages
+=============
+
+-  R is primarily known as a data analysis environment
+    -  The other data analysis environments people know of are statistical software.
+    -  R is comparable to the two top tier statistical environments SAS, SPSS.
+-  R is also a programming environment
+    -  This is how we use R in this course
+-  The strength of R is in its packages (libraries)
+-  R packages allow it to be used in many settings
+
+R and the IE curriculum
+=============
+
+-  This lecture is meant to be a reference in how to apply the use of concepts you cover in the IE curriculum and real world settings.
+-  The standard first task of any mathematical modeling and analysis is data manipulation.
+    -  This course focuses on data manipulation.
+    -  After the data has been manipulated into usable form, you can use R to apply what you used in your other classes.
+-  Packages we will cover in this lecture that relate to the IE curriculum.
+    -  Graphic User Interfaces
+    -  Probability
+    -  Advanced statistics
+    -  Symbolic math
+    -  Differential equations
+    -  Linear algebra
+    -  Linear programming
+    -  Simulation
+    
+Evaluating packages
+=============
+
+-  When evaluating a package for usefulness, look for:
+    -  User guide/vignette in help files.
+    -  Peer reviewed article describing implementation and use.
+    -  Published book that uses the package.
+
+Graphic User Interfaces
+=============
+
+- Most people are used to using computers with Graphic User Interfaces.
+- With little skill, you can find what you need in a menu driven interface.
+- In R, there is the R Commander interface
+    - http://www.rcommander.com/
+
+```{r}
+library(Rcmdr)
+```
+
+R Commander
+=============
+
+- Starts an GUI window
+- Select data sets
+- Load libraries
+- Work with R Markdown
+- Basic statistics and graphics
+- Analysis run in R Studio console
+
+R Commander extensions
+=============
+
+-  Most extensions were written by textbook authors
+-  Result is a GUI statistics package that is the convex hull of topics in the first few statistics courses.
+```{r}
+library(RcmdrPlugin.IPSUR)
+library(RcmdrPlugin.HH)
+```
+
+Probability
+=============
+
+-  R contains a full set of probability tables.
+-  See Introduction to R Section 8.1 for the base set
+-  More specialized probability distributions are available in various packages that need them.
+-  For each probability distribution, four functions exist
+    - 'd' - Probability density function (pdf)
+    - 'p' - Cumulative density function (cdf)
+    - 'q' - Quantile function (reverse cdf)
+    - 'r' - Random sample
+
+Examples
+=============
+
+```{r}
+pnorm(q = 3, mean=0, sd=1)
+```
+
+```{r}
+qnorm(p=0.975, mean=0,sd=1)
+```
+
+```{r}
+rexp(n = 10, rate = 10)
+```
+
+Fitting distributions
+=============
+
+-  A common task is to take observed data, and identifying a distribution family that closely matches this and determines the correct parameters.
+-  Use shape as a guess to the fitted distribution.
+-  Kolmogorov-Smirnoff test statistic
+-  Use 3rd and 4th moments to check distribution family.
+-  Use fitted distribution in simulation models
+-  Gain insight into the underlying data.
+-  Actual observations may be unusable
+    - There may be an unmeasurable intervention that effects the observation.
+    
+fitdistrplus package
+=============
+
+```{r}
+library(fitdistrplus)
+```
+
+Example - Births in Melborne
+=============
+
+Forty-four babies -- a new record -- were born in one 24-hour period at the Mater Mothers' Hospital in Brisbane, Queensland, Australia, on December 18, 1997. For each of the 44 babies, The Sunday Mail recorded the time of birth, the sex of the child, and the birth weight in grams. Additional information about these data can be found in the "Datasets and Stories" article "A Simple Dataset for Demonstrating Common Distributions" in the Journal of Statistics Education (Dunn 1999).
+
+Birth at minutes per day
+=============
+
+```{r}
+birthminutes = c(5, 64, 78, 115, 177, 245, 247, 262, 271, 428,
+                455, 492, 494, 549, 635, 649, 653, 693, 729, 776,
+                785, 846, 847, 873, 886, 914, 991, 1017, 1062, 1087,
+                1105, 1134, 1149, 1187, 1189, 1191, 1210, 1237, 1251, 1264, 
+                1283, 1337, 1407, 1435)
+birthminutes
+```
+
+Calculate interbirth time
+=============
+
+```{r}
+interarrival = birthminutes[2:length(birthminutes)] -  birthminutes[1:length(birthminutes)-1]
+interarrival
+```
+
+Look at distribution
+=============
+
+```{r}
+library(fitdistrplus)
+plotdist(interarrival)
+```
+
+Look at 3rd and 4th moments
+=============
+
+```{r}
+descdist(interarrival)
+```
+
+fit parameters
+=============
+
+```{r}
+baby <- fitdist(interarrival, distr = "exp")
+summary(baby)
+```
+
+Check goodness of fit
+=============
+
+```{r}
+par(mfrow = c(2, 2))
+
+denscomp(baby)
+qqcomp(baby)
+cdfcomp(baby)
+ppcomp(baby)
+par(mfrow = c(1,1))
+```
+
+Statistical goodness of fit test
+=================
+
+- Apply Kolmogorov-Smirnoff test for goodness of fit.
+
+```{r}
+gofbaby <-gofstat(baby)
+gofbaby
+gofbaby$kstest
+```
+
+Symbolic math
+=============
+
+- `rSympy` provides symbolic math capability
+- Uses the Python package `sympy`
+- Covers calculus, equation solvers, algebra, etc.
+- Think of it as a low-end counterpart to Mathematica
+- Treats symbols as symbols until you need to evaluate them numerically.
+
+Use of `rSympy`
+=============
+
+```{r}
+library(rSymPy)
+```
+- Declare variables to be algebraic variables.
+- Declare equation
+- Solve
+
+```{r}
+x<-Var("x")
+x+x
+```
+
+```{r}
+y <- Var("x**3")
+x/y
+```
+
+```{r}
+z <- sympy("2.5*x**2")
+z + y
+```
+
+```{r}
+sympy("diff(cos(x), x)")
+```
+```{r}
+sympy("a = x**2+2*x+1")
+sympy("b = (x+1)**2")
+sympy("simplify(a-b)")
+```
+```{r}
+sympy("simplify((x**3 + x**2 - x - 1)/(x**2 + 2*x + 1))")
+```
+
+```{r}
+sympy("expand((x + 2)*(x - 3))")
+sympy("factor(x**3 - x**2 + x - 1)")
+```
+
+```{r}
+sympy("a")
+sympy("integrate(a, (x))")
+sympy("integrate(a, (x, 0, 1))")
+
+```
+```{r}
+sympy("diff(a, x)")
+```
+
+
+Differential equations
+=============
+
+-  `desolve` package
+-  `FME` package
+-  Example provided last week
+
+Linear programming and optimization
+=============
+
+-  Optimizatition includes numerical optimization and linear programming
+    - Both are covered in the R Optimization Task View (https://cran.r-project.org/web/views/Optimization.html)
+-  Linear programming expresses a problem as an objective (minimize or maximize) subject to a set of constraints.
+
+Transportation problem
+=============
+
+-  This problem finds a least cost shipping schedule that meets requirements at markets and supplies at factories.
+-  Demand constraint - Demand at each market is satisfied.
+-  Supply constraint - Each factory can only supply up to its total capacity.
+
+
+Model
+=============
+
+```
+set I; /* canning plants */
+set J; /* markets */
+param a{i in I}; /* capacity of plant i in cases */
+param b{j in J}; /* demand at market j in cases */ 
+param d{i in I, j in J}; /* distance in thousands of miles */
+param f; /* freight in dollars per case per thousand miles */
+param c{i in I, j in J} := f * d[i,j] / 1000; /* transport cost in thousands of dollars per case */
+var x{i in I, j in J} >= 0; /* shipment quantities in cases */
+minimize cost: sum{i in I, j in J} c[i,j] * x[i,j];
+/* total transportation costs in thousands of dollars */
+
+s.t. supply{i in I}: sum{j in J} x[i,j] <= a[i];
+/* observe supply limit at plant i */
+
+s.t. demand{j in J}: sum{i in I} x[i,j] >= b[j];
+/* satisfy demand at market j */
+```
+
+And set up the data
+=============
+
+```
+set I := Seattle San-Diego;
+set J := New-York Chicago Topeka;
+param a := Seattle     350
+           San-Diego   600;
+param b := New-York    325
+           Chicago     300
+           Topeka      275;
+param d :              New-York   Chicago   Topeka :=
+           Seattle     2.5        1.7       1.8
+           San-Diego   2.5        1.8       1.4  ;
+param f := 90;
+end;
+```
+Applying glpkAPI
+=============
+
+```{r}
+library(glpkAPI)
+mip <- initProbGLPK()
+setProbNameGLPK(mip, "transport")
+trans <- mplAllocWkspGLPK()
+result <- mplReadModelGLPK(trans,
+	system.file("extdata", "transport.mod", package = "glpkAPI"), skip=0)
+result <- mplGenerateGLPK(trans)
+result <- mplBuildProbGLPK(trans, mip)
+```
+
+Solve problem
+=============
+
+```{r}
+return <- solveSimplexGLPK(mip)
+return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
+```
+
+look at solution and costs
+=============
+
+```{r}
+numrows <- getNumRowsGLPK(mip)
+numcols <- getNumColsGLPK(mip)
+for (i in 1:numrows){
+  print(getRowNameGLPK(mip, i))
+  print(getRowPrimGLPK(mip, i))
+}
+for (j in 1:numcols){
+  print(getColNameGLPK(mip, j))
+  print(getColPrimGLPK(mip, j))
+}
+```
+Simulation
+=============
+
+- Discrete event simulation models a system as state changes occurring in discrete moments in time.
+- Treat system as entities moving through a system and requiring resources for a period of time.
+- In R, use the `simmer` library
+  - Process view of simulation - focus is on the experience of entities moving through the system.
+  - Contrast with event view of simulation, where the focus is on servers that the entities move through (Simio, Arena)
+
+Parking lot simulation
+=============
+
+- Create a parking lot with a specific size
+- Cars arrive with exponential interarrival times
+- Cars need a parking space for an exponential length of time
+- Run for 24 hours
+
+
+Implementation using simmer
+=============
+
+```{r}
+library(simmer)
+library(ggplot2)
+library(dplyr)
+set.seed(1234)
+parkingtime = 2
+
+env <- simmer("ParkingSimulation")
+arrival <- create_trajectory("Car path") %>%
+  seize("parking", 1) %>%
+  timeout(function() rexp(1, 1/parkingtime)) %>%
+  release("parking", 1)
+env %>%
+  add_resource("parking", capacity = 100, mon=TRUE) %>%
+  add_generator("arrival", arrival, function() rexp(1, 25))
+
+env %>% run(until= (24))
+```
+
+Output from a simulation
+=============
+
+-  A simulation contains statistics collectors that either monitor resource usage or the experience of entities.
+
+```{r}
+head(
+  env %>% get_mon_resources()
+)
+head(
+  env %>% get_mon_arrivals()
+)
+```
+
+Output summaries
+============
+
+-  Then, apply statistical techniques to quantify the performance of the system.
+```{r}
+plot_resource_usage(env, "parking", items=c("server"), steps=T)
+```
+
+
+Statistical design of experiments
+===============
+
+-  Repeat simulation to generate additional performance estimates.
+-  End result is a mean and variance of the performance measure.
+-  Use statistical methods to determine if additional runs are needed.
+-  Repeat with alternative system designs to determine best design.
+
+```{r}
+envs <- lapply(1:30, function(i) {
+  simmer("ReplicatedParkingSim") %>%
+    add_resource("parking", 100) %>%
+    add_generator("arrival", arrival, function() rexp(1, 25)) %>% 
+    run(until= (24))
+})
+
+plot_resource_utilization(envs, "parking")
+```
