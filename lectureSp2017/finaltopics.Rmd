@@ -9,6 +9,13 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Programming
+
+-  For all questions that are based on algorithms, you may represent your answer in one of the following ways
+    -  Process map
+    -  Enumerated (numbered) outline
+    -  Pseudocode (R, do not worry about getting the syntax correct)
+
 ## CoNVO statements
 
 - Given a setting, write a CoNVO statement (four paragraphs)
@@ -16,11 +23,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Strings, Factors, Dates
 
 - Be able to describe the process of taking data and convert it to dates
-    -  Process maps
 
 ## Advanced Programming
 
--  Process maps
 -  Working with pipes
 -  dplyr
     -  Filter, mutate
@@ -33,8 +38,19 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Transforms and modeling
 
 -  Scaling
+-  Implementing scaling
 
 ## Linear Regression
 
+-  Representing multiple linear regression model
+-  Plotting residuals and interpreting residual plots
+-  Identifying variables to add to linear regression model
+-  Regression model diagnostics summaries, plots, and interpretation
 
 ## Simulation
+
+-  Use of Monte Carlo simulation
+-  Use of bootstrap simulation
+-  Simulation for hypothesis testing
+-  Interpreting simulation results for hypothesis testing
+-  Interpretting p-values in simulation results

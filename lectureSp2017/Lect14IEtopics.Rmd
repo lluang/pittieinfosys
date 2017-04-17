@@ -47,6 +47,16 @@ Evaluating packages
     -  Peer reviewed article describing implementation and use.
     -  Published book that uses the package.
 
+Why use R (or a programming based analysis environment)
+================
+
+-  The method you are using is part of a larger workflow
+    -  You need to do data manipulation in a programming environment, R allows you to stay in that environment for analysis.
+    -  Many commercial tools do not work well together
+-  You need to deploy the resulting model to many places
+    -  You can deploy it to many computers
+    -  Many of the other tools are expensive per seat. R is free to deploy.
+
 Graphic User Interfaces
 =============
 
@@ -79,6 +89,22 @@ library(RcmdrPlugin.IPSUR)
 library(RcmdrPlugin.HH)
 ```
 
+GUI for machine learning
+=======
+
+-  `rattle` package
+    -  GUI for a range of machine learning algorithms and model validation methods
+    -  http://rattle.togaware.com/
+    - Williams (2011), *Data Mining with Rattle and R: The Art of Excavating Data for Knowledge Discovery*, springer, https://www.springer.com/us/book/9781441998897
+
+R and Excel
+===========
+
+-  You already use `readxl` to read and write MS Excel files (part of `tidyverse`)
+-  The `RExcel` package allows calling R from Visual Basic within Excel
+-  http://www.statconn.com/products.html#RExcel
+-  Heiberger and Neuwirth (2009), *R Through Excel: A Spreadsheet Interface for Statistics, Data Analysis, and Graphics*, Springer, https://www.springer.com/us/book/9781441900517
+
 Probability
 =============
 
@@ -94,13 +120,19 @@ Probability
 Examples
 =============
 
+pnorm(q = 3, mean=0, sd=1)
+
 ```{r}
 pnorm(q = 3, mean=0, sd=1)
 ```
 
+qnorm(p=0.975, mean=0,sd=1)
+
 ```{r}
 qnorm(p=0.975, mean=0,sd=1)
 ```
+
+rexp(n = 10, rate = 10)
 
 ```{r}
 rexp(n = 10, rate = 10)
@@ -125,12 +157,12 @@ fitdistrplus package
 library(fitdistrplus)
 ```
 
-Example - Births in Melborne
+Example - Births in Brisbane
 =============
 
-Forty-four babies -- a new record -- were born in one 24-hour period at the Mater Mothers' Hospital in Brisbane, Queensland, Australia, on December 18, 1997. For each of the 44 babies, The Sunday Mail recorded the time of birth, the sex of the child, and the birth weight in grams. Additional information about these data can be found in the "Datasets and Stories" article "A Simple Dataset for Demonstrating Common Distributions" in the Journal of Statistics Education (Dunn 1999).
+Forty-four babies -- a new record -- were born in one 24-hour period at the Mater Mothers' Hospital in Brisbane, Queensland, Australia, on December 18, 1997. For each of the 44 babies, The Sunday Mail recorded the time of birth, the sex of the child, and the birth weight in grams. 
 
-Birth at minutes per day
+Birth minute of day
 =============
 
 ```{r}
@@ -150,8 +182,10 @@ interarrival = birthminutes[2:length(birthminutes)] -  birthminutes[1:length(bir
 interarrival
 ```
 
-Look at distribution
+Look at interarrival distribution
 =============
+
+plotdist(interarrival)
 
 ```{r}
 library(fitdistrplus)
@@ -161,12 +195,17 @@ plotdist(interarrival)
 Look at 3rd and 4th moments
 =============
 
+descdist(interarrival)
+
 ```{r}
 descdist(interarrival)
 ```
 
 fit parameters
 =============
+
+baby <- fitdist(interarrival, distr = "exp")
+
 
 ```{r}
 baby <- fitdist(interarrival, distr = "exp")
@@ -175,6 +214,11 @@ summary(baby)
 
 Check goodness of fit
 =============
+
+denscomp(baby)
+qqcomp(baby)
+cdfcomp(baby)
+ppcomp(baby)
 
 ```{r}
 par(mfrow = c(2, 2))
@@ -208,6 +252,9 @@ Symbolic math
 
 Use of `rSympy`
 =============
+```
+library(rSymPy)
+```
 
 ```{r}
 library(rSymPy)
@@ -216,9 +263,18 @@ library(rSymPy)
 - Declare equation
 - Solve
 
+```
+x<-Var("x")
+x+x
+```
+
 ```{r}
 x<-Var("x")
 x+x
+```
+```
+y <- Var("x**3")
+x/y
 ```
 
 ```{r}
@@ -226,21 +282,45 @@ y <- Var("x**3")
 x/y
 ```
 
-```{r}
+```
 z <- sympy("2.5*x**2")
 z + y
 ```
 
 ```{r}
+z <- sympy("2.5*x**2")
+z + y
+```
+
+```
 sympy("diff(cos(x), x)")
 ```
+```{r}
+sympy("diff(cos(x), x)")
+```
+```
+sympy("a = x**2+2*x+1")
+sympy("b = (x+1)**2")
+sympy("simplify(a-b)")
+```
+
 ```{r}
 sympy("a = x**2+2*x+1")
 sympy("b = (x+1)**2")
 sympy("simplify(a-b)")
 ```
+
+```
+sympy("simplify((x**3 + x**2 - x - 1)/(x**2 + 2*x + 1))")
+```
+
 ```{r}
 sympy("simplify((x**3 + x**2 - x - 1)/(x**2 + 2*x + 1))")
+```
+
+```
+sympy("expand((x + 2)*(x - 3))")
+sympy("factor(x**3 - x**2 + x - 1)")
 ```
 
 ```{r}
@@ -248,12 +328,20 @@ sympy("expand((x + 2)*(x - 3))")
 sympy("factor(x**3 - x**2 + x - 1)")
 ```
 
+```
+sympy("a")
+sympy("integrate(a, (x))")
+sympy("integrate(a, (x, 0, 1))")
+```
 ```{r}
 sympy("a")
 sympy("integrate(a, (x))")
 sympy("integrate(a, (x, 0, 1))")
-
 ```
+```
+sympy("diff(a, x)")
+```
+
 ```{r}
 sympy("diff(a, x)")
 ```
@@ -266,12 +354,124 @@ Differential equations
 -  `FME` package
 -  Example provided last week
 
+Linear Algebra
+=============
+
+- Like Matlab and Python (and other numeric programming libraries), R is built on a foundation of standard optimized linear algebra routines.
+    -  If you are doing numerical computing, it is almost always better to implement the methods using matrices and vectors because these standard routines are so much better than what you can write yourself that the benefits outweigh any work needed to convert your methods/models
+-  Covered in *Introduction to R* Section 5.7
+
+Specifying matrices and vectors
+===============================
+
+-  Matrices are multi-dimensional counterparts to vectors
+-  Specify values and dimensions using `array`
+    -  Option: Specify rows and use `rbind`
+    -  Option: Specify columns and use `cbind`
+    
+Using array function
+=====================
+
+```
+A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
+```
+
+
+```{r}
+A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
+A
+```
+
+rbind
+=========
+
+```
+row1 <- c(1, 1, 0)
+row2 <- c(2, -1, 3)
+row3 <- c(1, -2, -1)
+Arow <- rbind(row1, row2, row3)
+```
+
+```{r}
+row1 <- c(1, 1, 0)
+row2 <- c(2, -1, 3)
+row3 <- c(1, -2, -1)
+Arow <- rbind(row1, row2, row3)
+Arow
+```
+
+cbind
+=====
+```
+col1 <- c(1,2,1)
+col2 <- c(1,-1,-2)
+col3 <- c(0, 3, -1)
+Acol <- cbind(col1, col2, col3)
+```
+
+```{r}
+col1 <- c(1,2,1)
+col2 <- c(1,-1,-2)
+col3 <- c(0, 3, -1)
+Acol <- cbind(col1, col2, col3)
+Acol
+```
+
+Solving linear equations
+=================
+
+$$\begin{array}{cccc}
+x & +y &  & = 0\\
+2x & -y & +3z & = 3\\
+x & -2y & -z & =3
+\end{array}$$
+
+Represent equations as arrays and vectors
+==============
+
+$$\left(\begin{array}{ccc} 
+1, 1, 0 \\
+2, -1, 3 \\
+1, -2, -1 
+\end{array}\right) \left(\begin{array}{c}
+0\\
+3 \\
+3 \\
+\end{array}\right)$$ 
+
+Now, in R
+=========
+
+```
+b= c(0, 3, 3)
+```
+
+```{r}
+print(A)
+b= c(0, 3, 3)
+print(b)
+```
+
+Solve using `solve` command
+======
+
+```
+solve(A,b)
+```
+
+```{r}
+solve(A,b)
+```
+
+
 Linear programming and optimization
 =============
 
--  Optimizatition includes numerical optimization and linear programming
+-  Optimization includes numerical optimization and linear programming
     - Both are covered in the R Optimization Task View (https://cran.r-project.org/web/views/Optimization.html)
 -  Linear programming expresses a problem as an objective (minimize or maximize) subject to a set of constraints.
+-  This lecture uses the package `glpkAPI`, which offers both an Algebraic Modeling Language (in IE 1081 you will use an MS Excel add in that provides an AML), and an API that allows you to specify the constraints and objective using matrices and vectors.
+-  Also available in R (see R Optimization Task View), `clpAPI`, `cplexAPI`, `RCplex`, `gurobi`
 
 Transportation problem
 =============
@@ -320,8 +520,21 @@ param d :              New-York   Chicago   Topeka :=
 param f := 90;
 end;
 ```
+
 Applying glpkAPI
 =============
+
+```
+library(glpkAPI)
+mip <- initProbGLPK()
+setProbNameGLPK(mip, "transport")
+trans <- mplAllocWkspGLPK()
+result <- mplReadModelGLPK(trans,
+	system.file("extdata", "transport.mod", package = "glpkAPI"), skip=0)
+result <- mplGenerateGLPK(trans)
+result <- mplBuildProbGLPK(trans, mip)
+```
+
 
 ```{r}
 library(glpkAPI)
@@ -336,6 +549,11 @@ result <- mplBuildProbGLPK(trans, mip)
 
 Solve problem
 =============
+
+```
+return <- solveSimplexGLPK(mip)
+return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
+```
 
 ```{r}
 return <- solveSimplexGLPK(mip)
@@ -370,7 +588,7 @@ Parking lot simulation
 =============
 
 - Create a parking lot with a specific size
-- Cars arrive with exponential interarrival times
+- Cars arrive with exponential inter-arrival times
 - Cars need a parking space for an exponential length of time
 - Run for 24 hours
 
@@ -379,9 +597,9 @@ Implementation using simmer
 =============
 
 ```{r}
-library(simmer)
-library(ggplot2)
-library(dplyr)
+library(simmer, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+library(dplyr, quietly = TRUE)
 set.seed(1234)
 parkingtime = 2
 
@@ -402,6 +620,11 @@ Output from a simulation
 
 -  A simulation contains statistics collectors that either monitor resource usage or the experience of entities.
 
+```
+env %>% get_mon_resources()
+env %>% get_mon_arrivals()
+```
+
 ```{r}
 head(
   env %>% get_mon_resources()
@@ -415,6 +638,9 @@ Output summaries
 ============
 
 -  Then, apply statistical techniques to quantify the performance of the system.
+```
+plot_resource_usage(env, "parking", items=c("server"), steps=T)
+```
 ```{r}
 plot_resource_usage(env, "parking", items=c("server"), steps=T)
 ```
@@ -428,13 +654,27 @@ Statistical design of experiments
 -  Use statistical methods to determine if additional runs are needed.
 -  Repeat with alternative system designs to determine best design.
 
+```
+envs <- lapply(1:30, function(i) {
+  simmer("ReplicatedParkingSim") %>%
+    add_resource("parking", 100) %>%
+    add_generator("arrival", arrival, function() rexp(1, 30)) %>% 
+    run(until= (24))
+})
+```
+
 ```{r}
 envs <- lapply(1:30, function(i) {
   simmer("ReplicatedParkingSim") %>%
     add_resource("parking", 100) %>%
-    add_generator("arrival", arrival, function() rexp(1, 25)) %>% 
+    add_generator("arrival", arrival, function() rexp(1, 30)) %>% 
     run(until= (24))
 })
+```
+```
+plot_resource_utilization(envs, "parking")
+```
 
+```{r}
 plot_resource_utilization(envs, "parking")
 ```
