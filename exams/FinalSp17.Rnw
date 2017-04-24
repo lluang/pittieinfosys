@@ -183,202 +183,51 @@ Solution is probably a heat map indicating distance from census tract to nearest
 
 Relate hypertension as a function of food establishments, fast food.  Add in obesity.  
 
-\question Hypothesis testing
+\question Sleep deprivation, CA vs. OR
 
-Evaluate medication as a function of health care establishments.
-\begin{quote}
-{\bf Our Vision}
-Pittsburgh's bright future is built on a diverse transportation network that safely connects all people to their destinations. Residents, commuters, and visitors joyfully experience our unique topography and neighborhoods while navigating the city by bike and on foot. Well-designed bikeways, walkways, and communities will make riding a bike or walking comfortable, convenient, and fun. Our embrace of an active and healthy lifestyle is reflected in Pittsburgh's commitment to providing safe, world-class facilities for biking and walking.
-\end{quote}
-
-Among other data, the Allegheny County Crash data includes the fields in Table \ref{tbl:bicycle} for all years from 2004-2014.
-
-\begin{table}
-\centering
-\begin{tabular}{ll}
-Field & Description\\
-\hline
-BICYCLE	& Bicycle Indicator\\
-BICYCLE\_COUNT	& Total amount of Bicycles involved\\
-BICYCLE\_DEATH\_COUNT	& Total amount of Bicyclist Fatalities\\
-BICYCLE\_MAJ\_INJ\_COUNT	& Total amount of Bicyclist Major Injuries\\
-\end{tabular}
-\caption{Bicycle related fields in Allegheny County Crash Data \label{tbl:bicycle}}
-\end{table}
-
-Bike Pittsburgh is interested in the effect of introducing bike lanes.  They maintain a database that includes when bike lanes were introduced by block and street, as shown in Table \ref{tbl:bikelane}.
-
-\begin{table}[b]
-\centering
-\begin{tabular}{ccc}
-Street & Block & Year\\
-\hline
-Penn Avenue & 300 & 2014\\
-Penn Avenue & 400 & 2014\\
-\vdots & \vdots & \vdots \\
-Penn Avenue & 1800 & 2014\\
-\vdots & \vdots & \vdots \\
-\hline
-\end{tabular}
-\caption{Sample of bike lane installation data. \label{tbl:bikelane}}
-\end{table}
+The Centers for Disease Control and Prevention (CDC) conducted a study surveying 11,545 California residents and 4,691 Oregon residents on their sleeping habits.  924 CA residents and 413 OR residents reported yes.
 
 \begin{parts}
-\part[8] Write a CoNVO statement for Bike Pittsburgh desire to understand the impact of introducing bike lanes on bicycle accidents on the streets were bike lanes were introduced.  Note that the entirety of the Allegheny County Crash Data is available to you.  Assume that you are able to accurately place and associate crashes to a specific block on Allegheny County streets.
+\part[10]  Write a process map that will allow you to answer the question if the percentage of respondents in Oregon that rpeort insufificent rest or sleep during the preceding 30 days is the same as the percentage of respondents in California.
 
-\begin{solutionordottedlines}[4in]
-\begin{itemize}
-\item Context - Bike Pittsburgh is a bike advocacy agency that is interested in promoting a safe bicycle commuting environment.
-\item Need - Determine the impact of bicycle lanes on accidents.
-\item Vision - There needs to be a comparison - So something like show the rate of accidents per year before and after the bike lane was installed.
-\item Outcome - example Identify if there are specific areas that need to be resigned to help protect against accidents.
-\end{itemize}
-\end{solutionordottedlines}
+\part[2] Write the null and alternative hypothesis for this question.
 
-\part[8] Evaluate the crash and bike lane data according to Volume, Variety, Velocity, Veracity
+\part[13] This is the output of a Monte Carlo simulation designed to answer the question.  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
 
-\begin{solutionordottedlines}[4in]
-\begin{itemize}
-\item Volume - Something about lines of crash data and bike lane data.
-\item Variety - Location, type of vehicles involved, driver, road conditions, traffic conditions, police agency, bike involved, arresting authority.
-\item Velocity - Should say that bike lanes and bike sharing should change the data over time.
-\item Veracity - Should allow that both bike lane and crash data require that data was entered in correctly.
-\end{itemize}
-\end{solutionordottedlines}
-\end{parts}
+<<echo=FALSE>>=
+#VERSION A
+set.seed(1234)
+pCA <- 924./11545
+orsim <- function(i){
+              deprived <- sum(sample(x=c(1,0), size=4691, prob = c(pCA, 1-pCA), replace = TRUE))
+}
+ORout <-sapply(1:10000, orsim)
+hist(ORout, breaks = 100, main = "Simulation of Oregon survey", xlab = "Number reporting yes")
+tailnulltrue <- length(ORout[ORout > 413])/length(ORout)
+print(tailnulltrue)
+@
 
-\question
-{Filling in crash locations}
-
-In many cases of the crash report the road segment (the block number) is blank.  This is needed to correctly determine if the crash site occurred at a place with bike infrastructure (e.g. bike lanes). 
-
-\begin{parts}
-\part[10]
-Evaluate (1-3 sentences) the following missing value imputation methods for their usefulness in this setting. Remember to identify any needed parameters and to address the question in parenthesis.
-
-\begin{enumerate}
-\item Mean value (what variable will you condition taking the mean?)
-\item kNN (how will you define {\em nearest}?)
-\item Hot deck imputation (what variable will you condition the subset from where you will draw from?)
-\end{enumerate}
-
-\begin{solutionordottedlines}[3in]
-\begin{enumerate}
-\item Mean value imputation would probably be conditioned on the street name. However this will always give a location in the middle of the length of the street, and bike lanes may not extend the entire street, so it would not locate the crash correctly.
-\item kNN. Nearest could be a combination of street name and latitude and longitude. This has the best chance of working if there are other crashes that are on the same street (it would take a value in the middle of the nearby ones, which would at minimum be pretty close)
-\item Hot Deck. I would subset on the street name. This could place the crash anywhere on the road. It probably would have on average the correct number of crashes with bike infrastructure, but is not promising to get an individual imputed data point correct.
-\end{enumerate}
-\end{solutionordottedlines}
-
-\part[20]
-Describe the process needed to perform the missing value imputation. Begin with reading in the crash data.
-
-\begin{solution}[3in]
-I would use kNN. Read as many years of data as possible so that you will likely get crashes on that street.  Normalize distances, so street name is more important than the distance in lat/long (because N/S street numbers are radically different than W/E street numbers).
-
-\end{solution}
-
-\end{parts}
-
-\question
-{University police activity}
-
-There are a number of university campus police departments which work within the city of Pittsburgh. Each school has a department responsible for government relations and seeks to demonstrate that they contribute to the well being of the surrounding community.   Assume that the crash data be entered into a data frame {\tt accrash}. Also, {\tt accrash\$POLICE\_AGCY} is the police agency code that corresponds to {\tt policeagency\$Code} from the Police Agency table.  The campus police entries of Police Agency table are shown in Table \ref{tbl:campuspolice}.
-
-\begin{table}[ht]
-\centering
-\begin{tabular}{ll}
-  \hline
-Code & Policy.Agency \\ 
-  \hline
-2504 &  Carnegie Mellon University \\ 
-2506 &  University Of Pittsburgh \\ 
-2507 &  Chatham College Police \\ 
-2508 &  Duquesne University \\ 
-2509 &  Robert Morris University \\ 
-   \hline
-\end{tabular}
-\caption{University police in Pittsburgh. \label{tbl:campuspolice}}
-\end{table}
-
-\begin{parts}
-\part[10]
-Design the process to add the names of the police agency in the {\tt accrash} data frame.
-
-\part[14]
-Design the process that generates the list of all crashes in the Allegheny County Crash Data where the responding police agency was a campus police department.
-
-\end{parts}
-\begin{solution}[5in]
-\begin{itemize}
-\item Read in data into {\tt accrash} and {\tt policeagency}.
-\item Set both {\tt accrash\$POLICE\_AGCY} and {\tt policeagency\$Code} to be factors.
-\item Use merge to add a column to the crash data with the name of the police agency responding based on setting the Policy\_AGCY to the Code in the policeagency table.
-
-{\tt crash2014p <- merge(crash2014m, policeagency, 
-   by.x='POLICE\_AGCY', by.y='Code', all.x=TRUE)}
-\item Create a list of codes of campus police agencies.
-
-{\tt collegepolice <- c("2504", "2506", "2507", "2508", "2509")}
-\item Select from the {\tt accrash} data rows where the agency code is in the list of campus police agencies.
-
-{\tt crash2014p <- merge(crash2014m, policeagency, 
-  by.x='POLICE\_AGCY', by.y='Code', all.x=TRUE)}
-\end{itemize}
-\end{solution}
-
-\question
-{Pittsburgh Police Zones}
-
-Pittsburgh has 6 police zones (Figure \ref{fig:policezones}), where each zone is comprised of a number of neighborhoods.  In addition to the crash data, you have:
-\begin{itemize}
-\item Census data with the population for every neighborhood (i.e. there are two fields, census\$neighborhood and census\$population).
-\item A table that identifies which neighborhoods are in police zone.
-\item A function that identifies which neighborhood a crash occurs in based on either latitude and longitude or street address (so you can easily connect it with the crash data).
-\item A file with the map of neighborhoods along with methods needed to match and display data to the neighborhood or place graphics on top of the map.
-\end{itemize}
-
-A Pittsburgh City Councilwoman has requested that a graphic of crashes, crashes with injuries, and crashes with fatalities per capita (number divided by population) for the past five years by police zone be provided to show the distribution of crashes across the city. Assume that population is effectively unchanged over the past five years.
-
-\begin{parts}
-\part[12]
-What type of visualization should be used to show this information and why? (Your answer should discuss and compare at a minimum; pie charts, some version of bar chart, some version of line chart.  Remember to include your choice.)
-
-
-\begin{solutionordottedlines}[3in]
-\begin{itemize}
-\item Pie charts show ratios, but unless you size them by number of incidents, are not useful for comparing across different areas. If you do size them, size is a very difficult to interpret visual cue.
-\item You could have a bar charts with four bars, crashes per capita with no injuries, crashes per capita with fatalities, no injured, crashes per capita with injuries, no fatalities, and crashes per capita with both injuries and fatalities over five years.  But this would require faceting to show this over time. Or you could do it the other way, four charts, each shows one variable over time. This would show trends.
-\item You could have four time series lines on a chart. This would show each of the four data series and their changes over time.
-\end{itemize}
-
-The main point is that you have to choose a visualization that allows you to show both ratio and magnitude, and demonstrates change over time.
-\end{solutionordottedlines}
-
-\begin{figure}
-\centering
-\includegraphics[width=0.6\textwidth]{../data/zonemap}
-%\includegraphics[width=0.6\textwidth]{../data/09_police_zone_map}
-\caption{Pittsburgh Police Zones. Note: Precise boundaries are not signficant. \label{fig:policezones}}
-\end{figure}
-
-\part[18]
-Sketch a visualization and describe the process that would create that visualization starting from reading data tables.
+<<echo=FALSE>>=
+#VERSION B
+set.seed(4321)
+pCA <- 1097./11545
+orsim <- function(i){
+              deprived <- sum(sample(x=c(1,0), size=4691, prob = c(pCA, 1-pCA), replace = TRUE))
+}
+ORout <-sapply(1:10000, orsim)
+hist(ORout, breaks = 100, main = "Simulation of Oregon survey", xlab = "Number reporting yes")
+tailnulltrue <- length(ORout[ORout > 413])/length(ORout)
+print(tailnulltrue)
+@
 
 \begin{solution}[4in]
-Solution should include 
-\begin{itemize}
-\item Read in crime and population tables.
-\item Identify neighborhood from lat/long or street address.
-\item Tag each crash as no injury, injuries, fatalities, injuries and fatalities based on fields.
-\item Group crashes by neighborhood.
-\item Count crashes in each category by neighborhood and year.
-\item Sum crashes by category over neighborhoods in a police zone.
-\item Sum population of neighborhoods by police zone
-\item Divide number of crashes by population of police zone.
-\item Generate plot for each police zone showing crash rates per capita changing over time.
-\end{itemize}
-\end{solution}
-\end{parts}
+Process map:
+\begin{enumerate}
+  \item  Calculate the probability of a California resident responding yes.
+  \item  Create a simulation that draws the number of Oregon responders, with the probability of yes being the same as the California resident.
+  \item  Rerun that simulation 10000 times
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of OR residents that answered yes.
+  \item  The tail probability at that point is the p-value for the probability of that observation occuring if the null hypothesis is true.
+
 \end{questions}
 \end{document}
