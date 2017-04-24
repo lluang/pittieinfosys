@@ -14,7 +14,7 @@
 \newcommand{\bs}{\texorpdfstring{\char`\\}{}}
 
 \newcommand{\docversion}{2.5}
-\newcommand{\docdate}{April 26, 2017}
+\newcommand{\docdate}{April 27, 2016}
 %\newcommand{\docdate}{\today}
 
 %--------------------------------------------------------------------
