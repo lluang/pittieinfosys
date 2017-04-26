@@ -1,5 +1,5 @@
-\documentclass[12pt, addpoints]{exam}
-%\documentclass[12pt, addpoints, answers]{exam}
+%\documentclass[12pt, addpoints]{exam}
+\documentclass[12pt, addpoints, answers]{exam}
 \usepackage{Sweave}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -281,7 +281,7 @@ Of 34 people in the treatment group 10 yawned.  Of the 16 people in the control 
 
 \part[5] Write the null and alternative hypothesis for this question (from (a)).
 
-\part[15] This is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
+\part[15] This is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram. (draw on the histogram and annotate as needed).
 
 <<echo=FALSE, fig=TRUE>>=
 #VERSION A

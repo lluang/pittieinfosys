@@ -24,7 +24,11 @@ e.  Calculate the 95% confidence interval of the volume. (Note: see section 8.1 
 **ANSWER**
 
 a. Axis are 4, 6, 3
-b. Ellipsoid is inside the box formed by x from -4 to 4, y from -6 to 6, z from -3 to 3. Note that the total volume is 8 * 12 * 3 =388
+b. Ellipsoid is inside the box formed by x from -4 to 4, y from -6 to 6, z from -3 to 3. Note that the total volume is 
+```{r}
+2 * 4 * 2 * 6 * 2 * 3
+```
+
 c. Simulation of volume of ellipsoid with 10000 samples.
 
 ```{r}
