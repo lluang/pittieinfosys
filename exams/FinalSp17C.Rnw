@@ -1,0 +1,314 @@
+\documentclass[12pt, addpoints]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
+\usepackage{Sweave}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{makeidx}
+
+\usepackage[colorlinks]{hyperref}
+
+% In case we're not using hyperref.sty:
+\providecommand{\texorpdfstring}[2]{#1}
+% The following can be used in \section commands
+% without generating pdf warnings:
+\newcommand{\bs}{\texorpdfstring{\char`\\}{}}
+
+\newcommand{\docversion}{1.0}
+\newcommand{\docdate}{April 26, 2017}
+%\newcommand{\docdate}{\today}
+
+%--------------------------------------------------------------------
+%
+% Changes since version 2.4 are described in the comments
+% near the beginning of the file exam.cls.
+%
+%--------------------------------------------------------------------
+
+\makeindex
+
+\newcommand{\indc}[1]{\index{#1@\texttt{\char`\\#1}}}
+\newcommand{\indcsub}[2]{\index{#1@\texttt{\char`\\#1}!#2}}
+\newcommand{\indcstart}[1]{\index{#1@\texttt{\char`\\#1}|(}}
+\newcommand{\indcstop}[1]{\index{#1@\texttt{\char`\\#1}|)}}
+
+\newcommand{\indt}[1]{\index{#1@\texttt{#1}}}
+\newcommand{\indtsub}[2]{\index{#1@\texttt{#1}!#2}}
+\newcommand{\indtstart}[1]{\index{#1@\texttt{#1}|(}}
+\newcommand{\indtstop}[1]{\index{#1@\texttt{#1}|)}}
+
+%---------------------------------------------------------------------
+\newenvironment{example}%
+   {\bigskip\filbreak
+    \subsubsection{Example:}
+   }%
+   {}
+
+\def\samplehead#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    \hbox to \textwidth{%
+      \rlap{\parbox[b]{\textwidth}{\raggedright#1\strut}}%
+      \hfil\parbox[b]{\textwidth}{\centering#2\strut}\hfil
+      \llap{\parbox[b]{\textwidth}{\raggedleft#3\strut}}%
+    }% hbox
+    #4
+  \end{trivlist}
+}
+
+\def\samplefoot#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    #1
+    \vskip 3pt
+
+    \hbox to \textwidth{%
+      \rlap{\parbox[t]{\textwidth}{\raggedright#2}}%
+      \hfil\parbox[t]{\textwidth}{\centering#3}\hfil
+      \llap{\parbox[t]{\textwidth}{\raggedleft#4}}%
+    }% hbox
+  \end{trivlist}
+}
+
+% \makeatletter
+%   \@ifundefined{AmS}{\def\AmS{{\protect\the\textfont\tw@
+%     A\kern-.1667em\lower.5ex\hbox{M}\kern-.125emS}}}
+%     {}
+% \makeatother
+
+
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{IE 0015 Information Systems Final}
+
+\author{Spring 2017}
+\maketitle
+\centering
+{\bf C}
+
+\begin{enumerate}
+\item  Write your name at the top of this page.
+\item  There are four questions (11 pages) and the data dictionaries associated with the DASH data from the WPRDC (1 page) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  You may have a double sided sheet of paper for notes (crib sheet).
+\item  The phrase {\em describe the process} can be answered using any of the following:
+  \begin{enumerate}
+    \item Outline
+    \item Pseudocode
+    \item Flow chart/process map
+  \end{enumerate}
+  Remember, answers should be complete enough to enable a non-engineer programmer to write the program.
+\item  Answer questions in the space provided. You may also use the back of a sheet in the exam if needed.
+\item  You have 2 hours for the exam.
+\item  Staple crib sheet to the exam when you turn it in.
+\end{enumerate}
+
+\centering
+\gradetable
+
+\newpage
+\begin{questions}
+
+\question [25]
+{Allegheny County diabetes}
+The Allegheny County Health Department (ACHD) monitors diabetes throughout Allegheny County. It is concerned that one contributor to diabetes is the relative accessibility of healthy food and fast food (which is less healthy).  ACHD wishes to consider the accessibility of healthy food (distance to supermarkets) and less healthy food (Nearby convenience stores and fast food locations) and their relation to diabetes on a census tract by census tract basis.
+
+In addition to the DASH data sets (see page 12 of exam) and the U.S. Census data on each census tract (population and centroid), assume that you have the following functions available to you:
+
+\begin{itemize}
+  \item findtractfromlatlong(latitude, longitude) - returns the census tract ID that contains a given latitude and longitude.
+  \item findtractcentroid(censustract) - returns the latitude and longitude of the center of mass of a given census tract.
+  \item finddistance(lat1, long1, lat2, long2) - returns the distance in miles between two points identified by latitude and longitude.
+\end{itemize}
+
+\begin{parts}
+
+\part Write a CoNVO statement that corresponds to this narrative.
+
+\begin{solution}[4.7in]
+
+\begin{itemize}
+  \item Context - Allegheny County Health Department is charged with all issues related to public health. They are interested in factors contributing to diabetes
+  \item Need - Identify census tracts with diabetes and relating it to distance to supermarkets of fast food places.
+  \item Vision - For each census tract, calculate the distance from the centroid to the nearest grocery store.  Display on a map (heat map showing the distance)
+  \item Outcome - ACHD can point non-profit organizations to where food deserts exist (low amount of grocery stores) and encourage development of groceries, farmer markets, food pantries, etc.
+\end{itemize}
+
+\end{solution}
+
+\end{parts}
+
+\question
+
+Currently, the data set *Supermarkets and convenience stores* contains the latitude and longitude of supermarkets and convenience stores.
+
+Assume that you have available in R a function that can map out Allegheny Census Tracts and display them in any color, shade, or position an overlay as you desire.
+
+\begin{parts}
+\part[5]  Develop a process map that results in the distance from the centroid of each census tract to the nearest supermarket. (Note: do not include convenience stores.)
+
+\begin{solution}[2.5in]
+\end{solution}
+
+\part[5] Develop a process that results in showing how many convenience stores and fast food places are within 2 miles of the centroid of a census tract.
+
+\begin{solution}[2in]
+1.  Filter convenience stores in supermarkets data.
+2.  For each tract
+    - for each convenience store and fast food from fast food data, determine if it is within 2 miles of the tract centroid.
+    - Count number  
+
+\end{solution}
+
+\part[10]  Given a map with Allegheny County Census Tracts, Write a process map that takes the census tract data and the supermarket data from (a) and generates a map that displays a color to display the distance from the centroid to the nearest supermarket.
+\begin{solution}[3in]
+
+\begin{enumerate}
+  \item Filter supermarket data to have only supermarkets (no convenience stores)
+  \item For each tract, calculate the distance to each supermarket
+  \item Assign the minimum distance as the distance for that tract.
+  \item Create a color scale showing distance from tract to nearest supermarket.
+  \item Apply color scale to each tract
+\end{enumerate}
+\end{solution}
+
+\part[5] Define a linear model that will represent the rate of people diagnosed with diabetes in the population for a census tract as a function of the distance from the tract centroid to the nearest supermarket and the number of nearby convenience stores and fast food establishments.  Remember to use the variables as defined in the DASH datasets and define the results from earlier sections as appropriate.
+
+\begin{solution}[2in]
+$BPAN/BPAD \sim nearest\_supermarket + number_fastfoodConvenience$
+\end{solution}
+\end{parts}
+
+
+\question Baby weights
+
+The Child Health and Development Studies investigate a range of topics. One study considered all pregnancies between 1960 and 1967 among women in the Kaiser Foundation Health Plan in the San Francisco East Bay area. We study the relationship between a variety of variables and the birth-weight of a baby.  Two obvious variables that are of interest are gestation and mother's height. The available variables are defined as follows:
+
+\begin{enumerate}
+  \item bwt - birth-weight of baby in ounces
+  \item smoke - if the mother smokes or not
+  \item parity - if the child is a first born or not
+  \item gestation - length of pregnancy in days
+  \item age - mother's age in years 
+  \item height - mother's height in inches
+  \item weight - mother's pregnancy weight in pounds
+\end{enumerate}
+
+<<echo=FALSE>>=
+library(ggplot2)
+library(dplyr)
+library(openintro)
+babies <- read.csv("../data/babies.csv")
+@
+<<>>=
+baby <- babies[complete.cases(babies),]
+lmbwt1 <- lm(bwt ~ gestation, data=baby)
+lmbwt2 <- lm(bwt ~ height, data=baby)
+lmbwt3 <- lm(bwt ~ gestation + height, data=baby)
+summary(lmbwt1)
+summary(lmbwt2)
+summary(lmbwt3)
+@
+
+
+
+\begin{parts}
+
+\part[5] Above are three models for the birth-weight: first based on gestation, second on height, and the third including both gestation and height.  Evaluate the quality of these three models based on the model summaries.
+
+\begin{solution}[2in]
+Discuss the adjusted R squared of the three. Should end up with height and weight
+\end{solution}
+
+\part[5]  Interpret the Estimates for gestation and height in the third linear regression results table.
+
+\begin{solution}[1in]
+  For every day of gestation, the average baby-weight increases by 0.45 oz.  For every inch of the mother's height, the average birth-weight increases by 1.27 ounces.
+\end{solution}
+
+\part[5]
+Below are the diagnostic plots for the third model ($bwt \sim gestation + height$).  What does this say about the quality of this model?
+
+<<echo=FALSE, fig=TRUE>>=
+par(mfrow=c(2,2))
+plot(lmbwt3)
+par(mfrow=c(1,1))
+@
+
+\begin{solution}[2in]
+Should discuss that the residuals vs fitted, scale vs location both seem to say that the model is only good in the middle, and not good along the edges, so there needs to  be an additional term.
+\end{solution}
+\part[5]
+The following are graphs of the residuals plotted against two of the other variables.  Of these two, which should be added to the model and why?
+
+<<echo=FALSE>>=
+baby$parity <- as.factor(baby$parity)
+baby$smoke <- as.factor(baby$smoke)
+@
+
+<<echo=FALSE>>=
+baby$lm3residuals <- lmbwt3$residuals
+bwtplt <- ggplot(baby)
+@
+
+<<fig=TRUE, echo=FALSE>>=
+bwtplt + geom_point(aes(x=weight, y=lm3residuals)) + ggtitle("Weight vs residuals")
+@
+
+<<fig=TRUE, echo=FALSE>>=
+bwtplt + geom_point(aes(x=smoke, y=lm3residuals)) + ggtitle("Smoke vs residuals")
+@
+
+\begin{solution}[2in]
+Should use the factor variable. The continuous variable seems to have evenly distributed residuals across the range, while the factor seems to have slightly different distributions (0 has larger variance)
+\end{solution}
+\end{parts}
+
+
+\question Is yawning contagious?
+
+An experiment conducted by {\em MythBusters} a science entertainment TV program on the Discovery Channel, tested if a person can be subconsciously influenced into yawning if another person near them yawns.  50 people were randomly assigned to two groups: 34 to a group where a person near them yawned (treatment) and 16 to a group where there wasn't a person yawning near them (control).
+
+Of 34 people in the treatment group 10 yawned.  Of the 16 people in the control group, 4 yawned.
+\begin{parts}
+\part[10]  Write a process map that will allow you to answer the question if having a someone yawn near another person has an influence on if the other person will yawn.
+
+\part[5] Write the null and alternative hypothesis for this question (from (a)).
+
+\part[15] This is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
+
+<<echo=FALSE, fig=TRUE>>=
+#VERSION A
+set.seed(1234)
+pControl <- 4./16
+sleepsim <- function(i){
+              deprived <- sum(sample(x=c(1,0), size=34, prob = c(pControl, 1-pControl), replace = TRUE))
+}
+sleepout <-sapply(1:10000, sleepsim)
+tailnulltrue <- length(sleepout[sleepout > 10])/length(sleepout)
+#iint(tailnulltrue)
+hist(sleepout, breaks = 34, main = "Simulation of sleep study", xlab = "Number who yawned")
+@
+
+
+\begin{solution}[4in]
+Process map:
+\begin{enumerate}
+  \item  Calculate the probability of a member of the control group yawning.
+  \item  Create a simulation that draws samples of the same size as the treatment group, with the probability of yes being the same as the control group.
+  \item  Rerun that simulation 10000 times
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the treatment group that yawned.
+  \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
+\end{enumerate}
+
+\end{solution}
+\end{parts}
+
+\end{questions}
+\end{document}
