@@ -166,13 +166,26 @@ Solution is probably a heat map indicating distance from census tract to nearest
 \part[10]  Write a process map that takes the census tract data and the supermarket and convenience store data and generates the data to be displayed in the manner above.
 
 \begin{solution}[3in]
+  \begin{enumerate}
+    \item Filter supermarket and convenience store data for only supermarkets
+    \item For each census tract
+    \begin{enumerate}
+      \item For each supermarket, calculate distance
+      \item Identify closest supermarket (it may be inside the tract)
+      \item Assign the distance to the closest supermarket to the tract
+    \end{enumerate}
+    \item Join distance to supermarket to the census tract data using the Census tract ID
+  \end{enumerate}
 
 \end{solution}
 
 \part[5]  Write the continuation of the process map that will end with the displayed data.
 
 \begin{solution}[2in]
-
+  \begin{enumerate}
+    \item Map distance of each tract centroid to nearest supermarket to a color scale
+    \item Plot tract map with regions in color
+  \end{enumerate}
 \end{solution}
 
 
@@ -185,10 +198,10 @@ Relate hypertension as a function of food establishments, fast food.  Add in obe
 
 \question Sleep deprivation, CA vs. OR
 
-The Centers for Disease Control and Prevention (CDC) conducted a study surveying 11,545 California residents and 4,691 Oregon residents on their sleeping habits.  924 CA residents and 413 OR residents reported yes.
+The Centers for Disease Control and Prevention (CDC) conducted a study surveying 11,545 California residents and 4,691 Oregon residents on their sleeping habits.  924 CA residents and 413 OR residents reported yes (to insufficient sleep).
 
 \begin{parts}
-\part[10]  Write a process map that will allow you to answer the question if the percentage of respondents in Oregon that rpeort insufificent rest or sleep during the preceding 30 days is the same as the percentage of respondents in California.
+\part[10]  Write a process map that will allow you to answer the question if the percentage of respondents in Oregon that report insufficient rest or sleep during the preceding 30 days is the same as the percentage of respondents in California.
 
 \part[2] Write the null and alternative hypothesis for this question.
 
@@ -224,11 +237,19 @@ hist(ORout, breaks = 100, main = "Simulation of Oregon survey", xlab = "Number r
 Process map:
 \begin{enumerate}
   \item  Calculate the probability of a California resident responding yes.
-  \item  Create a simulation that draws the number of Oregon responders, with the probability of yes being the same as the California resident.
+  \item  Create a simulation that draws the number of Oregon respondents, with the probability of yes being the same as the California resident.
   \item  Rerun that simulation 10000 times
   \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of OR residents that answered yes.
-  \item  The tail probability at that point is the p-value for the probability of that observation occuring if the null hypothesis is true.
+  \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
 \end{enumerate}
+
+\begin{itemize}
+  \item H0: p(CA) = p(OR)
+  \item HA: p(CA) <> p(OR)
+\end{itemize}
+
+
+
 \end{solution}
 \end{parts}
 \end{questions}
