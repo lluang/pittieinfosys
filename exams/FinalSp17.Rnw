@@ -1,5 +1,5 @@
-\documentclass[12pt, addpoints]{exam}
-%\documentclass[12pt, addpoints, answers]{exam}
+%\documentclass[12pt, addpoints]{exam}
+\documentclass[12pt, addpoints, answers]{exam}
 \usepackage{Sweave}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -168,11 +168,17 @@ Solution is probably a heat map indicating distance from census tract to nearest
 \part[10]  Write a process map that takes the census tract data and the supermarket and convenience store data and generates the data to be displayed in the manner above.
 
 \begin{solution}[3in]
-\begin{enumerate}
-  \item Filter supermarket data to have only supermarkets (no convenience stores)
-  \item For each tract, calculate the distance to each supermarket
-  \item Assign the minimum distance as the distance for that tract.
-\end{enumerate}
+  \begin{enumerate}
+    \item Filter supermarket and convenience store data for only supermarkets
+    \item For each census tract
+    \begin{enumerate}
+      \item For each supermarket, calculate distance
+      \item Identify closest supermarket (it may be inside the tract)
+      \item Assign the distance to the closest supermarket to the tract
+    \end{enumerate}
+    \item Join distance to supermarket to the census tract data using the Census tract ID
+  \end{enumerate}
+
 \end{solution}
 
 \part[5]  Write the continuation of the process map that will end with the displayed data.
@@ -223,7 +229,6 @@ Assume that you have available in R a function that can map out Allegheny Census
 \begin{parts}
 \part[5]  Develop a process map that results in the distance from the centroid of each census tract to the nearest supermarket. (Note: do not include convenience stores.)
 
-\begin{solution}[2.5in]
 \end{solution}
 
 \part[5] Develop a process that results in showing how many convenience stores and fast food places are within 2 miles of the centroid of a census tract.
@@ -341,7 +346,7 @@ Should use the factor variable. The continuous variable seems to have evenly dis
 
 \question Sleep deprivation, CA vs. OR
 
-The Centers for Disease Control and Prevention (CDC) conducted a study surveying 11,545 California residents and 4,691 Oregon residents on their sleeping habits.  924 CA residents and 413 OR residents reported yes.
+The Centers for Disease Control and Prevention (CDC) conducted a study surveying 11,545 California residents and 4,691 Oregon residents on their sleeping habits.  924 CA residents and 413 OR residents reported yes (to insufficient sleep).
 
 \begin{parts}
 \part[10]  Write a process map that will allow you to answer the question if the percentage of respondents in Oregon that report insufficient rest or sleep during the preceding 30 days is the same as the percentage of respondents in California.
@@ -359,7 +364,7 @@ orsim <- function(i){
 }
 ORout <-sapply(1:10000, orsim)
 tailnulltrue <- length(ORout[ORout > 413])/length(ORout)
-#iint(tailnulltrue)
+#print(tailnulltrue)
 hist(ORout, breaks = 100, main = "Simulation of Oregon survey", xlab = "Number reporting yes")
 @
 
@@ -428,5 +433,9 @@ Process map:
 \end{solution}
 \end{parts}
 
+
+
+\end{solution}
+\end{parts}
 \end{questions}
 \end{document}
