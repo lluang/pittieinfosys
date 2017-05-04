@@ -1,0 +1,145 @@
+---
+title: "IE 0015 Information Systems Syllabus"
+author: "Louis Luangkesorn"
+date: "Spring 2018"
+output: html_document
+---
+
+- 1044 Benedum Hall
+- MW 1:00PM - 1:50PM
+- Final Wednesday April 26 8:00 AM - 9:50 AM
+
+Office Hours:
+
+- 1028 Benedum Hall
+- lluangkesorn@pitt.edu
+- Hours: TBD
+
+TA:
+
+- Matt Abbott - mla44@pitt.edu
+- Elizabeth Palko - eap65@pitt.edu
+
+Course goals
+============
+
+- To be able to work with data and use programming and database tools for processing, manipulating, analyzing, and presenting data.
+- To develop and implement algorithms for processing data.
+- To understand and critique data analysis presentations.
+
+Major Topics
+==================================
+
+1.  Databases
+2.  Data manipulation
+3.  Exploratory data analysis
+4.  Algorithms with data (missing values)
+5.  Communicating data analysis
+
+# Materials
+
+## Software
+
+1.  R -  https://mran.microsoft.com/open/  Follow the appropriate download link for your platform
+
+2.  R Studio - An Integrated Development Environment (IDE). A basic environment (editor, console) comes with R, so this is optional, however, highly recommended as it will be much easier with this.
+
+http://www.rstudio.com/products/RStudio - Click on 'Download R Studio Desktop'.  You will be given options for your platform.  After installing this watch the video on this page to get familiarized with the platform.
+
+3.  Packages.  Much of the functionality of R is embedded in packages.  These need to be installed prior to use. (Note: installation of packages is easy given access to the internet.  You will quickly learn to recognize when it is necessary to install a package. But to start, you should enter the following in the R console after you install R and R Studio
+
+install.packages(c("ggplot2",  "knitr",  "reshape2",  "dplyr",  "rJava",  "readxl",  "RODBC", "chron",  "lubridate",  "stringr",  "stringdist",  "editrules",  "Hmisc",  "rspa",  "deducorrect", "jsonlite", "tidyverse"))
+
+4.  MS Access - Available on MS Windows as part of MS Office Pro
+
+##  Texts
+
+The following are resources we will use.  ggplot2: Elegant Graphics for Data Analysis and R for Data Science will be the primary texts. Note that R for Data Science has not yet been published so it is only available as a web site.
+
+
+1.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, ISBN: 331924275X
+  - Available electronically through Pitt Library
+  - A cheaper paperback version can be purchased through MySpringer, Pitt library
+2.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, http://r4ds.had.co.nz/
+3.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
+4.  (de Jonge) An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
+5.  OpenIntro Statistics, https://www.openintro.org/stat/?stat_book=os. This will not be used heavily, but is a useful reference on how to use R for the topics you covered in your Introduction to Statistics course.
+
+##  Articles
+
+-  Each week, an article will be posted for discussion.  Each article will be an example of a data analysis and will be a focus of discussion to consider both strengths and weaknesses of the data analysis and presentation.
+-  The article discussions are intended to help you prepare for the exams. Exams are focused on being able to specify a data problem (CoNVO) and interpret exploratory data analysis output.
+
+
+## Datasets
+
+-  National Survey of Family Growth
+-  American Community Survey
+-  Titanic survivors
+-  Western PA Regional Data Center
+
+#  Grading
+
+1.  Weekly labs               15%
+2.  Midterm                   25%
+3.  Final                     25%
+4.  Project (1-3 person teams)  20%
+5.  Homeworks                 10%
+5.  Class participation       5%
+
+## Grade breakpoints
+
+
+Grade    Breakpoint
+-----    ----------
+A            93
+A-           90
+B+           87
+B            83
+B-           80
+C+           77
+C            73
+C-           70
+
+
+# ABET Outcomes
+
+a. an ability to apply knowledge of mathematics, science, and engineering;
+c. an ability to identify, formulate, and solve engineering problems;
+i. recognition of the need for and an ability to engage in life-long learning.
+k. an ability to use the techniques, skills, and modern engineering tools necessary for engineering practice.
+
+
+Schedule
+========
+
+- Module 0: Introduction to Data and R R4DS Ch 27 (Jan 4)
+- **No class Jan 9**
+- Module 1: Using MS Access and SQL (Jan 11, 18)
+  - Microsoft Support Access Training Videos - Databases, tables, and relationships
+    - https://support.office.com/en-us/article/Access-training-a5ffb1ef-4cc4-4d79-a862-e2dda6ef38e6?ui=en-US&rs=en-US&ad=US
+    - Get Started - All 3 videos
+    - Create an Access Database - Create an Access desktop database
+    - Add tables - All 3 videos
+    - Getting started with table relationships - All 5 videos
+
+- Module 2: Tidy data and relational data, R4DS ch 12, 13 (Jan 23)
+- Module 3: Data into R, ggplot Ch 9 (Jan 30)
+- Module 4: Data manipulation and aggregation, ggplot Ch 10 (Feb 6)
+- **PROJECT TOPIC FEBRUARY 8**
+- Module 5: Character Manipulation and regular expressions R4DS 
+- **HOMEWORK 1: Data manipulation FEBRUARY 15**
+- Module 6: Basic plot types ggplot2 Ch 2, 3 (Feb 20)
+- Module 7: Data visualization grammer ggplot ch 4 (Feb 27)
+- **MIDTERM March 2** (No labs)
+- Module 8: Data types: strings, factors, dates R4DS Ch 14, 15, 16 (Mar 13)
+- **PROJECT EXPLORATORY DATA ANALYSIS MARCH 15**
+- **HOMEWORK 2: Exploratory Data Analysis MARCH 22**
+- Module 9: Advanced programming R4DS Part III (Mar 20)
+- Module 10: Linear modeling for visualization - ggplot ch 11 (March 27)
+- Module 11: Linear regression (April 4)
+- Module 12: Simulation for statistical inference (April 11)
+- **HOMEWORK 3: Modeling APRIL 13**
+- **PROJECT REPORT APRIL 20**
+- **PROJECT PRESENTATIONS APRIL 21, 22**
+- FINAL Wednesday, April 26, 8:00AM - 9:50AM
