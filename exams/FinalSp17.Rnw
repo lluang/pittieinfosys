@@ -86,12 +86,14 @@
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 
-\title{IE 0015 Intro to Info Systems Final}
+\title{IE 0015 Information Systems Final}
+
 
 \author{Spring 2017}
 \date{\docdate}
 \maketitle
-
+\centering
+{\bf A}
 
 \begin{enumerate}
 \item  Write your name at the top of this page.
@@ -114,7 +116,7 @@
 
 \newpage
 \begin{questions}
-\question [20]
+\question [25]
 {Allegheny County food desert}
 
 According to the U.S. Department of Agriculture (USDA), food deserts are city neighborhoods or tracts that are more than one mile from a grocery store or rural areas that are more than 10 miles from a supermarket.  The Allegheny County Health Department (ACHD) desires to identify (census) tracts that fit this description in order to direct efforts of non-profits that come to it with a stated goal of reducing food deserts within Allegheny County
@@ -131,7 +133,7 @@ In addition to the DASH data sets and the U.S. Census data on each census tract 
 
 \part Write a CoNVO statement that corresponds to this narrative.
 
-\begin{solution}{4in}
+\begin{solution}[4.7in]
 
 \begin{itemize}
   \item Context - Allegheny County Health Department is charged with all issues related to public health. They are interested in identifying food desserts.
@@ -146,55 +148,209 @@ In addition to the DASH data sets and the U.S. Census data on each census tract 
 
 \question
 
-Currently, the data set *Supermarkets and convenience stores* contains the latitude and longitude of supermarkets and convenience stores.  Note above that the definition of food desert is based on the distance of a tract from the nearest grocery (supermarket).
+Currently, the data set *Supermarkets and convenience stores* contains the latitude and longitude of supermarkets and convenience stores.  Note above that the definition of food desert is based on the distance of a tract from the nearest grocery (supermarket, convenience stores do not qualify).
 
 Assume that you have available in R a function that can map out Allegheny Census Tracts and display them in any color, shade, or position an overlay as you desire.
 
 \begin{parts}
-\part[2]  What is a better measure of the amount of Pittsburgh that is a food desert for ACHD, the number of tracts that meet the definition or the population of the tracts that meet the definition? You should explain your answer in a paragraph of 2-5 sentences.
+\part[5]  What is a better measure of the amount of Pittsburgh that is a food desert for ACHD, the number of tracts that meet the definition or the population of the tracts that meet the definition? You should explain your answer in a paragraph of 2-5 sentences.
 
-\begin{solution}{2in}
+\begin{solution}[2in]
 Should be population, because the goal of ACHD is to bring resources to alleviate the food desert.
 \end{solution}
 
-\part[2] Allegheny County has 402 census tracts.  You are asked to display the distance from the centroid of each tract to the nearest supermarket using a map.  How will you display this distance on the map?
+\part[5] Allegheny County has 402 census tracts.  You are asked to display the distance from the centroid of each tract to the nearest supermarket using a map.  How will you display this distance on the map?
 
-\begin{solution}{1in}
+\begin{solution}[1in]
 Solution is probably a heat map indicating distance from census tract to nearest supermarket.
 \end{solution}
 
 \part[10]  Write a process map that takes the census tract data and the supermarket and convenience store data and generates the data to be displayed in the manner above.
 
 \begin{solution}[3in]
-
+\begin{enumerate}
+  \item Filter supermarket data to have only supermarkets (no convenience stores)
+  \item For each tract, calculate the distance to each supermarket
+  \item Assign the minimum distance as the distance for that tract.
+\end{enumerate}
 \end{solution}
 
 \part[5]  Write the continuation of the process map that will end with the displayed data.
 
-\begin{solution}{2in}
-
+\begin{solution}[2in]
+Use a heatmap.  Assign a color to the minimum distance.
 \end{solution}
 
 
 
 \end{parts}
 
-\question Linear regression
+\question [25]
+{Allegheny County diabetes}
+The Allegheny County Health Department (ACHD) monitors diabetes throughout Allegheny County. It is concerned that one contributer to diabetes is the relative accessibility of healthy food and fast food (which is less healthy).  ACHD wishes to consider the accessibility of healthy food (distance to supermarkets) and less healthy food (Nearby convenience stores and fast food locations) and their relation to diabetes on a census tract by census tract basis.
 
-Relate hypertension as a function of food establishments, fast food.  Add in obesity.  
+In addition to the DASH data sets (see page 11 of exam) and the U.S. Census data on each census tract (population and centroid), assume that you have the following functions available to you:
+
+\begin{itemize}
+  \item findtractfromlatlong(latitude, longitude) - returns the census tract ID that contains a given latitude and longitude.
+  \item findtractcentroid(censustract) - returns the latitude and longitude of the center of mass of a given census tract.
+  \item finddistance(lat1, long1, lat2, long2) - returns the distance in miles between two points identified by latitude and longitude.
+\end{itemize}
+
+\begin{parts}
+
+\part Write a CoNVO statement that corresponds to this narrative.
+
+\begin{solution}[4.7in]
+
+\begin{itemize}
+  \item Context - Allegheny County Health Department is charged with all issues related to public health. They are interested in factors contributing to diabetes
+  \item Need - Identify census tracts with diabetes and relating it to distance to supermarkets of fast food places.
+  \item Vision - For each census tract, calculate the distance from the centroid to the nearest grocery store.  Display on a map (heat map showing the distance)
+  \item Outcome - ACHD can point non-profit organizations to where food deserts exist (low amount of grocery stores) and encourage development of groceries, farmer markets, food pantries, etc.
+\end{itemize}
+
+\end{solution}
+
+\end{parts}
+
+\question
+
+Currently, the data set *Supermarkets and convenience stores* contains the latitude and longitude of supermarkets and convenience stores.
+
+Assume that you have available in R a function that can map out Allegheny Census Tracts and display them in any color, shade, or position an overlay as you desire.
+
+\begin{parts}
+\part[5]  Develop a process map that results in the distance from the centroid of each census tract to the nearest supermarket. (Note: do not include convenience stores.)
+
+\begin{solution}[2.5in]
+\end{solution}
+
+\part[5] Develop a process that results in showing how many convenience stores and fast food places are within 2 miles of the centroid of a census tract.
+
+\begin{solution}[2in]
+1.  Filter convenience stores in supermarkets data.
+2.  For each tract
+    - for each convenience store and fast food from fast food data, determine if it is within 2 miles of the tract centroid.
+    - Count number  
+
+\end{solution}
+
+\part[10]  Given a map with Allegheny County Census Tracts, Write a process map that takes the census tract data and the supermarket data from (a) and generates a map that displays a color to display the distance from the centroid to the nearest supermarket.
+\begin{solution}[3in]
+
+\begin{enumerate}
+  \item Filter supermarket data to have only supermarkets (no convenience stores)
+  \item For each tract, calculate the distance to each supermarket
+  \item Assign the minimum distance as the distance for that tract.
+  \item Create a color scale showing distance from tract to nearest supermarket.
+  \item Apply color scale to each tract
+\end{enumerate}
+\end{solution}
+
+\end{parts}
+
+
+\question Baby weights
+
+The Child Health and Development Studies investigate a range of topics. One study considered all pregnancies between 1960 and 1967 among women in the Kaiser Foundation Health Plan in the San Francisco East Bay area. We study the relationship between a variety of variables and the birth-weight of a baby.  Two obvious variables that are of interest are gestation and mother's height. The available variables are defined as follows:
+
+\begin{enumerate}
+  \item bwt - birth-weight of baby in ounces
+  \item smoke - if the mother smokes or not
+  \item parity - if the child is a first born or not
+  \item gestation - length of pregnancy in days
+  \item age - mother's age in years 
+  \item height - mother's height in inches
+  \item weight - mother's pregnancy weight in pounds
+\end{enumerate}
+
+<<echo=FALSE>>=
+library(ggplot2)
+library(dplyr)
+library(openintro)
+babies <- read.csv("../data/babies.csv")
+@
+<<>>=
+baby <- babies[complete.cases(babies),]
+lmbwt1 <- lm(bwt ~ gestation, data=baby)
+lmbwt2 <- lm(bwt ~ height, data=baby)
+lmbwt3 <- lm(bwt ~ gestation + height, data=baby)
+summary(lmbwt1)
+summary(lmbwt2)
+summary(lmbwt3)
+@
+
+
+
+\begin{parts}
+
+\part[5] Above are three models for the birth-weight: first based on gestation, second on height, and the third including both gestation and height.  Evaluate the quality of these three models based on the model summaries.
+
+\begin{solution}[2in]
+Discuss the adjusted R squared of the three. Should end up with height and weight
+\end{solution}
+
+\part[5]  Interpret the Estimates for gestation and height in the third linear regression results table.
+
+\begin{solution}[1in]
+  For every day of gestation, the average baby-weight increases by 0.45 oz.  For every inch of the mother's height, the average birth-weight increases by 1.27 ounces.
+\end{solution}
+
+\part[5]
+Below are the diagnostic plots for the third model (bwt \~ gestation + height).  What does this say about the quality of this model?
+
+<<echo=FALSE, fig=TRUE>>=
+par(mfrow=c(2,2))
+plot(lmbwt3)
+par(mfrow=c(1,1))
+@
+
+\begin{solution}[2in]
+Should discuss that the residuals vs fitted, scale vs location both seem to say that the model is only good in the middle, and not good along the edges, so there needs to  be an additional term.
+\end{solution}
+\part[5]
+The following are graphs of the residuals plotted against two of the other variables.  Of these two, which should be added to the model and why?
+
+<<echo=FALSE>>=
+baby$parity <- as.factor(baby$parity)
+baby$smoke <- as.factor(baby$smoke)
+@
+<<fig=TRUE, echo=FALSE>>=
+baby$lm3residuals <- lmbwt3$residuals
+bwtplt <- ggplot(baby)
+bwtplt + geom_point(aes(x=age, y=lm3residuals)) + ggtitle("Age vs residuals")
+@
+
+<<fig=TRUE, echo=FALSE>>=
+bwtplt + geom_point(aes(x=parity, y=lm3residuals)) + ggtitle("Parity vs residuals")
+@
+
+<<fig=TRUE, echo=FALSE>>=
+bwtplt + geom_point(aes(x=weight, y=lm3residuals)) + ggtitle("Weight vs residuals")
+@
+
+<<fig=TRUE, echo=FALSE>>=
+bwtplt + geom_point(aes(x=smoke, y=lm3residuals)) + ggtitle("Smoke vs residuals")
+@
+
+\begin{solution}[2in]
+Should use the factor variable. The continuous variable seems to have evenly distributed residuals across the range, while the factor seems to have slightly different distributions (0 has larger variance)
+\end{solution}
+\end{parts}
 
 \question Sleep deprivation, CA vs. OR
 
 The Centers for Disease Control and Prevention (CDC) conducted a study surveying 11,545 California residents and 4,691 Oregon residents on their sleeping habits.  924 CA residents and 413 OR residents reported yes.
 
 \begin{parts}
-\part[10]  Write a process map that will allow you to answer the question if the percentage of respondents in Oregon that rpeort insufificent rest or sleep during the preceding 30 days is the same as the percentage of respondents in California.
+\part[10]  Write a process map that will allow you to answer the question if the percentage of respondents in Oregon that report insufficient rest or sleep during the preceding 30 days is the same as the percentage of respondents in California.
 
-\part[2] Write the null and alternative hypothesis for this question.
+\part[5] Write the null and alternative hypothesis for this question.
 
-\part[13] This is the output of a Monte Carlo simulation designed to answer the question.  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
+\part[15] This is the output of a Monte Carlo simulation designed to answer the question.  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
 
-<<echo=FALSE>>=
+<<echo=FALSE, fig=TRUE>>=
 #VERSION A
 set.seed(1234)
 pCA <- 924./11545
@@ -202,12 +358,12 @@ orsim <- function(i){
               deprived <- sum(sample(x=c(1,0), size=4691, prob = c(pCA, 1-pCA), replace = TRUE))
 }
 ORout <-sapply(1:10000, orsim)
-hist(ORout, breaks = 100, main = "Simulation of Oregon survey", xlab = "Number reporting yes")
 tailnulltrue <- length(ORout[ORout > 413])/length(ORout)
-print(tailnulltrue)
+#iint(tailnulltrue)
+hist(ORout, breaks = 100, main = "Simulation of Oregon survey", xlab = "Number reporting yes")
 @
 
-<<echo=FALSE>>=
+<<echo=FALSE, fig=TRUE>>=
 #VERSION B
 set.seed(4321)
 pCA <- 1097./11545
@@ -215,19 +371,62 @@ orsim <- function(i){
               deprived <- sum(sample(x=c(1,0), size=4691, prob = c(pCA, 1-pCA), replace = TRUE))
 }
 ORout <-sapply(1:10000, orsim)
-hist(ORout, breaks = 100, main = "Simulation of Oregon survey", xlab = "Number reporting yes")
 tailnulltrue <- length(ORout[ORout > 413])/length(ORout)
-print(tailnulltrue)
+#print(tailnulltrue)
+hist(ORout, breaks = 100, main = "Simulation of Oregon survey", xlab = "Number reporting yes")
 @
 
 \begin{solution}[4in]
 Process map:
 \begin{enumerate}
   \item  Calculate the probability of a California resident responding yes.
-  \item  Create a simulation that draws the number of Oregon responders, with the probability of yes being the same as the California resident.
+  \item  Create a simulation that draws the number of Oregon respondents, with the probability of yes being the same as the California resident.
   \item  Rerun that simulation 10000 times
   \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of OR residents that answered yes.
-  \item  The tail probability at that point is the p-value for the probability of that observation occuring if the null hypothesis is true.
+  \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
+\end{enumerate}
+
+\end{solution}
+\end{parts}
+
+\question Is yawning contagious?
+
+An experiment conducted by {\em MythBusters} a science entertainment TV program on the Discovery Channel, tested if a person can be subconsciously influenced into yawning if another person near them yawns.  50 people were randomly assigned to two groups: 34 to a group where a person near them yawned (treatment) and 16 to a group where there wasn't a person yawning near them (control).
+
+Of 34 people in the treatment group 10 yawned.  Of the 16 people in the control group, 4 yawned.
+\begin{parts}
+\part[10]  Write a process map that will allow you to answer the question if having a someone yawn near another prson has an influence on if the other person will yawn.
+
+\part[5] Write the null and alternative hypothesis for this question (from (a)).
+
+\part[15] This is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
+
+<<echo=FALSE, fig=TRUE>>=
+#VERSION A
+set.seed(1234)
+pControl <- 4./16
+sleepsim <- function(i){
+              deprived <- sum(sample(x=c(1,0), size=34, prob = c(pControl, 1-pControl), replace = TRUE))
+}
+sleepout <-sapply(1:10000, sleepsim)
+tailnulltrue <- length(sleepout[sleepout > 10])/length(sleepout)
+#iint(tailnulltrue)
+hist(sleepout, breaks = 34, main = "Simulation of sleep study", xlab = "Number who yawned")
+@
+
+
+\begin{solution}[4in]
+Process map:
+\begin{enumerate}
+  \item  Calculate the probability of a member of the control group yawning.
+  \item  Create a simulation that draws samples of the same size as the treatment group, with the probability of yes being the same as the control group.
+  \item  Rerun that simulation 10000 times
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the treatment group that yawned.
+  \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
+\end{enumerate}
+
+\end{solution}
+\end{parts}
 
 \end{questions}
 \end{document}
