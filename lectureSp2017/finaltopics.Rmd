@@ -1,7 +1,7 @@
 ---
 title: "Final topics"
 author: "IE 0015 Information Systems"
-date: "April 12, 2017"
+date: "April 17, 2017"
 output: html_document
 ---
 
@@ -23,9 +23,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Strings, Factors, Dates
 
 - Be able to describe the process of taking data and convert it to dates
+- Lecture 9
 
 ## Advanced Programming
 
+- Lecture 10
 -  Working with pipes
 -  dplyr
     -  Filter, mutate
@@ -37,11 +39,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Transforms and modeling
 
+- Lecture 11
 -  Scaling
 -  Implementing scaling
 
 ## Linear Regression
 
+-  Lecture 11, Lecture 12
 -  Representing multiple linear regression model
 -  Plotting residuals and interpreting residual plots
 -  Identifying variables to add to linear regression model
@@ -49,8 +53,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Simulation
 
+-  Lecture 13
 -  Use of Monte Carlo simulation
 -  Use of bootstrap simulation
--  Simulation for hypothesis testing
--  Interpreting simulation results for hypothesis testing
--  Interpretting p-values in simulation results
+-  **Simulation for hypothesis testing**
+-  **Interpreting simulation results for hypothesis testing**
+-  **Interpretting p-values in simulation results**

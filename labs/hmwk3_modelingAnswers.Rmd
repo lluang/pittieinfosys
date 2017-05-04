@@ -3,8 +3,8 @@ title: 'Homework 3: Transformations and Modeling'
 author: "IE 0015"
 date: "April 17, 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 For the homework assignments, code and narrative should be written using R Markdown.  Process maps can be written on separate pieces of paper. You should render the R Markdown as PDF or Word, print the output, and staple with the process maps for the complete submission.
@@ -40,7 +40,7 @@ $value \sim b0 + b1 * time\_period + b2 * seasonality\_factor$
 Download and load into the R the monthly sales data. Note that as part of importing the data into an R data frame you will need to edit the source file and adjust the parameters. In addition, if you attempt to import from Excel, beware of blank columns. (these are hard to see, best to explicitly delete columns that should be empty in Excel)
 
 ```{r}
-monthly_sales_of_company_x_jan_6 <- read_excel("monthly-sales-of-company-x-jan-6.xlsx", col_names = c("Month", "Sales"), col_types = c("date", "numeric"), skip=13)
+monthly_sales_of_company_x_jan_6 <- read_excel("monthly-sales-of-company-x-jan-6.xlsx", col_names = c("Month", "Sales"), col_types = c("date", "numeric"), skip=10)
 ```
 
   a. [4] You will need to create columns to represent the trend (total number of months) and the seasonality factor (month of the year). Using the Date field, create three fields: the year, the month of year (numeric), and the month of the study (this will go from 1 to 77).
@@ -58,7 +58,7 @@ iii. Look at the help page for `lubridate` to see how to pull out the month from
 ```{r}
 monthly_sales_of_company_x_jan_6 <- monthly_sales_of_company_x_jan_6 %>%
   filter(!is.na(Month))
-monthly_sales_of_company_x_jan_6$monthnum <- 1:74
+monthly_sales_of_company_x_jan_6$monthnum <- 1:77
 ```
 
 **ANSWER**
