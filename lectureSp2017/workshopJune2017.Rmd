@@ -2,7 +2,7 @@
 title: "R, R Studio, and Version Control"
 author: Louis Luangkesorn
 date: June 15, 2017
-output: 
+output:
   presentation: slidy_presentation
   document: html_document
 ---
@@ -11,7 +11,7 @@ output:
 
 - Getting started
 - Philosophy of R and R Studio
-- 
+-
 
 
 
@@ -48,7 +48,7 @@ R Packages
 =======
 
 - Packages have advanced statistical functionality
-- Written by the same people that write textbooks and journal articles. 
+- Written by the same people that write textbooks and journal articles.
 
 
 Example  ggplot2
@@ -64,6 +64,7 @@ Run code chunk (upper right of editor window) look at output in R Studio editor 
 
 ```{r}
 library(ggplot2)
+library(tidyverse)
 data(diamonds)
 summary(diamonds)
 ```
@@ -95,9 +96,9 @@ Code chunks
 - R Markdown allows for code to be embedded in documents
 - Use '```{r}' to begin a code block
 - Use '```' to end a code block
-- Code blocks can be run. 
+- Code blocks can be run.
   - Newer versions of R Studio will show output below the block in addition to the console.
-  
+
 ```{r}
 5+5
 ```
@@ -129,7 +130,7 @@ Lower right
 
 - File explorer
 - Plots from console
-- Packages installed 
+- Packages installed
 - Help file navigator
 - Viewer (latest rendering of R Markdown document)
 
@@ -145,7 +146,7 @@ Lower right
      - Used to group related information
      - Provide statistical functions with information about data types (e.g. numerical or factor)
      - This data type is what makes R (and Python, Julia, Scala) especially suited for data analysis.
-  
+
 ```{r}
 height <- c(150, 160, 154, 140, 200)
 class <- c("C", "A", "B", "A", "C")
@@ -180,27 +181,60 @@ Workflow in R
 R Markdown
 ========
 
+- Editor
 - Combines text (narrative) and R code in a single document.
 - Text can be formatted
-  - Normal text
-  - *italics*
-  - **bold**
+    - Normal text
+    - *italics*
+    - **bold**
 - Section headers
-  - H1 (top level) headers
-    - Underline using '='
-    - Single # before text
-  - H2 (second level) headers
-    - Underline using '-'
-    - Two ## before text
-  - Additional levels of headings using more '#'
-  
+    - H1 (top level) headers
+        - Underline using '='
+        - Single # before text
+    - H2 (second level) headers
+        - Underline using '-'
+        - Two ## before text
+    - Additional levels of headings using more '#'
+-  Mathematical symbols
+    - LaTeX markup available using '$' for inline $\frac{2}{3}$ or '$$' for separate lines
+    $$ax^2 + by^2$$
+
+R Studio tools
+===============
+
+-  Use of R Studio or R Commander tools generates R code in the History tab
+-  Copy code to source or console to re-run code or to save and edit code in R script.
+
+
+
+Rendering Markdown documents
+============================
+
+-  Type can be identified at document creation
+-  Additional document type options can be added to top of file
+-  'Knit'
+    - Documents:  HTML, PDF, Word (.docx)
+    - Presentations:  Beamer (LaTeX -> pdf), html slides (slidy, ioslides)
+-  Further documentation available on using Word, LaTeX, or html templates.
+
+
+Import data
+============
+
+-  `readxl` (part of `tidyverse`) package is used to read data from an Excel Spreadsheet
+-  Data is read into a data frame
+-  Various functions allow for import of csv, text tables, various databases (via specialized packages or ODBC, but not MS Access)
+-  From web (json)
+
+
+
 Data frames
 ==============
 
 - List of lists
-- Combines data related to a dataset 
+- Combines data related to a dataset
 - Maintains knowledge of data types of each data element
-- Many R functions and packages require that data are in a data frame so that type information is available.
+- Many R functions and packages (e.g. tidyverse family) require that data are in a data frame so that type information is available.
 
 ```{r}
 summary(diamonds[1:10,1])
@@ -211,6 +245,207 @@ diamonds[1:3,c(1, 3, 5)]
 ```{r}
 dsmall = diamonds[sample(nrow(diamonds),200),]
 ```
+
+
+
+Things that we need to be able to do with data
+===============================================
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+In dplyr
+--------
+
+-  filter() (and slice())
+-  arrange()
+-  select() (and rename())
+-  distinct()
+-  mutate() (and transmute())
+-  summarise()
+-  sample_n() (and sample_frac())
+
+
+```{r}
+hogwartstudents <- data.frame(c("Cedric","Fred","George","Cho","Draco","Ginny"),
+                       c(3,2,2,1,0,-1),
+                       c("H", "G", "G", "R", "S", "G"))
+names(hogwartstudents) <- c("name", "year", "house") # name the columns
+```
+
+
+Filter
+========
+
+```{r filtergryffindor}
+hogwartstudents[hogwartstudents$house=="G",]
+```
+```{r}
+hogwartstudents %>% filter(house=='G')
+```
+
+Arrange
+==========
+```{r sorthogwarts}
+hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
+```
+
+```{r}
+hogwartstudents %>% arrange(year, name)
+```
+
+Select columns
+==============
+
+```{r columnshogwarts}
+hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
+```
+
+```{r}
+hogwartstudents %>% select(name, house)
+```
+
+Summarize (Group By)
+====================
+```{r summarizehogwarts}
+hogwartstudents %>%
+  group_by(house) %>%
+  summarize(number=n())
+```
+Random sample
+====================
+```{r studentsrandom}
+hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
+```
+```{r}
+hogwartstudents %>% sample_frac(size = 0.5)
+```
+
+Joins
+=======
+
+```{r}
+library(nycflights13)
+flights2 <- flights %>% select(year:day, hour, origin, dest, tailnum, carrier)
+head(flights2)
+```
+```{r}
+head(airlines)
+```
+```{r}
+flights2 %>%
+  left_join(airlines) %>%
+    head()
+```
+
+Thinking about aggregation
+========================
+
+-  What are the groups that are useful to aggregate on?
+-  What is the nature of data to be operated on?
+-  What is the desired end result.
+
+Using dplyr
+===========
+
+-  Use `group_by` and `summarize` functions
+
+```{r}
+diamonds %>% group_by(color, clarity) %>%
+  summarize(Count = n(), AvgPrice = mean(price)) %>%
+    head()
+```
+
+The apply family of functions
+=============================
+
+-  In programming languages that have functional features (e.g. R, Matlab), we generally do not use for loops to loop through data.
+-  If data is organized in a matrix, array, or vector, we can **map** a function to the data structure.
+-  Apply the function so summarize the data into a single dimension.
+
+Some members of the apply family of functions
+===========================
+
+Function name  | Description
+--------------------|------------------
+apply  |  Apply function over array margin
+by     | Apply function to a data frame split by factors
+lapply | Apply function over a list or vector (returns list)
+sapply | Apply function over a list or vector (returns vector or matrix)
+aggregate | Summaries over columns of a data frame.
+tapply | Apply function over a ragged array
+
+apply:
+=======
+
+-  Apply function over array margins
+-  *Margins* are the dimensions of the array (row = 1, columns = 2)
+
+```{r}
+# create a matrix of 10 rows x 2 columns
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+# mean of the rows
+apply(m, 1, mean)
+# mean of the columns
+apply(m, 2, mean)
+# divide all values by 2
+apply(m, 1:2, function(x) x/2)
+```
+
+
+```{r}
+library(reshape2)
+aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean)
+```
+
+tapply
+======
+
+-  Processes a single vector based on the values of one or more grouping vectors
+
+```{r}
+maxcarat <- tapply(diamonds$carat, diamonds$color, max)
+maxcarat
+```
+Mapping a function to a vector or list
+====================
+
+- `lapply` - Returns output as a list
+-  `sapply` - returns output as a vector or matrix (if possible)
+-  Note: returning a vector implies that order is important, e.g. the results are matched to another vector.
+
+Example for a mapping
+=============
+
+-  Break out individual words for each sentence.
+-  Unknown number of words in each sentence, so use a list for each sentence.
+
+```{r}
+text = c("R is a free environment for statistical analysis",
+ "It compiles and runs on a variety of platforms",
+ "Visit the R home page for more information")
+result = strsplit(text, " ")
+result
+typeof(result)
+```
+
+Now, take the list and get the length of each sentence
+==================
+
+- Because we want the length to be associated with the sentence, use `sapply`
+
+```{r}
+nwords = sapply(result, length)
+nwords
+```
+
+
+
 Grammer of graphics
 ===========
 
@@ -237,7 +472,8 @@ Aesthetics - appearance
 - Change the appearance of data elements using aesthetics.
 - Color, shape, size, transparency (alpha), etc.
 - Each aesthetic displays an additional aspect of the data.
-***
+
+
 ```{r}
 library(ggplot2)
 ```
@@ -259,8 +495,8 @@ Faceting
 -  How data will be divided among multiple plots
 -  Note the use of the function format
    *y ~ x*
-***
-```
+
+```{r}
 ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(color ~ .)
 ```
 
@@ -269,7 +505,7 @@ Faceting horizontally
 
 
 -  Change the order of the function in the facet_grid to layout facets horizontally
-```
+```{r}
 ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(. ~ color)
 ```
 
@@ -283,7 +519,7 @@ Scaling
   -  Cartesian (rectangular)
   -  Polar
   -  Spherical
-  
+
 
 
 Layering
@@ -292,17 +528,17 @@ Layering
 -  The mechanism by which we add data elements to a plot.
 -  In qplot, each layer must come from a single dataset and single set of aesthetic mappings.
 -  In ggplot, layers can come from different datasets and aesthetic mappings.
-- `layer(geom, geom_params, stat, stat_params, data, mapping)` 
+- `layer(geom, geom_params, stat, stat_params, data, mapping)`
   -  *mapping*
   -  *data* (if not the default from the call to *ggplot*)
   -  *geom* and *stat* - There is a default *stat* for each *geom*, and a default *geom* for each *stat*, so you only need to define one.
   -  *position*
-  
+
 Position adjustments
 ============
 
 -  `dodge` - Dodge overlaps to the side
--  `fill` - Stack overlapping objects and 
+-  `fill` - Stack overlapping objects and
 -  `identity` - Don't adjust position
 -  `jitter` - Jitter points to avoid overplotting
 -  `stack` - Stack overlapping objects on top of each other
@@ -363,7 +599,7 @@ Let's add in some options such as a statistic
 - stat = bin identifies how grouping will be done for the bar (histogram)
 
 ```{r}
-dbar = ggplot(dsmall) + aes(x = carat) + 
+dbar = ggplot(dsmall) + aes(x = carat) +
   geom_histogram(binwidth = 0.1)
 dbar
 ```
@@ -547,7 +783,7 @@ Area
 left:
 
 ```{r}
-d <- ggplot(diamonds, aes(carat)) 
+d <- ggplot(diamonds, aes(carat))
 d + stat_bin(aes(ymax = ..count..), binwidth = 0.1, geom = "area")
 ```
 ***
@@ -595,7 +831,7 @@ d + geom_boxplot()
 ```
 
 ```{r}
-d + geom_violin() 
+d + geom_violin()
 ```
 
 
@@ -704,7 +940,7 @@ Faceting
 -  Using the same dataset, create a set of graphs for different selections of the data.
 
 ```
-d <- ggplot(diamonds, aes(x = carat)) + geom_density() 
+d <- ggplot(diamonds, aes(x = carat)) + geom_density()
 d + facet_grid(. ~ clarity)
 ```
 
@@ -729,179 +965,1214 @@ t = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
 show(t)
 ```
 
-Using *readxl*
-=================
 
--  You can load a workbook (Excel file)
--  Then read a worksheet
--  The sheet is read in as a data.frame
+Probability and statistics
+==========================
 
-SQL
-======
+-  Most people know R as a statistical data analysis software.
+-  See Introduction to R and package documentation.
 
-- We can replace all of the `JOIN` operations from SQL in R as well.
-- One way is to use logical statements in the brackets (as in above)
-- Another way is to use the `join` and `filter` statements from the `dplyr` package (part of `tidyverse`)
-
-```{r}
-library(dplyr)
-library(magrittr)
-hogwartstudents <- data.frame(c("Cedric","Fred","George","Cho","Draco","Ginny"),
-                       c(3,2,2,1,0,-1),
-                       c("H", "G", "G", "R", "S", "G"))
-names(hogwartstudents) <- c("name", "year", "house") # name the columns
-```
-
-Things that we need to be able to do with data
-===============================================
-
-1.  Filter (SELECT)
-2.  Arrange (SORT BY)
-3.  Select columns
-5.  Distinct rows (UNIQUE)
-6.  Mutate (new columns)
-7.  Summarize (GROUP BY)
-8.  Random sample
-
-Filter
-========
-
-```{r filtergryffindor}
-hogwartstudents[hogwartstudents$house=="G",]
-```
-```{r}
-hogwartstudents %>% filter(house=='G')
-```
-
-Arrange
-==========
-```{r sorthogwarts}
-hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
-```
-
-Select columns
-==============
-
-```{r columnshogwarts}
-hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
-```
-
-```{r}
-hogwartstudents %>% select(name, house)
-```
-
-Summarize (Group By)
-====================
-```{r summarizehogwarts}
-hogwartstudents %>% 
-  group_by(house) %>%
-  summarize(number=n())
-```
-Random sample
-====================
-```{r studentsrandom}
-hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
-```
-
-Joins
-=======
-
-```
-acshousing$TEN <- as.factor(acshousing$TEN)
-acshousing %>% 
-  left_join(tenure) %>% 
-    select(SERIALNO, PUMA, ST, TEN)
-```
-
-Thinking about aggregation
-========================
-
--  What are the groups that are useful to aggregate on?
--  What is the nature of data to be operated on?
--  What is the desired end result.
-
-The apply family of functions
-=============================
-
--  In programming languages that have functional features (e.g. R, Matlab), we generally do not use for loops to loop through data.
--  If data is organized in a matrix, array, or vector, we can **map** a function to the data structure.
--  Apply the function so summarize the data into a single dimension.
-
-Some members of the apply family of functions
-===========================
-
-Function name  | Description
---------------------|------------------
-apply  |  Apply function over array margin
-by     | Apply function to a data frame split by factors
-lapply | Apply function over a list or vector (returns list)
-sapply | Apply function over a list or vector (returns vector or matrix)
-aggregate | Summaries over columns of a data frame.
-tapply | Apply function over a ragged array
-
-apply: 
-=======
-
--  Apply function over array margins
--  *Margins* are the dimensions of the array (row = 1, columns = 2)
-
-```{r}
-# create a matrix of 10 rows x 2 columns
-m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
-# mean of the rows
-apply(m, 1, mean)
-# mean of the columns
-apply(m, 2, mean)
-# divide all values by 2
-apply(m, 1:2, function(x) x/2)
-```
-
-
-```{r}
-library(reshape2)
-#library(ggplot2) #loads reshape2 package
-#data(diamonds)
-#summary(diamonds)
-aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean)
-```
-
-tapply
-======
-
--  Processes a single vector based on the values of one or more grouping vectors
-
-```{r}
-maxcarat <- tapply(diamonds$carat, diamonds$color, max)
-maxcarat
-```
-Mapping a function to a vector or list
-====================
-
-- `lapply` - Returns output as a list
--  `sapply` - returns output as a vector or matrix (if possible)
--  Note: returning a vector implies that order is important, e.g. the results are matched to another vector.
-
-Example for a mapping
+Graphic User Interfaces
 =============
 
--  Break out individual words for each sentence.
--  Unknown number of words in each sentence, so use a list for each sentence.
+- Most people are used to using computers with Graphic User Interfaces.
+- With little skill, you can find what you need in a menu driven interface.
+- In R, there is the R Commander interface
+    - http://www.rcommander.com/
 
 ```{r}
-text = c("R is a free environment for statistical analysis",
- "It compiles and runs on a variety of platforms",
- "Visit the R home page for more information")
-result = strsplit(text, " ")
-result
-typeof(result)
+library(Rcmdr)
 ```
 
-Now, take the list and get the length of each sentence
-==================
+R Commander
+=============
 
-- Because we want the length to be associated with the sentence, use `sapply`
+- Starts an GUI window
+- Select data sets
+- Load libraries
+- Work with R Markdown
+- Basic statistics and graphics
+- Analysis run in R Studio console
+
+R Commander extensions
+=============
+
+-  Most extensions were written by textbook authors
+-  Result is a GUI statistics package that is the convex hull of topics in the first few statistics courses.
+```{r}
+library(RcmdrPlugin.IPSUR)
+library(RcmdrPlugin.HH)
+```
+
+
+Probability
+=============
+
+-  R contains a full set of probability tables.
+-  See Introduction to R Section 8.1 for the base set
+-  More specialized probability distributions are available in various packages that need them.
+-  For each probability distribution, four functions exist
+    - 'd' - Probability density function (pdf)
+    - 'p' - Cumulative density function (cdf)
+    - 'q' - Quantile function (reverse cdf)
+    - 'r' - Random sample
+
+Examples
+=============
+
+pnorm(q = 3, mean=0, sd=1)
 
 ```{r}
-nwords = sapply(result, length)
-nwords
+pnorm(q = 3, mean=0, sd=1)
+```
+
+qnorm(p=0.975, mean=0,sd=1)
+
+```{r}
+qnorm(p=0.975, mean=0,sd=1)
+```
+
+rexp(n = 10, rate = 10)
+
+```{r}
+rexp(n = 10, rate = 10)
+```
+
+Fitting distributions
+=============
+
+-  A common task is to take observed data, and identifying a distribution family that closely matches this and determines the correct parameters.
+-  Use shape as a guess to the fitted distribution.
+-  Kolmogorov-Smirnoff test statistic
+-  Use 3rd and 4th moments to check distribution family.
+-  Use fitted distribution in simulation models
+-  Gain insight into the underlying data.
+-  Actual observations may be unusable
+    - There may be an unmeasurable intervention that effects the observation.
+
+fitdistrplus package
+=============
+
+```{r}
+library(fitdistrplus)
+```
+
+Example - Births in Brisbane
+=============
+
+Forty-four babies -- a new record -- were born in one 24-hour period at the Mater Mothers' Hospital in Brisbane, Queensland, Australia, on December 18, 1997. For each of the 44 babies, The Sunday Mail recorded the time of birth, the sex of the child, and the birth weight in grams.
+
+Birth minute of day
+=============
+
+```{r}
+birthminutes = c(5, 64, 78, 115, 177, 245, 247, 262, 271, 428,
+                455, 492, 494, 549, 635, 649, 653, 693, 729, 776,
+                785, 846, 847, 873, 886, 914, 991, 1017, 1062, 1087,
+                1105, 1134, 1149, 1187, 1189, 1191, 1210, 1237, 1251, 1264,
+                1283, 1337, 1407, 1435)
+birthminutes
+```
+
+Calculate interbirth time
+=============
+
+```{r}
+interarrival = birthminutes[2:length(birthminutes)] -  birthminutes[1:length(birthminutes)-1]
+interarrival
+```
+
+Look at interarrival distribution
+=============
+
+plotdist(interarrival)
+
+```{r}
+library(fitdistrplus)
+plotdist(interarrival)
+```
+
+Look at 3rd and 4th moments
+=============
+
+descdist(interarrival)
+
+```{r}
+descdist(interarrival)
+```
+
+fit parameters
+=============
+
+baby <- fitdist(interarrival, distr = "exp")
+
+
+```{r}
+baby <- fitdist(interarrival, distr = "exp")
+summary(baby)
+```
+
+Check goodness of fit
+=============
+
+denscomp(baby)
+qqcomp(baby)
+cdfcomp(baby)
+ppcomp(baby)
+
+```{r}
+par(mfrow = c(2, 2))
+
+denscomp(baby)
+qqcomp(baby)
+cdfcomp(baby)
+ppcomp(baby)
+par(mfrow = c(1,1))
+```
+
+Statistical goodness of fit test
+=================
+
+- Apply Kolmogorov-Smirnoff test for goodness of fit.
+
+```{r}
+gofbaby <-gofstat(baby)
+gofbaby
+gofbaby$kstest
+```
+
+
+Simulation
+=============
+
+```{r}
+library(ggplot2)
+library(foreach)
+library(deSolve)
+```
+
+
+
+Simulation in data analysis
+=============================
+
+-  Simulation is the use of sampling through random numbers to obtain a distribution of a dependent variable.
+-  e.g. Discrete event simulation (IE 1083), Monte Carlo simulation
+-  Useful when we do not have a direct way of determining the value of a dependent variable.
+
+Some types of computer simulation
+================
+
+-  Monte Carlo
+-  Bootstrap (resampling)
+-  Discrete event simulation
+-  Continuous simulation
+-  Agent based simulation
+
+Monte Carlo
+=====================
+
+Monte Carlo Simulation
+==============
+
+-  Based on repeated use of random numbers.
+    -  Name refers to the casinos in Monte Carlo by France
+-  If the problem can be stated as the interaction of independent random numbers
+- Often used for integration type problems. (area under the curve or probability)
+
+
+Random numbers in R
+===================
+
+
+
+Example of Monte Carlo
+=================
+
+- Generate 1000 x,y pairs where
+    - $x \sim U(0,1)$
+    - $y \sim U(0,1)$
+- Test if this is true
+
+$$x^2 + y^2 <=1$$
+
+In R
+========
+
+```{r}
+maxi = 1000
+i = (1:maxi)
+x <- runif(maxi)
+y <- runif(maxi)
+incircle <- ifelse(x^2 + y^2 <= 1, 1.0, 0.0)
+ratio <- unlist(foreach(i=1:maxi) %do% mean(incircle[1:i]))
+```
+
+Monte Carlo
+============
+
+```{r}
+head(ratio)
+```
+
+- What is this doing?
+
+Trend of `mean(incircle[1:i]))`
+==============
+```{r}
+plot(1:maxi, ratio)
+title("mean(incircle[1:i])")
+```
+
+Monte Carlo convergence
+======================
+
+-  Run Monte Carlo until the confidence interval of the estimate of the mean is within a certain tolerance.
+-  Take the first 30 iterations (Monte Carlo runs are fast)
+-  Compute the sample standard deviation $s$.
+-  Solve for $n$
+
+$$CI = z_{\alpha/2} s/\sqrt{n}$$
+```{r}
+meanratio <-mean(incircle)
+sdratio <- sd(incircle)
+print(meanratio, digits = 10)
+print(sdratio, digits = 10)
+```
+```{r}
+ci = pnorm(q = 0.975) * sdratio/sqrt(maxi)
+print(ci)
+```
+
+Usually, set ci to be some fraction of mean and solve for n
+==============
+
+$$n = \left(\frac{z_{(1-\alpha/2)} * S}{\bar{x} * 0.05}\right)$$
+
+
+Bootstrap
+======
+
+Resampling methods
+==============================
+
+-  Each determination of the dependent variable (performance measure) based on random simulation is a *sample*.
+-  Results in a *sampling distribution* of the dependent variable.
+    - Note: this is *not* the same as a single, "correct" answer.
+    - Answers in statistics are given as probability distributions.
+        - `There is a 95% probability that the true average is between __ and __`
+-  We assume there is a true underlying distribution. The simulation allows us to have an estimate of it.
+
+Advantages of simulation
+==============================
+
+-  Fewer assumptions:  we do not require that the underlying population is normally distributed or that the sample size is large.
+-  Greater accuracy: Many statistical methods are based on having rough upper bounds or use Taylor series expansions.  Simulations can be replicated based on the desired accuracy.
+-  Generality - Resampling methods can be applied to a large class of problems, so do not require developing and implementing methods specific to that problem definition.
+-  What if? - We can use samples to create a study population with certain characteristics (e.g. oversample currently underrepresented sub-population) and explore what would happen if the current population changes.
+
+
+Using bootstrap sampling
+=======================
+
+-  We have a small enough of observed data but not enough to identify a distribution.
+-  *Bootstrap* - resample with replacement from the observed data.
+
+Steps in the bootstrap
+=========================
+1.  Create samples of the independent variables $x_1^*, ..., x_M^*$, called *resamples*, by sampling *with replacement* from the data.
+
+2.  Calculate the statistic of interest $S(x_1^*), ..., S(x_M^*)$ for each resample. The distribution of the result of the resample is the *bootstrap distribution*.
+
+3.  The bootstrap distribution gives information about the sampling distribution of the original, unobservable, statistic *S*.  It gives an approximation of the center, spread, and shape of *S*.
+
+Standard errors
+=================
+
+-  Errors from bootstrapping come from two sources
+    -  The observed data does not the same exact distribution as the population from which it was drawn.
+    -  The resampled sample will have a different distribution than the observed data.
+
+Standard error example
+============================
+
+-  Look at a sample where the underling population is normally distributed $X \sim N(\mu=3, \sigma=1)$.
+-  Look at $\bar{x}$
+-  We know that $\bar{x} \sim N(\mu, 1/\sqrt{n})$
+-  Take mean of 25 samples $N(3,1)$ (sd = $1/\sqrt{25}$)
+-  1000 samples
+
+Example
+=====
+
+
+```{r}
+options(digits=2)
+srs <- rnorm(25, mean = 3)
+resamps <- replicate(1000, sample(srs, 25, TRUE), simplify = FALSE)
+xbarstar <- sapply(resamps, mean, simplify = TRUE)
+hist(xbarstar, breaks = 40, prob = TRUE, xlim=c(2, 4),
+  main="Mean of 25 N(3,1) distributions, 1000 replications",
+  xlab="Mean of replication")
+curve(dnorm(x, 3, 0.2), add = TRUE)
+```
+
+Compare simulation to the theoretical mean
+=========================================
+
+-  Expected confidence interval of the mean
+    - $sd/\sqrt{n} = 1/\sqrt{25} = 0.2$
+```{r}
+print(mean(xbarstar), digits=10)
+print(sd(xbarstar), digits=10)
+```
+-  Within expectation
+
+Improving the errors
+======================
+
+-  What would happen if we took more samples?
+-  More samples would make the sample look more like the observed data.
+    - Does not make the observed data closer to the true underlying population distribution.
+
+Implementing using the boot package
+===================
+
+-  The function `boot` is in the *boot* package.
+-  Define a summary function, then apply it using bootstrap.
+
+```{r}
+library(boot)
+mean_fun <- function(x, indices) mean(x[indices])
+boot(data = srs, statistic = mean_fun, R = 1000)
+```
+
+Try the same thing with a different statistic
+========================
+
+```{r}
+median_fun <- function(x, indices) median(x[indices])
+boot(data = rivers, statistic = median_fun, R = 1000)
+```
+
+Confidence intervals
+===================
+
+- Typically, we calculated confidence intervals by assuming that outputs were normally distributed.
+    - e.g. use c.i. as a function of the *t*-distribution.
+- Using simulation, we can apply the definition of the c.i. directly.
+    - `95% of the estimates are between __ and __`
+    - Using simulation, use the 0.025 and 0.975 quantiles of the simulation results. (e.g. equal tails)
+    - Another choice if you believe that the distribution is to use the smallest range that gives a 0.95 interval.
+        - Question: Why are these not the same thing?
+
+C.I. example
+====================
+
+```{r}
+btsamps <- replicate(2000, sample(stack.loss, 21, TRUE), simplify = FALSE)
+thetast <- sapply(btsamps, median, simplify = TRUE)
+mean(thetast)
+```
+
+Percentile interval of the median
+===============
+```{r}
+median(stack.loss)
+quantile(thetast, c(0.025, 0.975))
+```
+
+Now, using the boot function
+===============
+```{r}
+med_fun <- function(x, ind) median(x[ind])
+med_boot <- boot(stack.loss, med_fun, R = 2000)
+boot.ci(med_boot, type = c("perc", "norm", "bca"))
+```
+
+Note: *bca* = bias-corrected and adjusted
+
+Use with the t-interval
+=======================
+
+- We usually use the *t*-statistic to calculate confidence intervals.
+
+$$\bar{X} \pm t_{\alpha/2, df=n-1}\frac{S}{\sqrt{n}}$$
+
+-  If we know that our outcome statistics will be bell shaped (e.g. symmetric with a shape similar to the normal), we can use the *t*-statistics along with our bootstrap
+
+$$statistic  \pm t_{\alpha/2, df=n-1} * SE(statistic)$$
+
+
+Hypothesis testing
+====================
+
+Used to test if two groups are significantly different or if two groups are reasonably similar.  Standard method
+
+- Collect information/data from the two groups and calculate a statistic for comparison.  e.g.
+  $$\bar{X}_1 - \bar{X}_2$$
+- Presume there is no difference between the groups ($H_0$).  Find the distribution of the statistic in 1.  e.g. assume *mean=0* and calculate *sd*
+- Locate the observed value of the statistic with respect to the distribution found in 2. If the value is not in the main body of the distribution, then it provides evidence *against* the null hypothesis.  We usually compute the *p*-value to decide this.
+
+Hypothesis testing with simulation
+====================
+
+
+-  Example: the common dosage for an anti-retroviral drug AZT is 300mg. Higher doses are potentially more effective, but also have more side effects. Question: are the side effects significantly higher?
+
+1.  Calculate the difference in means between two groups: AZT with 300 mg and AZT with 600 mg dose.
+
+```{r}
+azt300 <- c(284, 279, 289, 292, 287, 295, 285, 279, 306, 298)
+azt600 <- c(298, 307, 297, 279, 291, 335, 299, 300, 306, 291)
+mean(azt300, digits=1)
+mean(azt600, digits=1)
+delta300600 <- mean(azt600) - mean(azt300)
+delta300600
+```
+
+Significance with bootstrap
+===========================
+
+2.  Resample from the data to generate a distribution of differences.
+    -  Presuming there are no differences, sample 10 from the *combined* data to generate a *a300* group, with the remainder in the *a600* group. (*Q: why 10?, why the combined group?*)
+    -  Calculate and save the differences in mean.
+3.  Draw the *permutation distribution* of these differences. Locate the observed difference that you observed when you had two distinct datasets (300.3-298.4 = 10.9) and determine its *p-value* from the *permutation distribution*. If *p* is small, this is evidence against the null hypothesis
+
+```{r}
+set.seed(1234)
+permdistfun <- function(azt){
+  pdelta <- c()
+  tf10 <- c(rep(FALSE, 10), rep(TRUE, 10))
+  select <- sample(tf10, 20, replace =FALSE)
+  azt3 <- azt[select]
+  azt6 <- azt[!select]
+  delta <- mean(azt6)-mean(azt3)
+  delta
+}
+```
+
+
+Now, apply bootstrap and to get the permutation distribution
+=====
+```{r}
+azt <- c(azt300, azt600)
+samples = 1000
+pdist <- sort(replicate(samples,permdistfun(azt)))
+```
+```{r, echo=FALSE}
+summary(pdist)
+hist(pdist, breaks=seq(-20, 20, by=1))
+```
+
+
+Find the p-value of the observed difference
+=================
+```{r}
+qdist <- max(which(pdist<delta300600))/samples
+pvalue <- min(qdist, 1-qdist)
+pvalue
+```
+
+Compare to normal hypothesis testing
+==========================
+
+- the `t.test` function can be used for one or two sample t-tests on vectors of data
+- Q: how would you use this for a paired t-test?
+
+```{r}
+t.test(x=azt300, y=azt600)
+```
+
+-  Why the difference?
+
+
+Another example - Categorical variables
+====================
+
+- Claim (HA) is that a treatment leads to a change in the population from the control.
+- Null hypothesis is that the treatment has not change.
+- Simulate the sample the size of a treatment, and determine the $p$ that observed values were seen.
+
+Quadcopter rotor blades
+==========
+
+A quadcopter company is considering a new manufacturer
+for rotor blades. The new manufacturer would be more expensive but their higher-quality blades are more reliable, resulting in happier customers and fewer warranty
+claims. However, management must be convinced that the more expensive blades are worth the conversion before they approve the switch.
+
+If there is strong evidence of a more than 3\% improvement in the percent of blades that pass inspection, management says they will switch suppliers, otherwise they will maintain the current supplier.
+
+Data
+=======
+
+Rotor blade failures
+
+Group           Pass    Fail
+-------------- ------ --------
+Current         899     101
+Prospective     958     42
+
+```{r}
+rotor <- data.frame(pass = c(899, 958),
+                    fail = c(101, 42))
+pfailnull <- sum(rotor$fail[1])/sum(rotor)
+```
+
+Simulate assuming that all data is from the control group
+==========================
+```{r}
+rotorsim <- function(i){
+              successes <- sum(sample(x=0:1, size = 1000, replace=TRUE, prob=c(pfailnull, (1-pfailnull))))
+}
+rotorout <-sapply(1:10000, rotorsim)
+```
+
+Look at the histogram of the result and find the HA
+======================
+```{r}
+hist(rotorout, breaks = 100)
+```
+
+```{r}
+print(length(rotorout[rotorout>958])/length(rotorout))
+```
+
+Other types of simulation
+========
+
+Continuous simulation
+=================
+
+- AKA system dynamics
+- Change in system state described by differential equations
+- Simulate by advancing state of system in time steps
+- Example: the Susceptible-Infected-Recovered (SIR) model of infectious diseases
+
+SIR model
+===========
+
+$$\frac{dS}{dt} = \frac{-\lambda}{N} I S$$
+$$\frac{dI}{dt} = \frac{-\lambda}{N} I S - v I$$
+
+$$\frac{dR}{dT} = vI$$
+
+-Where
+    - $\lambda$ is the force of infection, where $\lambda$ is a function of the contact rate and the probability of transmission per contact,
+    - v is the recovery rate,
+    - S is the number of susceptible individuals at a given time,
+    - I is the number of infected individuals at a given time,
+    - R is the number of recovered individuals at a given time.
+
+Same model in R as differential equations
+=======
+
+- The `FME` package is used to solve systems of Ordinary Differential Equations (ODE)
+    - Initial Value Problems - You have a model, and observed data, now you want to find parameters to the model
+    - The general package for differential equations (which is called by `FME`) is `deSolve`
+- Note we do not include $R$ because that is an absorbing state.
+
+```{r}
+library("FME")
+
+twocomp <- function (time, y, parms, ...) {  
+  with(as.list(c(parms, y)), {
+    dS <- -L*I*S/N
+    dI <-  L*I*S/N - v*I  
+    dN <- 0
+    list(c(dS, dI, dN))
+  })
+}
+```
+
+Solving for an infection at a school
+===================================
+
+- We will parameterize this system of equations for an epidemic that occurred in an English boarding school.
+- Next, we will input the available initial value data. For this model the data given is in increments of days.
+    - I(t) is given for all days  
+    - S(t) is just given for day 3 (the first day in the data). Hence we use 'NA' in all the remaining S(t).
+
+```{r}
+dat <- data.frame(
+  time = seq(3, 14, 1),
+   I = c(25,75,227,296,258,236,192,126,71,28,11,1),  
+  S = c(738,NA,NA, NA, NA, NA, NA, NA, NA,NA,NA,NA)
+)
+```
+
+Guess initial parameters
+==============
+
+- Initial guess of the parameters L and v are made. This does not have to be close and can be made from intuition. Then the data is plotted.
+- $lambda=0.005, v = 0.3$
+- Note that we also provided S(1) and I(1)
+
+```{r}
+params <- c(L = 1.0, v = 0.5)
+times <- seq(0, 14)
+y0 <- c(S = 762,I  = 1, N=763)
+out1 <- ode(y0, times, twocomp, params)
+plot(out1, obs = dat)
+```
+
+
+Next, the cost function
+============
+```{r}
+cost <- function(p) {
+  out <- ode(y0, times, twocomp, p)
+  modCost(out, dat, weight = "none") # try weight = "std" or "mean"
+}
+```
+
+Fit the model and compare model with fitted parameters against data
+==============
+
+```{r}
+fit <- modFit(f = cost, p = params)
+summary(fit)
+```
+
+Plot output with the fitted parameters
+============
+```{r}
+out1 <- ode(y0, times, twocomp, params)  
+out2 <- ode(y0, times, twocomp, coef(fit))  
+plot(out1, out2, obs=dat, obspar=list(pch=16, col="red"))
+```
+
+What we would be interested in is the maximum infected
+=========
+```{r}
+summary(out2)
+```
+
+Now, we can repeat with larger populations
+================
+
+```{r}
+times <- seq(0, 25)
+y0 <- c(S = 100000,I  = 1, N=100001)
+out3 <- ode(y0, times, twocomp, coef(fit))
+plot(out3)
+```
+
+And statistics in the new population
+========================
+```{r}
+summary(out3)
+```
+
+Discrete event simulation
+=============
+
+- Create entities that interact with each other.
+- Simulation advanced based on when the next interaction will be (discrete time step)
+- This will be covered IE 1083
+    - Models tend to be easier to build using a package like Arena or Simio.
+    - Programming language based simulation more flexible in analysis.
+    - In R, there is the `simmer` package that implements DES.
+
+Agent based simulation
+==================
+
+- Entities in system (agents) have information.
+- At each interaction, the agents involved use the information they have to make a decision on what to do next.
+- E.g. disease modeling. If two people interact, check to see if one is already infected, then determine if the infection spreads.
+
+Summary
+======
+
+-  Simulation often used when some data is unobservable.
+    -  Ask the question: could I have seen the result I saw if *X* was true?
+-  Resampling can be used for hypothesis testing in the case of little data or if normal assumption is not true.
+    -  Bootstrapping can be used to identify what the system would look like if more data were available or if the source population changes.
+
+
+
+R Packages
+=============
+
+-  R is primarily known as a data analysis environment
+    -  The other data analysis environments people know of are statistical software.
+    -  R is comparable to the two top tier statistical environments SAS, SPSS.
+-  R is also a programming environment
+    -  This is how we use R in this course
+-  The strength of R is in its packages (libraries)
+-  R packages allow it to be used in many settings
+
+R and the IE curriculum
+=============
+
+-  This lecture is meant to be a reference in how to apply the use of concepts you cover in the IE curriculum and real world settings.
+-  The standard first task of any mathematical modeling and analysis is data manipulation.
+    -  This course focuses on data manipulation.
+    -  After the data has been manipulated into usable form, you can use R to apply what you used in your other classes.
+-  Packages we will cover in this lecture that relate to the IE curriculum.
+    -  Graphic User Interfaces
+    -  Probability
+    -  Advanced statistics
+    -  Symbolic math
+    -  Differential equations
+    -  Linear algebra
+    -  Linear programming
+    -  Simulation
+
+Evaluating packages
+=============
+
+-  When evaluating a package for usefulness, look for:
+    -  User guide/vignette in help files.
+    -  Peer reviewed article describing implementation and use.
+    -  Published book that uses the package.
+
+Why use R (or a programming based analysis environment)
+================
+
+-  The method you are using is part of a larger workflow
+    -  You need to do data manipulation in a programming environment, R allows you to stay in that environment for analysis.
+    -  Many commercial tools do not work well together
+-  You need to deploy the resulting model to many places
+    -  You can deploy it to many computers
+    -  Many of the other tools are expensive per seat. R is free to deploy.
+
+
+Symbolic math
+=============
+
+- `rSympy` provides symbolic math capability
+- Uses the Python package `sympy`
+- Covers calculus, equation solvers, algebra, etc.
+- Think of it as a low-end counterpart to Mathematica
+- Treats symbols as symbols until you need to evaluate them numerically.
+
+Use of `rSympy`
+=============
+```
+library(rSymPy)
+```
+
+```{r}
+library(rSymPy)
+```
+- Declare variables to be algebraic variables.
+- Declare equation
+- Solve
+
+```
+x<-Var("x")
+x+x
+```
+
+```{r}
+x<-Var("x")
+x+x
+```
+```
+y <- Var("x**3")
+x/y
+```
+
+```{r}
+y <- Var("x**3")
+x/y
+```
+
+```
+z <- sympy("2.5*x**2")
+z + y
+```
+
+```{r}
+z <- sympy("2.5*x**2")
+z + y
+```
+
+```
+sympy("diff(cos(x), x)")
+```
+```{r}
+sympy("diff(cos(x), x)")
+```
+```
+sympy("a = x**2+2*x+1")
+sympy("b = (x+1)**2")
+sympy("simplify(a-b)")
+```
+
+```{r}
+sympy("a = x**2+2*x+1")
+sympy("b = (x+1)**2")
+sympy("simplify(a-b)")
+```
+
+```
+sympy("simplify((x**3 + x**2 - x - 1)/(x**2 + 2*x + 1))")
+```
+
+```{r}
+sympy("simplify((x**3 + x**2 - x - 1)/(x**2 + 2*x + 1))")
+```
+
+```
+sympy("expand((x + 2)*(x - 3))")
+sympy("factor(x**3 - x**2 + x - 1)")
+```
+
+```{r}
+sympy("expand((x + 2)*(x - 3))")
+sympy("factor(x**3 - x**2 + x - 1)")
+```
+
+```
+sympy("a")
+sympy("integrate(a, (x))")
+sympy("integrate(a, (x, 0, 1))")
+```
+```{r}
+sympy("a")
+sympy("integrate(a, (x))")
+sympy("integrate(a, (x, 0, 1))")
+```
+```
+sympy("diff(a, x)")
+```
+
+```{r}
+sympy("diff(a, x)")
+```
+
+
+Differential equations
+=============
+
+-  `desolve` package
+-  `FME` package
+-  Example provided last week
+
+Linear Algebra
+=============
+
+- Like Matlab and Python (and other numeric programming libraries), R is built on a foundation of standard optimized linear algebra routines.
+    -  If you are doing numerical computing, it is almost always better to implement the methods using matrices and vectors because these standard routines are so much better than what you can write yourself that the benefits outweigh any work needed to convert your methods/models
+-  Covered in *Introduction to R* Section 5.7
+
+Specifying matrices and vectors
+===============================
+
+-  Matrices are multi-dimensional counterparts to vectors
+-  Specify values and dimensions using `array`
+    -  Option: Specify rows and use `rbind`
+    -  Option: Specify columns and use `cbind`
+
+Using array function
+=====================
+
+```
+A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
+```
+
+
+```{r}
+A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
+A
+```
+
+rbind
+=========
+
+```
+row1 <- c(1, 1, 0)
+row2 <- c(2, -1, 3)
+row3 <- c(1, -2, -1)
+Arow <- rbind(row1, row2, row3)
+```
+
+```{r}
+row1 <- c(1, 1, 0)
+row2 <- c(2, -1, 3)
+row3 <- c(1, -2, -1)
+Arow <- rbind(row1, row2, row3)
+Arow
+```
+
+cbind
+=====
+```
+col1 <- c(1,2,1)
+col2 <- c(1,-1,-2)
+col3 <- c(0, 3, -1)
+Acol <- cbind(col1, col2, col3)
+```
+
+```{r}
+col1 <- c(1,2,1)
+col2 <- c(1,-1,-2)
+col3 <- c(0, 3, -1)
+Acol <- cbind(col1, col2, col3)
+Acol
+```
+
+Solving linear equations
+=================
+
+$$\begin{array}{cccc}
+x & +y &  & = 0\\
+2x & -y & +3z & = 3\\
+x & -2y & -z & =3
+\end{array}$$
+
+Represent equations as arrays and vectors
+==============
+
+$$\left(\begin{array}{ccc}
+1, 1, 0 \\
+2, -1, 3 \\
+1, -2, -1
+\end{array}\right) \left(\begin{array}{c}
+0\\
+3 \\
+3 \\
+\end{array}\right)$$
+
+Now, in R
+=========
+
+```
+b= c(0, 3, 3)
+```
+
+```{r}
+print(A)
+b= c(0, 3, 3)
+print(b)
+```
+
+Solve using `solve` command
+======
+
+```
+solve(A,b)
+```
+
+```{r}
+solve(A,b)
+```
+
+
+Linear programming and optimization
+=============
+
+-  Optimization includes numerical optimization and linear programming
+    - Both are covered in the R Optimization Task View (https://cran.r-project.org/web/views/Optimization.html)
+-  Linear programming expresses a problem as an objective (minimize or maximize) subject to a set of constraints.
+-  This lecture uses the package `glpkAPI`, which offers both an Algebraic Modeling Language (in IE 1081 you will use an MS Excel add in that provides an AML), and an API that allows you to specify the constraints and objective using matrices and vectors.
+-  Also available in R (see R Optimization Task View), `clpAPI`, `cplexAPI`, `RCplex`, `gurobi`
+
+Transportation problem
+=============
+
+-  This problem finds a least cost shipping schedule that meets requirements at markets and supplies at factories.
+-  Demand constraint - Demand at each market is satisfied.
+-  Supply constraint - Each factory can only supply up to its total capacity.
+
+
+Model
+=============
+
+```
+set I; /* canning plants */
+set J; /* markets */
+param a{i in I}; /* capacity of plant i in cases */
+param b{j in J}; /* demand at market j in cases */
+param d{i in I, j in J}; /* distance in thousands of miles */
+param f; /* freight in dollars per case per thousand miles */
+param c{i in I, j in J} := f * d[i,j] / 1000; /* transport cost in thousands of dollars per case */
+var x{i in I, j in J} >= 0; /* shipment quantities in cases */
+minimize cost: sum{i in I, j in J} c[i,j] * x[i,j];
+/* total transportation costs in thousands of dollars */
+
+s.t. supply{i in I}: sum{j in J} x[i,j] <= a[i];
+/* observe supply limit at plant i */
+
+s.t. demand{j in J}: sum{i in I} x[i,j] >= b[j];
+/* satisfy demand at market j */
+```
+
+And set up the data
+=============
+
+```
+set I := Seattle San-Diego;
+set J := New-York Chicago Topeka;
+param a := Seattle     350
+           San-Diego   600;
+param b := New-York    325
+           Chicago     300
+           Topeka      275;
+param d :              New-York   Chicago   Topeka :=
+           Seattle     2.5        1.7       1.8
+           San-Diego   2.5        1.8       1.4  ;
+param f := 90;
+end;
+```
+
+Applying glpkAPI
+=============
+
+```
+library(glpkAPI)
+mip <- initProbGLPK()
+setProbNameGLPK(mip, "transport")
+trans <- mplAllocWkspGLPK()
+result <- mplReadModelGLPK(trans,
+	system.file("extdata", "transport.mod", package = "glpkAPI"), skip=0)
+result <- mplGenerateGLPK(trans)
+result <- mplBuildProbGLPK(trans, mip)
+```
+
+
+```
+{r}
+library(glpkAPI)
+mip <- initProbGLPK()
+setProbNameGLPK(mip, "transport")
+trans <- mplAllocWkspGLPK()
+result <- mplReadModelGLPK(trans,
+	system.file("extdata", "transport.mod", package = "glpkAPI"), skip=0)
+result <- mplGenerateGLPK(trans)
+result <- mplBuildProbGLPK(trans, mip)
+```
+
+Solve problem
+=============
+
+```
+return <- solveSimplexGLPK(mip)
+return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
+```
+
+```
+{r}
+return <- solveSimplexGLPK(mip)
+return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
+```
+
+look at solution and costs
+=============
+
+```
+{r}
+numrows <- getNumRowsGLPK(mip)
+numcols <- getNumColsGLPK(mip)
+for (i in 1:numrows){
+  print(getRowNameGLPK(mip, i))
+  print(getRowPrimGLPK(mip, i))
+}
+for (j in 1:numcols){
+  print(getColNameGLPK(mip, j))
+  print(getColPrimGLPK(mip, j))
+}
+```
+Simulation
+=============
+
+- Discrete event simulation models a system as state changes occurring in discrete moments in time.
+- Treat system as entities moving through a system and requiring resources for a period of time.
+- In R, use the `simmer` library
+  - Process view of simulation - focus is on the experience of entities moving through the system.
+  - Contrast with event view of simulation, where the focus is on servers that the entities move through (Simio, Arena)
+
+Parking lot simulation
+=============
+
+- Create a parking lot with a specific size
+- Cars arrive with exponential inter-arrival times
+- Cars need a parking space for an exponential length of time
+- Run for 24 hours
+
+
+Implementation using simmer
+=============
+
+```{r}
+library(simmer, quietly = TRUE)
+set.seed(1234)
+parkingtime = 2
+
+env <- simmer("ParkingSimulation")
+arrival <- create_trajectory("Car path") %>%
+  seize("parking", 1) %>%
+  timeout(function() rexp(1, 1/parkingtime)) %>%
+  release("parking", 1)
+env %>%
+  add_resource("parking", capacity = 100, mon=TRUE) %>%
+  add_generator("arrival", arrival, function() rexp(1, 25))
+
+env %>% run(until= (24))
+```
+
+Output from a simulation
+=============
+
+-  A simulation contains statistics collectors that either monitor resource usage or the experience of entities.
+
+```
+env %>% get_mon_resources()
+env %>% get_mon_arrivals()
+```
+
+```{r}
+head(
+  env %>% get_mon_resources()
+)
+head(
+  env %>% get_mon_arrivals()
+)
+```
+
+Output summaries
+============
+
+-  Then, apply statistical techniques to quantify the performance of the system.
+```
+plot_resource_usage(env, "parking", items=c("server"), steps=T)
+```
+```{r}
+plot_resource_usage(env, "parking", items=c("server"), steps=T)
+```
+
+
+Statistical design of experiments
+===============
+
+-  Repeat simulation to generate additional performance estimates.
+-  End result is a mean and variance of the performance measure.
+-  Use statistical methods to determine if additional runs are needed.
+-  Repeat with alternative system designs to determine best design.
+
+```
+envs <- lapply(1:30, function(i) {
+  simmer("ReplicatedParkingSim") %>%
+    add_resource("parking", 100) %>%
+    add_generator("arrival", arrival, function() rexp(1, 30)) %>%
+    run(until= (24))
+})
+```
+
+```{r}
+envs <- lapply(1:30, function(i) {
+  simmer("ReplicatedParkingSim") %>%
+    add_resource("parking", 100) %>%
+    add_generator("arrival", arrival, function() rexp(1, 30)) %>%
+    run(until= (24))
+})
+```
+```
+plot_resource_utilization(envs, "parking")
+```
+
+```{r}
+plot_resource_utilization(envs, "parking")
 ```
