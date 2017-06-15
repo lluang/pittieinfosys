@@ -11,7 +11,14 @@ output:
 
 - Getting started
 - Philosophy of R and R Studio
-- 
+- Git and version control
+- Data manipulation with dplyr
+- Grammer of Graphics
+- Probability and statistics
+- Simulation
+- Differential equations
+- Symbolic math
+- Optimization
 
 
 
@@ -1632,8 +1639,122 @@ hist(rotorout, breaks = 100)
 print(length(rotorout[rotorout>958])/length(rotorout))
 ```
 
+Discrete Event Simulation
+=============
+
+- Discrete event simulation models a system as state changes occurring in discrete moments in time.
+- Treat system as entities moving through a system and requiring resources for a period of time.
+- In R, use the `simmer` library
+  - Process view of simulation - focus is on the experience of entities moving through the system.
+  - Contrast with event view of simulation, where the focus is on servers that the entities move through (Simio, Arena)
+
+Parking lot simulation
+=============
+
+- Create a parking lot with a specific size
+- Cars arrive with exponential inter-arrival times
+- Cars need a parking space for an exponential length of time
+- Run for 24 hours
+
+
+Implementation using simmer
+=============
+
+```{r}
+library(simmer, quietly = TRUE)
+library(simmer.plot)
+set.seed(1234)
+parkingtime = 2
+
+env <- simmer("ParkingSimulation")
+arrival <- create_trajectory("Car path") %>%
+  seize("parking", 1) %>%
+  timeout(function() rexp(1, 1/parkingtime)) %>%
+  release("parking", 1)
+env %>%
+  add_resource("parking", capacity = 100, mon=TRUE) %>%
+  add_generator("arrival", arrival, function() rexp(1, 25))
+
+env %>% run(until= (24))
+```
+
+Output from a simulation
+=============
+
+-  A simulation contains statistics collectors that either monitor resource usage or the experience of entities.
+
+```
+env %>% get_mon_resources()
+env %>% get_mon_arrivals()
+```
+
+```{r}
+head(
+  env %>% get_mon_resources()
+)
+```
+```{r}
+head(
+  env %>% get_mon_arrivals()
+)
+```
+
+Output summaries
+============
+
+-  Then, apply statistical techniques to quantify the performance of the system.
+```
+plot(env, what = "resources", metric = "utilization", c("parking"))
+```
+```{r}
+plot(env, what = "resources", metric = "utilization", c("parking"))
+```
+
+```{r}
+plot(env, what = "resources", metric = "usage", c("parking"))
+```
+
+
+Statistical design of experiments
+===============
+
+-  Repeat simulation to generate additional performance estimates.
+-  End result is a mean and variance of the performance measure.
+-  Use statistical methods to determine if additional runs are needed.
+-  Repeat with alternative system designs to determine best design.
+
+```
+envs <- lapply(1:30, function(i) {
+  simmer("ReplicatedParkingSim") %>%
+    add_resource("parking", 100) %>%
+    add_generator("arrival", arrival, function() rexp(1, 30)) %>%
+    run(until= (24))
+})
+```
+
+```{r}
+envs <- lapply(1:30, function(i) {
+  simmer("ReplicatedParkingSim") %>%
+    add_resource("parking", 100) %>%
+    add_generator("arrival", arrival, function() rexp(1, 30)) %>%
+    run(until= (24))
+})
+```
+```
+plot_resource_utilization(envs, "parking")
+```
+
+```{r}
+plot(envs, what = "resources", metric = "usage", c("parking"))
+```
+
+
+
+
 Other types of simulation
 ========
+
+
 
 Continuous simulation
 =================
@@ -1657,6 +1778,8 @@ $$\frac{dR}{dT} = vI$$
     - S is the number of susceptible individuals at a given time,
     - I is the number of infected individuals at a given time,
     - R is the number of recovered individuals at a given time.
+
+
 
 Same model in R as differential equations
 =======
@@ -2167,112 +2290,4 @@ for (j in 1:numcols){
 }
 ```
 
-Simulation
-=============
-
-- Discrete event simulation models a system as state changes occurring in discrete moments in time.
-- Treat system as entities moving through a system and requiring resources for a period of time.
-- In R, use the `simmer` library
-  - Process view of simulation - focus is on the experience of entities moving through the system.
-  - Contrast with event view of simulation, where the focus is on servers that the entities move through (Simio, Arena)
-
-Parking lot simulation
-=============
-
-- Create a parking lot with a specific size
-- Cars arrive with exponential inter-arrival times
-- Cars need a parking space for an exponential length of time
-- Run for 24 hours
-
-
-Implementation using simmer
-=============
-
-```{r}
-library(simmer, quietly = TRUE)
-library(simmer.plot)
-set.seed(1234)
-parkingtime = 2
-
-env <- simmer("ParkingSimulation")
-arrival <- create_trajectory("Car path") %>%
-  seize("parking", 1) %>%
-  timeout(function() rexp(1, 1/parkingtime)) %>%
-  release("parking", 1)
-env %>%
-  add_resource("parking", capacity = 100, mon=TRUE) %>%
-  add_generator("arrival", arrival, function() rexp(1, 25))
-
-env %>% run(until= (24))
-```
-
-Output from a simulation
-=============
-
--  A simulation contains statistics collectors that either monitor resource usage or the experience of entities.
-
-```
-env %>% get_mon_resources()
-env %>% get_mon_arrivals()
-```
-
-```{r}
-head(
-  env %>% get_mon_resources()
-)
-```
-```{r}
-head(
-  env %>% get_mon_arrivals()
-)
-```
-
-Output summaries
-============
-
--  Then, apply statistical techniques to quantify the performance of the system.
-```
-plot(env, what = "resources", metric = "utilization", c("parking"))
-```
-```{r}
-plot(env, what = "resources", metric = "utilization", c("parking"))
-```
-
-```{r}
-plot(env, what = "resources", metric = "usage", c("parking"))
-```
-
-
-Statistical design of experiments
-===============
-
--  Repeat simulation to generate additional performance estimates.
--  End result is a mean and variance of the performance measure.
--  Use statistical methods to determine if additional runs are needed.
--  Repeat with alternative system designs to determine best design.
-
-```
-envs <- lapply(1:30, function(i) {
-  simmer("ReplicatedParkingSim") %>%
-    add_resource("parking", 100) %>%
-    add_generator("arrival", arrival, function() rexp(1, 30)) %>%
-    run(until= (24))
-})
-```
-
-```{r}
-envs <- lapply(1:30, function(i) {
-  simmer("ReplicatedParkingSim") %>%
-    add_resource("parking", 100) %>%
-    add_generator("arrival", arrival, function() rexp(1, 30)) %>%
-    run(until= (24))
-})
-```
-```
-plot_resource_utilization(envs, "parking")
-```
-
-```{r}
-plot(envs, what = "resources", metric = "usage", c("parking"))
-```
 
