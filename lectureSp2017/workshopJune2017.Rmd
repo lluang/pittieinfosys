@@ -1,17 +1,17 @@
 ---
 title: "R, R Studio, and Version Control"
-author: Louis Luangkesorn
-date: June 15, 2017
+author: "Louis Luangkesorn"
+date: "June 15, 2017"
 output:
-  presentation: slidy_presentation
   document: html_document
+  presentation: slidy_presentation
 ---
 
 # Outline
 
 - Getting started
 - Philosophy of R and R Studio
--
+- 
 
 
 
@@ -43,18 +43,30 @@ R Philosophy
   - Replace R with Python, Julia, Scala
   - Jupyter Notebook - Browser based interface
 
+Under the hood
+==============
+
+- Much of R is written in R
+- Basic low-level math is in C or Fortran
+    - e.g. BLAS, LAPACK
+- `.C()`, `.Fortran()` functions allow for calling C or Fortran functions as R functions
+    - Requires an appropriate compiler available.
+-  `Rcpp` package allows for calling C++ code
+- Fits the philosophy of using the right tool for the job.
+    - `R` becomes an interactive scripting language that pulls everything together.
 
 R Packages
 =======
 
 - Packages have advanced statistical functionality
-- Written by the same people that write textbooks and journal articles.
+- Written by the same people that write textbooks and journal articles
+- Often packages have numerically intensive parts written in C, Fortran or C++
+- Some packages are wrappers around mathematical libraries written in Python or Java
 
-
-Example  ggplot2
+Example:  ggplot2
 =====
 - You can install library in R Studio
-- Lower left
+- Lower right
 - Packages tab
   - Install button
   - Select CRAN repository
@@ -65,8 +77,12 @@ Run code chunk (upper right of editor window) look at output in R Studio editor 
 ```{r}
 library(ggplot2)
 library(tidyverse)
-data(diamonds)
-summary(diamonds)
+library(magrittr)
+#data(diamonds)
+#summary(diamonds)
+#dshort <- diamonds %>% sample_frac(0.1)
+#summary(dshort)
+#ggplot(dshort) + geom_point(aes(x=carat, y=price, color=color))
 ```
 
 Tour of R Studio
@@ -121,9 +137,11 @@ Environment/History
 - List data types and example data elements
 
 Git
---------------
+-------
 
 - If you have a current project with version control, a Git tab is available.
+
+
 
 Lower right
 -----------
@@ -134,8 +152,84 @@ Lower right
 - Help file navigator
 - Viewer (latest rendering of R Markdown document)
 
+Version control and Git
+=======================
 
-## Data structures in R
+Why version control?
+--------------------
+
+- Problem: Programming is complex, and analysis changes.
+- What if you had to recreate an analysis exactly from a year ago?
+    -  Maybe keep multiple versions? But time stamps change and directories get cluttered.
+    -  What if you make a change, and want to re-run all of your analysis, with the change everywhere?
+-  What if you have a big project with many people working on different parts. How do you keep everyone synchronized?
+
+What is a version control system
+--------------------------------
+
+- A repository (database) that keeps track of files with all changes (when and by whom)
+- Think MS Word track changes, except you always keep a record of all changes.
+- Generally, only usable with text files
+    - Programming
+    - Markdown or LaTeX
+    - text file notes
+    - xml/html (note: modern MS Office files are XML files that have been compressed using zip)
+- You can compare any two historical versions, you can pull the version that existed at any time.
+- Each person has her own copy of the code repository, and commits code to the repository, pushes and pulls changes from a remote repository, and 
+
+What is Git
+-----------
+
+- Git is a Distributed Version Control System
+    - Distributed means that the various repositories that exist are created equal.
+    - Changes to one repository will be propagated to all copies that are connected through pushing and pulling changes.
+    - Note: in practice, one repository will usually be the principle `remote` repository.
+
+Version control system principles
+---------------------------------
+
+- In a centralized version control system, there is one repository.
+- Team members each have a code based linked to that repository.
+- As team members reach milestones, they push changes to the central server repository.
+- As team members work, the pull other team member changes from the repository to their own code base.
+-*Subversion* is probably the best known example
+
+![Centralized Version Control](https://git-scm.com/book/en/v2/images/centralized.png)
+
+Distributed version control operations
+--------------------------------------
+
+- In DVCS, each team member has a local repository, and a local code base.
+- There is usually a single remote repository that is considered the master.
+- Team members commit changes to their local repository as they reach milestones.
+- Local repository changes are pushed to a remote repository as able.
+- Team member pull from a remote repository to receive other team member changes.
+- In principle, pushes and pulls can be done with any other repository, as long as their is a chain of pushes and pulls that bring all team members in sync the entire team is connected.
+
+![Distributed Version Control](https://git-scm.com/book/en/v2/images/distributed.png)
+
+Version control workflow
+-------------------------
+
+-  Pull changes from remote repository to local repository and local code based
+-  Work on local code base
+-  Stage changes to be saved permanmently
+-  Commit changes with comments in local repository
+-  Push changes to remote repository
+
+![Git workflow](https://git-scm.com/book/en/v2/images/areas.png)
+
+
+Doing this in R Studio
+----------------------
+
+-  R Studio is a modern development environment
+    - Therefore it includes built in tools for basic use of Git or Subversion
+    - If you have created a project, a Git tab is available in the upper right quadrant.
+-  Help is available at 
+
+Data structures in R
+====================
 
 - common data types
   - integer, double, strings, boolean
@@ -2033,8 +2127,7 @@ result <- mplBuildProbGLPK(trans, mip)
 ```
 
 
-```
-{r}
+```{r}
 library(glpkAPI)
 mip <- initProbGLPK()
 setProbNameGLPK(mip, "transport")
@@ -2053,8 +2146,7 @@ return <- solveSimplexGLPK(mip)
 return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
 ```
 
-```
-{r}
+```{r}
 return <- solveSimplexGLPK(mip)
 return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
 ```
@@ -2062,8 +2154,7 @@ return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
 look at solution and costs
 =============
 
-```
-{r}
+```{r}
 numrows <- getNumRowsGLPK(mip)
 numcols <- getNumColsGLPK(mip)
 for (i in 1:numrows){
@@ -2075,6 +2166,7 @@ for (j in 1:numcols){
   print(getColPrimGLPK(mip, j))
 }
 ```
+
 Simulation
 =============
 
@@ -2098,6 +2190,7 @@ Implementation using simmer
 
 ```{r}
 library(simmer, quietly = TRUE)
+library(simmer.plot)
 set.seed(1234)
 parkingtime = 2
 
@@ -2127,6 +2220,8 @@ env %>% get_mon_arrivals()
 head(
   env %>% get_mon_resources()
 )
+```
+```{r}
 head(
   env %>% get_mon_arrivals()
 )
@@ -2137,10 +2232,14 @@ Output summaries
 
 -  Then, apply statistical techniques to quantify the performance of the system.
 ```
-plot_resource_usage(env, "parking", items=c("server"), steps=T)
+plot(env, what = "resources", metric = "utilization", c("parking"))
 ```
 ```{r}
-plot_resource_usage(env, "parking", items=c("server"), steps=T)
+plot(env, what = "resources", metric = "utilization", c("parking"))
+```
+
+```{r}
+plot(env, what = "resources", metric = "usage", c("parking"))
 ```
 
 
@@ -2174,5 +2273,6 @@ plot_resource_utilization(envs, "parking")
 ```
 
 ```{r}
-plot_resource_utilization(envs, "parking")
+plot(envs, what = "resources", metric = "usage", c("parking"))
 ```
+
