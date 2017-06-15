@@ -220,7 +220,7 @@ Version control workflow
 
 -  Pull changes from remote repository to local repository and local code based
 -  Work on local code base
--  Stage changes to be saved permanmently
+-  Stage changes to be saved permanently
 -  Commit changes with comments in local repository
 -  Push changes to remote repository
 
@@ -436,12 +436,12 @@ Joins
 #head(flights2)
 ```
 ```{r}
-head(airlines)
+# head(airlines)
 ```
 ```{r}
-flights2 %>%
-  left_join(airlines) %>%
-    head()
+# flights2 %>%
+#   left_join(airlines) %>%
+#     head()
 ```
 
 Thinking about aggregation
@@ -457,9 +457,9 @@ Using dplyr
 -  Use `group_by` and `summarize` functions
 
 ```{r}
-diamonds %>% group_by(color, clarity) %>%
-  summarize(Count = n(), AvgPrice = mean(price)) %>%
-    head()
+# diamonds %>% group_by(color, clarity) %>%
+#   summarize(Count = n(), AvgPrice = mean(price)) %>%
+#     head()
 ```
 
 The apply family of functions
@@ -488,20 +488,20 @@ apply:
 -  *Margins* are the dimensions of the array (row = 1, columns = 2)
 
 ```{r}
-# create a matrix of 10 rows x 2 columns
-m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
-# mean of the rows
-apply(m, 1, mean)
-# mean of the columns
-apply(m, 2, mean)
-# divide all values by 2
-apply(m, 1:2, function(x) x/2)
+# # create a matrix of 10 rows x 2 columns
+# m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+# # mean of the rows
+# apply(m, 1, mean)
+# # mean of the columns
+# apply(m, 2, mean)
+# # divide all values by 2
+# apply(m, 1:2, function(x) x/2)
 ```
 
 
 ```{r}
-library(reshape2)
-aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean)
+# library(reshape2)
+# aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean)
 ```
 
 tapply
@@ -510,8 +510,8 @@ tapply
 -  Processes a single vector based on the values of one or more grouping vectors
 
 ```{r}
-maxcarat <- tapply(diamonds$carat, diamonds$color, max)
-maxcarat
+# maxcarat <- tapply(diamonds$carat, diamonds$color, max)
+# maxcarat
 ```
 Mapping a function to a vector or list
 ====================
@@ -527,12 +527,12 @@ Example for a mapping
 -  Unknown number of words in each sentence, so use a list for each sentence.
 
 ```{r}
-text = c("R is a free environment for statistical analysis",
- "It compiles and runs on a variety of platforms",
- "Visit the R home page for more information")
-result = strsplit(text, " ")
-result
-typeof(result)
+# text = c("R is a free environment for statistical analysis",
+#  "It compiles and runs on a variety of platforms",
+#  "Visit the R home page for more information")
+# result = strsplit(text, " ")
+# result
+# typeof(result)
 ```
 
 Now, take the list and get the length of each sentence
@@ -541,8 +541,8 @@ Now, take the list and get the length of each sentence
 - Because we want the length to be associated with the sentence, use `sapply`
 
 ```{r}
-nwords = sapply(result, length)
-nwords
+# nwords = sapply(result, length)
+# nwords
 ```
 
 
@@ -579,14 +579,15 @@ Aesthetics - appearance
 library(ggplot2)
 ```
 ```{r}
-ggplot(dsmall, aes(carat, price, shape=cut, color=color)) + geom_point()
+# dsmall <- diamonds %>% sample_frac(0.1)
+# ggplot(dsmall, aes(carat, price, shape=cut, color=color)) + geom_point()
 ```
 ```
 ggplot(diamonds, aes(carat, price, shape=cut, color=color)) + geom_point()
 ```
 
 ```{r}
-ggplot(dsmall, aes(carat, price, shape=cut, size=price)) + geom_point()
+# ggplot(dsmall, aes(carat, price, shape=cut, size=price)) + geom_point()
 ```
 
 
@@ -598,7 +599,7 @@ Faceting
    *y ~ x*
 
 ```{r}
-ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(color ~ .)
+# ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(color ~ .)
 ```
 
 Faceting horizontally
@@ -607,7 +608,7 @@ Faceting horizontally
 
 -  Change the order of the function in the facet_grid to layout facets horizontally
 ```{r}
-ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(. ~ color)
+# ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(. ~ color)
 ```
 
 Scaling
@@ -653,7 +654,7 @@ Putting together a plot
 - (Note nothing happens)
 
 ```{r}
-p = ggplot(dsmall)
+# p = ggplot(dsmall)
 ```
 
 Identify how the data will be displayed (aesthetic)
@@ -666,7 +667,7 @@ Identify how the data will be displayed (aesthetic)
 - Note: you can build plots by building on the plot object.
 
 ```{r}
-p1 = p + aes(x = carat)
+# p1 = p + aes(x = carat)
 ```
 
 Declare the type of plot (geom)
@@ -676,22 +677,22 @@ Declare the type of plot (geom)
 -  **Now** the plot can be displayed
 
 ```{r}
-p2 = p1 +  geom_histogram()
-p2
+# p2 = p1 +  geom_histogram()
+# p2
 ```
 
 Same thing, but with density
 ==========
 ```{r}
-p3 = p1 + geom_density()
-p3
+# p3 = p1 + geom_density()
+# p3
 ```
 
 Same thing, but using different layer (and attributes)
 ============
 ```{r}
-dbar = ggplot(dsmall, aes(x = carat, y = price)) + geom_point()
-show(dbar)
+# dbar = ggplot(dsmall, aes(x = carat, y = price)) + geom_point()
+# show(dbar)
 ```
 
 Let's add in some options such as a statistic
@@ -700,9 +701,9 @@ Let's add in some options such as a statistic
 - stat = bin identifies how grouping will be done for the bar (histogram)
 
 ```{r}
-dbar = ggplot(dsmall) + aes(x = carat) +
-  geom_histogram(binwidth = 0.1)
-dbar
+# dbar = ggplot(dsmall) + aes(x = carat) +
+#   geom_histogram(binwidth = 0.1)
+# dbar
 ```
 
 Plot geom examples
@@ -760,17 +761,17 @@ Some basic examples of ggplot
 
 
 ```{r}
-df <- data.frame(
-x = c(3, 1, 5), y = c(2, 4, 6), label = c("a","b","c")
-)
-p <- ggplot(df, aes(x, y, label = label)) + xlab(NULL) + ylab(NULL)
+# df <- data.frame(
+# x = c(3, 1, 5), y = c(2, 4, 6), label = c("a","b","c")
+# )
+# p <- ggplot(df, aes(x, y, label = label)) + xlab(NULL) + ylab(NULL)
 ```
 
 Scatter plot using geom_point
 ======
 
 ```{r}
-p + geom_point() + ggtitle("geom_point") + aes(size=4)
+# p + geom_point() + ggtitle("geom_point") + aes(size=4)
 ```
 
 Bar plot using geom_bar
@@ -778,21 +779,21 @@ Bar plot using geom_bar
 - Note: stat="identity" used to provide the y-value
 
 ```{r}
-p + geom_bar(stat="identity") + ggtitle("geom_bar(stat=\"identity\")")
+# p + geom_bar(stat="identity") + ggtitle("geom_bar(stat=\"identity\")")
 ```
 
 Line plot using geom_line
 ======
 
 ```{r}
-p + geom_line() + labs(title = "geom_line")
+# p + geom_line() + labs(title = "geom_line")
 ```
 
 Filled line plot using geom_area
 ======
 
 ```{r}
-p + geom_area() + labs(title = "geom_area")
+# p + geom_area() + labs(title = "geom_area")
 ```
 
 Pathway plot using geom_path
@@ -801,28 +802,28 @@ Pathway plot using geom_path
 Contrast this to the standard line plot. Order matters
 
 ```{r}
-p + geom_path() + labs(title = "geom_path")
+# p + geom_path() + labs(title = "geom_path")
 ```
 
 Use text to label the data points using geom_text
 ======
 
 ```{r}
-p + geom_text() + labs(title = "geom_text")
+# p + geom_text() + labs(title = "geom_text")
 ```
 
 Data elements using regions instead of points using geom_tile
 ======
 
 ```{r}
-p + geom_tile() + labs(title = "geom_tile")
+# p + geom_tile() + labs(title = "geom_tile")
 ```
 
 Generate a polygon by specifying the corners using geom_polygon
 ======
 
 ```{r}
-p + geom_polygon() + labs(title = "geom_polygon")
+# p + geom_polygon() + labs(title = "geom_polygon")
 ```
 
 Point
@@ -830,8 +831,8 @@ Point
 -  Add multiple aesthetics to a graph to show more dimensions of meaning
 
 ```{r}
-p = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
-show(p)
+# p = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
+# show(p)
 ```
 
 Bar charts
@@ -839,24 +840,24 @@ Bar charts
 left:
 
 ```{r}
-p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
-p + geom_bar() + labs(title="Default for bar plots is to stack")
+# p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
+# p + geom_bar() + labs(title="Default for bar plots is to stack")
 ```
-***
+
 ```{r}
-p + geom_bar(position="identity") + labs(title="Otherwise they hide each other")
+# p + geom_bar(position="identity") + labs(title="Otherwise they hide each other")
 ```
 
 More bar chart styles
 =====
-left:
+
 
 ```{r}
-p + geom_bar(position="fill") + labs(title="A fill shows percentages of each classification")
+# p + geom_bar(position="fill") + labs(title="A fill shows percentages of each classification")
 ```
-***
+
 ```{r}
-p + geom_bar(position="dodge") + labs(title="dodge puts the bars next to each other")
+# p + geom_bar(position="dodge") + labs(title="dodge puts the bars next to each other")
 ```
 
 Pie charts
@@ -865,8 +866,8 @@ Pie charts
 Pie charts are like bar charts on polar coordinates.
 
 ```{r}
-p = ggplot(diamonds, aes(x=factor(1), fill=cut))
-p + geom_bar(width=1,position="fill") + coord_polar(theta="y") + labs(title="Fraction of sample with each quality of cut", ylab="")
+# p = ggplot(diamonds, aes(x=factor(1), fill=cut))
+# p + geom_bar(width=1,position="fill") + coord_polar(theta="y") + labs(title="Fraction of sample with each quality of cut", ylab="")
 ```
 
 Pie charts - 2
@@ -875,49 +876,48 @@ Pie charts - 2
 - But you can use the size of the pie slice to communicate other information
 
 ```{r}
-p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
-p + geom_bar(width=1) + coord_polar() + labs(title="Number of samples with each type of cut by level of clarity")
+# p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
+# p + geom_bar(width=1) + coord_polar() + labs(title="Number of samples with each type of cut by level of clarity")
 ```
 
 Area
 ===
-left:
 
 ```{r}
-d <- ggplot(diamonds, aes(carat))
-d + stat_bin(aes(ymax = ..count..), binwidth = 0.1, geom = "area")
+# d <- ggplot(diamonds, aes(carat))
+# d + stat_bin(aes(ymax = ..count..), binwidth = 0.1, geom = "area")
 ```
-***
+
 ```{r}
-d + stat_bin(aes(size = ..density..), binwidth = 0.1, geom = "point", position="identity")
+# d + stat_bin(aes(size = ..density..), binwidth = 0.1, geom = "point", position="identity")
 ```
 
 Histograms and density
 ===================
 
 ```{r, echo=FALSE}
-d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
+# d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
 ```
 
 ```{r}
-d + geom_histogram(aes(y=..density..), binwidth=0.25) + labs(title="Histograms")
-d + geom_histogram(aes(y=..density..), binwidth=0.25, colour="black", fill="white") + labs(title="Histograms")
+# d + geom_histogram(aes(y=..density..), binwidth=0.25) + labs(title="Histograms")
+# d + geom_histogram(aes(y=..density..), binwidth=0.25, colour="black", fill="white") + labs(title="Histograms")
 ```
 
 
 ```{r}
-d + geom_density() + labs(title="Density-moving window")
+# d + geom_density() + labs(title="Density-moving window")
 ```
 
 Adding to aesthetics
 =====
 
 ```{r}
-d + geom_histogram(aes(y=..density..), binwidth=0.25) + labs(title="Histograms")
+# d + geom_histogram(aes(y=..density..), binwidth=0.25) + labs(title="Histograms")
 ```
 
 ```{r}
-d + geom_histogram(aes(y=..density..), binwidth=0.25, colour="black", fill="white") + labs(title="Histograms")
+# d + geom_histogram(aes(y=..density..), binwidth=0.25, colour="black", fill="white") + labs(title="Histograms")
 ```
 
 
@@ -925,14 +925,14 @@ Box and whiskers and violin plots
 ===========
 
 ```{r, echo=FALSE}
-d <- ggplot(diamonds, aes(x=color,y = carat))
+# d <- ggplot(diamonds, aes(x=color,y = carat))
 ```
 ```{r}
-d + geom_boxplot()
+# d + geom_boxplot()
 ```
 
 ```{r}
-d + geom_violin()
+# d + geom_violin()
 ```
 
 
@@ -940,14 +940,14 @@ Density functions
 =================
 
 ```{r, echo=FALSE}
-d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
+# d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
 ```
 ```{r}
-d + geom_density() + labs(title="Density - Moving window")
+# d + geom_density() + labs(title="Density - Moving window")
 ```
 
 ```{r}
-d + stat_ecdf() + labs(title="Cumulative distribution")
+# d + stat_ecdf() + labs(title="Cumulative distribution")
 ```
 
 Two-dimensional plotting
@@ -959,16 +959,16 @@ Two-dimensional plotting
 -  Heat maps (2-D bins)
 
 ```{r}
-d <- ggplot(diamonds, aes(x = carat, y = clarity))
-d + geom_bin2d()
+# d <- ggplot(diamonds, aes(x = carat, y = clarity))
+# d + geom_bin2d()
 ```
 
 2-D density plots
 ====
 ```{r}
-diamonds$price = as.numeric(diamonds$price)
-d <- ggplot(diamonds, aes(x = carat, y = depth))
-d + geom_density2d()
+# diamonds$price = as.numeric(diamonds$price)
+# d <- ggplot(diamonds, aes(x = carat, y = depth))
+# d + geom_density2d()
 ```
 
 
@@ -976,46 +976,44 @@ Contour data
 =====
 
 ```{r}
-# Generate data
-library(reshape2) # for melt
-volcano3d <- melt(volcano)
-names(volcano3d) <- c("x", "y", "z")
-v <- ggplot(volcano3d, aes(x, y, z = z))
+# # Generate data
+# library(reshape2) # for melt
+# volcano3d <- melt(volcano)
+# names(volcano3d) <- c("x", "y", "z")
+# v <- ggplot(volcano3d, aes(x, y, z = z))
 ```
-***
+
 ```{r}
-v + stat_contour()
+# v + stat_contour()
 ```
 
 Use bins to modify the contour statistics
 ==========
 
 ```{r}
-v + stat_contour(bins=2)
-```
-***
-```{r}
-v + stat_contour(bins=5)
+# v + stat_contour(bins=2)
 ```
 
-Or specify the binwidth
-====
+```{r}
+# v + stat_contour(bins=5)
+```
+
 Use bins to modify the contour statistics
 ==========
-left:
+
 
 ```{r}
-v + stat_contour(binwidth=10)
+# v + stat_contour(binwidth=10)
 ```
-***
+
 ```{r}
-v + stat_contour(binwidth=25)
+# v + stat_contour(binwidth=25)
 ```
 
 
 Other appearances
 ======
-type:section
+
 
 Scales
 =====
@@ -1059,11 +1057,11 @@ Themes
 -  Example: black and white backgrounds
 
 ```{r}
-t = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
+# t = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
 ```
 
 ```{r}
-show(t)
+# show(t)
 ```
 
 
@@ -1082,7 +1080,7 @@ Graphic User Interfaces
     - http://www.rcommander.com/
 
 ```{r}
-library(Rcmdr)
+# library(Rcmdr)
 ```
 
 R Commander
@@ -1101,8 +1099,8 @@ R Commander extensions
 -  Most extensions were written by textbook authors
 -  Result is a GUI statistics package that is the convex hull of topics in the first few statistics courses.
 ```{r}
-library(RcmdrPlugin.IPSUR)
-library(RcmdrPlugin.HH)
+# library(RcmdrPlugin.IPSUR)
+# library(RcmdrPlugin.HH)
 ```
 
 
@@ -1124,19 +1122,19 @@ Examples
 pnorm(q = 3, mean=0, sd=1)
 
 ```{r}
-pnorm(q = 3, mean=0, sd=1)
+# pnorm(q = 3, mean=0, sd=1)
 ```
 
 qnorm(p=0.975, mean=0,sd=1)
 
 ```{r}
-qnorm(p=0.975, mean=0,sd=1)
+# qnorm(p=0.975, mean=0,sd=1)
 ```
 
 rexp(n = 10, rate = 10)
 
 ```{r}
-rexp(n = 10, rate = 10)
+# rexp(n = 10, rate = 10)
 ```
 
 Fitting distributions
@@ -1155,7 +1153,7 @@ fitdistrplus package
 =============
 
 ```{r}
-library(fitdistrplus)
+# library(fitdistrplus)
 ```
 
 Example - Births in Brisbane
@@ -1167,20 +1165,20 @@ Birth minute of day
 =============
 
 ```{r}
-birthminutes = c(5, 64, 78, 115, 177, 245, 247, 262, 271, 428,
-                455, 492, 494, 549, 635, 649, 653, 693, 729, 776,
-                785, 846, 847, 873, 886, 914, 991, 1017, 1062, 1087,
-                1105, 1134, 1149, 1187, 1189, 1191, 1210, 1237, 1251, 1264,
-                1283, 1337, 1407, 1435)
-birthminutes
+# birthminutes = c(5, 64, 78, 115, 177, 245, 247, 262, 271, 428,
+#                 455, 492, 494, 549, 635, 649, 653, 693, 729, 776,
+#                 785, 846, 847, 873, 886, 914, 991, 1017, 1062, 1087,
+#                 1105, 1134, 1149, 1187, 1189, 1191, 1210, 1237, 1251, 1264,
+#                 1283, 1337, 1407, 1435)
+# birthminutes
 ```
 
 Calculate interbirth time
 =============
 
 ```{r}
-interarrival = birthminutes[2:length(birthminutes)] -  birthminutes[1:length(birthminutes)-1]
-interarrival
+# interarrival = birthminutes[2:length(birthminutes)] -  birthminutes[1:length(birthminutes)-1]
+# interarrival
 ```
 
 Look at interarrival distribution
@@ -1189,8 +1187,8 @@ Look at interarrival distribution
 plotdist(interarrival)
 
 ```{r}
-library(fitdistrplus)
-plotdist(interarrival)
+# library(fitdistrplus)
+# plotdist(interarrival)
 ```
 
 Look at 3rd and 4th moments
@@ -1199,7 +1197,7 @@ Look at 3rd and 4th moments
 descdist(interarrival)
 
 ```{r}
-descdist(interarrival)
+# descdist(interarrival)
 ```
 
 fit parameters
@@ -1209,8 +1207,8 @@ baby <- fitdist(interarrival, distr = "exp")
 
 
 ```{r}
-baby <- fitdist(interarrival, distr = "exp")
-summary(baby)
+# baby <- fitdist(interarrival, distr = "exp")
+# summary(baby)
 ```
 
 Check goodness of fit
@@ -1222,13 +1220,13 @@ cdfcomp(baby)
 ppcomp(baby)
 
 ```{r}
-par(mfrow = c(2, 2))
-
-denscomp(baby)
-qqcomp(baby)
-cdfcomp(baby)
-ppcomp(baby)
-par(mfrow = c(1,1))
+# par(mfrow = c(2, 2))
+# 
+# denscomp(baby)
+# qqcomp(baby)
+# cdfcomp(baby)
+# ppcomp(baby)
+# par(mfrow = c(1,1))
 ```
 
 Statistical goodness of fit test
@@ -1237,9 +1235,9 @@ Statistical goodness of fit test
 - Apply Kolmogorov-Smirnoff test for goodness of fit.
 
 ```{r}
-gofbaby <-gofstat(baby)
-gofbaby
-gofbaby$kstest
+# gofbaby <-gofstat(baby)
+# gofbaby
+# gofbaby$kstest
 ```
 
 
@@ -1247,9 +1245,8 @@ Simulation
 =============
 
 ```{r}
-library(ggplot2)
-library(foreach)
-library(deSolve)
+# library(foreach)
+# library(deSolve)
 ```
 
 
@@ -1301,19 +1298,19 @@ In R
 ========
 
 ```{r}
-maxi = 1000
-i = (1:maxi)
-x <- runif(maxi)
-y <- runif(maxi)
-incircle <- ifelse(x^2 + y^2 <= 1, 1.0, 0.0)
-ratio <- unlist(foreach(i=1:maxi) %do% mean(incircle[1:i]))
+# maxi = 1000
+# i = (1:maxi)
+# x <- runif(maxi)
+# y <- runif(maxi)
+# incircle <- ifelse(x^2 + y^2 <= 1, 1.0, 0.0)
+# ratio <- unlist(foreach(i=1:maxi) %do% mean(incircle[1:i]))
 ```
 
 Monte Carlo
 ============
 
 ```{r}
-head(ratio)
+# head(ratio)
 ```
 
 - What is this doing?
@@ -1321,8 +1318,8 @@ head(ratio)
 Trend of `mean(incircle[1:i]))`
 ==============
 ```{r}
-plot(1:maxi, ratio)
-title("mean(incircle[1:i])")
+# plot(1:maxi, ratio)
+# title("mean(incircle[1:i])")
 ```
 
 Monte Carlo convergence
@@ -1335,14 +1332,14 @@ Monte Carlo convergence
 
 $$CI = z_{\alpha/2} s/\sqrt{n}$$
 ```{r}
-meanratio <-mean(incircle)
-sdratio <- sd(incircle)
-print(meanratio, digits = 10)
-print(sdratio, digits = 10)
+# meanratio <-mean(incircle)
+# sdratio <- sd(incircle)
+# print(meanratio, digits = 10)
+# print(sdratio, digits = 10)
 ```
 ```{r}
-ci = pnorm(q = 0.975) * sdratio/sqrt(maxi)
-print(ci)
+# ci = pnorm(q = 0.975) * sdratio/sqrt(maxi)
+# print(ci)
 ```
 
 Usually, set ci to be some fraction of mean and solve for n
@@ -1408,14 +1405,14 @@ Example
 
 
 ```{r}
-options(digits=2)
-srs <- rnorm(25, mean = 3)
-resamps <- replicate(1000, sample(srs, 25, TRUE), simplify = FALSE)
-xbarstar <- sapply(resamps, mean, simplify = TRUE)
-hist(xbarstar, breaks = 40, prob = TRUE, xlim=c(2, 4),
-  main="Mean of 25 N(3,1) distributions, 1000 replications",
-  xlab="Mean of replication")
-curve(dnorm(x, 3, 0.2), add = TRUE)
+# options(digits=2)
+# srs <- rnorm(25, mean = 3)
+# resamps <- replicate(1000, sample(srs, 25, TRUE), simplify = FALSE)
+# xbarstar <- sapply(resamps, mean, simplify = TRUE)
+# hist(xbarstar, breaks = 40, prob = TRUE, xlim=c(2, 4),
+#   main="Mean of 25 N(3,1) distributions, 1000 replications",
+#   xlab="Mean of replication")
+# curve(dnorm(x, 3, 0.2), add = TRUE)
 ```
 
 Compare simulation to the theoretical mean
@@ -1424,8 +1421,8 @@ Compare simulation to the theoretical mean
 -  Expected confidence interval of the mean
     - $sd/\sqrt{n} = 1/\sqrt{25} = 0.2$
 ```{r}
-print(mean(xbarstar), digits=10)
-print(sd(xbarstar), digits=10)
+# print(mean(xbarstar), digits=10)
+# print(sd(xbarstar), digits=10)
 ```
 -  Within expectation
 
@@ -1443,17 +1440,17 @@ Implementing using the boot package
 -  Define a summary function, then apply it using bootstrap.
 
 ```{r}
-library(boot)
-mean_fun <- function(x, indices) mean(x[indices])
-boot(data = srs, statistic = mean_fun, R = 1000)
+# library(boot)
+# mean_fun <- function(x, indices) mean(x[indices])
+# boot(data = srs, statistic = mean_fun, R = 1000)
 ```
 
 Try the same thing with a different statistic
 ========================
 
 ```{r}
-median_fun <- function(x, indices) median(x[indices])
-boot(data = rivers, statistic = median_fun, R = 1000)
+# median_fun <- function(x, indices) median(x[indices])
+# boot(data = rivers, statistic = median_fun, R = 1000)
 ```
 
 Confidence intervals
@@ -1471,24 +1468,24 @@ C.I. example
 ====================
 
 ```{r}
-btsamps <- replicate(2000, sample(stack.loss, 21, TRUE), simplify = FALSE)
-thetast <- sapply(btsamps, median, simplify = TRUE)
-mean(thetast)
+# btsamps <- replicate(2000, sample(stack.loss, 21, TRUE), simplify = FALSE)
+# thetast <- sapply(btsamps, median, simplify = TRUE)
+# mean(thetast)
 ```
 
 Percentile interval of the median
 ===============
 ```{r}
-median(stack.loss)
-quantile(thetast, c(0.025, 0.975))
+# median(stack.loss)
+# quantile(thetast, c(0.025, 0.975))
 ```
 
 Now, using the boot function
 ===============
 ```{r}
-med_fun <- function(x, ind) median(x[ind])
-med_boot <- boot(stack.loss, med_fun, R = 2000)
-boot.ci(med_boot, type = c("perc", "norm", "bca"))
+# med_fun <- function(x, ind) median(x[ind])
+# med_boot <- boot(stack.loss, med_fun, R = 2000)
+# boot.ci(med_boot, type = c("perc", "norm", "bca"))
 ```
 
 Note: *bca* = bias-corrected and adjusted
@@ -1524,12 +1521,12 @@ Hypothesis testing with simulation
 1.  Calculate the difference in means between two groups: AZT with 300 mg and AZT with 600 mg dose.
 
 ```{r}
-azt300 <- c(284, 279, 289, 292, 287, 295, 285, 279, 306, 298)
-azt600 <- c(298, 307, 297, 279, 291, 335, 299, 300, 306, 291)
-mean(azt300, digits=1)
-mean(azt600, digits=1)
-delta300600 <- mean(azt600) - mean(azt300)
-delta300600
+# azt300 <- c(284, 279, 289, 292, 287, 295, 285, 279, 306, 298)
+# azt600 <- c(298, 307, 297, 279, 291, 335, 299, 300, 306, 291)
+# mean(azt300, digits=1)
+# mean(azt600, digits=1)
+# delta300600 <- mean(azt600) - mean(azt300)
+# delta300600
 ```
 
 Significance with bootstrap
@@ -1541,38 +1538,38 @@ Significance with bootstrap
 3.  Draw the *permutation distribution* of these differences. Locate the observed difference that you observed when you had two distinct datasets (300.3-298.4 = 10.9) and determine its *p-value* from the *permutation distribution*. If *p* is small, this is evidence against the null hypothesis
 
 ```{r}
-set.seed(1234)
-permdistfun <- function(azt){
-  pdelta <- c()
-  tf10 <- c(rep(FALSE, 10), rep(TRUE, 10))
-  select <- sample(tf10, 20, replace =FALSE)
-  azt3 <- azt[select]
-  azt6 <- azt[!select]
-  delta <- mean(azt6)-mean(azt3)
-  delta
-}
+# set.seed(1234)
+# permdistfun <- function(azt){
+#   pdelta <- c()
+#   tf10 <- c(rep(FALSE, 10), rep(TRUE, 10))
+#   select <- sample(tf10, 20, replace =FALSE)
+#   azt3 <- azt[select]
+#   azt6 <- azt[!select]
+#   delta <- mean(azt6)-mean(azt3)
+#   delta
+# }
 ```
 
 
 Now, apply bootstrap and to get the permutation distribution
 =====
 ```{r}
-azt <- c(azt300, azt600)
-samples = 1000
-pdist <- sort(replicate(samples,permdistfun(azt)))
+# azt <- c(azt300, azt600)
+# samples = 1000
+# pdist <- sort(replicate(samples,permdistfun(azt)))
 ```
 ```{r, echo=FALSE}
-summary(pdist)
-hist(pdist, breaks=seq(-20, 20, by=1))
+# summary(pdist)
+# hist(pdist, breaks=seq(-20, 20, by=1))
 ```
 
 
 Find the p-value of the observed difference
 =================
 ```{r}
-qdist <- max(which(pdist<delta300600))/samples
-pvalue <- min(qdist, 1-qdist)
-pvalue
+# qdist <- max(which(pdist<delta300600))/samples
+# pvalue <- min(qdist, 1-qdist)
+# pvalue
 ```
 
 Compare to normal hypothesis testing
@@ -1582,7 +1579,7 @@ Compare to normal hypothesis testing
 - Q: how would you use this for a paired t-test?
 
 ```{r}
-t.test(x=azt300, y=azt600)
+# t.test(x=azt300, y=azt600)
 ```
 
 -  Why the difference?
@@ -1615,28 +1612,28 @@ Current         899     101
 Prospective     958     42
 
 ```{r}
-rotor <- data.frame(pass = c(899, 958),
-                    fail = c(101, 42))
-pfailnull <- sum(rotor$fail[1])/sum(rotor)
+# rotor <- data.frame(pass = c(899, 958),
+#                     fail = c(101, 42))
+# pfailnull <- sum(rotor$fail[1])/sum(rotor)
 ```
 
 Simulate assuming that all data is from the control group
 ==========================
 ```{r}
-rotorsim <- function(i){
-              successes <- sum(sample(x=0:1, size = 1000, replace=TRUE, prob=c(pfailnull, (1-pfailnull))))
-}
-rotorout <-sapply(1:10000, rotorsim)
+# rotorsim <- function(i){
+#               successes <- sum(sample(x=0:1, size = 1000, replace=TRUE, prob=c(pfailnull, (1-pfailnull))))
+# }
+# rotorout <-sapply(1:10000, rotorsim)
 ```
 
 Look at the histogram of the result and find the HA
 ======================
 ```{r}
-hist(rotorout, breaks = 100)
+# hist(rotorout, breaks = 100)
 ```
 
 ```{r}
-print(length(rotorout[rotorout>958])/length(rotorout))
+# print(length(rotorout[rotorout>958])/length(rotorout))
 ```
 
 Discrete Event Simulation
@@ -1661,21 +1658,21 @@ Implementation using simmer
 =============
 
 ```{r}
-library(simmer, quietly = TRUE)
-library(simmer.plot)
-set.seed(1234)
-parkingtime = 2
-
-env <- simmer("ParkingSimulation")
-arrival <- create_trajectory("Car path") %>%
-  seize("parking", 1) %>%
-  timeout(function() rexp(1, 1/parkingtime)) %>%
-  release("parking", 1)
-env %>%
-  add_resource("parking", capacity = 100, mon=TRUE) %>%
-  add_generator("arrival", arrival, function() rexp(1, 25))
-
-env %>% run(until= (24))
+# library(simmer, quietly = TRUE)
+# library(simmer.plot)
+# set.seed(1234)
+# parkingtime = 2
+# 
+# env <- simmer("ParkingSimulation")
+# arrival <- create_trajectory("Car path") %>%
+#   seize("parking", 1) %>%
+#   timeout(function() rexp(1, 1/parkingtime)) %>%
+#   release("parking", 1)
+# env %>%
+#   add_resource("parking", capacity = 100, mon=TRUE) %>%
+#   add_generator("arrival", arrival, function() rexp(1, 25))
+# 
+# env %>% run(until= (24))
 ```
 
 Output from a simulation
@@ -1688,15 +1685,15 @@ env %>% get_mon_resources()
 env %>% get_mon_arrivals()
 ```
 
-```{r}
-head(
-  env %>% get_mon_resources()
-)
+# ```{r}
+# head(
+#   env %>% get_mon_resources()
+# )
 ```
 ```{r}
-head(
-  env %>% get_mon_arrivals()
-)
+<!-- head( -->
+<!--   env %>% get_mon_arrivals() -->
+<!-- ) -->
 ```
 
 Output summaries
@@ -1707,11 +1704,11 @@ Output summaries
 plot(env, what = "resources", metric = "utilization", c("parking"))
 ```
 ```{r}
-plot(env, what = "resources", metric = "utilization", c("parking"))
+<!-- plot(env, what = "resources", metric = "utilization", c("parking")) -->
 ```
 
 ```{r}
-plot(env, what = "resources", metric = "usage", c("parking"))
+<!-- plot(env, what = "resources", metric = "usage", c("parking")) -->
 ```
 
 
@@ -1733,12 +1730,12 @@ envs <- lapply(1:30, function(i) {
 ```
 
 ```{r}
-envs <- lapply(1:30, function(i) {
-  simmer("ReplicatedParkingSim") %>%
-    add_resource("parking", 100) %>%
-    add_generator("arrival", arrival, function() rexp(1, 30)) %>%
-    run(until= (24))
-})
+<!-- envs <- lapply(1:30, function(i) { -->
+<!--   simmer("ReplicatedParkingSim") %>% -->
+<!--     add_resource("parking", 100) %>% -->
+<!--     add_generator("arrival", arrival, function() rexp(1, 30)) %>% -->
+<!--     run(until= (24)) -->
+<!-- }) -->
 ```
 
 ```{r}
