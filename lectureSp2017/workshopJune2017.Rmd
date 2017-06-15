@@ -338,13 +338,13 @@ Data frames
 - Many R functions and packages (e.g. tidyverse family) require that data are in a data frame so that type information is available.
 
 ```{r}
-summary(diamonds[1:10,1])
-diamonds[1:3,c("carat", "cut")]
-diamonds[1:3,c(1, 3, 5)]
+#summary(diamonds[1:10,1])
+#diamonds[1:3,c("carat", "cut")]
+#diamonds[1:3,c(1, 3, 5)]
 ```
 
 ```{r}
-dsmall = diamonds[sample(nrow(diamonds),200),]
+#dsmall = diamonds[sample(nrow(diamonds),200),]
 ```
 
 
@@ -373,10 +373,10 @@ In dplyr
 
 
 ```{r}
-hogwartstudents <- data.frame(c("Cedric","Fred","George","Cho","Draco","Ginny"),
-                       c(3,2,2,1,0,-1),
-                       c("H", "G", "G", "R", "S", "G"))
-names(hogwartstudents) <- c("name", "year", "house") # name the columns
+#hogwartstudents <- data.frame(c("Cedric","Fred","George","Cho","Draco","Ginny"),
+#                       c(3,2,2,1,0,-1),
+#                       c("H", "G", "G", "R", "S", "G"))
+#names(hogwartstudents) <- c("name", "year", "house") # name the columns
 ```
 
 
@@ -384,56 +384,56 @@ Filter
 ========
 
 ```{r filtergryffindor}
-hogwartstudents[hogwartstudents$house=="G",]
+#hogwartstudents[hogwartstudents$house=="G",]
 ```
 ```{r}
-hogwartstudents %>% filter(house=='G')
+#hogwartstudents %>% filter(house=='G')
 ```
 
 Arrange
 ==========
 ```{r sorthogwarts}
-hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
+#hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
 ```
 
 ```{r}
-hogwartstudents %>% arrange(year, name)
+#hogwartstudents %>% arrange(year, name)
 ```
 
 Select columns
 ==============
 
 ```{r columnshogwarts}
-hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
+#hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
 ```
 
 ```{r}
-hogwartstudents %>% select(name, house)
+#hogwartstudents %>% select(name, house)
 ```
 
 Summarize (Group By)
 ====================
 ```{r summarizehogwarts}
-hogwartstudents %>%
-  group_by(house) %>%
-  summarize(number=n())
+#hogwartstudents %>%
+#  group_by(house) %>%
+#  summarize(number=n())
 ```
 Random sample
 ====================
 ```{r studentsrandom}
-hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
+#hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
 ```
 ```{r}
-hogwartstudents %>% sample_frac(size = 0.5)
+#hogwartstudents %>% sample_frac(size = 0.5)
 ```
 
 Joins
 =======
 
 ```{r}
-library(nycflights13)
-flights2 <- flights %>% select(year:day, hour, origin, dest, tailnum, carrier)
-head(flights2)
+#library(nycflights13)
+#flights2 <- flights %>% select(year:day, hour, origin, dest, tailnum, carrier)
+#head(flights2)
 ```
 ```{r}
 head(airlines)
@@ -1740,12 +1740,9 @@ envs <- lapply(1:30, function(i) {
     run(until= (24))
 })
 ```
-```
-plot_resource_utilization(envs, "parking")
-```
 
 ```{r}
-plot(envs, what = "resources", metric = "usage", c("parking"))
+#plot(envs, what = "resources", metric = "usage", c("parking"))
 ```
 
 
@@ -1790,16 +1787,16 @@ Same model in R as differential equations
 - Note we do not include $R$ because that is an absorbing state.
 
 ```{r}
-library("FME")
-
-twocomp <- function (time, y, parms, ...) {  
-  with(as.list(c(parms, y)), {
-    dS <- -L*I*S/N
-    dI <-  L*I*S/N - v*I  
-    dN <- 0
-    list(c(dS, dI, dN))
-  })
-}
+#library("FME")
+# 
+# twocomp <- function (time, y, parms, ...) {  
+#   with(as.list(c(parms, y)), {
+#     dS <- -L*I*S/N
+#     dI <-  L*I*S/N - v*I  
+#     dN <- 0
+#     list(c(dS, dI, dN))
+#   })
+# }
 ```
 
 Solving for an infection at a school
@@ -1811,11 +1808,11 @@ Solving for an infection at a school
     - S(t) is just given for day 3 (the first day in the data). Hence we use 'NA' in all the remaining S(t).
 
 ```{r}
-dat <- data.frame(
-  time = seq(3, 14, 1),
-   I = c(25,75,227,296,258,236,192,126,71,28,11,1),  
-  S = c(738,NA,NA, NA, NA, NA, NA, NA, NA,NA,NA,NA)
-)
+# dat <- data.frame(
+#   time = seq(3, 14, 1),
+#    I = c(25,75,227,296,258,236,192,126,71,28,11,1),  
+#   S = c(738,NA,NA, NA, NA, NA, NA, NA, NA,NA,NA,NA)
+# )
 ```
 
 Guess initial parameters
@@ -1826,59 +1823,59 @@ Guess initial parameters
 - Note that we also provided S(1) and I(1)
 
 ```{r}
-params <- c(L = 1.0, v = 0.5)
-times <- seq(0, 14)
-y0 <- c(S = 762,I  = 1, N=763)
-out1 <- ode(y0, times, twocomp, params)
-plot(out1, obs = dat)
+# params <- c(L = 1.0, v = 0.5)
+# times <- seq(0, 14)
+# y0 <- c(S = 762,I  = 1, N=763)
+# out1 <- ode(y0, times, twocomp, params)
+# plot(out1, obs = dat)
 ```
 
 
 Next, the cost function
 ============
 ```{r}
-cost <- function(p) {
-  out <- ode(y0, times, twocomp, p)
-  modCost(out, dat, weight = "none") # try weight = "std" or "mean"
-}
+# cost <- function(p) {
+#   out <- ode(y0, times, twocomp, p)
+#   modCost(out, dat, weight = "none") # try weight = "std" or "mean"
+# }
 ```
 
 Fit the model and compare model with fitted parameters against data
 ==============
 
 ```{r}
-fit <- modFit(f = cost, p = params)
-summary(fit)
+# fit <- modFit(f = cost, p = params)
+# summary(fit)
 ```
 
 Plot output with the fitted parameters
 ============
 ```{r}
-out1 <- ode(y0, times, twocomp, params)  
-out2 <- ode(y0, times, twocomp, coef(fit))  
-plot(out1, out2, obs=dat, obspar=list(pch=16, col="red"))
+# out1 <- ode(y0, times, twocomp, params)  
+# out2 <- ode(y0, times, twocomp, coef(fit))  
+# plot(out1, out2, obs=dat, obspar=list(pch=16, col="red"))
 ```
 
 What we would be interested in is the maximum infected
 =========
 ```{r}
-summary(out2)
+# summary(out2)
 ```
 
 Now, we can repeat with larger populations
 ================
 
 ```{r}
-times <- seq(0, 25)
-y0 <- c(S = 100000,I  = 1, N=100001)
-out3 <- ode(y0, times, twocomp, coef(fit))
-plot(out3)
+# times <- seq(0, 25)
+# y0 <- c(S = 100000,I  = 1, N=100001)
+# out3 <- ode(y0, times, twocomp, coef(fit))
+# plot(out3)
 ```
 
 And statistics in the new population
 ========================
 ```{r}
-summary(out3)
+# summary(out3)
 ```
 
 Discrete event simulation
@@ -1908,7 +1905,7 @@ Summary
 
 
 
-R Packages
+Other R Packages for mathematical modeling
 =============
 
 -  R is primarily known as a data analysis environment
@@ -1919,22 +1916,6 @@ R Packages
 -  The strength of R is in its packages (libraries)
 -  R packages allow it to be used in many settings
 
-R and the IE curriculum
-=============
-
--  This lecture is meant to be a reference in how to apply the use of concepts you cover in the IE curriculum and real world settings.
--  The standard first task of any mathematical modeling and analysis is data manipulation.
-    -  This course focuses on data manipulation.
-    -  After the data has been manipulated into usable form, you can use R to apply what you used in your other classes.
--  Packages we will cover in this lecture that relate to the IE curriculum.
-    -  Graphic User Interfaces
-    -  Probability
-    -  Advanced statistics
-    -  Symbolic math
-    -  Differential equations
-    -  Linear algebra
-    -  Linear programming
-    -  Simulation
 
 Evaluating packages
 =============
@@ -1971,7 +1952,7 @@ library(rSymPy)
 ```
 
 ```{r}
-library(rSymPy)
+# library(rSymPy)
 ```
 - Declare variables to be algebraic variables.
 - Declare equation
@@ -1983,81 +1964,55 @@ x+x
 ```
 
 ```{r}
-x<-Var("x")
-x+x
+# x<-Var("x")
+# x+x
 ```
+
+
+```{r}
+# y <- Var("x**3")
+# x/y
 ```
-y <- Var("x**3")
-x/y
+
+
+```{r}
+# z <- sympy("2.5*x**2")
+# z + y
+```
+
+
+```{r}
+# sympy("diff(cos(x), x)")
+```
+
+
+```{r}
+# sympy("a = x**2+2*x+1")
+# sympy("b = (x+1)**2")
+# sympy("simplify(a-b)")
+```
+
+
+
+```{r}
+# sympy("simplify((x**3 + x**2 - x - 1)/(x**2 + 2*x + 1))")
 ```
 
 ```{r}
-y <- Var("x**3")
-x/y
+# sympy("expand((x + 2)*(x - 3))")
+# sympy("factor(x**3 - x**2 + x - 1)")
 ```
 
-```
-z <- sympy("2.5*x**2")
-z + y
-```
 
 ```{r}
-z <- sympy("2.5*x**2")
-z + y
+# sympy("a")
+# sympy("integrate(a, (x))")
+# sympy("integrate(a, (x, 0, 1))")
 ```
 
-```
-sympy("diff(cos(x), x)")
-```
-```{r}
-sympy("diff(cos(x), x)")
-```
-```
-sympy("a = x**2+2*x+1")
-sympy("b = (x+1)**2")
-sympy("simplify(a-b)")
-```
 
 ```{r}
-sympy("a = x**2+2*x+1")
-sympy("b = (x+1)**2")
-sympy("simplify(a-b)")
-```
-
-```
-sympy("simplify((x**3 + x**2 - x - 1)/(x**2 + 2*x + 1))")
-```
-
-```{r}
-sympy("simplify((x**3 + x**2 - x - 1)/(x**2 + 2*x + 1))")
-```
-
-```
-sympy("expand((x + 2)*(x - 3))")
-sympy("factor(x**3 - x**2 + x - 1)")
-```
-
-```{r}
-sympy("expand((x + 2)*(x - 3))")
-sympy("factor(x**3 - x**2 + x - 1)")
-```
-
-```
-sympy("a")
-sympy("integrate(a, (x))")
-sympy("integrate(a, (x, 0, 1))")
-```
-```{r}
-sympy("a")
-sympy("integrate(a, (x))")
-sympy("integrate(a, (x, 0, 1))")
-```
-```
-sympy("diff(a, x)")
-```
-
-```{r}
-sympy("diff(a, x)")
+# sympy("diff(a, x)")
 ```
 
 
@@ -2092,8 +2047,8 @@ A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
 
 
 ```{r}
-A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
-A
+# A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
+# A
 ```
 
 rbind
@@ -2107,11 +2062,11 @@ Arow <- rbind(row1, row2, row3)
 ```
 
 ```{r}
-row1 <- c(1, 1, 0)
-row2 <- c(2, -1, 3)
-row3 <- c(1, -2, -1)
-Arow <- rbind(row1, row2, row3)
-Arow
+# row1 <- c(1, 1, 0)
+# row2 <- c(2, -1, 3)
+# row3 <- c(1, -2, -1)
+# Arow <- rbind(row1, row2, row3)
+# Arow
 ```
 
 cbind
@@ -2124,11 +2079,11 @@ Acol <- cbind(col1, col2, col3)
 ```
 
 ```{r}
-col1 <- c(1,2,1)
-col2 <- c(1,-1,-2)
-col3 <- c(0, 3, -1)
-Acol <- cbind(col1, col2, col3)
-Acol
+# col1 <- c(1,2,1)
+# col2 <- c(1,-1,-2)
+# col3 <- c(0, 3, -1)
+# Acol <- cbind(col1, col2, col3)
+# Acol
 ```
 
 Solving linear equations
@@ -2161,9 +2116,9 @@ b= c(0, 3, 3)
 ```
 
 ```{r}
-print(A)
-b= c(0, 3, 3)
-print(b)
+# print(A)
+# b= c(0, 3, 3)
+# print(b)
 ```
 
 Solve using `solve` command
@@ -2174,7 +2129,7 @@ solve(A,b)
 ```
 
 ```{r}
-solve(A,b)
+# solve(A,b)
 ```
 
 
@@ -2238,56 +2193,41 @@ end;
 Applying glpkAPI
 =============
 
-```
-library(glpkAPI)
-mip <- initProbGLPK()
-setProbNameGLPK(mip, "transport")
-trans <- mplAllocWkspGLPK()
-result <- mplReadModelGLPK(trans,
-	system.file("extdata", "transport.mod", package = "glpkAPI"), skip=0)
-result <- mplGenerateGLPK(trans)
-result <- mplBuildProbGLPK(trans, mip)
-```
 
 
 ```{r}
-library(glpkAPI)
-mip <- initProbGLPK()
-setProbNameGLPK(mip, "transport")
-trans <- mplAllocWkspGLPK()
-result <- mplReadModelGLPK(trans,
-	system.file("extdata", "transport.mod", package = "glpkAPI"), skip=0)
-result <- mplGenerateGLPK(trans)
-result <- mplBuildProbGLPK(trans, mip)
+# library(glpkAPI)
+# mip <- initProbGLPK()
+# setProbNameGLPK(mip, "transport")
+# trans <- mplAllocWkspGLPK()
+# result <- mplReadModelGLPK(trans,
+# 	system.file("extdata", "transport.mod", package = "glpkAPI"), skip=0)
+# result <- mplGenerateGLPK(trans)
+# result <- mplBuildProbGLPK(trans, mip)
 ```
 
 Solve problem
 =============
 
-```
-return <- solveSimplexGLPK(mip)
-return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
-```
-
 ```{r}
-return <- solveSimplexGLPK(mip)
-return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
+# return <- solveSimplexGLPK(mip)
+# return <- mplPostsolveGLPK(trans, mip, GLP_MIP);
 ```
 
 look at solution and costs
 =============
 
 ```{r}
-numrows <- getNumRowsGLPK(mip)
-numcols <- getNumColsGLPK(mip)
-for (i in 1:numrows){
-  print(getRowNameGLPK(mip, i))
-  print(getRowPrimGLPK(mip, i))
-}
-for (j in 1:numcols){
-  print(getColNameGLPK(mip, j))
-  print(getColPrimGLPK(mip, j))
-}
+# numrows <- getNumRowsGLPK(mip)
+# numcols <- getNumColsGLPK(mip)
+# for (i in 1:numrows){
+#   print(getRowNameGLPK(mip, i))
+#   print(getRowPrimGLPK(mip, i))
+# }
+# for (j in 1:numcols){
+#   print(getColNameGLPK(mip, j))
+#   print(getColPrimGLPK(mip, j))
+# }
 ```
 
 
