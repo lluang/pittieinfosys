@@ -3,6 +3,7 @@ title: 'Lab 8: Data formats'
 author: "IE 0015 Information Systems"
 date: "Spring 2017"
 output:
+  pdf_document: default
   html_document: default
 ---
 

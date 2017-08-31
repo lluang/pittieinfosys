@@ -3,8 +3,8 @@ title: 'Lab 4: Tidy data in R'
 author: "IE 0015"
 date: "January 26, 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 Note: this lab should be written using R Markdown.  The lab is provided as an R Markdown file for your convenience as a starting point. You should change the author and date appropriately. For the final submission, you should render (Knit) this as either a Word or PDF document and print that output.

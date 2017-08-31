@@ -2,7 +2,9 @@
 title: 'Lab 5:  Aggregation'
 author: "IE 0015 Information Systems Engineering"
 date: "February 2017"
-output: html_document
+output: 
+    pdf_document: default
+    html_document: default
 ---
 
 ```{r loadlibraries, warning=FALSE}

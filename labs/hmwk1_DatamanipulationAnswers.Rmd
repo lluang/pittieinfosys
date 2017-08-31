@@ -3,8 +3,8 @@ title: 'Homework 1: Data manipulation'
 author: "IE 0015"
 date: "February 15, 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 For the homework assignments, code and narrative should be written using R Markdown.  Process maps can be written on separate pieces of paper. You should render the R Markdown as PDF or Word, print the output, and staple with the process maps for the complete submission.

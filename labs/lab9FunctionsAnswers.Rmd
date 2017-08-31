@@ -3,6 +3,7 @@ title: 'Lab 9: Advanced Programming'
 author: "IE 0015 Information Systems"
 date: "March 2017"
 output:
+  pdf_document: default
   html_document: default
 ---
 
