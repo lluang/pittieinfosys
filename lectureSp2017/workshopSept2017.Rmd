@@ -1,0 +1,1194 @@
+---
+title: "R, R Studio, and Version Control"
+author: "Louis Luangkesorn"
+date: "September 20, 2017"
+output:
+  document: html_document
+  presentation: slidy_presentation
+---
+
+# Outline
+
+- Getting started
+- Philosophy of R and R Studio
+- Git and version control
+- Reading data from Excel
+- Dates with lubridate
+- Data manipulation with dplyr
+    - Data manipulation verbs
+- Plots with ggplot
+
+Getting started
+===========
+
+Primary references
+
+- R for Data Science (http://r4ds.had.co.nz)
+- Modern Dive: An introductionto statistical and Data Sciences via R (http://moderndive.com)
+
+
+R Philosophy
+=====
+- Open source
+- Made up of many components that work together
+- R - statistics and computation
+- R Studio - Development environment
+    - Editor - Atom editor
+    - Console - For R
+    - Project based
+    - Watch video at https://www.rstudio.com/products/RStudio/
+    - Literate programming and document creation - Markdown and LaTeX
+- Version control
+    - Git
+
+Under the hood
+==============
+
+- Much of R is written in R
+- Basic low-level math is in C or Fortran
+    - e.g. BLAS, LAPACK
+- `.C()`, `.Fortran()` functions allow for calling C or Fortran functions as R functions
+    - Requires an appropriate compiler available.
+-  `Rcpp` package allows for calling C++ code
+- Fits the philosophy of using the right tool for the job.
+    - `R` becomes an interactive scripting language that pulls everything together.
+
+R Packages
+=======
+
+- Packages have advanced statistical functionality
+- Written by the same people that write textbooks and journal articles
+- Often packages have numerically intensive parts written in C, Fortran or C++
+- Some packages are wrappers around mathematical libraries written in Python or Java
+- We use the `tidyverse` family of packages, focus on working with dataframes.
+    - Improves our ability to read our programs
+
+Example:  ggplot2
+=====
+- You can install library in R Studio
+- Lower right
+- Packages tab
+  - Install button
+  - Select CRAN repository
+  - Enter the names of packages that you want to install.
+
+Run code chunk (upper right of editor window) look at output in R Studio editor window and in Environment tab (upper right quadrant of R Studio)
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(magrittr)
+```
+
+Tour of R Studio
+==============
+
+Editor
+-------
+
+- Based on the Atom programmers editor
+- R
+- R Markdown - knitr
+- LaTeX/Sweave
+- C++
+
+R Markdown
+--------------
+
+- Document format meant to evoke writing a formatted text using only plain text.
+- Underlines to indicate headings
+- hash marks to indicate bullet lists
+- Single \* to indicate *italics*
+- Double \*\* to indicate **bold face**
+
+Code chunks
+--------------
+
+- R Markdown allows for code to be embedded in documents
+- Use '```{r}' to begin a code block
+- Use '```' to end a code block
+- Code blocks can be run.
+  - Newer versions of R Studio will show output below the block in addition to the console.
+
+```{r}
+5+5
+```
+
+Console
+--------
+
+- Read, Evaluate, Print loop (REPL)
+- Allows for iterative development
+- Run code from the code window <ctrl><Enter>
+- Run command in upper right of the Editor window
+
+Environment/History
+-------------
+
+- Everything that is available to the current console
+- Data frames first
+  - Double click on data frame to get a data explorer view
+- Next all variables
+- List data types and example data elements
+
+Git
+-------
+
+- If you have a current project with version control, a Git tab is available.
+
+
+
+Lower right
+-----------
+
+- File explorer
+- Plots from console
+- Packages installed
+- Help file navigator
+- Viewer (latest rendering of R Markdown document)
+
+Version control and Git
+=======================
+
+Why version control?
+--------------------
+
+- Problem: Programming is complex, and analysis changes.
+- What if you had to recreate an analysis exactly from a year ago?
+    -  Maybe keep multiple versions? But time stamps change and directories get cluttered.
+    -  What if you make a change, and want to re-run all of your analysis, with the change everywhere?
+-  What if you have a big project with many people working on different parts. How do you keep everyone synchronized?
+
+What is a version control system
+--------------------------------
+
+- A repository (database) that keeps track of files with all changes (when and by whom)
+- Think MS Word track changes, except you always keep a record of all changes.
+- Generally, only usable with text files
+    - Programming
+    - Markdown or LaTeX
+    - text file notes
+    - xml/html (note: modern MS Office files are XML files that have been compressed using zip)
+- You can compare any two historical versions, you can pull the version that existed at any time.
+- Each person has her own copy of the code repository, and commits code to the repository, pushes and pulls changes from a remote repository, and 
+
+What is Git
+-----------
+
+- Git is a Distributed Version Control System
+    - Distributed means that the various repositories that exist are created equal.
+    - Changes to one repository will be propagated to all copies that are connected through pushing and pulling changes.
+    - Note: in practice, one repository will usually be the principle `remote` repository.
+
+Version control system principles
+---------------------------------
+
+- In a centralized version control system, there is one repository.
+- Team members each have a code based linked to that repository.
+- As team members reach milestones, they push changes to the central server repository.
+- As team members work, the pull other team member changes from the repository to their own code base.
+-*Subversion* is probably the best known example
+
+![Centralized Version Control](https://git-scm.com/book/en/v2/images/centralized.png)
+
+Distributed version control operations
+--------------------------------------
+
+- In DVCS, each team member has a local repository, and a local code base.
+- There is usually a single remote repository that is considered the master.
+- Team members commit changes to their local repository as they reach milestones.
+- Local repository changes are pushed to a remote repository as able.
+- Team member pull from a remote repository to receive other team member changes.
+- In principle, pushes and pulls can be done with any other repository, as long as their is a chain of pushes and pulls that bring all team members in sync the entire team is connected.
+
+![Distributed Version Control](https://git-scm.com/book/en/v2/images/distributed.png)
+
+Version control workflow
+-------------------------
+
+-  Pull changes from remote repository to local repository and local code based
+-  Work on local code base
+-  Stage changes to be saved permanently
+-  Commit changes with comments in local repository
+-  Push changes to remote repository
+
+![Git workflow](https://git-scm.com/book/en/v2/images/areas.png)
+
+
+Doing this in R Studio
+----------------------
+
+-  R Studio is a modern development environment
+    - Therefore it includes built in tools for basic use of Git or Subversion
+    - If you have created a project, a Git tab is available in the upper right quadrant.
+-  Help is available at 
+
+Data structures in R
+====================
+
+- common data types
+  - integer, double, strings, boolean
+  - factor, ordered
+  - Lists
+  -  Data frames
+     - List of lists
+     - Used to group related information
+     - Provide statistical functions with information about data types (e.g. numerical or factor)
+     - This data type is what makes R (and Python, Julia, Scala) especially suited for data analysis.
+
+```{r}
+height <- c(150, 160, 154, 140, 200)
+class <- c("C", "A", "B", "A", "C")
+id <- c(101, 102, 103, 104, 105)
+
+roster <- data.frame(id = id,
+                     class = class,
+                     height_cm = height)
+```
+
+Working with data
+=================
+
+-  `tidyverse` - A collection of packages that are used for manipulating data frames.
+  - Often called the *hadleyverse* after Hadley Whickam
+- `ggplot` - Graphics and charting
+- `lubridate` - Working with date and times
+- `dplyr` - Data manipulation
+- `readxl` - Read data from Excel formats
+- `magittr` - Pipes `%>%`
+
+Workflow in R
+===========
+
+- R markdown file
+- Import data
+- Cleaning data
+- Describe analysis
+- Conduct analysis
+- Present results
+
+R Markdown
+========
+
+- Editor
+- Combines text (narrative) and R code in a single document.
+- Text can be formatted
+    - Normal text
+    - *italics*
+    - **bold**
+- Section headers
+    - H1 (top level) headers
+        - Underline using '='
+        - Single # before text
+    - H2 (second level) headers
+        - Underline using '-'
+        - Two ## before text
+    - Additional levels of headings using more '#'
+-  Mathematical symbols
+    - LaTeX markup available using '$' for inline $\frac{2}{3}$ or '$$' for separate lines
+    $$ax^2 + by^2$$
+
+R Studio tools
+===============
+
+-  Use of R Studio or R Commander tools generates R code in the History tab
+-  Copy code to source or console to re-run code or to save and edit code in R script.
+
+
+
+Rendering Markdown documents
+============================
+
+-  Type can be identified at document creation
+-  Additional document type options can be added to top of file
+-  'Knit'
+    - Documents:  HTML, PDF, Word (.docx)
+    - Presentations:  Beamer (LaTeX -> pdf), html slides (slidy, ioslides)
+-  Further documentation available on using Word, LaTeX, or html templates.
+
+
+Import data
+============
+
+-  `readxl` (part of `tidyverse`) package is used to read data from an Excel Spreadsheet
+-  Data is read into a data frame
+-  Various functions allow for import of csv, text tables, various databases (via specialized packages or ODBC, but not MS Access)
+-  From web (json)
+-  Note: `readxl` will try to guess the data type. If there are mixed data types in the data, it will read as a character
+-  Check for missing values. R will usually convert blank cells to missing values, but some programs will use another character as a placeholder
+
+```{r}
+library(readxl)
+ED_2017_May_July_Admitted <- read_excel("E:/Box Sync/CHP ED Project/Data/Data update Admitted.xls")
+
+```
+
+Check for na
+------------
+
+- Note that some dates look like they are of type `chr`
+  - Look at Excel file and how blank values are treated
+  - identify `NA` placeholders
+
+```{r}
+ED_2017_May_July_Admitted <- read_excel("E:/Box Sync/CHP ED Project/Data/Data update Admitted.xls", na='-')
+```
+
+Convert to factors
+---------
+
+- Look for data elements with a small number of unique values to convert to factors
+- "small" may be relative
+
+```{r}
+length(unique(ED_2017_May_July_Admitted$`ESI (Acuity Level)`))
+length(unique(ED_2017_May_July_Admitted$`Chief Complaint`))
+length(unique(ED_2017_May_July_Admitted$`Visit Reason`))
+```
+```{r}
+ED_2017_May_July_Admitted$`ESI (Acuity Level)` <- as.factor(ED_2017_May_July_Admitted$`ESI (Acuity Level)`)
+ED_2017_May_July_Admitted$`Chief Complaint` <- as.factor(ED_2017_May_July_Admitted$`Chief Complaint`)
+```
+       
+
+Data frames
+==============
+
+- List of lists
+- Combines data related to a dataset
+- Maintains knowledge of data types of each data element
+- Many R functions and packages (e.g. tidyverse family) require that data are in a data frame so that type information is available.
+
+Dates
+======
+
+- Standard date format is POSIXct
+- Sometimes, you get a string that is is a number starting in the 40000s
+  - Check to see that missing values are handled properly
+  - This is the number of days since 1970-01-01, i.e. the epoch date
+  - Convert to POSIXct using as.POSIXct or as.Date
+
+Dates and times with Lubridate
+===========
+
+Things we need to do with dates and times
+----------------------------------
+
+- Calculate intervals
+- Sort
+- Convert formats
+- Weekday, weekends
+- Time zones
+
+Date time classes
+------
+- Example: Calculate intervals for Room assignment to Time left ED for admitted patients
+
+- `readxl` read dates as date time classes
+- Use `difftime` to calculate differences
+- Remember to set units
+
+```{r}
+ED_2017_May_July_Admitted$Assignment_to_Leave <- 
+  difftime(ED_2017_May_July_Admitted$`Time Left ED`, ED_2017_May_July_Admitted$`Room Assign`, units="mins") 
+head(ED_2017_May_July_Admitted$Assignment_to_Leave)
+```
+
+
+Lubridate
+------------
+
+
+```{r}
+library(lubridate)
+```
+
+
+Read in date time
+-----------------
+
+- `readxl` did this for us.
+-  Can also use lubridate functions if the dates and times were in non-standard formats.
+
+```{r}
+ymd(20170131)
+```
+```{r}
+ymd_hms("20170131 08:15:00", tz="EST")
+```
+
+Calculate intervals
+-------------------
+
+- Lubridate has three concepts of time intervals
+- Durations - Exact number of seconds (or minutes, hours, days)
+- Periods - Human type units.  Weeks, months, years
+  - Months and years can have variable numbers of days
+- Intervals - Time periods with start and end points
+
+
+Durations
+---------
+
+- Think in terms of seconds
+
+```{r}
+head(as.duration( ED_2017_May_July_Admitted$Assignment_to_Leave))
+
+```
+
+Arithmetic on durations
+-------
+
+- You can add and multiply durations
+```{r}
+print(dhours(2) + dminutes(15))
+print(2 * dminutes(1))
+```
+- `dseconds(), dminutes(), dhours(), ddays(), dweeks()`
+  -  note the use of `d` before the unit 
+- `dyears` uses a standard 365 days per year)
+-  Note: beware of time zones and daylight time doing something
+
+```{r}
+one_pm <- ymd_hms("2016-03-12 13:00:00", tz = "America/New_York")
+print(one_pm)
+print(one_pm + ddays(1))
+```
+
+Periods
+-------
+
+- Account for things like daylight savings, length of months, leap years
+- no `d` before the unit
+
+```{r}
+print(one_pm)
+print(one_pm + days(1))
+```
+
+
+Intervals
+---------
+
+- A period of time with a starting point
+- You can use this to see if you overlap
+- 
+
+```{r}
+daybeforeyesterday <- today() - days(2)
+print(today() %--% daybeforeyesterday)
+print((today() %--% daybeforeyesterday)/hours(1))
+```
+
+Data manipulation verbs and dplyr
+===============================================
+
+- Things we often need to do with data
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+In dplyr
+--------
+
+-  filter() (and slice())
+-  arrange()
+-  select() (and rename())
+-  distinct()
+-  mutate() (and transmute())
+-  summarise()
+-  sample_n() (and sample_frac())
+
+Pipes and magrittr
+------------------
+
+- Every dplyr function takes a data frame and returns a dataframe.
+- We can use pipes `%>%` as a short hand to express this.
+
+```{r}
+library(dplyr)
+library(magrittr)
+```
+
+Filter
+------
+
+-  Select rows based on a criteria
+-  Corresponds to `WHERE` in SQL
+```{r}
+ED_2017_May_July_Admitted$checkinmonth <- month(ED_2017_May_July_Admitted$`Check In Date (Date of Arrival)`)
+head(ED_2017_May_July_Admitted %>% filter(checkinmonth==6))
+```
+
+```{r}
+ED_2017_May_July_Admitted$checkinmonth <- month(ED_2017_May_July_Admitted$`Check In Date (Date of Arrival)`)
+head(ED_2017_May_July_Admitted %>% 
+       filter(checkinmonth==6) %>%
+        filter(Age<2))
+```
+  
+
+Arrange
+------
+
+-  `arrange` sorts rows
+-  Corresponds to `ORDER BY` in SQL
+
+```{r}
+head(ED_2017_May_July_Admitted %>% 
+       filter(checkinmonth==6) %>%
+        filter(Age<2) %>% 
+        arrange(Arrival))
+```
+
+Select columns
+------
+
+- `select` chooses columns to include in the output
+  - Note: Corresponds to first part of `SELECT` statement in SQL
+
+```{r}
+#hogwartstudents %>% select(name, house)
+```
+
+
+Mutate
+------
+
+- Perform a calculation to create a column
+
+```{r}
+ED_2017_May_July_Admitted %>%
+  mutate(time_to_rapidtriage = difftime(ED_2017_May_July_Admitted$`Rapid Triage Complete Time`, ED_2017_May_July_Admitted$Arrival, units="mins")) %>%
+  select(Arrival, `Rapid Triage Complete Time`, time_to_rapidtriage) %>%
+  head()
+```
+
+```{r}
+ED_2017_May_July_Admitted <- ED_2017_May_July_Admitted %>%
+  mutate(arrivalmonth = month(Arrival))
+```
+
+
+Summarise (Group By)
+------
+
+- Summarise requires a grouping
+
+```{r summarizehogwarts}
+ED_2017_May_July_Admitted %>%
+  filter(arrivalmonth==6) %>%
+  group_by(Age) %>%
+  summarise(number = n(), edlos = mean(`LOS (min)`))
+```
+
+Random sample
+------
+
+```{r}
+ED_2017_May_July_Admitted %>% sample_frac(size = 0.1) %>%
+  filter(arrivalmonth==6) %>%
+  group_by(Age) %>%
+  summarise(number = n(), edlos = mean(`LOS (min)`))
+
+```
+
+
+```{r}
+ED_2017_May_July_Admitted %>%
+  mutate(time_to_rapidtriage = difftime(ED_2017_May_July_Admitted$`Rapid Triage Complete Time`, ED_2017_May_July_Admitted$Arrival, units="mins")) %>%
+  group_by(Age) %>%
+  summarize(count = n(), avgtimetotriage = mean(time_to_rapidtriage, na.rm = TRUE)) 
+```
+
+Joins
+------
+
+-  Combine two tables based on common columns
+  - `dplyr` in "Two-table verbs"
+-  Let `dplyr` identify the columns (if names are the same) or specify them.
+-  `inner_join` - Same row in both sides in result
+-  `left_join` - All rows from left side, rows in right when available
+-  `right_join` - All rows from right side, rows on left when available
+-  `full_join` - All rows from each table are in result. When there is not a match, fields will be left blank.
+-  `semi_join` - Keeps all observations in left that have a match on right
+-  `anti-join` - Drops all observations in x that have a match on the right.
+
+```{r}
+library(nycflights13)
+flights2 <- flights %>% select(year:day, hour, origin, dest, tailnum, carrier)
+head(flights2)
+```
+```{r}
+head(airlines)
+```
+```{r}
+flights2 %>%
+   left_join(airlines) %>%
+     head()
+```
+
+Set operations
+-------------
+
+- intersect()
+- union()
+- setdiff()
+
+```{r}
+print(df1 <- data_frame(x = 1:2, y = c(1L, 1L)))
+print(df2 <- data_frame(x = 1:2, y = 1:2))
+```
+
+```{r}
+print(intersect(df1, df2))
+print(union(df1, df2))
+print(setdiff(df1, df2))
+print(setdiff(df2, df1))
+```
+Thinking about aggregation
+========================
+
+-  What are the groups that are useful to aggregate on?
+-  What is the nature of data to be operated on?
+-  What is the desired end result.
+
+Using dplyr
+===========
+
+-  Use `group_by` and `summarize` functions
+
+```{r}
+# diamonds %>% group_by(color, clarity) %>%
+#   summarize(Count = n(), AvgPrice = mean(price)) %>%
+#     head()
+```
+
+Grammer of graphics
+===========
+
+- A statistical graphic is a mapping of `data` variables to `aes`thetic attributes of `geom`etric objects.
+
+- docs.ggplot2.org
+
+Overview of Grammar of Graphics
+============
+
+A plot is composed of:
+-  data
+-  aesthetic - How the data will be plotted
+-  geom - Indicates the type of plot
+
+And can also have:
+
+-  facets - Indicates multiple plots
+-  scaling - How data layout
+-  statistic - Transformation of the data
+-  position adjustment - To avoid overplotting
+
+
+
+Aesthetics - appearance
+=======================
+
+- Change the appearance of data elements using aesthetics.
+- Color, shape, size, transparency (alpha), etc.
+- Each aesthetic displays an additional aspect of the data.
+
+
+```{r}
+library(ggplot2)
+```
+```{r}
+# dsmall <- diamonds %>% sample_frac(0.1)
+# ggplot(dsmall, aes(carat, price, shape=cut, color=color)) + geom_point()
+```
+```
+ggplot(diamonds, aes(carat, price, shape=cut, color=color)) + geom_point()
+```
+
+```{r}
+# ggplot(dsmall, aes(carat, price, shape=cut, size=price)) + geom_point()
+```
+
+
+Faceting
+==========
+
+-  How data will be divided among multiple plots
+-  Note the use of the function format
+   *y ~ x*
+
+```{r}
+# ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(color ~ .)
+```
+
+Faceting horizontally
+=====
+
+
+-  Change the order of the function in the facet_grid to layout facets horizontally
+```{r}
+# ggplot(dsmall, aes(carat, price, shape=cut)) + geom_point() + facet_grid(. ~ color)
+```
+
+Scaling
+=========
+
+-  Horizontal (x), vertical (y) positioning and color.
+  -  Linear
+  -  Log transforms
+-  Coordinate system
+  -  Cartesian (rectangular)
+  -  Polar
+  -  Spherical
+
+
+
+Layering
+======
+
+-  The mechanism by which we add data elements to a plot.
+-  In qplot, each layer must come from a single dataset and single set of aesthetic mappings.
+-  In ggplot, layers can come from different datasets and aesthetic mappings.
+- `layer(geom, geom_params, stat, stat_params, data, mapping)`
+  -  *mapping*
+  -  *data* (if not the default from the call to *ggplot*)
+  -  *geom* and *stat* - There is a default *stat* for each *geom*, and a default *geom* for each *stat*, so you only need to define one.
+  -  *position*
+
+Position adjustments
+============
+
+-  `dodge` - Dodge overlaps to the side
+-  `fill` - Stack overlapping objects and
+-  `identity` - Don't adjust position
+-  `jitter` - Jitter points to avoid overplotting
+-  `stack` - Stack overlapping objects on top of each other
+
+
+Putting together a plot
+============
+
+- Build plots layer by layer
+- Start with identifying the data frame.
+- (Note nothing happens)
+
+```{r}
+# p = ggplot(dsmall)
+```
+
+Identify how the data will be displayed (aesthetic)
+====================
+
+- Using *aes*, identify which data elements will be chosen.
+- First attribute is the x-axis (if only one, then it is a histogram or density plot)
+- Second attribute is the y-axis.
+- Additional attributes need to be mapped to other visual cues (color, size, shape, etc)
+- Note: you can build plots by building on the plot object.
+
+```{r}
+# p1 = p + aes(x = carat)
+```
+
+Declare the type of plot (geom)
+======================
+
+-  Add the plot layer, which includes the *geom* of the plot, i.e. the type of plot.
+-  **Now** the plot can be displayed
+
+```{r}
+# p2 = p1 +  geom_histogram()
+# p2
+```
+
+Same thing, but with density
+==========
+```{r}
+# p3 = p1 + geom_density()
+# p3
+```
+
+Same thing, but using different layer (and attributes)
+============
+```{r}
+# dbar = ggplot(dsmall, aes(x = carat, y = price)) + geom_point()
+# show(dbar)
+```
+
+Let's add in some options such as a statistic
+=================
+
+- stat = bin identifies how grouping will be done for the bar (histogram)
+
+```{r}
+# dbar = ggplot(dsmall) + aes(x = carat) +
+#   geom_histogram(binwidth = 0.1)
+# dbar
+```
+
+Plot geom examples
+=====
+type:section
+
+
+Layer shortcuts can specify the geom separately
+===========
+
+-  `geom_area()`
+-  `geom_point()`
+-  `geom_path()`
+-  `geom_line()`
+-  `geom_smooth()`
+-  `geom_abline()`
+-  `geom_bar()`
+-  `geom_histogram()`
+-  `geom_density()`
+-  `geom_abline()`
+-  `geom_violin()`
+
+
+Geom and stat
+===========
+
+-  Each geometry has a counterpart default statistics
+-  Each statistic has a default geometry
+-  They can be specified
+
+Examples of stat
+========
+
+-  `stat_bin()` -  `stat_bin2d()`
+-  `stat_bindot()`
+-  `stat_binhex()`
+-  `stat_boxplot()`
+-  `stat_contour()`
+-  `stat_density()`
+-  `stat_density2d()`
+-  `stat_qq()`
+-  `stat_quantile()`
+-  `stat_smooth()`
+-  `stat_function()`
+-  `stat_sum()`
+-  `stat_summary()`
+-  `stat_summary_hex()`
+-  `stat_summary2d()`
+
+Some basic examples of ggplot
+===========
+
+- `ggplot` requires a dataframe with data, and can take data labels
+- We can create a number of different plots by identifying the data and aesthetic, then applying different geometries to them.
+
+
+```{r}
+# df <- data.frame(
+# x = c(3, 1, 5), y = c(2, 4, 6), label = c("a","b","c")
+# )
+# p <- ggplot(df, aes(x, y, label = label)) + xlab(NULL) + ylab(NULL)
+```
+
+Scatter plot using geom_point
+======
+
+```{r}
+# p + geom_point() + ggtitle("geom_point") + aes(size=4)
+```
+
+Bar plot using geom_bar
+======
+- Note: stat="identity" used to provide the y-value
+
+```{r}
+# p + geom_bar(stat="identity") + ggtitle("geom_bar(stat=\"identity\")")
+```
+
+Line plot using geom_line
+======
+
+```{r}
+# p + geom_line() + labs(title = "geom_line")
+```
+
+Filled line plot using geom_area
+======
+
+```{r}
+# p + geom_area() + labs(title = "geom_area")
+```
+
+Pathway plot using geom_path
+======
+
+Contrast this to the standard line plot. Order matters
+
+```{r}
+# p + geom_path() + labs(title = "geom_path")
+```
+
+Use text to label the data points using geom_text
+======
+
+```{r}
+# p + geom_text() + labs(title = "geom_text")
+```
+
+Data elements using regions instead of points using geom_tile
+======
+
+```{r}
+# p + geom_tile() + labs(title = "geom_tile")
+```
+
+Generate a polygon by specifying the corners using geom_polygon
+======
+
+```{r}
+# p + geom_polygon() + labs(title = "geom_polygon")
+```
+
+Point
+====
+-  Add multiple aesthetics to a graph to show more dimensions of meaning
+
+```{r}
+# p = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
+# show(p)
+```
+
+Bar charts
+=====
+left:
+
+```{r}
+# p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
+# p + geom_bar() + labs(title="Default for bar plots is to stack")
+```
+
+```{r}
+# p + geom_bar(position="identity") + labs(title="Otherwise they hide each other")
+```
+
+More bar chart styles
+=====
+
+
+```{r}
+# p + geom_bar(position="fill") + labs(title="A fill shows percentages of each classification")
+```
+
+```{r}
+# p + geom_bar(position="dodge") + labs(title="dodge puts the bars next to each other")
+```
+
+Pie charts
+====
+
+Pie charts are like bar charts on polar coordinates.
+
+```{r}
+# p = ggplot(diamonds, aes(x=factor(1), fill=cut))
+# p + geom_bar(width=1,position="fill") + coord_polar(theta="y") + labs(title="Fraction of sample with each quality of cut", ylab="")
+```
+
+Pie charts - 2
+======
+
+- But you can use the size of the pie slice to communicate other information
+
+```{r}
+# p = ggplot(diamonds, aes(clarity, fill=cut, color=cut))
+# p + geom_bar(width=1) + coord_polar() + labs(title="Number of samples with each type of cut by level of clarity")
+```
+
+Area
+===
+
+```{r}
+# d <- ggplot(diamonds, aes(carat))
+# d + stat_bin(aes(ymax = ..count..), binwidth = 0.1, geom = "area")
+```
+
+```{r}
+# d + stat_bin(aes(size = ..density..), binwidth = 0.1, geom = "point", position="identity")
+```
+
+Histograms and density
+===================
+
+```{r, echo=FALSE}
+# d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
+```
+
+```{r}
+# d + geom_histogram(aes(y=..density..), binwidth=0.25) + labs(title="Histograms")
+# d + geom_histogram(aes(y=..density..), binwidth=0.25, colour="black", fill="white") + labs(title="Histograms")
+```
+
+
+```{r}
+# d + geom_density() + labs(title="Density-moving window")
+```
+
+Adding to aesthetics
+=====
+
+```{r}
+# d + geom_histogram(aes(y=..density..), binwidth=0.25) + labs(title="Histograms")
+```
+
+```{r}
+# d + geom_histogram(aes(y=..density..), binwidth=0.25, colour="black", fill="white") + labs(title="Histograms")
+```
+
+
+Box and whiskers and violin plots
+===========
+
+```{r, echo=FALSE}
+# d <- ggplot(diamonds, aes(x=color,y = carat))
+```
+```{r}
+# d + geom_boxplot()
+```
+
+```{r}
+# d + geom_violin()
+```
+
+
+Density functions
+=================
+
+```{r, echo=FALSE}
+# d <- ggplot(diamonds, aes(carat)) + xlim(0, 3)
+```
+```{r}
+# d + geom_density() + labs(title="Density - Moving window")
+```
+
+```{r}
+# d + stat_ecdf() + labs(title="Cumulative distribution")
+```
+
+Two-dimensional plotting
+==============
+
+-  Sometimes, the data is best represented as located on a two dimensional axis, then a third dimension is needed to display the data.
+-  e.g. events in time that are on both daily and weekly cycles.
+-  Contours
+-  Heat maps (2-D bins)
+
+```{r}
+# d <- ggplot(diamonds, aes(x = carat, y = clarity))
+# d + geom_bin2d()
+```
+
+2-D density plots
+====
+```{r}
+# diamonds$price = as.numeric(diamonds$price)
+# d <- ggplot(diamonds, aes(x = carat, y = depth))
+# d + geom_density2d()
+```
+
+
+Contour data
+=====
+
+```{r}
+# # Generate data
+# library(reshape2) # for melt
+# volcano3d <- melt(volcano)
+# names(volcano3d) <- c("x", "y", "z")
+# v <- ggplot(volcano3d, aes(x, y, z = z))
+```
+
+```{r}
+# v + stat_contour()
+```
+
+Use bins to modify the contour statistics
+==========
+
+```{r}
+# v + stat_contour(bins=2)
+```
+
+```{r}
+# v + stat_contour(bins=5)
+```
+
+Use bins to modify the contour statistics
+==========
+
+
+```{r}
+# v + stat_contour(binwidth=10)
+```
+
+```{r}
+# v + stat_contour(binwidth=25)
+```
+
+
+Other appearances
+======
+
+
+Scales
+=====
+
+- We can set the scales for any visual cue to represent the data.
+
+Types of scales
+===
+
+-  `scale_area()`
+-  `scale_color_gradient()`
+-  `scale_color_hue()`
+-  `scale_color_grey()`
+-  `scale_shape()`
+-  `scale_size()`
+-  `scale_x_datetime()`
+
+
+
+Faceting
+======
+
+-  Using the same dataset, create a set of graphs for different selections of the data.
+
+```
+d <- ggplot(diamonds, aes(x = carat)) + geom_density()
+d + facet_grid(. ~ clarity)
+```
+
+Or arrange the facets into rows and columns
+=====
+```
+d + facet_wrap(~ clarity)
+```
+
+Themes
+======
+
+-  The default ggplot theme is meant for working on screen.
+-  Can change individual elements or create a theme for everything other than the data
+-  Example: black and white backgrounds
+
+```{r}
+# t = ggplot(dsmall,aes(carat, price, color = color)) + geom_point()
+```
+
+```{r}
+# show(t)
+```
+
+
