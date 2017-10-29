@@ -57,10 +57,10 @@ install.packages(c("ggplot2",  "knitr",  "reshape2",  "dplyr",  "rJava",  "readx
 The following are resources we will use.  ggplot2: Elegant Graphics for Data Analysis and R for Data Science will be the primary texts. Note that R for Data Science has not yet been published so it is only available as a web site.
 
 
-1.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, ISBN: 331924275X
+1.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, Springer  ISBN: 331924275X
   - Available electronically through Pitt Library
   - A cheaper paperback version can be purchased through MySpringer, Pitt library
-2.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, http://r4ds.had.co.nz/
+2.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, Oreilly Press, http://r4ds.had.co.nz/
 3.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
 4.  (de Jonge) An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
 5.  OpenIntro Statistics, https://www.openintro.org/stat/?stat_book=os. This will not be used heavily, but is a useful reference on how to use R for the topics you covered in your Introduction to Statistics course.

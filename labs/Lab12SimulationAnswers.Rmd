@@ -2,7 +2,9 @@
 title: 'Lab 12: Simulation'
 author: "IE 0015 Information Systems"
 date: "April 13, 2017"
-output: html_document
+output: 
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}

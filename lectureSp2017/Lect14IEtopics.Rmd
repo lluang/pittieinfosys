@@ -3,6 +3,7 @@ title: 'Lecture 14: Using R in other settings'
 author: "IE 0015 Information Systems"
 date: "April  2017"
 output:
+  pdf_document: default
   html_document: default
   slidy_presentation: default
 ---
@@ -598,6 +599,7 @@ Implementation using simmer
 
 ```{r}
 library(simmer, quietly = TRUE)
+library(simmer.plot)
 library(ggplot2, quietly = TRUE)
 library(dplyr, quietly = TRUE)
 set.seed(1234)
@@ -638,11 +640,9 @@ Output summaries
 ============
 
 -  Then, apply statistical techniques to quantify the performance of the system.
-```
-plot_resource_usage(env, "parking", items=c("server"), steps=T)
-```
+
 ```{r}
-plot_resource_usage(env, "parking", items=c("server"), steps=T)
+plot(env, what = "resources", names = "parking", metric = "usage", steps = TRUE)
 ```
 
 
@@ -654,14 +654,7 @@ Statistical design of experiments
 -  Use statistical methods to determine if additional runs are needed.
 -  Repeat with alternative system designs to determine best design.
 
-```
-envs <- lapply(1:30, function(i) {
-  simmer("ReplicatedParkingSim") %>%
-    add_resource("parking", 100) %>%
-    add_generator("arrival", arrival, function() rexp(1, 30)) %>% 
-    run(until= (24))
-})
-```
+
 
 ```{r}
 envs <- lapply(1:30, function(i) {
@@ -671,10 +664,9 @@ envs <- lapply(1:30, function(i) {
     run(until= (24))
 })
 ```
-```
-plot_resource_utilization(envs, "parking")
-```
+
 
 ```{r}
-plot_resource_utilization(envs, "parking")
+
+plot(envs, what = "resources", names = "parking", metric = "usage", steps = TRUE)
 ```

@@ -3,8 +3,8 @@ Title: 'Lab 6: Simple Graphs with ggplot2'
 author: "IE 0015 Information Systems"
 date: "February 15, 2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r loadlibraries}

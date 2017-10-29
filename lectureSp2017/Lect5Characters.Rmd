@@ -7,6 +7,10 @@ output:
   slidy_presentation: default
 ---
 
+```{r}
+library(tidyverse)
+library(magrittr)
+```
 Working with Characters
 ==================== 
                                                                         

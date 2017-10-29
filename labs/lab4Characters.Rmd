@@ -3,8 +3,8 @@ title: 'Lab 4: Character Strings'
 author: "IE 0015 Information Systems"
 date: "01/25/2017"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r loadtitanic}
