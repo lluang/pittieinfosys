@@ -24,7 +24,7 @@ Getting started
 Primary references
 
 - R for Data Science (http://r4ds.had.co.nz)
-- Modern Dive: An introductionto statistical and Data Sciences via R (http://moderndive.com)
+- Modern Dive: An introduction to statistical and Data Sciences via R (http://moderndive.com)
 
 
 R Philosophy
@@ -250,7 +250,7 @@ Working with data
 =================
 
 -  `tidyverse` - A collection of packages that are used for manipulating data frames.
-  - Often called the *hadleyverse* after Hadley Whickam
+  - Often called the *hadleyverse* after Hadley Wickham
 - `ggplot` - Graphics and charting
 - `lubridate` - Working with date and times
 - `dplyr` - Data manipulation

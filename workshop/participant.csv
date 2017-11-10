@@ -1,0 +1,13 @@
+participant,test,class,score
+1,pre,A,56
+1,post,A,57
+2,pre,B,67
+2,post,B,56
+3,pre,C,67
+3,post,C,85
+4,pre,A,59
+4,post,A,57
+5,pre,B,78
+5,post,B,68
+6,pre,C,56
+6,post,C,78
