@@ -1,0 +1,565 @@
+---
+title: "R, R Studio, and R Commander"
+author: "Louis Luangkesorn"
+date: "November 16, 2017"
+output:
+  slidy_presentation: default
+  document: html_document
+---
+
+# Outline
+
+- Getting started
+- Philosophy of R and R Studio
+- Grammer of Graphics
+- Probability and statistics
+- Simulation
+- Differential equations
+- Symbolic math
+- Optimization
+
+
+
+# Getting started
+
+- Install R - Microsoft R Open
+  https://mran.microsoft.com/download/
+- Install R Studio https://www.rstudio.com/products/rstudio/download/
+
+- Open a new R Markdown document
+    - File -> New File -> R Markdown
+- Open a new R script
+    - File -> New File -> R Markdown
+- A Guide to Data Analysis in R Commander
+    - https://stellmack.dl.umn.edu/sites/g/files/pua2461/f/media/_the_rcmdr_guide_.pdf
+    -  We will cover *Basic Analysis*
+
+R Philosophy
+=====
+- Open source
+    - Made up of many components that work together
+    - Academia, finance, big pharma, research labs
+- R - statistics and computation
+    -  Microsoft R Open - Microsoft packages and distributes R
+    -  Includes Intel MKL
+    -  Microsoft does configuration management with packages
+- R Studio - Development environment
+    - Editor - Atom editor
+      - Reproducable research - Markdown and LaTeX
+    - Watch video at https://www.rstudio.com/products/RStudio/
+- R Commander - Menu driven interface
+    - Mostly developed to support use of R with statistics textbooks
+
+Under the hood
+==============
+
+- Much of R is written in R
+- Basic low-level math is in C or Fortran
+    - e.g. BLAS, LAPACK
+    - Same as Matlab or scientific Python
+- `.C()`, `.Fortran()` functions allow for calling C or Fortran functions as R functions
+    - Requires an appropriate compiler available.
+-  `Rcpp` package allows for calling C++ code
+- Fits the philosophy of using the right tool for the job.
+    - `R` becomes an interactive scripting language that pulls everything together.
+
+R Packages
+=======
+
+-  Packages have advanced statistical functionality
+-  Written by the same people that write textbooks and journal articles
+-  Often packages have numerically intensive parts written in C, Fortran or C++
+-  *simmer* for simulation, *gurobi* for optimization
+-  *desolve* and *FME* for differential equations
+-  linear algebra built in
+
+=====
+- You can install library in R Studio
+- Lower right
+- Packages tab
+  - Install button
+  - Select CRAN repository
+  - Enter the names of packages that you want to install.
+
+=======
+Run code chunk (upper right of editor window) look at output in R Studio editor window and in Environment tab (upper right quadrant of R Studio)
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(magrittr)
+data(diamonds)
+summary(diamonds)
+dshort <- diamonds %>% sample_frac(0.1)
+ggplot(dshort) + geom_point(aes(x=carat, y=price, color=color))
+```
+
+Tour of R Studio
+==============
+
+Editor
+-------
+
+- Based on the Atom programmers editor
+- R
+- R Markdown - knitr
+
+R Markdown
+--------------
+
+- Document format meant to evoke writing a formatted text using only plain text.
+- Underlines to indicate headings
+- hash marks to indicate bullet lists
+- Single \* to indicate *italics*
+- Double \*\* to indicate **bold face**
+
+Code chunks
+--------------
+
+- R Markdown allows for code to be embedded in documents
+- Use '```{r}' to begin a code block
+- Use '```' to end a code block
+- Code blocks can be run.
+  - Newer versions of R Studio will show output below the block in addition to the console.
+
+```{r}
+5+5
+```
+
+Console
+--------
+
+- Read, Evaluate, Print loop (REPL)
+- Allows for iterative development
+- Run code from the code window <ctrl><Enter>
+- Run command in upper right of the Editor window
+- R Studio helper functions and R Commander output to console
+
+Environment/History
+-------------
+
+- Everything that is available to the current console
+- Data frames first
+  - Double click on data frame to get a data explorer view
+- Next all variables
+- List data types and example data elements
+- Code that is run in console appears in history
+
+
+Lower right
+-----------
+
+- File explorer
+- Plots from console
+- Packages installed
+- Help file navigator
+- Viewer (latest rendering of R Markdown document)
+
+# Installing packages
+
+-  Basic statistics is included in Base R
+-  In lower right quadrant of R Studio, look at packages tab
+    -  "Install"
+    -  Type name of desired package
+    -  You may be asked for a repository (it should be pointing to Microsoft because we are using the Microsoft distribution)
+
+Working with data
+=================
+
+-  `tidyverse` - A collection of packages that are used for manipulating data frames.
+  - Often called the *hadleyverse* after Hadley Whickam
+- `ggplot` - Graphics and charting
+- `dplyr` - Data manipulation
+- `magittr` - Pipes
+- `tidyr` - Data transformation
+- `readxl` - Read data from Excel formats
+
+Workflow in R
+===========
+
+- Import data
+- Cleaning data
+- Describe analysis
+- Conduct analysis
+- Present results
+
+
+Data frames
+==============
+
+- List of lists
+- Combines data related to a dataset
+- Maintains knowledge of data types of each data element
+- Many R functions and packages (e.g. tidyverse family) require that data are in a data frame so that type information is available.
+
+```{r}
+#summary(diamonds[1:10,1])
+#diamonds[1:3,c("carat", "cut")]
+#diamonds[1:3,c(1, 3, 5)]
+```
+
+```{r}
+#dsmall = diamonds[sample(nrow(diamonds),200),]
+```
+
+
+Graphic User Interfaces
+=============
+
+- Most people are used to using computers with Graphic User Interfaces.
+- With little skill, you can find what you need in a menu driven interface.
+- In R, there is the R Commander interface
+    - http://www.rcommander.com/
+- Enter *library(Rcmdr)* in console
+- If a popup window appears saying you need to install additional packages and asking if you want to, click on "Yes"
+- R Commander will open in an additional window (look for R icon in your status bar)
+
+```{r}
+# library(Rcmdr)
+# library(RcmdrMisc) # for running R Commander generated code
+```
+
+R Commander
+=============
+
+- Starts an GUI window
+- Select data sets
+- Load libraries
+- Work with R Markdown
+- Basic statistics and graphics
+- Analysis run in R Studio console
+
+R Commander extensions
+=============
+
+-  Most extensions were written by textbook authors
+-  Result is a GUI statistics package that is the convex hull of topics in the first few statistics courses.
+
+```{r}
+# library(RcmdrPlugin.IPSUR)
+# library(RcmdrPlugin.HH)
+```
+
+# R Commander GUI
+
+-  Menu bar
+-  Rscript/R Markdown window
+    -  You can enter R code in the script window if you know it
+    -  May want to do basic data manipulation
+    -  R Commander generates menu commands into R code in script window
+    -  Contents can be copy-paste into an R editor
+    -  Workflow: do initial work in R Commander, copy generated code into an editor.  Refine analysis in R.
+
+# Loading data in R Commander
+
+-  Any data already loaded into R is available in R Studio
+-  Data associated with loaded packages are available
+-  Can load data from external files
+
+# Loading data from CSV file
+
+-  In R Commander, click Data -> Import data -> from text file, clipboard, or URL
+-  Fill in details. Note that *Dataset* will be the variable name after you open the file.
+    - Name, field separator, missing values indicator
+-  Click *OK*
+-  Select the data file
+-  Note that the code to read the file is both in the Script window of R Commander and the console in R Studio
+-  Same steps for Excel
+
+#  Choosing between data sets
+
+- Look at button in R Commander
+- All datasets currently loaded in R are available.
+- Edit button creates a table view of the data.
+
+# Saving data 
+
+- Data -> Active Data sets -> Save Active Data set
+
+Probability
+=============
+
+-  R contains a full set of probability tables.
+-  See Introduction to R Section 8.1 for the base set
+-  More specialized probability distributions are available in various packages that need them.
+-  For each probability distribution, four functions exist
+    - 'd' - Probability density function (pdf)
+    - 'p' - Cumulative density function (cdf)
+    - 'q' - Quantile function (reverse cdf)
+    - 'r' - Random sample
+
+Examples
+=============
+
+pnorm(q = 3, mean=0, sd=1)
+
+```{r}
+# pnorm(q = 3, mean=0, sd=1)
+```
+
+qnorm(p=0.975, mean=0,sd=1)
+
+```{r}
+# qnorm(p=0.975, mean=0,sd=1)
+```
+
+rexp(n = 10, rate = 10)
+
+```{r}
+# rexp(n = 10, rate = 10)
+```
+
+Fitting distributions
+=============
+
+-  A common task is to take observed data, and identifying a distribution family that closely matches this and determines the correct parameters.
+-  Use shape as a guess to the fitted distribution.
+-  Kolmogorov-Smirnoff test statistic
+-  Use 3rd and 4th moments to check distribution family.
+-  Use fitted distribution in simulation models
+-  Gain insight into the underlying data.
+-  Actual observations may be unusable
+    - There may be an unmeasurable intervention that effects the observation.
+
+fitdistrplus package
+=============
+
+```{r}
+# library(fitdistrplus)
+```
+
+Example - Births in Brisbane
+=============
+
+Forty-four babies -- a new record -- were born in one 24-hour period at the Mater Mothers' Hospital in Brisbane, Queensland, Australia, on December 18, 1997. For each of the 44 babies, The Sunday Mail recorded the time of birth, the sex of the child, and the birth weight in grams.
+
+Birth minute of day
+=============
+
+```{r}
+# birthminutes = c(5, 64, 78, 115, 177, 245, 247, 262, 271, 428,
+#                 455, 492, 494, 549, 635, 649, 653, 693, 729, 776,
+#                 785, 846, 847, 873, 886, 914, 991, 1017, 1062, 1087,
+#                 1105, 1134, 1149, 1187, 1189, 1191, 1210, 1237, 1251, 1264,
+#                 1283, 1337, 1407, 1435)
+# birthminutes
+```
+
+Calculate interbirth time
+=============
+
+```{r}
+# interarrival = birthminutes[2:length(birthminutes)] -  birthminutes[1:length(birthminutes)-1]
+# interarrival
+```
+
+Look at interarrival distribution
+=============
+
+plotdist(interarrival)
+
+```{r}
+# library(fitdistrplus)
+# plotdist(interarrival)
+```
+
+Look at 3rd and 4th moments
+=============
+
+descdist(interarrival)
+
+```{r}
+# descdist(interarrival)
+```
+
+fit parameters
+=============
+
+baby <- fitdist(interarrival, distr = "exp")
+
+
+```{r}
+# baby <- fitdist(interarrival, distr = "exp")
+# summary(baby)
+```
+
+Check goodness of fit
+=============
+
+denscomp(baby)
+qqcomp(baby)
+cdfcomp(baby)
+ppcomp(baby)
+
+```{r}
+# par(mfrow = c(2, 2))
+# 
+# denscomp(baby)
+# qqcomp(baby)
+# cdfcomp(baby)
+# ppcomp(baby)
+# par(mfrow = c(1,1))
+```
+
+Statistical goodness of fit test
+=================
+
+- Apply Kolmogorov-Smirnoff test for goodness of fit.
+
+```{r}
+# gofbaby <-gofstat(baby)
+# gofbaby
+# gofbaby$kstest
+```
+
+
+
+
+
+Other R Packages for mathematical modeling
+=============
+
+-  R is primarily known as a data analysis environment
+    -  The other data analysis environments people know of are statistical software.
+    -  R is comparable to the two top tier statistical environments SAS, SPSS.
+-  R is also a programming environment
+    -  This is how we use R in this course
+-  The strength of R is in its packages (libraries)
+-  R packages allow it to be used in many settings
+
+
+Evaluating packages
+=============
+
+-  When evaluating a package for usefulness, look for:
+    -  User guide/vignette in help files.
+    -  Peer reviewed article describing implementation and use.
+    -  Published book that uses the package.
+
+Why use R (or a programming based analysis environment)
+================
+
+-  The method you are using is part of a larger workflow
+    -  You need to do data manipulation in a programming environment, R allows you to stay in that environment for analysis.
+    -  Many commercial tools do not work well together
+-  You need to deploy the resulting model to many places
+    -  You can deploy it to many computers
+    -  Many of the other tools are expensive per seat. R is free to deploy.
+
+
+Differential equations
+=============
+
+-  `desolve` package
+-  `FME` package
+-  Example provided last week
+
+Linear Algebra
+=============
+
+- Like Matlab and Python (and other numeric programming libraries), R is built on a foundation of standard optimized linear algebra routines.
+    -  If you are doing numerical computing, it is almost always better to implement the methods using matrices and vectors because these standard routines are so much better than what you can write yourself that the benefits outweigh any work needed to convert your methods/models
+-  Covered in *Introduction to R* Section 5.7
+
+Specifying matrices and vectors
+===============================
+
+-  Matrices are multi-dimensional counterparts to vectors
+-  Specify values and dimensions using `array`
+    -  Option: Specify rows and use `rbind`
+    -  Option: Specify columns and use `cbind`
+
+Using array function
+=====================
+
+```
+A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
+```
+
+
+```{r}
+# A <- array(c(1, 2, 1, 1, -1, -2, 0, 3, -1), dim = c(3,3))
+# A
+```
+
+rbind
+=========
+
+```
+row1 <- c(1, 1, 0)
+row2 <- c(2, -1, 3)
+row3 <- c(1, -2, -1)
+Arow <- rbind(row1, row2, row3)
+```
+
+```{r}
+# row1 <- c(1, 1, 0)
+# row2 <- c(2, -1, 3)
+# row3 <- c(1, -2, -1)
+# Arow <- rbind(row1, row2, row3)
+# Arow
+```
+
+cbind
+=====
+```
+col1 <- c(1,2,1)
+col2 <- c(1,-1,-2)
+col3 <- c(0, 3, -1)
+Acol <- cbind(col1, col2, col3)
+```
+
+```{r}
+# col1 <- c(1,2,1)
+# col2 <- c(1,-1,-2)
+# col3 <- c(0, 3, -1)
+# Acol <- cbind(col1, col2, col3)
+# Acol
+```
+
+Solving linear equations
+=================
+
+$$\begin{array}{cccc}
+x & +y &  & = 0\\
+2x & -y & +3z & = 3\\
+x & -2y & -z & =3
+\end{array}$$
+
+Represent equations as arrays and vectors
+==============
+
+$$\left(\begin{array}{ccc}
+1, 1, 0 \\
+2, -1, 3 \\
+1, -2, -1
+\end{array}\right) \left(\begin{array}{c}
+0\\
+3 \\
+3 \\
+\end{array}\right)$$
+
+Now, in R
+=========
+
+```
+b= c(0, 3, 3)
+```
+
+```{r}
+# print(A)
+# b= c(0, 3, 3)
+# print(b)
+```
+
+Solve using `solve` command
+======
+
+```
+solve(A,b)
+```
+
+```{r}
+# solve(A,b)
+```
+
