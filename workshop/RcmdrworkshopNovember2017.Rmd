@@ -254,6 +254,7 @@ R Commander extensions
 
 -  Any data already loaded into R is available in R Studio
 -  Data associated with loaded packages are available
+    -  *iris* or *diamonds* from ggplot2
 -  Can load data from external files
 
 # Loading data from CSV file
@@ -275,6 +276,53 @@ R Commander extensions
 # Saving data 
 
 - Data -> Active Data sets -> Save Active Data set
+
+# Numerical summaries
+
+- Statistics -> Summaries -> Numerical Summaries
+- Statistics -> Summaries -> Correlation matrix
+- Statistics -> Summaries -> Correlation test
+
+# ANOVA
+
+- Statistics -> Means -> One-way ANOVA
+- Statistics -> Means -> Multi-way ANOVA
+    - Pairwise comparision of means
+
+# Graphs
+
+- Graphs (non-diagnostic) are in the graphs menu
+- R Commander uses base R graphics
+    - Note that I generally use ggplot2 (grammer of graphics)
+- The third option in R is lattice
+- lattice and ggplot2 are generally regarded as more flexible, informative, and professional.
+
+# Graphing interactions
+
+- Graphs -> Plot of means
+
+# Linear regression
+
+- Statistics -> Fit Models -> Linear regression (simple linear regression)
+- Models -> Confidence Intervals
+- Statistics -> Fit Models -> Linear model
+- Models -> Graphs -> Basic Diagnosis Plots
+
+# Chi-square test of independence
+
+- Statistics -> Contingency tables -> Two-way Table
+- Statistics -> Contingency tables -> Multi-way Table
+
+# Graphs - Scatterplot
+
+- Graphs -> Scatterplot
+
+- By groups option
+
+# Histograms and bar graphs
+
+- Graphs -> Histograms
+- Graphs -> Bar graphs
 
 Probability
 =============
@@ -308,6 +356,15 @@ rexp(n = 10, rate = 10)
 ```{r}
 # rexp(n = 10, rate = 10)
 ```
+
+# Probability in R Commander
+
+- Many distributions, continuous and discrete
+- quantiles (q___)
+- probabilities (p___)
+- Plotting
+- Sampling (r___)
+
 
 Fitting distributions
 =============
