@@ -36,6 +36,7 @@ output:
 
 R Philosophy
 =====
+
 - Open source
     - Made up of many components that work together
     - Academia, finance, big pharma, research labs
@@ -73,15 +74,19 @@ R Packages
 -  *desolve* and *FME* for differential equations
 -  linear algebra built in
 
+Installing packages
 =====
-- You can install library in R Studio
+
+- You can install packages in R Studio
 - Lower right
 - Packages tab
-  - Install button
-  - Select CRAN repository
-  - Enter the names of packages that you want to install.
+    - Install button
+    - Select CRAN repository
+    - Enter the names of packages that you want to install.
 
-=======
+Using R Studio
+===============
+
 Run code chunk (upper right of editor window) look at output in R Studio editor window and in Environment tab (upper right quadrant of R Studio)
 
 ```{r}
@@ -105,7 +110,7 @@ Editor
 - R Markdown - knitr
 
 R Markdown
---------------
+========
 
 - Document format meant to evoke writing a formatted text using only plain text.
 - Underlines to indicate headings
@@ -114,7 +119,7 @@ R Markdown
 - Double \*\* to indicate **bold face**
 
 Code chunks
---------------
+=========
 
 - R Markdown allows for code to be embedded in documents
 - Use '```{r}' to begin a code block
@@ -127,7 +132,7 @@ Code chunks
 ```
 
 Console
---------
+============
 
 - Read, Evaluate, Print loop (REPL)
 - Allows for iterative development
@@ -136,7 +141,7 @@ Console
 - R Studio helper functions and R Commander output to console
 
 Environment/History
--------------
+============
 
 - Everything that is available to the current console
 - Data frames first
@@ -147,7 +152,7 @@ Environment/History
 
 
 Lower right
------------
+============
 
 - File explorer
 - Plots from console
