@@ -118,10 +118,11 @@ Schedule
 - Module 1: Using MS Access and SQL (Jan 11, 18)
   - Microsoft Support Access Training Videos - Databases, tables, and relationships
     - https://support.office.com/en-us/article/Access-training-a5ffb1ef-4cc4-4d79-a862-e2dda6ef38e6?ui=en-US&rs=en-US&ad=US
-    - Get Started - All 3 videos
+    - Get Started - All 4 videos
     - Create an Access Database - Create an Access desktop database
     - Add tables - All 3 videos
     - Getting started with table relationships - All 5 videos
+    -  Add and edit data - 2 videos
 
 - Module 2: Tidy data and relational data, R4DS ch 12, 13 (Jan 23)
 - Module 3: Data into R, ggplot Ch 9 (Jan 30)
