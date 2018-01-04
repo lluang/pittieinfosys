@@ -7,7 +7,7 @@ output: html_document
 
 - 1044 Benedum Hall
 - MW 1:00PM - 1:50PM
-- Final Wednesday April 26 8:00 AM - 9:50 AM
+- Final TBD
 
 Office Hours:
 
@@ -17,8 +17,11 @@ Office Hours:
 
 TA:
 
-- Matt Abbott - mla44@pitt.edu
-- Elizabeth Palko - eap65@pitt.edu
+- TBD
+
+Description
+===========
+In the modern world, significant amounts of data are collected and stored by organizations. To think about data includes both an understanding of the types of questions that organizations will have and the decisions that will result from those answers. This course covers thinking about data driven questions as well as extracting data from common storage formats, then manipulating the stored data into forms useable for application of analytics.  The course covers data cleaning, data munging, and visualization to allow for descriptive analytics to be performed, then examples of more advanced analytics that are enabled by these initial topics prepare students for using these data manipulation capabilities as a precursor to more advanced analytics later in the curriculum.
 
 Course goals
 ============
@@ -34,7 +37,7 @@ Major Topics
 2.  Data manipulation
 3.  Exploratory data analysis
 4.  Algorithms with data (missing values)
-5.  Communicating data analysis
+5.  Data analysis through simulation
 
 # Materials
 
@@ -54,21 +57,21 @@ install.packages(c("ggplot2",  "knitr",  "reshape2",  "dplyr",  "rJava",  "readx
 
 ##  Texts
 
-The following are resources we will use.  ggplot2: Elegant Graphics for Data Analysis and R for Data Science will be the primary texts. Note that R for Data Science has not yet been published so it is only available as a web site.
+The following are resources we will use.  R for Data Science is the primary text, but we will use Wickham ggplot2 and de Jonge An introduction to data cleaning as well. The other texts are listed here as references.
 
 
-1.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, Springer  ISBN: 331924275X
+1.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, Oreilly Press, http://r4ds.had.co.nz/
+2.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, Springer  ISBN: 331924275X
   - Available electronically through Pitt Library
   - A cheaper paperback version can be purchased through MySpringer, Pitt library
-2.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, Oreilly Press, http://r4ds.had.co.nz/
-3.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
-4.  (de Jonge) An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
+3.  (de Jonge) An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
+4.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
 5.  OpenIntro Statistics, https://www.openintro.org/stat/?stat_book=os. This will not be used heavily, but is a useful reference on how to use R for the topics you covered in your Introduction to Statistics course.
 
 ##  Articles
 
 -  Each week, an article will be posted for discussion.  Each article will be an example of a data analysis and will be a focus of discussion to consider both strengths and weaknesses of the data analysis and presentation.
--  The article discussions are intended to help you prepare for the exams. Exams are focused on being able to specify a data problem (CoNVO) and interpret exploratory data analysis output.
+-  The article discussions are intended to help you prepare for the exams. Exams are focused on being able to specify a data problem (CoNVO), plan a data analysis, and interpret exploratory data analysis output.
 
 
 ## Datasets
@@ -113,9 +116,9 @@ k. an ability to use the techniques, skills, and modern engineering tools necess
 Schedule
 ========
 
-- Module 0: Introduction to Data and R R4DS Ch 27 (Jan 4)
-- **No class Jan 9**
-- Module 1: Using MS Access and SQL (Jan 11, 18)
+- Module 0: Introduction to Data and R R4DS Ch 27 (Jan 8)
+- *No class Jan 15*
+- Module 1: Using MS Access and SQL (Jan 10, 17)
   - Microsoft Support Access Training Videos - Databases, tables, and relationships
     - https://support.office.com/en-us/article/Access-training-a5ffb1ef-4cc4-4d79-a862-e2dda6ef38e6?ui=en-US&rs=en-US&ad=US
     - Get Started - All 3 videos
@@ -123,8 +126,9 @@ Schedule
     - Add tables - All 3 videos
     - Getting started with table relationships - All 5 videos
 
-- Module 2: Tidy data and relational data, R4DS ch 12, 13 (Jan 23)
-- Module 3: Data into R, ggplot Ch 9 (Jan 30)
+**Check dates**
+- Module 2: Tidy data and relational data, R4DS ch 12, 13 (Jan 18)
+- Module 3: Data into R, ggplot Ch 9 (Jan 25)
 - Module 4: Data manipulation and aggregation, ggplot Ch 10 (Feb 6)
 - **PROJECT TOPIC FEBRUARY 8**
 - Module 5: Character Manipulation and regular expressions R4DS 
@@ -142,4 +146,4 @@ Schedule
 - **HOMEWORK 3: Modeling APRIL 13**
 - **PROJECT REPORT APRIL 20**
 - **PROJECT PRESENTATIONS APRIL 21, 22**
-- FINAL Wednesday, April 26, 8:00AM - 9:50AM
+- FINAL TBD
