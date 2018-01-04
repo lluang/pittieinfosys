@@ -7,7 +7,7 @@ output: html_document
 
 - 1044 Benedum Hall
 - MW 1:00PM - 1:50PM
-- Final Wednesday April 26 8:00 AM - 9:50 AM
+- Final Friday April 27 2:00PM - 3:50PM
 
 Office Hours:
 
@@ -17,8 +17,8 @@ Office Hours:
 
 TA:
 
-- Matt Abbott - mla44@pitt.edu
-- Elizabeth Palko - eap65@pitt.edu
+- Sydney Dydiw
+- Mairead McDonagh
 
 Course goals
 ============
@@ -54,13 +54,13 @@ install.packages(c("ggplot2",  "knitr",  "reshape2",  "dplyr",  "rJava",  "readx
 
 ##  Texts
 
-The following are resources we will use.  ggplot2: Elegant Graphics for Data Analysis and R for Data Science will be the primary texts. Note that R for Data Science has not yet been published so it is only available as a web site.
+The primary text is R for data science by Grolemund and Wickham.  The secondary text is GGplot2 by Wickham.  This is available in electronic (epub or PDF) from the Pitt library.
 
 
-1.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, Springer  ISBN: 331924275X
+1.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, Oreilly Press, http://r4ds.had.co.nz/
+2.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, Springer  ISBN: 331924275X
   - Available electronically through Pitt Library
   - A cheaper paperback version can be purchased through MySpringer, Pitt library
-2.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, Oreilly Press, http://r4ds.had.co.nz/
 3.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
 4.  (de Jonge) An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
 5.  OpenIntro Statistics, https://www.openintro.org/stat/?stat_book=os. This will not be used heavily, but is a useful reference on how to use R for the topics you covered in your Introduction to Statistics course.
@@ -115,13 +115,14 @@ Schedule
 
 - Module 0: Introduction to Data and R R4DS Ch 27 (Jan 4)
 - **No class Jan 9**
-- Module 1: Using MS Access and SQL (Jan 11, 18)
+- Module 1: Using MS Access and SQL (Jan 10, 17)
   - Microsoft Support Access Training Videos - Databases, tables, and relationships
     - https://support.office.com/en-us/article/Access-training-a5ffb1ef-4cc4-4d79-a862-e2dda6ef38e6?ui=en-US&rs=en-US&ad=US
-    - Get Started - All 3 videos
+    - Get Started - All 4 videos
     - Create an Access Database - Create an Access desktop database
     - Add tables - All 3 videos
     - Getting started with table relationships - All 5 videos
+    -  Add and edit data - 2 videos
 
 - Module 2: Tidy data and relational data, R4DS ch 12, 13 (Jan 23)
 - Module 3: Data into R, ggplot Ch 9 (Jan 30)
