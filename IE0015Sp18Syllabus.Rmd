@@ -2,12 +2,14 @@
 title: "IE 0015 Information Systems Syllabus"
 author: "Louis Luangkesorn"
 date: "Spring 2018"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 - 1044 Benedum Hall
 - MW 1:00PM - 1:50PM
-- Final TBD
+- Final Friday April 27 2:00PM - 3:50PM
 
 Office Hours:
 
@@ -15,13 +17,17 @@ Office Hours:
 - lluangkesorn@pitt.edu
 - Hours: TBD
 
-TA:
+TA
+-----
 
-- TBD
+  - Sydney Dydiw
+  - Mairead McDonagh
 
 Description
 ===========
+
 In the modern world, significant amounts of data are collected and stored by organizations. To think about data includes both an understanding of the types of questions that organizations will have and the decisions that will result from those answers. This course covers thinking about data driven questions as well as extracting data from common storage formats, then manipulating the stored data into forms useable for application of analytics.  The course covers data cleaning, data munging, and visualization to allow for descriptive analytics to be performed, then examples of more advanced analytics that are enabled by these initial topics prepare students for using these data manipulation capabilities as a precursor to more advanced analytics later in the curriculum.
+
 
 Course goals
 ============
@@ -59,19 +65,19 @@ install.packages(c("ggplot2",  "knitr",  "reshape2",  "dplyr",  "rJava",  "readx
 
 The following are resources we will use.  R for Data Science is the primary text, but we will use Wickham ggplot2 and de Jonge An introduction to data cleaning as well. The other texts are listed here as references.
 
-
 1.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, Oreilly Press, http://r4ds.had.co.nz/
 2.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, Springer  ISBN: 331924275X
   - Available electronically through Pitt Library
   - A cheaper paperback version can be purchased through MySpringer, Pitt library
 3.  (de Jonge) An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
-4.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
-5.  OpenIntro Statistics, https://www.openintro.org/stat/?stat_book=os. This will not be used heavily, but is a useful reference on how to use R for the topics you covered in your Introduction to Statistics course.
+4.  Introductory Statistics with Randomization and Simulation, https://www.openintro.org/stat/?stat_book=isrs. This is a different look at introductory statistics than the standard intro to statistics course. We will use it for simulation near the end of the course. In addition, the labs in the website has code that can help you implement statistical methods.
+5.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
+
 
 ##  Articles
 
 -  Each week, an article will be posted for discussion.  Each article will be an example of a data analysis and will be a focus of discussion to consider both strengths and weaknesses of the data analysis and presentation.
--  The article discussions are intended to help you prepare for the exams. Exams are focused on being able to specify a data problem (CoNVO), plan a data analysis, and interpret exploratory data analysis output.
+-  Exams are focused on being able to specify a data problem (CoNVO), plan a data analysis, and interpret exploratory data analysis output. All exam questions will be based on either an article or a problem described using a narrative. The article discussions are intended to help you prepare to read and answer these types of questions. 
 
 
 ## Datasets
@@ -79,7 +85,15 @@ The following are resources we will use.  R for Data Science is the primary text
 -  National Survey of Family Growth
 -  American Community Survey
 -  Titanic survivors
+-  WHO Tuberculosis
 -  Western PA Regional Data Center
+
+# Assignments
+
+1.  Assignments include weekly labs, homeworks, and projects.
+2.  All assignments should be done using R Markdown and rendered in PDF or MS Word.
+3.  All computer output should be annotated.  Axis must be labeled, figures and tables need titles and captions.  Figures and tables should be accompanied by explanatory text that explains how the output answers the question.
+4.  Weekly labs and homeworks are submitted individually.  It is expected and encouraged that you work with classmates in developing programming code as that reflects industry practice where computer programming projects are done in teams. However, your annotations (figure notations and explanatory text) should be your own.
 
 #  Grading
 
@@ -117,33 +131,31 @@ Schedule
 ========
 
 - Module 0: Introduction to Data and R R4DS Ch 27 (Jan 8)
-- *No class Jan 15*
 - Module 1: Using MS Access and SQL (Jan 10, 17)
   - Microsoft Support Access Training Videos - Databases, tables, and relationships
     - https://support.office.com/en-us/article/Access-training-a5ffb1ef-4cc4-4d79-a862-e2dda6ef38e6?ui=en-US&rs=en-US&ad=US
-    - Get Started - All 3 videos
+    - Get Started - All 4 videos
     - Create an Access Database - Create an Access desktop database
     - Add tables - All 3 videos
     - Getting started with table relationships - All 5 videos
-
-**Check dates**
-- Module 2: Tidy data and relational data, R4DS ch 12, 13 (Jan 18)
-- Module 3: Data into R, ggplot Ch 9 (Jan 25)
-- Module 4: Data manipulation and aggregation, ggplot Ch 10 (Feb 6)
-- **PROJECT TOPIC FEBRUARY 8**
-- Module 5: Character Manipulation and regular expressions R4DS 
-- **HOMEWORK 1: Data manipulation FEBRUARY 15**
-- Module 6: Basic plot types ggplot2 Ch 2, 3 (Feb 20)
-- Module 7: Data visualization grammer ggplot ch 4 (Feb 27)
-- **MIDTERM March 2** (No labs)
-- Module 8: Data types: strings, factors, dates R4DS Ch 14, 15, 16 (Mar 13)
-- **PROJECT EXPLORATORY DATA ANALYSIS MARCH 15**
-- **HOMEWORK 2: Exploratory Data Analysis MARCH 22**
-- Module 9: Advanced programming R4DS Part III (Mar 20)
-- Module 10: Linear modeling for visualization - ggplot ch 11 (March 27)
-- Module 11: Linear regression (April 4)
-- Module 12: Simulation for statistical inference (April 11)
-- **HOMEWORK 3: Modeling APRIL 13**
-- **PROJECT REPORT APRIL 20**
-- **PROJECT PRESENTATIONS APRIL 21, 22**
-- FINAL TBD
+    -  Add and edit data - 2 videos
+- Module 2: Tidy data and relational data, R4DS ch 12, 13 (Jan 22)
+- Module 3: Data into R, R4DS ch 11 (Jan 29)
+- Module 4: Data manipulation and aggregation, ggplot Ch 10 (Feb 5)
+- **PROJECT TOPIC FEBRUARY 7**
+- Module 5: Character Manipulation and regular expressions R4DS (Feb 12)
+- **HOMEWORK 1: Data manipulation FEBRUARY 14**
+- Module 6: Basic plot types ggplot2 Ch 2, 3 (Feb 19)
+- Module 7: Data visualization grammer ggplot ch 4 (Feb 26)
+- **MIDTERM Feb 28** (No labs)
+- Module 8: Data types: strings, factors, dates R4DS Ch 14, 15, 16 (Mar 12)
+- **PROJECT EXPLORATORY DATA ANALYSIS MARCH 14**
+- Module 9: Advanced programming R4DS Part III (Mar 19)
+- **HOMEWORK 2: Exploratory Data Analysis MARCH 21**
+- Module 10: Linear modeling for visualization - R4DS ch 23, 24 ggplot ch 11 (March 26)
+- Module 11: Linear regression (April 2)
+- Module 12: Simulation for statistical inference (April 9)
+- **HOMEWORK 3: Modeling APRIL 11**
+- **PROJECT REPORT APRIL 18**
+- **PROJECT PRESENTATIONS APRIL 19, 20 in lab**
+- FINAL Friday April 27 2:00PM - 3:50PM
