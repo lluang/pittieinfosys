@@ -1,10 +1,10 @@
 ---
 title: "Thinking About Data"
 author: "IE 0015"
-date: "January 2017"
+date: "January 2018"
 output:
-  beamer_presentation: default
   slidy_presentation: default
+  beamer_presentation: default
 ---
 
 
@@ -141,7 +141,7 @@ Aspects of an argument
 -  Are they interested in subjective or objective measurements?
 -  Do they need an experiment?
 
-This defines how simple or complext the data analysis needs to be.
+This defines how simple or complex the data analysis needs to be.
 
 Outcome
 =======
@@ -185,7 +185,7 @@ Titanic dataset
 
 -  Dataset includes all passengers on the Titanic.
 -  Cruise liner that was advertised as unsinkable.
--  Crashed ainto iceberg and sank on first trans-atlantic voyage.
+-  Crashed into iceberg and sank on first trans-Atlantic voyage.
 -  High fatalities, in part because there were not enough lifeboats for the number of passengers and crew.
 -  CoNVO - Who survived? What characteristics?
 
@@ -212,6 +212,6 @@ American Community Survey
 =========================
 
 - Sample of approximately 1/40 households per year.
-- Public Use Microdata Area (PUMA) - Pittsburgh north of the Monoghohela River.
+- Public Use Microdata Area (PUMA) - Pittsburgh north of the Monongahela River.
 - Survey includes demographics, employment, educational, housing, health, questions.
 - Because we have the raw survey results, we can look at cross correlations.

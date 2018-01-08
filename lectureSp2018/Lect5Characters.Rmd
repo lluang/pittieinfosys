@@ -1,8 +1,16 @@
-Lecture 8: Character Manipulation and Regular Expressions
-========================================================
-author: IE 0015 Information Systems
-date: February 2016
+---
+title: "Lecture 5: Character Manipulation and Regular Expressions"
+author: "IE 0015"
+date: "January 2017"
+output:
+  pdf_document: default
+  slidy_presentation: default
+---
 
+```{r}
+library(tidyverse)
+library(magrittr)
+```
 Working with Characters
 ==================== 
                                                                         
@@ -14,6 +22,22 @@ Working with Characters
   -  Match strings
   -  Search and replace
   
+=======
+What this course is not covering in class
+======================
+
+- This course is not covering
+  - Text mining
+  - Text analysis
+  - e.g. what Google, Amazon.com, etc. do
+- If your project requires it:
+  - Text mining with R 
+    - http://tidytextmining.com/
+    - This book is written in the same spirit as R for Data Science.
+  - `tm` package in R
+    - The package vignette is a good introduction to text mining and methods of text analysis
+    - https://cran.r-project.org/web/packages/tm/vignettes/tm.pdf
+
 Basics of working with characters
 ==================
 
@@ -79,7 +103,6 @@ state.name[1]
 
 Regular expressions
 ========
-type: section
 
 What are regular expressions?
 ===============
@@ -136,7 +159,8 @@ Character classes
 =============
 
 -  Letters [A-Z], [a-z], [A-Za-z]
--  Digits [0-9] [0123456789] \d
+-  Digits [0-9] [0123456789] `\d`
+-  Alpha numeric  [:alnum:]
 -  Other classes [ACTG]
 
 Modifiers
@@ -163,23 +187,23 @@ Examples
 - 12a 01Zd
 - (abc){3} means abcabcabc
 - [0-9]{3}  \d{3} Any group of three digits
-- [\^0-9] \D  Not a digit
+- `[\^0-9] \D`  Not a digit
 
 Character classes
 =========
 
 -  *Character classes* also known as *conventions* have been created to express different groups of characters
 
--  [\d] refers to any digit. Same as [0-9]
--  [\D] is any non-digit. Same as [\^0-9] or [\^\d]
--  [\w] is any word character. Same as [_a-zA-Z0-9]
+-  `[\d]` refers to any digit. Same as [0-9]
+-  `[\D]` is any non-digit. Same as `[\^0-9]` or `[\^\d]`
+-  `[\w]` is any word character. Same as [_a-zA-Z0-9]
   - Does NOT include white space (tabs, new lines, punctuation)
--  [\W] is any non-word character (whitespace, punctuation, etc). Same as [\^_a-zA-Z0-9]
--  [\s] or [ \t\n\r] matches whitespace, or
+-  `[\W]` is any non-word character (whitespace, punctuation, etc). Same as [\^_a-zA-Z0-9]
+-  `[\s]` or `[ \t\n\r]` matches whitespace, or
   - spaces
-  - [\t] tabs
-  - [\n] newlines
-  - [\r] carriage returns
+  - `[\t]` tabs
+  - `[\n]` newlines
+  - `[\r]` carriage returns
 
 Phone number
 ===========
@@ -189,13 +213,13 @@ Phone number
 - 412/624-9800
 - 412-255-2621
 - 412.624.9830
-- [\W]?[0-9]{3}[\W]?[0-9]{3}[\W]?[0-9]{4}
-  - Optional leading character not letter or number [\W]?
-  - Three digits [0-9]{3}
-  - One or more non-digit [\W]?
-  - Three digits [0-9]{3}
-  - Optional non-digit [\W]?
-  - Four digits [0-9]{4}
+- `[\W]?[0-9]{3}[\W]?[0-9]{3}[\W]?[0-9]{4}`
+  - Optional leading character not letter or number `[\W]`?
+  - Three digits `[0-9]{3}`
+  - One or more non-digit `[\W]`?
+  - Three digits `[0-9]{3}`
+  - Optional non-digit `[\W]`?
+  - Four digits `[0-9]{4}`
 
 Splitting strings
 =================
@@ -229,21 +253,28 @@ We can use it to find records in a data frame
 Titanic personal title example
 =====
 ```{r loadtitanic, echo=FALSE}
-titanic <- read.csv("../data/titanictrain.csv")
+titanic <- read.csv("../data/titanic3.csv")
 ```
 
 ```{r}
-womentitanic <- (titanic[grep('Mrs\\.|Miss\\.|Ms\\.|Mme\\.|Mlle\\.',
-                              titanic$Name), 
-                         'Name'])
+womentitanic <- (titanic[grep("Mrs.|Miss.|Ms.|Mme.|Mlle.",
+                              titanic$name), 
+                         'name'])
 head(womentitanic)
 length(womentitanic)
 ```
 
+
+```{r}
+data = titanic$name[5]
+startpoint = regexpr(", [A-Z][a-z]*\\.", data)
+attributes(startpoint)
+attr(startpoint, 'match.length')
+title = substr(data, startpoint+2, startpoint + attr(startpoint, 'match.length')-1)
+```
+
 The Rime of the Ancient Mariner
 ==========================
-type:section
-
 
 The Rime of the Ancient Mariner, Coleridge (1798)
 ============
@@ -293,9 +324,11 @@ Better will be to find all examples and where they are
 
 ```{r}
 regexprresult <- regexpr('Marinere', rime)
-regexprresult
+regexprresult %>% head()
+```
+```{r}
 gregexprresult <- gregexpr('Marinere', rime)
-gregexprresult
+gregexprresult %>% head()
 ```
 
 
@@ -306,12 +339,21 @@ Examples of using character classes in R
 -  Note the double backslash. First backslash is to tell R that the second one is real and not an escape sequence.
 
 ```{r}
-regexpr('\\d', rime)
-gregexpr('\\D', rime)
-gregexpr('\\w', rime)
-regexpr('\\W', rime)
-gregexpr('[A-Z]', rime)
+regexpr('\\d', rime) %>% head()
 ```
+```{r}
+gregexpr('\\D', rime) %>% head()
+```
+```{r}
+gregexpr('\\w', rime) %>% head()
+```
+```{r}
+regexpr('\\W', rime) %>% head()
+```
+```{r}
+gregexpr('[A-Z]', rime) %>% head()
+```
+
 
 Alternatives
 ==================
@@ -320,10 +362,9 @@ Alternatives
 - '|' is used to separate alternatives
 
 ```{r}
-regexpr('[t|T][h|H][e|E]', rime)
-gregexpr('(the|The|THE)', rime)
+regexpr('[t|T][h|H][e|E]', rime) %>% head()
+gregexpr('(the|The|THE)', rime) %>% head()
 ```
-
 More character classes
 ==================
 
@@ -340,106 +381,25 @@ a b c d e f g h i j k l m n o p q r s t u v w x y z
 Look for a specific class
 ============
 ```{r}
-gregexpr("[aeiou]", characters)
+gregexpr("[aeiou]", characters) %>% head()
 ```
 
-Or everything else
+Or everything else using ^
 ==============
 ```{r}
-gregexpr("[^aeiou]", characters)
+gregexpr("[^aeiou]", characters) %>% head()
 ```
 
 Try groups of characters
 =====================
 
 ```{r}
-gregexpr("[0-3]", characters)
-gregexpr("[6-9]", characters)
+gregexpr("[0-3]", characters) %>% head()
+gregexpr("[6-9]", characters) %>% head()
 ```
 
 Combine them
 =====
 ```{r}
-gregexpr("[0-36-9]", characters)
-```
-
-Unicode characters are often used for non-standard characters
-============
-```{r}
-basho.txt <- file("../data/basho.txt")
-basho <- scan(basho.txt, what=character(), sep='\n')
-basho
-```
-
-Searching for unicode characters
-=============
-
--  Include a '\u' in front of the 4-digit unicode number
-```{r}
-regexpr("\u6c60", basho)
-```
-
-Some punctuation characters are also unicode characters
-===============
-
--  What do these find?
--  \u2014
--  \u2013
-```{r}
-regexpr("\u2014", basho)
-regexpr("\u2013", basho)
-basho
-```
-
-Lookarounds
-=========
-
-- We can look for words in combination.
-- Let's look for "Marinere", but only if it is preceded by "Ancyent"
-- Make it case insensitive by using `(?i)` (and set `perl=TRUE`)
-- Note that the `ancyent` was matched, not the lookahead part (`marinere`) (see the length of the match)
-- We'll use the full Rime of the Ancyent Mariner text
-
-```{r}
-rimefull.txt <- file("../data/rime.txt")
-rimefull <- scan(rimefull.txt, what=character(), sep='\n')
-getAncyentMariner <- function(data, regexpression) {
-  string.start <- regexpr(regexpression, data, perl=TRUE)
-  string.end <- string.start+ attr(string.start, "match.length")-2
-  target <- substr(data, string.start, string.end)
-  return (target)
-}  
-findancyentmariner <- getAncyentMariner(rimefull, "(?i)ancyent (?=marinere)")
-head(findancyentmariner, n=30)
-```
-Let's be more flexible on what we find
-==============
-
-```{r}
-findancyentma <- getAncyentMariner(rimefull, "(?i)ancyent (?=ma*)")
-head(findancyentma, n=30)
-```
-
-Negative lookahead
-======
-- Same pattern, but make sure that the pattern does not appear immediate after the first
-- `?!` (remember that `!` means NOT)
-
-```{r}
-findancyentnomariner <- getAncyentMariner(rimefull, "(?i)ancyent (?!marinere)")
-head(findancyentnomariner, n=30)
-```
-
-Lookbehind
-========
-
--  Same thing, but look backwards using `?<='
-
-```{r}
-findancyentbeforemariner <- getAncyentMariner(rimefull, "(?i)(?<=ancyent) marinere")
-head(findancyentbeforemariner, n=30)
-```
-```{r}
-findmariner <- getAncyentMariner(rimefull, "(?i)marinere")
-head(findmariner, n=30)
+gregexpr("[0-36-9]", characters)  %>% head()
 ```

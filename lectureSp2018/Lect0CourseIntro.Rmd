@@ -1,11 +1,17 @@
 ---
 title: "Course Introduction"
 author: "IE 0015"
-date: "Spring 2018"
+date: "January 2018"
 output:
   slidy_presentation: default
-  ioslides_presentation: default
 ---
+
+Rendering this file (*.Rmd)
+===================
+
+1. Open in R Studio
+2. Click on Knit icon in editor toolbar (look for icon with ball of string and knitting needle)
+3. Alternative, click on the down facing triangle next to the icon and choose an option.
 
 Notecard
 =========
@@ -51,7 +57,7 @@ Labs and Homeworks
 -  There are weekly coding labs and monthly homeworks.
 -  Coding is creative and difficult, especially on realistic data sets. There is more than one way to complete the assignments.  Being able to handle the fact that the first thing you try does not work and working on the details to get things to work is how you will succeed.
 -  Industry practice is that programmers work in teams. I expect and encourage you to work together to resolve coding problems on labs and homeworks.
--  All figures and tables must be annotated.  Axis must be labeled (include units), tables and figures need titles and captions, tables and figures should be accompanied by narrative. The annotations and narratives must be your own.  (i.e. your code may be similar to someone elses, but your explanations should not be.)
+-  All figures and tables must be annotated.  Axis must be labeled (include units), tables and figures need titles and captions, tables and figures should be accompanied by narrative. The annotations and narratives must be your own.  (i.e. your code may be similar to someone else's, but your explanations should not be.)
 
 Project
 =========
@@ -237,8 +243,10 @@ File types
 ==========
 
 - R Script (.R): R Code
-- R Markdown (.rmd): R Markdown mixing formatted text and code chunks. Can generate html, pdf, or docx files
-- R Presentations (.Rpres): Generates HTML based presentations (ioslides)
+- R Markdown (.Rmd): R Markdown mixing formatted text and code chunks. Can generate html, pdf, or docx files.
+    -  Can also generate HTML or pdf slide presentations.
+    -  Use HTML when you are working, pdf or docx when you are done and ready to present this to others.
+
 
 Import dataset
 ==============
