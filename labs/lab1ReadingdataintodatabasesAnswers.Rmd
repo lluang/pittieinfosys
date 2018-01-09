@@ -1,11 +1,13 @@
 ---
 title: "Reading data into databases"
 author: "IE0015 Lab 1"
-date: "January 12/13, 2017"
-output: pdf_document
+date: "January 11/12, 2018"
+output:
+  word_document: default
+  pdf_document: default
 ---
 
-Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.
+Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.  When a query is required, you may use the MS Access Query Wizard to design the query, then use the SQL View to display the resulting SQL that will go into your answer. 
 
 1. [1] Download the Titanic data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
 
@@ -25,64 +27,69 @@ Note: If you get 1310 that means you didn't select the first rows as field name.
 
 The double quotes keep the text together.
 
-4.  [2] Create an SQL query to determine, from each port of embarkation, how many females (women and girls) survived and perished.
+4.  [2] Use the query wizard to create an SQL query to determine, from each port of embarkation, how many females (women and girls) were embarked.  This will involve creating a Crosstab where rows are the port of embarkation and columns are gender.
 
 Your answer should include a table with the answer (note that you should name the cities, not only the initial) and the final SQL query that allowed you to answer the question.
 
-CountOfID	| embarked |	sex	| survived | Port name (not from SQl query)
----|---|---|---|-
-2	| |	female |	1 | None
-11	| C	| female	| 0 | Cherbourg
-102	| C	| female	| 1 | Cherbourg
-23	| Q	| female	| 0 | Queenstown
-37	| Q	| female	| 1 | Queenstown
-93	| S	| female	| 0 | Southampton
-198	| S	| female	| 1 | Southampton
+
+
+Embarked | sex | 0 (peris) | 1 (survived)
+---------|--------|------|--------------
+Cherbourg | female | 11 | 102
+Cherbourg | male | 109 | 48
+Queenstown | female | 23 | 37
+Queenstown | male | 56 | 7
+Southampton | female | 93 | 198
+Southampton | male | 517 | 106
+(blank) | female | 0 | 2
 
 
 ```
-SELECT Count(Titanic3.ID) AS CountOfID, Titanic3.embarked, Titanic3.sex, Titanic3.survived
+TRANSFORM Count(Titanic3.ID) AS CountOfID
+SELECT Titanic3.embarked, Titanic3.sex
 FROM Titanic3
-GROUP BY Titanic3.embarked, Titanic3.sex, Titanic3.survived
-HAVING (((Titanic3.sex)="female"));
+GROUP BY Titanic3.embarked, Titanic3.sex
+PIVOT Titanic3.survived;
+
 ```
 
-5. [1] Download and look at the data from the two American Community Survey (ACS) Pittsburgh North (01701) tables using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
+5. [1] Download and look at the data from the two American Community Survey (ACS) Pennsylvania tables using a text editor.  How are columns separated?  How is text that should not be separated identified? What column(s) should be guaranteed to be unique and can serve as a primary key?
 
 
 comma, "", 
 
 SERIALNO (for household record) Alternative PK_UID
  
-SERIALNO and SPORDER (for person record, do not take off if they did not get this)
+SERIALNO and SPORDER (for person record, do not take off if they did not get SPORDER)
 
 
 
-6. [*] Load both tables into MS Access.  What error messages did you see?
+6. [*] Load both tables into MS Access.  What error messages did you see? (Note: we will do something about this in Lab 2)
 
-The personal file does not load because it has more than 255 columns
+The personal file does not load because it has more than 255 columns.  
 
 
-7. [1] In the ACS Household survey data, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own) You will need to access the ACS Codebook/Data Dictionary from the ACS website.
+7. [1] In the ACS Household Record, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own) You will need to access the ACS Data Dictionary from the ACS website. (hint, search for the words in the categories you are looking for.)
 
 ANSWERS
 
 - TEN identifies type of ownership
 - NP identifies people in household
 
-8.  [2] Determine the number of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for housing and compare this to the total population (calculate the percent of total of each category, you may calculate this separate from the SQL query).  Include query(ies), the resulting table, and the written value of the tenure (TEN results in a number) Note that the table should use words to indicate tenure (the type of ownership)
+8.  [2] Determine the number of people who live in Group Quarters/vacant, Rent, Own (with mortgage), own (no mortgage), or are not currently paying for housing.  Include query(ies), the resulting table, and the written value of the tenure.  Note that the table should use words to indicate tenure (the type of ownership) and not a number.
 
 ```
-SELECT Ss12hpa.TEN, Count(Ss12hpa.SERIALNO) AS CountOfSERIALNO, Sum(Ss12hpa.NP) AS SumOfNP
-FROM Ss12hpa
-GROUP BY Ss12hpa.TEN;
+SELECT Ss16hpa.TEN, TEN.TEN, Sum(Ss16hpa.NP) AS People, Count(Ss16hpa.SERIALNO) AS Households
+FROM Ss16hpa LEFT JOIN TEN ON Ss16hpa.TEN = TEN.ID
+GROUP BY Ss16hpa.TEN, TEN.TEN;
 ```
+Note: they may not have the GQ/Vacant (blank) row. Do not take off for that. I created a table called TEN that filled in the name of the tenure categories for me. It is not necessary for the assignment.
 
-Tenure| TEN	| CountOfSERIALNO |	SumOfNP
+Tenure| TEN	| SumOfNP (people) | CountOfSERIALNO (households)
 ---|---|---|---
-GQ |  |	458 |	387
-Own(Mortgage) | 1	| 219	| 507
-Own(no mortgage) | 2	| 155 |	272
-Rent | 3	| 407	| 707
-Occupied (no rent) | 4	| 16	| 36
+GQ/vacant | (blank)|	7446 |	12880
+Owned with mortgage or loan (include home equity loans) | 1	| 60414	| 21846
+Owned free and clear | 2	| 33343 |	16255
+Rent | 3	| 24102	| 11614
+Occupied without payment of rent | 4	| 1965 | 972
 

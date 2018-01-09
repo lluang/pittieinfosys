@@ -1,31 +1,31 @@
 ---
 title: "Reading data into databases"
 author: "IE0015 Lab 1"
-date: "January 12/13, 2017"
+date: "January 11/12, 2018"
 output:
   word_document: default
   pdf_document: default
 ---
 
-Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.
+Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.  When a query is required, you may use the MS Access Query Wizard to design the query, then use the SQL View to display the resulting SQL that will go into your answer. 
 
 1. [1] Download the Titanic data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
 
 What character separates fields in this file?  What character identifies text that should be kept in the same data field?  What would happen if you did not identify text that should be kept together?
 
+
 2. [1]  Using the MS Access, import the Titanic data. How many rows and columns are in the resulting table?  
 
 3. [1]  There are generally commas in the name and the home.dest field data.  Why did these not cause the data to be divided into two different columns.
 
-4.  [2] Create an SQL query to determine, from each port of embarkation, how many females (women and girls) survived and perished.
+4.  [2] Use the query wizard to create an SQL query to determine, from each port of embarkation, how many females (women and girls) were embarked.  This will involve creating a Crosstab where rows are the port of embarkation and columns are gender.
 
 Your answer should include a table with the answer (note that you should name the cities, not only the initial) and the final SQL query that allowed you to answer the question.
 
-5. [1] Download and look at the data from the two American Community Survey (ACS) Pittsburgh North (01701) tables using a text editor.  How are columns separated?  How is text that should not be separated identified? What column should be guaranteed to be unique and can serve as a primary key?
+5. [1] Download and look at the data from the two American Community Survey (ACS) Pennsylvania tables using a text editor.  How are columns separated?  How is text that should not be separated identified? What column(s) should be guaranteed to be unique and can serve as a primary key?
 
+6. [*] Load both tables into MS Access.  What error messages did you see? (Note: we will do something about this in Lab 2)
 
-6. [1] Load both tables into MS Access.  What error messages did you see?
+7. [1] In the ACS Household Record, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own) You will need to access the ACS Data Dictionary from the ACS website. (hint, search for the words in the categories you are looking for.)
 
-7. [1] In the ACS Household survey data, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own) You will need to access the ACS Codebook/Data Dictionary from the ACS website.
-
-8.  [2] Determine the number of people who live in Group Quarters, Rent, Own (include mortgage), or are not currently paying for housing and compare this to the total population (calculate the percent of total of each category, you may calculate this separate from the SQL query).  Include query(ies), the resulting table, and the percentages of people in each category.
+8.  [2] Determine the number of people who live in Group Quarters/vacant, Rent, Own (with mortgage), own (no mortgage), or are not currently paying for housing.  Include query(ies), the resulting table, and the written value of the tenure. Note that the table should use words to indicate tenure (the type of ownership) and not a number.
