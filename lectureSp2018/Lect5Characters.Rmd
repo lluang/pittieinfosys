@@ -8,8 +8,10 @@ output:
 ---
 
 ```{r}
-library(tidyverse)
+library(tidyr)
+library(dplyr)
 library(magrittr)
+library(stringr)
 ```
 Working with Characters
 ==================== 
@@ -49,7 +51,49 @@ Basics of working with characters
 ```{r}
 head(state.name)
 length(state.name)
-nchar(state.name)
+str_length(state.name)
+```
+
+Quotes and escapes
+==================
+
+- The pair of double quote ("") or single quotes('') mark strings.
+- For consistency, always use double quotes unless you need nested quotes.
+
+```{r}
+string1 <- "This is a string"
+string2 <- 'If I want to include a "quote" inside a string, I use single quotes'
+```
+
+Common mistakes
+=================
+- Not closing a quote
+
+```{r}
+"This is a string without a quote
+```
+
+-  Look at the console, see the '+' character
+-  Close the string
+```{r}
+"
+```
+
+Escape characters
+===================
+
+- Some character sequences are special (e.g. ")
+- To remove their special meaning, use the backslash as an *escape* character (\)
+```{r}
+double_quote <- "\"" # or '"'
+single_quote <- '\'' # or "'"
+```
+- If you need a backslash (e.g. identifying a file directory path), use a double backslash
+```{r}
+filelocation = "C:\Documents\courses"
+```
+```{r}
+filelocation = "C:\\Documents\\courses"
 ```
 
 Combining (concatenating) strings
@@ -60,31 +104,43 @@ Combining (concatenating) strings
 -  Specify how to separate strings using the `sep` parameter.
 
 ```{r}
-cat("Long strings can", "be displayed over", "several lines using", "the fill= arguement", 
-    sep = " ", fill = 40)
+cat("Long strings can", "be displayed over", "several lines using", "the fill= arguement", sep = " ", fill = 40)
 ```
 
-`paste` is a alternative to `cat`
+`str_c` is a alternative to `cat`
 =================
 
 - Works when you need to convert other data types to strings
 - Also better when you have to do operations to generate strings.
 
 ```{r}
-paste(c('one', 2, 'three', 4, 'five'), 
-      collapse = " ")
+paste(c('one', 2, 'three', 4, 'five'))
+```
+- Add the *sep* arguement to separate them (other than tabs)
+- Add the *collapse* arguement to combine them into a single string.
+
+```{r}
 paste('X', 1:5, sep="")
 paste(c('X', 'Y'), 1:6, sep="_", collapse="|")
+```
+
+Use *str_c* To combine strings
+=========================
+
+```{r}
+str_c("x", "y", "z")
+str_c("x", "y", "z", sep=",")
 ```
 
 Working with substrings
 ================
 
 -  Computers treat strings like arrays, so getting a substring is like using indices of arrays.
+-  Look at *help(str_sub)* to see arguements for *str_sub* (start, end)
 
 ```{r}
-substring(state.name[1:5], 1, 4)
-al = substring(state.name[1],first=1:nchar(state.name[1]), last=1:nchar(state.name[1]))
+str_sub(state.name[1:5], 1, 4)
+al = str_sub(state.name[1], start=1:str_length(state.name[1]), end=1:str_length(state.name[1]))
 al
 which(al=="a")
 ```
@@ -92,16 +148,17 @@ which(al=="a")
 Replacing texts
 ==========
 
-- We can use the substring function to replace strings if we find them
-- Note that it overwrites, not expands the string
+- We can use the *str_sub* function to replace strings if we find them
+- Note that it overwrites the characters
+    - If you want to insert, use *sub_c*
 
 ```{r}
 nickname = "Sweet Home"
-substring(state.name[1], 4, 4+nchar(nickname))=nickname
+str_sub(state.name[1], 4, 4+nchar(nickname))=nickname
 state.name[1]
 ``` 
 
-Regular expressions
+Searches and Regular expressions
 ========
 
 What are regular expressions?
@@ -205,6 +262,21 @@ Character classes
   - `[\n]` newlines
   - `[\r]` carriage returns
 
+Simple searches
+================
+
+- Simple searches can be literal
+
+```{r}
+bananas = c("banana", "Banana", "BANANA", "bananas")
+str_view(bananas, "banana")
+```
+Upper and lower case
+==============
+```{r}
+str_view(bananas, regex("banana", ignore_case=TRUE))
+```
+
 Phone number
 ===========
 
@@ -221,6 +293,23 @@ Phone number
   - Optional non-digit `[\W]`?
   - Four digits `[0-9]{4}`
 
+
+Using stringr functions
+=======================
+
+-  *str_view* looks at a regular expression match
+-  *str_view_all* finds all matches
+-  Two arguments, the string, then the pattern
+
+```{r}
+x <- "1888 is the longest year in Roman numerals: MDCCCLXXXVIII"
+str_view(x, "CC?")
+```
+```{r}
+numbers <- c("412-624-9830", "(412)624-9838", "412/624-9800", "412-255-2621", "412.624.9830")
+str_view_all(numbers, regex("[\\W]?[0-9]{3}[\\W]?[0-9]{3}[\\W]?[0-9]{4}"))
+```
+
 Splitting strings
 =================
 
@@ -228,7 +317,7 @@ Splitting strings
 
 ```{r}
 str = 'one   two      three  four'
-strsplit(str, " ")
+str_split(str, " ")
 ```
 
 With regular expressions
@@ -237,7 +326,7 @@ With regular expressions
 -  Use the one or more modifier '+' to say that any number of spaces will be a split
 
 ```{r}
-strsplit(str, " +")
+str_split(str, " +")
 ```
 
 We can use it to find records in a data frame
@@ -270,7 +359,8 @@ data = titanic$name[5]
 startpoint = regexpr(", [A-Z][a-z]*\\.", data)
 attributes(startpoint)
 attr(startpoint, 'match.length')
-title = substr(data, startpoint+2, startpoint + attr(startpoint, 'match.length')-1)
+title = str_sub(data, startpoint+2, startpoint + attr(startpoint, 'match.length')-1)
+title
 ```
 
 The Rime of the Ancient Mariner

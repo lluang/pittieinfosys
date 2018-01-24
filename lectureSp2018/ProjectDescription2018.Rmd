@@ -30,17 +30,22 @@ output:
 Timeline
 --------
 
-1.  Form team and propose topic. Identify a data set(s) and a potential CoNVO - February 8
+1.  Form team and propose topic. Identify a data set(s) and a potential CoNVO - February 7
   -  One paragraph discussing a point of view (hypothetical client) and the goal of the project.  Then present the CoNVO statement.
-2.  Exploratory data analysis - March 15
-  -  Initial graphical view of data set.  There should be at least three dependent variables.
+  -  **Co**ntext.  Hypothetical client's overall goal
+  -  **N**eeds.  A decision the client needs to make and a data question that needs to be answered.
+  -  **V**ision. How the question will be answered.  A sketch of a possible chart.
+  -  **O**utcome. Some choices the client can make.
+  
+2.  Exploratory data analysis - March 14
+  -  Two initial graphical view of data set.  There should be at least three dependent variables in each.
   -  Describe data according to Volume, Variety, Velocity, Veracity
     -  Volume - How much is there?
     -  Variety - How much and what variety is available about each observation?
     -  Velocity - Is data changing over time?
     -  Veracity - Is the data correct or are there questions about its accuracy or meaning?
   -  Refine CoNVO
-3.  Final Report April 19,  Presentations April 20, 21 in lab (note: if teammates are in different lab sessions, I will pick one to present in)
+3.  Final Report April 18. Final report should be no more than 6 pages.  Use the format of the Freshman Conference.  Presentations April 19, 20 in lab (note: if teammates are in different lab sessions, I will pick one to present in)
 4.  Extra credit. If you had to learn how to use an R package using data types and methods we did not cover in class, write one or two pages about the package.  Check with me to make sure that the package is significant enough.  E.g. Mapping or GIS packages for geographical data.
 
 Inspiration

@@ -6,8 +6,8 @@ output:
   slidy_presentation: default
 ---
 
-Rendering this file (*.Rmd)
-===================
+Rendering this file (Rmd)
+=============================
 
 1. Open in R Studio
 2. Click on Knit icon in editor toolbar (look for icon with ball of string and knitting needle)
@@ -150,7 +150,6 @@ Learning MS Access
   -  This is what your employers will ask you to do.
   -  Our goal for this course is that you know how to do this.
 -  Use the Microsoft Support website tutorials to learn how to use MS Access
--  
 
 What is MS Access
 =================

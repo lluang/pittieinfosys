@@ -1,7 +1,7 @@
 ---
-title: 'Lab 4: Tidy data in R'
+title: 'Lab 3: Tidy data in R'
 author: "IE 0015"
-date: "January 26, 2017"
+date: "January 25,26, 2018"
 output:
   pdf_document: default
   html_document: default
@@ -12,7 +12,8 @@ Note: this lab should be written using R Markdown.  The lab is provided as an R 
 In the `tidyr` package there are two Tubeculosis data sets `who` and `population`.  Look at the `tidyr` help files (R Studio -> Packages tab -> tidyr) to see what each contains. To load and view the last few rows of the datasets, you should enter:
 
 ```{r, warning=FALSE}
-library(tidyverse)
+library(tidyr)
+library(dplyr)
 data(who)
 tail(who)
 ```
@@ -31,7 +32,7 @@ Each row in the who dataset has several values that refer to different populatio
 
 The data is organized so that the reader can see all information about a country and year in a single row.
 
-2. [4]  What steps need to be taken make the who data tidy? Do so using R and save the results to the data frame `tidywho`. (note: you may leave the labels as they are, you do not have to rewrite the age ranges)  Display the last 10 rows.
+2. [4]  What steps need to be taken make the who data tidy? Do so using R and save the results to the data frame `tidywho`. (note: you may leave the labels as they are, you do not have to rewrite the age ranges) In addition to R code, you can answer in a list of steps, or draw a flow chart/process map of the steps. Display the last 10 rows.
 
 To save effort, only use the variables corresponding to new positive pulmonary smears.
 
