@@ -1,19 +1,19 @@
 ---
 title: 'Lab 2: SQL Joins'
 author: "IE 0015 Information Systems Engineering"
-date: "01/19/2017"
+date: "01/18-19/2018"
 output:
   word_document: default
   pdf_document: default
   html_document: default
 ---
 
-This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh (North) (Public Use Microdata Area 01701) for 2012.  The data dictionary is at 
-http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html.  You should open up the data dictionary in a searchable format to do this lab.
+This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh, North for 2012 (your version of Excel is not able to handle all of the PA that you used last week).  Create a new Access database importing Pittsburgh data. You should have the same result (housing data was imported, person data generated an error).  The data dictionary is at 
+http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html.  You should open up the data dictionary in a searchable format to do this lab.  
 
 1. [1] In Lab 1, you determined that MS Access was not able to import the Person record of the ACS PUMS because of the number of columns in the person record.  We will break the table into two tables and use queries to connect them together and with the Household record.
 
-In the Person Record (ss12ppa) what fields uniquely identify each row and what kinds of values do they take? (remember, you should look at the data dictionary to identify what the codes in the database stand for. This dataset is from 2012, but the field names and definitions do not change much over time.) Hint: start using the data dictionary by searching for 'PERSON RECORD'.
+In the Person Record (ss12ppa) what fields in combination uniquely identify each row and what kinds of values do they take? (remember, you should look at the data dictionary to identify what the codes in the database stand for. This dataset is from 2012, but the field names and definitions do not change much over time.) Hint: start using the data dictionary by searching for 'PERSON RECORD'.
 
 ANSWERS
 
@@ -48,6 +48,7 @@ ANSWER
 SELECT ss12ppapt1.SERIALNO, ss12ppapt1.SPORDER, ss12ppapt1.AGEP, ss12ppapt1.SCHG, ss12ppapt1.DDRS, ss12ppapt2.pwgtp1
 FROM ss12ppapt1 INNER JOIN ss12ppapt2 ON (ss12ppapt1.SPORDER = ss12ppapt2.SPORDER) AND (ss12ppapt1.SERIALNO = ss12ppapt2.SERIALNO);
 ```
+NOTE: the students will have different values in the top four. The structure must be correct (SQL has no guarantees on the order).
 
 SERIALNO |	SPORDER | AGEP |	SCHG	| DDRS |	pwgtp1
 --|--|--|--|--|--
@@ -57,7 +58,7 @@ SERIALNO |	SPORDER | AGEP |	SCHG	| DDRS |	pwgtp1
 2647	| 4	| 22	| 16	| 2	| 122
 
 
-3.  [2] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Pittsburgh (North)? 
+3.  [2] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Allegheny County? 
   a.  How do you identify if a child is in preschoool? In Kindergarten?
   b.  Generate a query that identifies the school status of 4 and 5 year olds. Do not include children currently in Kindergarden  (because they have finished eligibility for Pre-school)
   c.  What is the fraction of 4 and 5 year olds who are in pre-school? (Note: you will be able to calculate this with the results of part (a))
