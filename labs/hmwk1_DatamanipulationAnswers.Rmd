@@ -1,7 +1,7 @@
 ---
 title: 'Homework 1: Data manipulation'
 author: "IE 0015"
-date: "February 15, 2017"
+date: "February 14, 2018"
 output:
   pdf_document: default
   html_document: default
@@ -12,7 +12,9 @@ For the homework assignments, code and narrative should be written using R Markd
 In the `tidyr` package there are two Tubeculosis data sets `who` and `population` (you used them in Lab 3).  Look at the `tidyr` help files (R Studio -> Packages tab -> tidyr) to see what each contains. To load and view the last few rows of the datasets, you should enter:
 
 ```{r, warning=FALSE}
-library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(magrittr)
 data(who)
 tail(who)
 ```

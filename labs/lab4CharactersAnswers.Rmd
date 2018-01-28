@@ -48,4 +48,3 @@ unique(titanic$Title)
 titanic$Title <- factor(titanic$Title)
 summary(titanic$Title)
 ```
-
