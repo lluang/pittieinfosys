@@ -46,17 +46,19 @@ tidywho %>% tail(20)
 
 2.  [10] In the subgroup column, there are actually three pieces information: the mode of diagnosis,  gender, and the age range.
   a. Draw a process map for the steps to take to extract age range, diagnosis mode, and gender by year from the original column names. Note: in a process map, each function in (b) should correspond to a block on the process map.
-  b. In R, create three new columns 'agerange', 'gender', 'diagnosismode' and populate them based on the current value of subgroup. (note: 'agerange' is going to be the hardest of the three, I suggest starting with 'gender'). Print out the last 20 rows of Country, iso3, year, agerange, gender, diagnosismode, cases.  Note: because of the size of the dataset, start by making a dataframe with the last 15 rows of tidywho where the year is after 2008 (i.e. 2009-2014).
+  b. In R, create three new columns 'agerange', 'gender', 'diagnosismode' and populate them based on the current value of subgroup. (note: 'agerange' is going to be the hardest of the three, I suggest starting with 'gender'). Print out the fifst 10 rows of Country, iso3, year, agerange, gender, diagnosismode, cases.  Note: because of the size of the dataset, start by making a dataframe with the rows of `tidywho` from question 1 where the year is after 2010 (i.e. 2010-2014).
 
 Notes: 
-  1. To split a string by character position, use `substring`
-  2. The total number of characters in a string can be found by `length(stringname)`
-  3. `strsplit` takes a string and splits it using a character to split the string. e.g.
-  `splittedstring <- strplit(stringname, split="_")
-  4. `strsplit` returns a list of length 1, and it accessed by `splittedstring[[1]]`
+  1. To split a string by character position, use `str_sub`. Note that the first three characters of subgroup all all the same so they should be removed.
+  2. The total number of characters in a string can be found by `str_length(stringname)`
+  3. `str_split` takes a string and splits it using a character to split the string. e.g.
+  `splittedstring <- str_split("new_sp_m2534", pattern="_", simplify=TRUE)`
+  4. `str_split` with `simplify=TRUE` returns a vector. If you forget `simplify=TRUE`, it returns a list that is harder to work with (it will return a list that is inside of another list, and it accessed by `splittedstring[[1]]`)
+  5. Start by looking at a small number of rows (e.g. 5) and get that to work. Then see if it works for all of the rows.
 
 ```{r}
-tidywho2011 <- tidywho %>% filter(year>2010)
+library(stringr)
+tidywho2010 <- tidywho %>% filter(year>=2010)
 ```
   
   
@@ -66,7 +68,7 @@ tidywho2011 <- tidywho %>% filter(year>2010)
 2. Split subgroup by `_`
 3. Check if there are two or three subgroups
 4. The first character of the last subgroup is the gender
-5. If there are three subgroups, the second subgroup is the diagnosis mode.  If there are two subgroups, the diagnosis mode is "rel".
+5. If there are three subgroups, the second subgroup is the diagnosis mode.  If there are two subgroups, the diagnosis mode is "rel". (no diagnosis mode is recorded)
 6. The age range comes after the 1st character of the last subgroup.  They can either use all of the numbers to identify the age range, or they can try to pull out the beginning and end.
   6a. If there are 3 digits, the first digit is the beginning and the last two digits are the end of the range
   6b. If there are 4 digits, the first two digits is the beginning and the last two digets are the end of the range
@@ -74,21 +76,21 @@ tidywho2011 <- tidywho %>% filter(year>2010)
 
 
 ```{r}
-tidywho2011$subgroup1 <- substring(tidywho2011$subgroup, 4, length(tidywho2011$subgroup))
+tidywho2010$subgroup1 <- str_sub(tidywho2010$subgroup, 4, length(tidywho2010$subgroup))
 diagnosismode <- c()
 gender <- c()
 agerange <- c()
-for(newrange in tidywho2011$subgroup1){
-  subgroupsplit <- strsplit(newrange, split= "_")
-  diagnosismode <- append(diagnosismode,  subgroupsplit[[1]][length(subgroupsplit[[1]])-1])
-  subgrouplast <- subgroupsplit[[1]][length(subgroupsplit[[1]])]
-  gender <- append(gender, substring(subgrouplast, 1, 1))
-  agerange <- append(agerange, substring(subgrouplast, 2, nchar(subgrouplast)))
+for(newrange in tidywho2010$subgroup1){
+  subgroupsplit <- str_split(newrange, pattern = "_", simplify=TRUE)
+  diagnosismode <- append(diagnosismode, subgroupsplit[length(subgroupsplit)-1])
+  subgrouplast <- subgroupsplit[length(subgroupsplit)]
+  gender <- append(gender, str_sub(subgrouplast, 1, 1))
+  agerange <- append(agerange, str_sub(subgrouplast, 2, str_length(subgrouplast)))
 }
-tidywho2011$diagnosismode <- diagnosismode
-tidywho2011$gender <- gender
-tidywho2011$agerange <- agerange
-tidywho2011 %>% tail(15)
+tidywho2010$diagnosismode <- diagnosismode
+tidywho2010$gender <- gender
+tidywho2010$agerange <- agerange
+tidywho2010 %>% head(10)
 ```
 
 3.  [6] You need a table of rates of annual diagnosis by country for the last 3 years (2011-2013).
@@ -101,7 +103,7 @@ tidywho2011 %>% tail(15)
 Make a table of total diagnosis by country, then combine it with the population table, then get rates.  Note: students may or may not include diagnosismode in their answer.
 
 ```{r}
-tidywho2011 %>% 
+tidywho2010 %>% 
     group_by(country, year, diagnosismode) %>%
       summarize(newcases=sum(cases, na.rm=TRUE)) %>%
         left_join(population) %>%
@@ -111,7 +113,7 @@ tidywho2011 %>%
 Alternative without the diagnosismode column.
 
 ```{r}
-tidywho2011 %>% 
+tidywho2010 %>% 
     group_by(country, year) %>%
       summarize(newcases=sum(cases, na.rm=TRUE)) %>%
         left_join(population) %>%
