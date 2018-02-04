@@ -1,8 +1,10 @@
 ---
-title: "Lecture 5: Character Manipulation and Regular Expressions"
+title: 'Lecture 6: Character Manipulation and Strings'
 author: "IE 0015"
-date: "January 2018"
+date: "February 2018"
 output:
+  html_document:
+    df_print: paged
   pdf_document: default
   slidy_presentation: default
 ---
@@ -24,7 +26,6 @@ Working with Characters
   -  Match strings
   -  Search and replace
   
-=======
 What this course is not covering in class
 ======================
 
@@ -59,25 +60,26 @@ Quotes and escapes
 
 - The pair of double quote ("") or single quotes('') mark strings.
 - For consistency, always use double quotes unless you need nested quotes.
+- Note that you need to use `writeLines` to not show escape characters.
 
 ```{r}
 string1 <- "This is a string"
 string2 <- 'If I want to include a "quote" inside a string, I use single quotes'
+print(string1)
+print(string2)
+writeLines(string2)
 ```
 
 Common mistakes
 =================
 - Not closing a quote
 
-```{r}
+```
 "This is a string without a quote
 ```
 
 -  Look at the console, see the '+' character
--  Close the string
-```{r}
-"
-```
+-  Close the string using a `"`
 
 Escape characters
 ===================
@@ -89,9 +91,14 @@ double_quote <- "\"" # or '"'
 single_quote <- '\'' # or "'"
 ```
 - If you need a backslash (e.g. identifying a file directory path), use a double backslash
-```{r}
+```
 filelocation = "C:\Documents\courses"
 ```
+- Generates an error 
+```
+Error: '\D' is an unrecognized escape in character string starting ""C:\D"
+```
+
 ```{r}
 filelocation = "C:\\Documents\\courses"
 ```
@@ -107,21 +114,22 @@ Combining (concatenating) strings
 cat("Long strings can", "be displayed over", "several lines using", "the fill= arguement", sep = " ", fill = 40)
 ```
 
-`str_c` is a alternative to `cat`
+`str_c` is the preferred alternative to `cat`
 =================
 
 - Works when you need to convert other data types to strings
 - Also better when you have to do operations to generate strings.
+- The rest of the lecture, I will avoid using non-`stringr` methods.
 
 ```{r}
-paste(c('one', 2, 'three', 4, 'five'))
+str_c('one', 2, 'three', 4, 'five')
 ```
-- Add the *sep* arguement to separate them (other than tabs)
-- Add the *collapse* arguement to combine them into a single string.
+- Add the *sep* argument to separate them (other than tabs)
+- Add the *collapse* argument to combine them into a single string.
 
 ```{r}
-paste('X', 1:5, sep="")
-paste(c('X', 'Y'), 1:6, sep="_", collapse="|")
+str_c(c('X', 'Y'), 1:6, sep="_")
+str_c(c('X', 'Y'), 1:6, sep="_", collapse="|")
 ```
 
 Use *str_c* To combine strings
@@ -136,7 +144,7 @@ Working with substrings
 ================
 
 -  Computers treat strings like arrays, so getting a substring is like using indices of arrays.
--  Look at *help(str_sub)* to see arguements for *str_sub* (start, end)
+-  Look at *help(str_sub)* to see arguments for *str_sub* (start, end)
 
 ```{r}
 str_sub(state.name[1:5], 1, 4)
@@ -243,7 +251,8 @@ Examples
 - [0-9][0-9][a-zA-Z]+ has two digits followed by one or more letters.
 - 12a 01Zd
 - (abc){3} means abcabcabc
-- [0-9]{3}  \d{3} Any group of three digits
+- [abc]{3} means three of 'a', 'b', 'c' in a row
+- [0-9]{3} or \d{3} Any group of three digits
 - `[\^0-9] \D`  Not a digit
 
 Character classes
@@ -277,6 +286,31 @@ Upper and lower case
 str_view(bananas, regex("banana", ignore_case=TRUE))
 ```
 
+Anchors
+========
+
+- You can tell that a string needs to be at the beginning or end of the word using anchors
+    - `^` for beginning of the word
+    - `$` for the end of the word
+
+```{r}
+apples <- c("apple pie", "apple", "apple cake", "crabapple")
+str_view(apples, "apple")
+```
+
+```{r}
+str_view(apples, "^apple")
+```
+
+```{r}
+str_view(apples, "apple$")
+```
+
+```{r}
+str_view(apples, "^apple$")
+```
+
+
 Phone number
 ===========
 
@@ -307,7 +341,7 @@ str_view(x, "CC?")
 ```
 ```{r}
 numbers <- c("412-624-9830", "(412)624-9838", "412/624-9800", "412-255-2621", "412.624.9830")
-str_view_all(numbers, regex("[\\W]?[0-9]{3}[\\W]?[0-9]{3}[\\W]?[0-9]{4}"))
+str_view_all(numbers, "[\\W]?[0-9]{3}[\\W]?[0-9]{3}[\\W]?[0-9]{4}")
 ```
 
 Splitting strings
@@ -328,11 +362,17 @@ With regular expressions
 ```{r}
 str_split(str, " +")
 ```
+- and make this a vector using `simplify` (which is usually easier to use than a list)
+```{r}
+str_split(str, " +", simplify = TRUE)
+```
+
 
 We can use it to find records in a data frame
 ================================
 
-- *grep* takes a regular expression and a character string or vectors and returns either the indices or values (value=TRUE) of the matches
+- `grep` takes a regular expression and a character string or vectors and returns either the indices or values (value=TRUE) of the matches
+- `regexp`
 - Example, find women who are not members of nobility.
 - Mrs, Miss, Ms, Mme (Madame), Mlle (Mademoiselle) are generic title for women and girls
 - Always followed by a period in this database
@@ -356,10 +396,8 @@ length(womentitanic)
 
 ```{r}
 data = titanic$name[5]
-startpoint = regexpr(", [A-Z][a-z]*\\.", data)
-attributes(startpoint)
-attr(startpoint, 'match.length')
-title = str_sub(data, startpoint+2, startpoint + attr(startpoint, 'match.length')-1)
+titlelocation = str_locate(data, ", [A-Z][a-z]*\\.")
+title = str_sub(data, titlelocation[1]+2, titlelocation[2])
 title
 ```
 
@@ -406,19 +444,31 @@ any(grep('Ship',rime))
 any(grep('[Ss]hip',rime))
 ```
 
+Using str_view
+==============
+```{r}
+str_view(rime, '[Ss]hip')
+```
+```{r}
+str_locate(rime, '[Ss]hip')
+```
+
+```{r}
+str_sub(rime[3], 7, 10)
+```
 Better will be to find all examples and where they are
 =====================
 
--  `regexpr` finds the first match in each section of the text.
--  `gregexpr` finds all matches in each section of text.
+-  `str_locate()` finds the first match in each section of the text.
+-  `str_locate_all()` finds all matches in each section of text.
 
 ```{r}
-regexprresult <- regexpr('Marinere', rime)
-regexprresult %>% head()
+findmarinere <- str_locate(rime, 'Marinere')
+findmarinere
 ```
 ```{r}
-gregexprresult <- gregexpr('Marinere', rime)
-gregexprresult %>% head()
+findtheall <- str_locate_all(rime, 'the')
+findtheall
 ```
 
 
@@ -429,19 +479,19 @@ Examples of using character classes in R
 -  Note the double backslash. First backslash is to tell R that the second one is real and not an escape sequence.
 
 ```{r}
-regexpr('\\d', rime) %>% head()
+str_locate(rime, '\\d') %>% tail()
 ```
 ```{r}
-gregexpr('\\D', rime) %>% head()
+str_locate(rime, '\\D') %>% tail()
 ```
 ```{r}
-gregexpr('\\w', rime) %>% head()
+str_locate(rime, '\\w') %>% head()
 ```
 ```{r}
-regexpr('\\W', rime) %>% head()
+str_locate(rime, '\\W') %>% head()
 ```
 ```{r}
-gregexpr('[A-Z]', rime) %>% head()
+str_locate(rime, '[A-Z]') %>% tail()
 ```
 
 
@@ -452,8 +502,10 @@ Alternatives
 - '|' is used to separate alternatives
 
 ```{r}
-regexpr('[t|T][h|H][e|E]', rime) %>% head()
-gregexpr('(the|The|THE)', rime) %>% head()
+str_locate(rime, '[t|T][h|H][e|E]') %>% head()
+```
+```{r}
+str_locate(rime, '(the|The)') %>% head()
 ```
 More character classes
 ==================
@@ -471,25 +523,27 @@ a b c d e f g h i j k l m n o p q r s t u v w x y z
 Look for a specific class
 ============
 ```{r}
-gregexpr("[aeiou]", characters) %>% head()
+str_locate_all(characters, "[aeiou]") %>% head()
 ```
 
 Or everything else using ^
 ==============
 ```{r}
-gregexpr("[^aeiou]", characters) %>% head()
+str_locate_all(characters, "[^aeiou]") %>% head()
 ```
 
 Try groups of characters
 =====================
 
 ```{r}
-gregexpr("[0-3]", characters) %>% head()
-gregexpr("[6-9]", characters) %>% head()
+str_locate_all(characters, "[0-3]") 
+```
+```{r}
+str_locate_all(characters, "[6-9]") 
 ```
 
 Combine them
 =====
 ```{r}
-gregexpr("[0-36-9]", characters)  %>% head()
+str_locate(characters, "[0-36-9]")
 ```
