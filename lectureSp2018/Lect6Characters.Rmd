@@ -9,12 +9,43 @@ output:
   slidy_presentation: default
 ---
 
+Introduction
+=============
+
+- You should load the titanic and Rime of the Ancient Marinere from the Courseweb datasets.
+- You should have the `stringr` package
+
 ```{r}
 library(tidyr)
 library(dplyr)
 library(magrittr)
 library(stringr)
 ```
+
+Project
+=========
+
+- Project topics are due Wednesday. This is a loose deadline, you can change the project later if it turns out you cannot find useful data.
+  -  One paragraph discussing a point of view (hypothetical client) and the goal of the project.  Then present the CoNVO statement.
+  -  **Co**ntext.  Hypothetical client's overall goal
+  -  **N**eeds.  A decision the client needs to make and a data question that needs to be answered.
+  -  **V**ision. How the question will be answered.  A sketch of a possible chart.
+  -  **O**utcome. Some choices the client can make.
+  
+Project extra credit
+====================
+
+- Use a method/package we do not cover in class or in the course textbooks.
+- Value: one letter grade on project (can go over 100)
+- Implication: you will have to learn it on your own. I will help you find materials and guide you.
+- Some possible methods that have shown up in past projects:
+    - Mapping/geo data
+    - Differential equations
+    - Linear algebra
+    - Anything from other IE/Pitt classes (I can help find a useful package)
+    - Text mining
+    - Time series/forecasting
+
 Working with Characters
 ==================== 
                                                                         

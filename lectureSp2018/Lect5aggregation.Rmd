@@ -3,8 +3,8 @@ title: 'Lecture 5: Data Aggregation'
 author: "IE 0015 Spring 2018"
 date: "February 2018"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   slidy_presentation: default
 ---
 
@@ -125,6 +125,45 @@ dplyr group_by and summarize
 - Logical: `any()`, `all()`
 
 
+Look at housing tenure
+==============
+
+```{r}
+# Mean household income split by housing Tenure
+tenurevalues <- data.frame(
+                  TEN = c("", "1", "2", "3", "4"), 
+                  tenurevalues = c(NA, 
+                                 "Owned with mortgage or loan",
+                                 "Owned free and clear",
+                                 "Rented",
+                                 "Occupied without payment of rent"))
+acsh$TEN <- as.factor(acsh$TEN)
+acsh <- acsh %>% left_join(tenurevalues, by='TEN')
+acsh$watercost <- as.numeric(acsh$WATP)
+acsh$householdincome <- as.numeric(acsh$HINCP)
+acsh$numpeople <- as.numeric(acsh$NP)
+```
+
+Mean income
+==========
+
+```{r}
+acsh %>% group_by(tenurevalues) %>%
+  summarise(meanincome = mean(householdincome, na.rm=TRUE))
+```
+
+More summary examples
+=====================
+```{r}
+acsh %>% group_by(tenurevalues) %>%
+  summarise(numberhouseholds = n(),
+            meanincome = mean(householdincome, na.rm=TRUE),
+            medianincome = median(householdincome, na.rm=TRUE),
+            sdincome = sd(householdincome, na.rm=TRUE),
+            minincome = min(householdincome, na.rm=TRUE),
+            maxincome = max(householdincome, na.rm=TRUE),
+            nintyfifthquant = quantile(householdincome, probs = 0.95, na.rm=TRUE))
+```
 
 
 The `apply` family of functions
@@ -187,21 +226,6 @@ by: data frame split by factors
 ======
 
 -  Summarize data frame split by factors
-
-```{r}
-# Mean household income split by housing Tenure
-tenurevalues <- data.frame(
-                  TEN = c("", 1, 2, 3, 4), 
-                  tenurevalues = c(NA, 
-                                 "Owned with mortgage or loan",
-                                 "Owned free and clear",
-                                 "Rented",
-                                 "Occupied without payment of rent"))
-acsh <- merge(acsh, tenurevalues, by='TEN')
-acsh$watercost <- as.numeric(acsh$WATP)
-acsh$householdincome <- as.numeric(acsh$HINCP)
-acsh$numpeople <- as.numeric(acsh$NP)
-```
 
 Results of grouping by a factor
 =====
@@ -273,9 +297,8 @@ aggregate
 ```{r}
 library(reshape2)
 library(ggplot2) #loads reshape2 package
-data(diamonds)
 summary(diamonds)
-aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean)
+aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean) %>% head()
 ```
 
 tapply
@@ -292,30 +315,31 @@ Mapping a function to a vector or list
 
 - `lapply` - Returns output as a list
 -  `sapply` - returns output as a vector or matrix (if possible)
+-  `apply` allows choice of axis over a matrix. Returns a matrix
 -  Note: returning a vector implies that order is important, e.g. the results are matched to another vector.
 
 Example for a mapping
 =============
 
 -  Break out individual words for each sentence.
--  Unknown number of words in each sentence, so use a list for each sentence.
+-  Unknown number of words in each sentence, so use a row for each sentence.
 
 ```{r}
+library(stringr)
 text = c("R is a free environment for statistical analysis",
  "It compiles and runs on a variety of platforms",
  "Visit the R home page for more information")
-result = strsplit(text, " ")
+result = str_split(text, " ", simplify=TRUE)
 result
-typeof(result)
 ```
 
-Now, take the list and get the length of each sentence
+Now, take the matrix and get the length of each sentence
 ==================
 
-- Because we want the length to be associated with the sentence, use `sapply`
+- Because we want the length to be associated with the rows, use `apply` and `MARGIN=1` (rows)
 
 ```{r}
-nwords = sapply(result, length)
+nwords = apply(result, MARGIN=1, FUN=length)
 nwords
 ```
 
