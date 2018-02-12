@@ -359,11 +359,6 @@ SQL
 
 Plotting with ggplot2
 =======================
-type: section
-
-
-
-
 
 Packages
 ========

@@ -21,8 +21,8 @@ Introduction
 
 Where data manipulation fits in the workflow
 =======================
-[Data analysis workflow](figures/data-science-communicate.png)
-  
+![Data analysis workflow](figures/data-science-communicate.png)
+
 Relationship to databases
 =========================
 
@@ -253,4 +253,3 @@ table3 %>% head(2)
 tidy3 <- table3 %>% separate(col='rate', into=c('cases', 'population'), sep='/')
 head(tidy3, 4)
 ```
-
