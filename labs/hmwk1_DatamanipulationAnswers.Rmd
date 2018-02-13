@@ -15,6 +15,7 @@ In the `tidyr` package there are two Tubeculosis data sets `who` and `population
 library(tidyr)
 library(dplyr)
 library(magrittr)
+library(stringr)
 data(who)
 tail(who)
 ```
@@ -57,7 +58,6 @@ Notes:
   5. Start by looking at a small number of rows (e.g. 5) and get that to work. Then see if it works for all of the rows.
 
 ```{r}
-library(stringr)
 tidywho2010 <- tidywho %>% filter(year>=2010)
 ```
   

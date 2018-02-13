@@ -3,8 +3,8 @@ title: "Visualization"
 author: "IE 0015 Spring 2018"
 date: "February 2018"
 output:
-  pdf_document: default
   slidy_presentation: default
+  pdf_document: default
   html_document:
     fig_height: 4
     fig_width: 6
@@ -16,12 +16,12 @@ Midterm
 
 -  CoNVO
 -  Data manipulation (verbs)
-  -  Process maps
-  -  SQL, R, plain english
-  -  We will not be grading syntax
-  -  Tidy data
-  -  Aggregation
-  -  Character strings
+    -  Process maps
+    -  SQL, R, plain english
+    -  Tidy data
+    -  Aggregation
+    -  Character strings
+    -  We will not be grading syntax
 -  Data analysis
   -  Sketch a visualization
   -  Interpret a data summary or data visualization
@@ -56,14 +56,14 @@ Visualization components
 ========================
 
 
-![Visualization components](figures/visualizationcomponents.jpg)
+![](figures/visualizationcomponents.jpg)
 
 
 Visual cues
 ===========
 
 
-![Visual cues](figures/visualcues.jpg)
+![](figures/visualcues.jpg)
 
 Ranking visual cues
 ===================
@@ -71,7 +71,7 @@ Ranking visual cues
 Some visual cues are more clear than others
 
 
-![Ranking visual cues](figures/visualcuesranked.jpg)
+![](figures/visualcuesranked.jpg)
 
 Coordinate systems
 ==================
@@ -79,7 +79,7 @@ Coordinate systems
 Coordinate systems dictate the dimensions of the visualization.
 
 
-![Coordinate systems](figures/coordinatesystems.jpg)
+![](figures/coordinatesystems.jpg)
 
 Scales
 ======
@@ -87,7 +87,7 @@ Scales
 Scales dictate where in the dimensions the data maps to.
 
 
-![Scales](figures/visualscales.jpg)
+![](figures/visualscales.jpg)
 
 Using visualization
 ===================
@@ -116,14 +116,14 @@ Choosing a visualization
 Thinking about types of visualizations
 ====================================
 
-![Chart Types](figures/chart-suggestion-infographic.jpg)
+![](figures/chart-suggestion-infographic.jpg)
 
 
 Visualizing categorical data
 ============================
 
 
-![Visualizing categorical data](figures/visualizationcategorical.jpg)
+![](figures/visualizationcategorical.jpg)
 
 
 
@@ -132,7 +132,7 @@ Time
 
 Time is continuous, but you can also divide it into categories.
 
-![Time](figures/visualizationtime.jpg)
+![](figures/visualizationtime.jpg)
 
 
 Time series
@@ -141,13 +141,13 @@ Time series
 How does your data change over time?
 
 
-![Time series](figures/visualizationtimeseries.jpg)
+![](figures/visualizationtimeseries.jpg)
 
 Visualizing spatial data
 ========================
 
 
-![Spatial data](figures/visualizationspatial.jpg)
+![](figures/visualizationspatial.jpg)
 
 Combining components
 ====================
@@ -155,7 +155,7 @@ Combining components
 By combining components, graphs are richer and can display many relationships at once.
 
 
-![Combining components](figures/visualcombinations.jpg)
+![](figures/visualcombinations.jpg)
 
 
 Multiple variables
@@ -164,7 +164,7 @@ Multiple variables
 There is no hard limit to how many variables can be in one visualization
 
 
-![Multiple views](figures/visualizationmultiple.jpg)
+![](figures/visualizationmultiple.jpg)
 
 Data distribution
 =================
@@ -177,7 +177,7 @@ Data distribution
 Visualizing distributions
 =========================
 
-![Visualizing distributions](figures/visualizationdistributions.jpg)
+![](figures/visualizationdistributions.jpg)
 
 
 Comparisons
@@ -185,7 +185,7 @@ Comparisons
 
 One thing that visualizations should do is show how things change.
 
-![Ways to show comparisons](figures/visualcomparisons.jpg)
+![](figures/visualcomparisons.jpg)
 
 Color scales
 ============
@@ -194,7 +194,7 @@ Color scales
 -  Diverging
 -  Qualitative
 
-![Color scales](figures/visualizationcolorscales.jpg)
+![](figures/visualizationcolorscales.jpg)
 
 
 Highlighting
@@ -202,7 +202,7 @@ Highlighting
 
 Emphasize a particular data point or series to place focus
 
-![Highlighting data points](figures/visualizationhighlighting.jpg)
+![](figures/visualizationhighlighting.jpg)
 
 Annotation
 ==========
@@ -210,7 +210,7 @@ Annotation
 Give context to data or explain boundary cases.
 
 
-![Point out odd data points](figures/visualannotations.jpg)
+![](figures/visualannotations.jpg)
 
 Making things pretty
 ====================

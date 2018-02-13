@@ -25,12 +25,12 @@ Look in the name field, find the comma after the last name.
 The title starts two spaces after the comma.
 The title is completed with a period.
 
-2.  (5 pts) Read in the titanic data and extract the title of each person.  Make a list of unique titles.
+2.  (5 pts) Read in the titanic data and extract the title of each person.  Make a list of unique titles.  
 
-Hint 1: Look in lecture Rmd file
-Hint 2: How do you find the first letter? how do you know the title is complete? Note: The Countess is a special case, don't worry about getting her territory right, just her title.  
+Note 1: Look in lecture Rmd file
+Note 2: How do you find the first letter? how do you know the title is complete? Note: The Countess is a special case, don't worry about getting her territory right, just her title.  
 Note 3:  in a regular expression, you need to escape the punctuation with a backslash, and you need to escape the backslash with another backslash (i.e. two backslashes before a punctuation mark.)
-Note 4:  to apply a function to a vector (e.g. a column in a dataframe) use `sapply(dataframe$column, FUN=sqrt)  
+Note 4:  to apply a function to a vector (e.g. a column in a dataframe) use `sapply`, e.g. `sapply(dataframe$column, FUN=sqrt)`  
   
 **ANSWER**
 
