@@ -1,0 +1,207 @@
+---
+title: 'Lecture 9: Visualizing summaries'
+author: "IE 0015 Information Systems"
+date: "February 2018"
+output: 
+  pdf_document: default
+  beamer_presentation: default
+  slidy_presentation: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+```
+
+## Overview
+
+-  Statistical summaries and comparisons
+-  Scales, Axis, and Legends
+-  Colors
+
+## Statistical summaries and comparisons
+
+-  You can use visualizations to take complex look at a data set.
+-  Start from a simple graphic, and add variations.
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill=cut)) +
+  ggtitle("Diamonds in dataset by cut")
+```
+
+
+Showing additional information
+===========================
+
+-  Use additional aesthetics to show more dimensions
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill=color)) +
+  ggtitle("Stacked bar chart example")
+```
+
+Summary calculations
+================
+
+-  `geom_bar`, `geom_hist`, `geom_boxplot`, `geom_summary` are examples of plots where there is a calculation first, then the plot is of the calculation.
+    -  e.g. count for `geom_bar`
+    
+Overridding default statistics
+====================
+
+- Sometimes you are presented data where you have the count, but you still want to use a bar graph.
+
+```{r}
+demo <- data.frame(cut = c("Fair", "Good", "Very Good", "Premium", "Ideal"), 
+                   freq = c(1610, 4905, 12082, 13791, 21551)
+)
+ggplot(demo) + geom_bar(aes(x=cut, y=freq), stat="Identity") +
+  ggtitle("Bar graph of diamonds based on frequency data")
+```
+
+Or, if you needed to get this format of data, use dplyr
+====================
+
+```{r}
+demo1 <- diamonds %>% group_by(cut) %>% summarize(freq=n())
+demo1
+```
+```{r}
+ggplot(demo1) + geom_bar(aes(x=cut, y=freq), stat="Identity") +
+  ggtitle("Bar graph of diamonds based on frequency data")
+```
+
+Change the presentation order
+===================
+
+-  You may want to sort the x-axis on something that may be meaningful.
+-  e.g. you are interested in the distribution more than the numbers associated with each class.
+
+Ordering factors by count
+======================
+
+1.  Use `reorder` function.
+    1. Factor variable that you want to use to group data.
+    2. Variable that contains the data to use to reorder the factors.
+    3. The function to apply to (2) to determine the order
+
+```{r}
+ggplot(diamonds, aes(x=reorder(color, color, FUN = length), fill=color)) + geom_bar() +
+  xlab("Diamond Color") + ylab("Frequency")
+  ggtitle("Diamond color sorted by frequency of occurrance")
+```
+
+Other ways to add dimensions to bar charts 
+===============
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill=color)) +
+  ggtitle("Stacked bar chart example")
+```
+
+Stacked bar charts can be used for proportion
+===============
+
+- compare distributions across categories
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill=color), position="fill") +
+  ylab("proportion") +
+  ggtitle("Stacked bar chart using position = 'fill'")
+```
+
+
+Show data side by side
+======================
+
+- Another way of showing distribution
+- Why this vs stacked?
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill=color), position="dodge") +
+  ggtitle("Stacked bar chart using position = 'dodge'")
+```
+
+Showing distributions of values
+===============================
+
+- `geom_boxplot`, `geom_violin`, and `stat_summary` can be used to show data summaries.
+
+box and whiskers
+================
+
+-  Box shows median, 25th and 75th quantiles.  i.e. the central 50% of data.
+-  Whiskers show last point within 1.5 * Interquartile range past the box. Indicates normal variation.
+-  Use `fivenum` function to extract values of the ends of the box and the whiskers.
+-  Other points are outliers.  Abnormal variation.  Should be investigated.
+
+Box and whiskers Example
+=====================
+
+```{r}
+ggplot(diamonds) + geom_boxplot(aes(x=color, y = carat)) + 
+  ggtitle("Box and whiskers example")
+```
+
+Violin plot
+===============
+
+- Violin plot makes a density plot for each category, then turns them on its side.
+- Note: I like to look at it because it is more detailed than a boxplot, but I don't recommend showing it to a customer.
+
+```{r}
+ggplot(diamonds) + geom_violin(aes(x=color, y = carat)) + 
+  ggtitle("Violin plot example")
+```
+
+
+Summary plot
+============
+
+- `stat_summary` shows a points, and a high and low value.
+-  Example: median, max, min
+
+```{r}
+ggplot(diamonds) + stat_summary(aes(x=color, y = carat), fun.y = mean, fun.ymin=min, fun.ymax=max) + 
+  ggtitle("stat_summary example with mean and max/min")
+```
+
+
+
+Changing statistics
+===================
+- You can replace this
+    - Try mean, and 95th and 5th quantiles
+    - Is this more meaningful?
+```{r}
+q05 <- function(x) quantile(x, 0.05)
+q95 <- function(x) quantile(x, 0.95)
+ggplot(diamonds) + stat_summary(aes(x=color, y = carat), fun.y = median, fun.ymin=q05, fun.ymax=q95) + 
+  ggtitle("stat_summary example with median and 5th and 95th quantiles")
+```
+
+Changing axis
+==============
+
+- If the format of the report makes it better to have bars go horizontal, use `coord_flip`
+
+```{r}
+ggplot(diamonds) + stat_summary(aes(x=color, y = carat), fun.y = median, fun.ymin=q05, fun.ymax=q95) + coord_flip() +
+  ggtitle("stat_summary example with median and 5th and 95th quantiles")
+```
+
+Coordinate flipping works with any plot
+============
+
+```{r}
+ggplot(diamonds) + geom_violin(aes(x=color, y = carat)) + coord_flip() + 
+  ggtitle("Violin plot example")
+```
+
