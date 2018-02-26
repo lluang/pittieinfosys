@@ -1,0 +1,232 @@
+%\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, letter, addpoints]{exam}
+\usepackage{multirow}
+\usepackage{pdflscape}
+%\usepackage{amssymb}
+
+%\usepackage{makeidx}
+
+%\usiepackage[colorlinks]{hyperref}
+
+% In case we're not using hyperref.sty:
+%\providecommand{\texorpdfstring}[2]{#1}
+% Thie following can be used in \section commands
+% without generating pdf warnings:
+%\newcommand{\bs}{\texorpdfstring{\char`\\}{}}
+
+%\newcommand{\docversion}{2.5}
+%\newcommand{\docdate}{May 7, 2015}
+%\newcommand{\docdate}{\today}
+
+%--------------------------------------------------------------------
+%
+% Changes since version 2.4 are described in the comments
+% near the beginning of the file exam.cls.
+%
+%--------------------------------------------------------------------
+
+%\makeindex
+
+%\newcommand{\indc}[1]{\index{#1@\texttt{\char`\\#1}}}
+%\newcommand{\indcsub}[2]{\index{#1@\texttt{\char`\\#1}!#2}}
+%\newcommand{\indcstart}[1]{\index{#1@\texttt{\char`\\#1}|(}}
+%\newcommand{\indcstop}[1]{\index{#1@\texttt{\char`\\#1}|)}}
+
+%\newcommand{\indt}[1]{\index{#1@\texttt{#1}}}
+%\newcommand{\indtsub}[2]{\index{#1@\texttt{#1}!#2}}
+%\newcommand{\indtstart}[1]{\index{#1@\texttt{#1}|(}}
+%\newcommand{\indtstop}[1]{\index{#1@\texttt{#1}|)}}
+
+%---------------------------------------------------------------------
+\newenvironment{example}%
+   {\bigskip\filbreak
+    \subsubsection{Example:}
+   }%
+   {}
+
+\def\samplehead#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    \hbox to \textwidth{%
+      \rlap{\parbox[b]{\textwidth}{\raggedright#1\strut}}%
+      \hfil\parbox[b]{\textwidth}{\centering#2\strut}\hfil
+      \llap{\parbox[b]{\textwidth}{\raggedleft#3\strut}}%
+    }% hbox
+    #4
+  \end{trivlist}
+}
+
+\def\samplefoot#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    #1
+    \vskip 3pt
+
+    \hbox to \textwidth{%
+      \rlap{\parbox[t]{\textwidth}{\raggedright#2}}%
+      \hfil\parbox[t]{\textwidth}{\centering#3}\hfil
+      \llap{\parbox[t]{\textwidth}{\raggedleft#4}}%
+    }% hbox
+  \end{trivlist}
+}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\makebox[\textwidth]{Name:\enspace\hrulefill}
+
+\centering
+{\bf IE 0015 Spring 2017 Midterm}
+
+\centering
+{\bf A}
+
+
+<<echo=FALSE>>=
+library(xtable)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(readr)
+library(ggplot2)
+@
+
+
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Write your name on the top of this page.
+\item
+  Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required.
+\item
+  The exam is four pages (including cover). In addition there are three pages of reference containing the data dictionaries and an example of the data from the Pittsburgh City Trees database, and a map of Pittsburgh with neighborhoods for your reference.
+\item
+  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
+\item
+  You have until 2:30 PM to finish. There are 100 points total divided among 3 questions.
+\end{enumerate}
+
+\pagebreak
+\begin{center}
+\gradetable[v][questions]
+\end{center}
+
+\begin{questions}
+
+\question[35]
+
+The Pittsburgh Citizen Police Review Board (CPRB) is an independent agency of the City of Pittsburgh set up to investigate citizen complaints about improper police conduct. It is made up of representatives appointed by either the City Council or the Mayor. 
+
+One of the responsibilities of the CPRB is to represent the interests of the general public in investigations of police misconduct and to provide transparency into police activity.  The CPRB has available all police incident and arrest reports, which includes all incidents that involve subject resistance and police use of force.
+
+On January 31, 2016, Mr. Bruce T. Kelley Jr. and another man were involved in a fight with Port Authority officers who were confronting them while drinking in a Port Authority Subway shelter in Wilkinsburg, PA . Two officers were injured, and in the ensuing pursuit and confrontation, Mr. Kelley was shot and killed after killing a Port Authority K-9.  As part of the investigation the CPRB is interested in being able to compare the actions taken by Port Authority  officers compared to other incidents where suspects resist police action. 
+
+(Note: In reality, the CPRB does not have jurisdiction over the Port Authority officers, so was not involved in the actual case.)
+
+
+\begin{parts}
+\part   Create a CoNVO statement from the point of view of an analyst preparing a report as a consultant for the CPRB (i.e. you represent the CPRB).
+
+\begin{solution}[3in]
+
+  \begin{itemize}
+    \item Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.  
+
+Here, the context is the CPRB wants to investigate a specific police action.
+
+  \item  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
+
+Here, the Need is to look at incidents in the region where the subject actions are similar to the subject actions in the case and compare the police action in those cases.
+
+  \item  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all." Another common mistake is to be too vague. The Vision in particular needs to be concrete enough so that a potential client has a picture of what she will be getting at the end of an analysis project and how she can use it.
+
+Because the goal is to compare the actions taken by police with similar cases, the vision should involve filtering arrests for similar offensives or filtering incidents to similar incidents (e.g. public drunkenness) to determine how common it was for subjects to resist arrests.  Reports could discuss police approaches to the suspects to determine if this was common or if this was done in a manner not usual.  And if the approach was common, if the response was normal or not (and if police response to the escalation of violence was consistent.)  Another way of looking at the data is focusing on the police response to the subject resistance, if the police escalated in a way consistent with other incidents that did not result in a fatality, or if this pathway commonly resulted in subject injury or fatality.
+  
+  \item  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context and lead to the decision identified in the Need. There should be more than one possible outcome (if not, there is no reason to do the project, the organization should take that route now). One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.  
+
+Here, the CPRB could find that the police acted within their procedure or that the police did not. Also they could find that the police procedures are flawed and need revision.
+
+  \end{itemize}
+
+Note: for grading I don't expect anyone to be that nuanced.  You should have either filtered incident data on something, or filtered subject resistance on something for the vision. And the outcome should have had more than one possible result.
+\end{solution}
+
+\end{parts}
+\pagebreak
+
+\question Tidy data
+
+The Pittsburgh Citizens Police Review Board (CPRB) wants to investigate claims that the Pittsburgh Police Department provides better services to some of Pittsburgh's 99 neighborhoods compared to others. 
+Specifically, that the ratio of arrests to incidents for different categories of crimes is different across neighborhoods.
+
+Using the Police Blotter, answer the following.
+
+\begin{parts}
+
+\part[5]  Currently, the "Offenses" column in the police blotter is not tidy. How is it not tidy?
+
+\part[10]  Create a process map that will modify the police blotter to make it tidy. Note that as part of this you should separate the code given in the "Offenses" column from the description.
+
+
+
+\begin{solution}[3in]
+
+1. The Offenses column has multiple data points in the column.  The offenses column also has both the numerical code as well as the descriptor in the column.
+2. The following:
+  \begin{itemize}
+  \item Create a new table with the incident number and the offenses column (could include Hierarchy as well).
+  \item  Split the offenses column by the '|'.
+  \item  Create a new row with each new offense and the original incident number (CCR).
+  \item  Split the Offense number from the text using the first space.
+  \item  You now have a table with one row for each offense that has the CCR, offense number and the office description.
+  \end{itemize} 
+\end{solution}
+
+\end{parts}
+\pagebreak
+\question
+
+Using the Police Blotter and the Police Incident data and the data, answer the following.
+
+\begin{parts}
+
+\part[20]  The "Hierarchy" column in the Blotter table groups contains the highest (most serious) offense of an incident/arrest. Assume that you have a table that maps the offense code to the Hierarchy code.  Develop a process map that will calculate the number of incidents and arrests by offense in each police zone as well as the ratio of arrests to incidents.
+
+\part[15]  Create a process map that will allow you to compare the ratio of arrests to incidents by Police Zone for the ten most common incidents (defined in Hierarchy) in that zone.  You may start with your answer to part a.  
+
+\part[15]  Sketch a visualization that is based on the process map in part b. This visualization should indicate both the ratio of arrests to incidents as well as the total number of incidents.  Explain how your visualization fulfills all of these requirements.
+
+
+\begin{solution}[4in]
+
+1.  Process map for part a and b follows:
+
+  \begin{itemize}
+  \item Mutate: add a column to the arrest data table by joining the arrest table to the hierarchy table using the offense number.
+  \item For both arrest and blotter table, group by hierarchy and police zone.
+  \item  For both arrest and blotter table, summarize by counting the number of arrests/incidents for each combination of hierarchy and police zone. This gives the raw number.
+  \item  For each combination of hierarchy and police zone, divide the number of arrests by the number of incidents. This gives the ratio of arrests to incidents for each police zone.
+  \end{itemize}
+
+3.  Starting with the number of arrests and incidents and their ratio.
+
+  \begin{itemize}
+  \item For each police zone, order the hierarchies by the number of incidents.
+  \item For each police zone, filter by the top 5 hierarchies.
+  \item  For a visualization, I would use a map of Pittsburgh that had the police zones identified. In each, I would put in a bar chart that depicted the total number of incidents behind the total number of arrests, so the two bars would total to the number of incidents, and the bars could be defined as arrests vs incidents in excess of arrests. This would show both proportion and the amount.
+  \end{itemize}
+\end{solution}
+
+\end{parts}
+\end{questions}
+
+
+<<echo=FALSE>>=
+#PittsburghPoliceArrest <- read_csv("../data/PittsburghPoliceArrest.csv")
+#PittsburghPoliceBlotter <- read_csv("../data/PittsburghPoliceBlotter.csv")
+@
+
+\end{document}

@@ -42,7 +42,7 @@ key = "subgroup", value="cases")
 tidywho$year <- as.integer(tidywho$year)
 ```
 
-1.  [2] Create a subset of tidywho that only includes the ASEAN nations.  Name this `whoasean`. Note that the list of nations and the corresponding ISO codes is provided below. You will need the package `countrycode` to make this work.
+1.  [1] Create a subset of tidywho that only includes the ASEAN nations.  Name this `whoasean`. Note that the list of nations and the corresponding ISO codes is provided below. You will need the package `countrycode` to make this work.
 
 Note:
 
@@ -80,7 +80,7 @@ whoasean$gender <- gender
 whoasean$agerange <- agerange
 ```
 
-2.  [10] Group and plot the total rate of diagnosis of TB per year for each country in a form that is comparable. 
+2.  [12] Group and plot the total rate of diagnosis of TB per year for each country in a form that is comparable. 
 
   a. Draw a process map that illustrates how to do this.
   b. Show at least two visualizations. Note that it should include a time series for each country in a form that distinguishable using black and white printing.
@@ -114,11 +114,10 @@ ggplot(aseanrates, aes(year, rate, color=iso2)) + geom_line() +
 ```
 
 
-3.  [13] You are interested in how the different countries have been changing the ratio of use of the various diagnosis modes have been changing per year.
+3.  [12] You are interested in how the different countries have been changing the ratio of use of the various diagnosis modes have been changing per year.
 
   a.  Draw a process map to create the dataset with the ASEAN countries and diagnosis mode by year.
-  b.  Design and implement at least 3 visualizations to compare the use of different diagnosis modes by  the ASEAN nations over time.  
-  c.  Discuss which visualization you found to be most informative and why. (one paragraph). Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words.  The data dictionary is at http://www.who.int/tb/country/data/download/en/
+  b.  Design and implement three visualizations to compare the use of different diagnosis modes by each ASEAN country over time. Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words (not a code). The three visualizations should use different *geom* and should use a printer friendly color map. The data dictionary is at http://www.who.int/tb/country/data/download/en/
 
   
 **ANSWER**
