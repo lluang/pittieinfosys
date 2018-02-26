@@ -1,7 +1,7 @@
 ---
 title: 'Homework 2:  Exploratory Data Analysis'
 author: "IE 0015"
-date: "March 22, 2017"
+date: "March ??, 2018"
 output:
   pdf_document: default
   html_document: default
@@ -119,8 +119,7 @@ ggplot(aseanrates, aes(year, rate, color=iso2)) + geom_line() +
 3.  [13] You are interested in how the different countries have been changing the ratio of use of the various diagnosis modes have been changing per year.
 
   a.  Draw a process map to create the dataset with country and diagnosis mode by year.
-  b.  Design a visualization and explain the criteria you used. (one paragraph)
-  c.  Write the code that will implement the data manipulation then visualization you drew out in a and b. Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words.  The data dictionary is at http://www.who.int/tb/country/data/download/en/
+  b.  Design and immplement three visualizations. Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words (not a code). The three visualizations should use different *geom* and should use a printer friendly color map. The data dictionary is at http://www.who.int/tb/country/data/download/en/
 
   
 **ANSWER**
