@@ -1,7 +1,7 @@
 ---
 title: 'Homework 2:  Exploratory Data Analysis'
 author: "IE 0015"
-date: "March 22, 2017"
+date: "March 22, 2018"
 output:
   pdf_document: default
   html_document: default
@@ -23,8 +23,6 @@ data(population)
 
 
 This lab will use the tuberculosis dataset and focus on the 10 countries that are part of the Association of South East Asian Nations (ASEAN):   Brunei, Cambodia, Indonesia, Laos, Malaysia, Myanmar (Burma), the Philippines, Singapore, Thailand, and Vietnam. The provided code will pick up from Homework 1, by combining the TB and population data, then breaking out the diagnosis, gender, and age range.
-
-
 
 
 The following code is provided as a starting point from homework 1.
@@ -85,7 +83,7 @@ whoasean$agerange <- agerange
 2.  [10] Group and plot the total rate of diagnosis of TB per year for each country in a form that is comparable. 
 
   a. Draw a process map that illustrates how to do this.
-  b. Generate the visualization. Note that it should include a time series for each country in a form that will be visual using black and white printing.
+  b. Show at least two visualizations. Note that it should include a time series for each country in a form that distinguishable using black and white printing.
 
 Note: 
 
@@ -118,9 +116,9 @@ ggplot(aseanrates, aes(year, rate, color=iso2)) + geom_line() +
 
 3.  [13] You are interested in how the different countries have been changing the ratio of use of the various diagnosis modes have been changing per year.
 
-  a.  Draw a process map to create the dataset with country and diagnosis mode by year.
-  b.  Design a visualization and explain the criteria you used. (one paragraph)
-  c.  Write the code that will implement the data manipulation then visualization you drew out in a and b. Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words.  The data dictionary is at http://www.who.int/tb/country/data/download/en/
+  a.  Draw a process map to create the dataset with the ASEAN countries and diagnosis mode by year.
+  b.  Design and implement at least 3 visualizations to compare the use of different diagnosis modes by  the ASEAN nations over time.  
+  c.  Discuss which visualization you found to be most informative and why. (one paragraph). Note: the country can be referenced using ISO2 codes. The diagnosis should be indicated using the full words.  The data dictionary is at http://www.who.int/tb/country/data/download/en/
 
   
 **ANSWER**
@@ -140,6 +138,23 @@ ggplot(aseanmodes, aes(year, rate, color=diagnosismode)) +
   scale_x_discrete(breaks = c(2002, 2004, 2006, 2008, 2010, 2012)) +
   scale_color_brewer(palette="Set2") +
   scale_y_continuous(name = "rate per 100,000") +
-  facet_grid(. ~ iso2) +
-  theme(axis.text.x = element_text(angle=90))
+  facet_grid(. ~ iso2) 
+```
+
+```{r}
+ggplot(aseanmodes, aes(year, rate, fill=diagnosismode)) +
+  geom_bar(stat="identity") + 
+  scale_x_discrete(breaks = c(2002, 2004, 2006, 2008, 2010, 2012)) +
+  scale_color_brewer(palette="Set2") +
+  scale_y_continuous(name = "rate per 100,000") +
+  facet_grid(iso2 ~ .)
+```
+
+
+```{r}
+ggplot(aseanmodes, aes(year, rate, color=diagnosismode, linetype = iso2)) +
+  geom_line() + 
+  scale_x_discrete() +
+  scale_color_brewer(palette="Set2") +
+  scale_y_continuous(name = "rate per 100,000")
 ```

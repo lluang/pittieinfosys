@@ -1,16 +1,17 @@
 ---
-title: "Lab 7: Complex visualizations"
+title: "Lab 7: Complex graphs"
 author: "IE 0015 Information Systems"
-date: "February 23, 2017"
+date: "February 2018"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
-```{r loadlibraries, warning=FALSE}
+```{r loadlibraries, warning=FALSE, message=FALSE}
 library(ggplot2)
 library(dplyr)
 library(magrittr)
+library(RColorBrewer)
 ```
 ```{r, loaddata}
 FemPreg <- read.csv("../data/nsfgFemPreg.csv",
@@ -18,14 +19,17 @@ FemPreg <- read.csv("../data/nsfgFemPreg.csv",
 ```
 
 
-1.  [3] One question when looking at population demographics is if all parts of the population have the same distribution. Using the Female Pregnancy Data from the National Survey of Population Growth, create a graph that shows the distribution of the birthweight of newborn babies, separated by race (Note: use HISPRACE for this purpose).  
+1.  [5] One question when looking at population demographics is if all parts of the population have the same distribution. 
+
+    a.  Using the Female Pregnancy Data from the National Survey of Population Growth, create graphs that shows the distribution of the birthweight of newborn babies, separated by race (Note: use HISPRACE for this purpose).  Use at least three different type of plots (geom_ or stat_ commands from ggplot, different ways of displaying multiple categories on a single plot).
+    b.  Explain which of the three you used is best.
 
 Note: 
 
   1.  You will need both a way to display distributions, and a way to show each race in a single plot. 
   2.  Race should be identified in the plot as a label, not as a number. (which is how it is presented in the Female Pregnancy data table.)
   3. The code below converts numeric values into their codes (see Lecture 4: Data in R). You will need to something similar later.
-  4. Because you are getting distributions by race, you should convert counts into percentages using `y=..count../sum(..count..)` within the `aes()` function. 
+  4. Because you are getting distributions by race, you should convert counts into percentages using `y=..density..` within the `aes()` function. 
 
 ```{r}
 raceorigin <- as.data.frame(
@@ -38,9 +42,15 @@ colnames(raceorigin) <- c("HISPRACE", "raceorigin")
 FemPreg$HISPRACE <- as.factor(FemPreg$HISPRACE)
 FemPreg <- FemPreg %>% 
   left_join(raceorigin)
+FemPreg$BIRTHWGT_LB1 <- as.numeric(FemPreg$BIRTHWGT_LB1)
+FemPreg <- FemPreg %>% filter(BIRTHWGT_LB1<98)
 ```
 
-2.  (6) The American Academy of Pediatrics recommends that infants are breastfed exclusively for about the first 6 months and that breastfeeding continue for at least 12 months.  Plot the average duration of breastfeeding (including none) according to both race (HISPRACE) and level of education of the mother (HIEDUC.  Make sure that the plot can be understood when printed in black and white and that the axis names are meaningful and legible. (i.e. translate the numerical values to the descriptions)
+2.  [5] The American Academy of Pediatrics recommends that infants are breastfed exclusively for about the first 6 months and that breastfeeding continue for at least 12 months.  Plot the average duration of breastfeeding (including none) according to both race (HISPRACE) and level of education of the mother (HIEDUC.  Make sure that the plot can be understood when printed in black and white and that the axis names are meaningful and legible. (i.e. translate the numerical values to the descriptions)
+
+    a.  What kind of plot will you choose and why?
+    b.  Create the plot using ggplot.  Make sure you have meaningful and legible axis titles.
+
 
 Notes: 
 
@@ -48,5 +58,26 @@ Notes:
   2. Think about what NA means for this variable.
   3. Aggregations and summaries were covered in Lecture 6: Aggregation
 
-  a.  What kind of plot will you choose and why?
-  b.  Create the plot using ggplot.  Make sure you have meaningful and legible axis titles.
+
+  
+```{r}
+FemPreg$HIEDUC <- as.ordered(FemPreg$HIEDUC)
+highesteducation <- as.data.frame(
+                     rbind(c("5", "9TH GRADE OR LESS"),
+                            c("6", "10TH GRADE"),
+                            c("7", "11TH GRADE"),
+                            c("8", "12TH GRADE, NO DIPLOMA (NOR GED)"),
+                            c("9", "HIGH SCHOOL GRADUATE (DIPLOMA OR GED)"),
+                            c("10", "SOME COLLEGE BUT NO DEGREE"),
+                            c("11", "ASSOCIATE DEGREE IN COLLEGE/UNIVERSITY"),
+                            c("12", "BACHELOR'S DEGREE"),
+                            c("13", "MASTER'S DEGREE"),
+                            c("14", "DOCTORATE DEGREE"),
+                            c("15", "PROFESSIONAL DEGREE")
+                     )
+           )
+colnames(highesteducation) <- c("HIEDUC", "highesteducation")
+highesteducation$HIEDUC <- as.ordered(highesteducation$HIEDUC)
+FemPreg <- FemPreg %>% 
+  left_join(highesteducation)
+```

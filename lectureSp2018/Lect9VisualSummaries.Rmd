@@ -3,8 +3,8 @@ title: 'Lecture 9: Visualizing summaries'
 author: "IE 0015 Information Systems"
 date: "February 2018"
 output: 
-  pdf_document: default
   beamer_presentation: default
+  pdf_document: default
   slidy_presentation: default
   html_document: default
 ---
@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(ggplot2)
 library(dplyr)
 library(magrittr)
+library(RColorBrewer)
 ```
 
 Overview
