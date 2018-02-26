@@ -1,0 +1,58 @@
+---
+title: "Pittsburgh City Trees"
+author: "IE 0015 Information Systems"
+date: "February 24, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(ggplot2)
+library(readr)
+city_trees_data <- read_csv("exams/city_trees_data.csv",
+col_types = cols(`_id` = col_character(),
+address_number = col_character(),
+id = col_character()))
+```
+
+
+1. The following are a sample of the common names of trees that are in the database. Most people think of trees using the family name (Maple, Poplar, Ash, etc.).  
+```{r}
+city_trees_data %>% select(common_name) %>%
+  unique() %>% arrange(common_name) %>% head()
+```
+
+Most people know of tree families, not the name of the specific tree species.  In the following question, ignore "Vacant Site" and "NA" entries for "Common Name".
+
+a.  How is the tree family name set apart form the name of the specific species?
+b.  Write a process map that extracts the family name from the common name.
+c.  Write a process map that counts the total number of trees by family by named neighborhood.
+
+
+1. The following are a sample of the scientific names of trees that are in the database. A scientific name has two parts, *genus* and *species*.  Most people would be able to distinguish between two trees of different *genus* visuallyl. Only people with some training in identifying trees would be able to distinguish between different *species* of the same *genus*.
+
+```{r}
+city_trees_data %>% select(scientific_name) %>%
+  unique() %>% arrange(scientific_name) %>% head()
+```
+
+In the following question, ignore "Vacant Site" and "NA" entries for "scientific anme".
+
+a.  How is the tree *genus* set apart form the *species*?
+b.  Write a process map that extracts the *genus* from the scientific name.
+c.  Write a process map that counts the total number of trees by *genus* by ward.
+
+2.  There are a number of columns that look at the economic value of trees. In particular you want to look at the dollar value of air quality benefits, but separating out the benefits of reducing particulate matter (pm10) (so you cannot use the air_quality_benfits_total_dollar_value field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  Write/draw a process map that accomplishes this.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of air quality from a tree into a single column.
+
+2.  There are a number of columns that look at the economic value of trees. In particular you want to look at total unrealized benefits (i.e. not including property value benefits, so you cannot use the overall_benefits_dollar_value
+field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  Write/draw a process map that accomplishes this.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of air quality from a tree into a single column.
+
+```
+topfive <- 
+```
