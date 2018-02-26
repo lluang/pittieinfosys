@@ -54,5 +54,11 @@ c.  Write a process map that counts the total number of trees by *genus* by ward
 field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  Write/draw a process map that accomplishes this.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of air quality from a tree into a single column.
 
 ```
-topfive <- 
+topfive <- city_trees_data %>%
+  group_by(ward, family) %>%
+  summarize(speciescount <- n())
+```
+
+```{r}
+ggplot(city_trees_data) + geom_histogram(aes(x=scientific_name)) + facet_grid(. ~ ward)
 ```
