@@ -24,7 +24,7 @@ id = col_character()))
 ```
 
 
-1. The following are a sample of the common names of trees that are in the database. Most people think of trees using the family name (Maple, Poplar, Ash, etc.).  
+1. The following is a sample of the common names of trees that are in the database. Most people think of trees using the family name (Maple, Poplar, Ash, etc.).  
 ```{r}
 city_trees_data %>% select(common_name) %>%
   unique() %>% arrange(common_name) %>% head()
@@ -48,7 +48,7 @@ city_trees_data %>% select(scientific_name) %>%
 ```{r}
 city_trees_data <- city_trees_data %>% 
   mutate(family = as.factor(str_split(common_name, pattern = ":", simplify = TRUE)[,1])) %>%
-  filter(family != "Vacant") 
+  filter(family != "Vacant Site Small") 
 ```
 
 ```{r}
@@ -68,7 +68,7 @@ d.  Write a process map that makes a list of the top 10 tree genus by total coun
 ```{r}
 city_trees_data <- city_trees_data %>% 
   mutate(genus = as.factor(str_split(scientific_name, pattern = " ", simplify = TRUE)[,1])) %>%
-  filter(family != "Vacant") 
+  filter(genus != "Vacant Site Small") 
 ```
 
 ```{r}
@@ -98,7 +98,8 @@ city_trees_data %>%
   filter(family %in% city_trees_topfamily$family, !is.na(public_works_division)) %>%
   ggplot() + geom_bar(aes(x=family, fill=as.factor(public_works_division)), position="dodge") +   scale_fill_discrete("Public Works \n Division") + 
   scale_color_brewer("Set3") +
-  ggtitle("Common tree families in Pittsburgh by Public Works Division")
+  ggtitle("Common tree families in Pittsburgh by Public Works Division") +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
 ```
 
 3.  Below is a bar graph with the distribution of the six most common tree families in each of the six public works divisions.
@@ -114,8 +115,6 @@ city_trees_data %>%
   ggplot() + geom_bar(aes(x=genus, fill=as.factor(public_works_division))) + 
   scale_color_brewer("Set3") +
   scale_fill_discrete("Public Works \n Division") + 
-  ggtitle("Common tree genus in Pittsburgh by Public Works Division")
+  ggtitle("Common tree genus in Pittsburgh by Public Works Division") +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
 ```
-
-
-3.  The 
