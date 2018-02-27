@@ -106,7 +106,7 @@ library(ggplot2)
 \item
   Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
 \item
-  You have until 2:30 PM to finish. There are 100 points total divided among 3 questions.
+  You have until 2:30 PM to finish. There are 100 points total divided among 4 questions.
 \end{enumerate}
 
 \pagebreak
@@ -166,7 +166,7 @@ address_number = col_character(),
 id = col_character()))
 @
 
-1. The following is a sample of the common names of trees that are in the database. Most people think of trees using the family name (Maple, Poplar, Ash, etc.).  
+The following is a sample of the common names of trees that are in the database. Most people think of trees using the family name (Maple, Poplar, Ash, etc.).  
 <<echo=FALSE, warning=FALSE, message=FALSE>>=
 city_trees_data %>% select(common_name) %>%
   unique() %>% arrange(common_name) %>% head()
@@ -175,7 +175,7 @@ city_trees_data %>% select(common_name) %>%
 Most people know of tree families, not the name of the specific tree species.  In the following question, ignore "Vacant Site" and "NA" entries for "Common Name".
 
 \begin{parts}
-\part  How is the tree family name set apart form the name of the specific species?
+\part  How is the tree family name set apart from the name of the specific species?
 \part  Write a process map that extracts the family name from the common name.
 \part  Write a process map that counts the total number of trees by family by named neighborhood.  Remember to remove "Vacant".
 \part  Write a process map that makes a list of the top 10 tree family by total count for the city of Pittsburgh. Remember to remove "Vacant".
@@ -208,7 +208,7 @@ city_trees_topfamily <- city_trees_data %>%
 
 \begin{parts}
 \part Write/draw a process map that can generate this dollar value by neighborhood.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of air quality from a tree into a single column.
-\part Sketch a visualization that shows the dollar benefit of air quality.
+\part Sketch a visualization that shows the dollar benefit of air quality by neighborhood.
 \end{parts}
 
 \begin{solution}[6in]
@@ -221,7 +221,7 @@ For the visualization, they could use bar graphs with a bar for each neighborhoo
 \end{solution}
 
 \question[20]
-3.  Below is a bar graph with the distribution of the six most common tree families in each of the six public works divisions.
+Below is a bar graph with the distribution of the six most common tree families in each of the six public works divisions.
 
 \begin{parts}
   \part Design and sketch a visualization that shows:
