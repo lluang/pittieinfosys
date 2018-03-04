@@ -102,7 +102,7 @@ library(ggplot2)
 \item
   Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required.
 \item
-  The exam is four pages (including cover). In addition there are three pages of reference containing the data dictionaries and an example of the data from the Pittsburgh City Trees database, and a map of Pittsburgh with neighborhoods for your reference.
+  The exam has six pages (including cover). In addition there are two pages of reference containing the data dictionaries and an example of the data from the Pittsburgh City Trees database.
 \item
   Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
 \item
@@ -123,7 +123,7 @@ The mission of the Western Pennsylvania Conservancy (WPC) is to provide Western 
 The WPC is concerned about the level of biodiversity in the City of Pittsburgh. In particular, it is concerned that trees in specific neighborhoods may be dominated by a single *genus* or *family* (group of species) of tree. It wants to identify neighborhoods that have low diversity so it can help take action to increase the biodiversity of the neighborhood.
 
 \begin{parts}
-\part  Create a CoNVO statement from the point of view of an analyst assisting the WPC in identifying some of Pittsburgh's 91 neighborhoods to focus future efforts.
+\part  Create a CoNVO statement from the point of view of an analyst assisting the WPC in identifying some of Pittsburgh's 90 neighborhoods to focus future efforts.  Note: each section should have 2-4 sentences.
 
 \begin{solution}[3in]
 
@@ -182,7 +182,7 @@ In the following question, ignore "Vacant Site" and "NA" entries for "scientific
 \part  Write a process map that makes a list of the top 10 tree genus by total count for the city of Pittsburgh. Remember to remove "Vacant".
 \end{parts}
 
-\begin{solution}[6in]
+\begin{solution}[3in]
 
 -  By a space " "
 
@@ -211,11 +211,11 @@ city_trees_topgenus <- city_trees_data %>%
 \question[12]  There are a number of columns that look at the economic value of trees. In particular you want to look at the dollar value of air quality benefits, but separating out the benefits of reducing particulate matter (pm10) (so you cannot use the air\_quality\_benfits\_total\_dollar\_value field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  
 
 \begin{parts}
-\part Write/draw a process map that can generate this dollar value by neighborhood.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of air quality from a tree into a single column.
+\part Write/draw a process map that can generate this dollar value by neighborhood.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of air quality from a tree into a single column.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of from a tree into a single column. Note: you only need to name three value fields on the process map, I'll assume you can identify the others.
 \part Sketch a visualization that shows the dollar benefit of air quality by neighborhood.
 \end{parts}
 
-\begin{solution}[6in]
+\begin{solution}[4in]
 
 1.  Gather dollar value fields into two fields titled air quality types and value.
 2.  Group by neighborhood.
@@ -223,9 +223,9 @@ city_trees_topgenus <- city_trees_data %>%
 
 For the visualization, they could use bar graphs with a bar for each neighborhood. Another options is a map with bars.  Or circles with the size for each neighborhood.  Many possible answers.
 \end{solution}
-
+\pagebreak
 \question[20]
-Below is a bar graph with the distribution of the six most common tree families in each of the six public works divisions.
+Below is a bar graph with the distribution of the six most common tree genus (families) in each of the six public works divisions.
     
 <<echo=FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 city_trees_data %>% 
@@ -238,17 +238,18 @@ city_trees_data %>%
 @
 
 \begin{parts}
-  \part Design and sketch a visualization that shows:
-  
-    1.  Total trees per public works division.
-    2.  Distribution of trees by genus within the public works division.
-    3.  Relative location of public works division.
+  \part Design and sketch a single visualization that shows:
+    \begin{itemize}
+      \item  Total trees per public works division.
+      \item  Distribution of trees by genus within the public works division.
+      \item  Relative location of public works division.
+    \end{itemize}
     
-  \part  Explain how your version of this visualization meets all three criteria and what priority you gave each.
+  \part  Explain how your visualization meets all three criteria and what priority you gave each.
 \end{parts}
 
 
-\begin{solution}[6in]
+\begin{solution}[4in]
 
 One example would be stacked bar charts by public works division where each bar was the total number of trees, and the bar was divided into the number of trees by genus  Another example is pie charts on a map of Pittsburgh, where the size of the pie is the total and the slices represent the proportion of each tree genus
 

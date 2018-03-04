@@ -92,8 +92,6 @@ library(readr)
 library(ggplot2)
 @
 
-
-
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \itemsep1pt\parskip0pt\parsep0pt
@@ -102,7 +100,7 @@ library(ggplot2)
 \item
   Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required.
 \item
-  The exam is four pages (including cover). In addition there are three pages of reference containing the data dictionaries and an example of the data from the Pittsburgh City Trees database, and a map of Pittsburgh with neighborhoods for your reference.
+  The exam has six pages (including cover). In addition there are two pages of reference containing the data dictionaries and an example of the data from the Pittsburgh City Trees database.
 \item
   Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
 \item
@@ -121,7 +119,7 @@ library(ggplot2)
 The United States Department of Agriculture has identified a new invasive species of borer (an insect that can kill trees) that infects Ginkgo trees.  The Pittsburgh Department of Public works needs to make a plan to go through all public works districts and make a schedule to inspect then either treat or cull (cut down) every Ginkgo tree in the city.
 
 \begin{parts}
-\part   Create a CoNVO statement from the point of view of an analyst helping the Pittsburgh Department of Public Works create a schedule for crews to treat or cull all Ginkgo trees in the city.
+\part   Create a CoNVO statement from the point of view of an analyst helping the Pittsburgh Department of Public Works create a schedule for crews to treat or cull all Ginkgo trees in the city across Pittsburgh's 90 neighborhoods.  Note: each section should have 2-4 sentences.
 
 \begin{solution}[3in]
 
@@ -165,7 +163,7 @@ address_number = col_character(),
 id = col_character()))
 @
 
-The following are a sample of the scientific names of trees that are in the database. A scientific name has two parts, *genus* and *species*.  Most people would be able to distinguish between two trees of different *genus* visuallyl. Only people with some training in identifying trees would be able to distinguish between different *species* of the same *genus*.
+The following are a sample of the scientific names of trees that are in the database. A scientific name has two parts, *genus* and *species*.  Most people would be able to distinguish between two trees of different *genus* visually. Only people with some training in identifying trees would be able to distinguish between different *species* of the same *genus*.
 
 <<>>=
 city_trees_data %>% select(scientific_name) %>%
@@ -180,7 +178,7 @@ In the following question, ignore "Vacant Site" and "NA" entries for "scientific
 \part  Write a process map that makes a list of the top 10 tree genus by total count for the city of Pittsburgh. Remember to remove "Vacant".
 \end{parts}
 
-\begin{solution}[6in]
+\begin{solution}[3in]
 
 -  By a space " "
 
@@ -207,14 +205,14 @@ city_trees_topgenus <- city_trees_data %>%
 \pagebreak
 
 \question[12] There are a number of columns that look at the economic value of trees. In particular you want to look at total unrealized benefits (i.e. not including property value benefits, so you cannot use the overall\_benefits\_dollar\_value
-field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  Write/draw a process map that accomplishes this.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of  from a tree into a single column. 
+field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  Write/draw a process map that accomplishes this.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of  from a tree into a single column.  Note: you only need to name three value fields on the process map, I'll assume you can identify the others.
 
 \begin{parts}
 \part Write/draw a process map that can generate this dollar value by neighborhood.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of a tree into a single column.
 \part Sketch a visualization that shows the dollar benefit of trees by neighborhood.
 \end{parts}
 
-\begin{solution}[6in]
+\begin{solution}[4in]
 
 1.  Gather dollar value (total) fields into two fields titled benefit types and value.
 2.  Group by neighborhood.
@@ -223,6 +221,7 @@ field). In addition, you are interested in equity, so you want to see the distri
 For the visualization, they could use bar graphs with a bar for each neighborhood. Another options is a map with bars.  Or circles with the size for each neighborhood.  Many possible answers.
 \end{solution}
 
+\pagebreak
 \question[20]
 Below is a bar graph with the distribution of the six most common tree families in each of the six public works divisions.
     
@@ -237,17 +236,18 @@ city_trees_data %>%
 @
 
 \begin{parts}
-  \part Design and sketch a visualization that shows:
-  
-    1.  Total trees per public works division.
-    2.  Distribution of trees by genus within the public works division.
-    3.  Relative location of public works division.
-    
-  \part  Explain how your version of this visualization meets all three criteria and what priority you gave each.
+  \part Design and sketch a single visualization that shows:
+    \begin{itemize}
+      \item  Total trees per public works division.
+      \item  Distribution of trees by genus within the public works division.
+      \item  Relative location of public works division.
+    \end{itemize}
+
+  \part  Explain how your visualization meets all three criteria and what priority you gave each.
 \end{parts}
 
 
-\begin{solution}[6in]
+\begin{solution}[4in]
 
 One example would be stacked bar charts by public works division where each bar was the total number of trees, and the bar was divided into the number of trees by genus  Another example is pie charts on a map of Pittsburgh, where the size of the pie is the total and the slices represent the proportion of each tree genus
 
