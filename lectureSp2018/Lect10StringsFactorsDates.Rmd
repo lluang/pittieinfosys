@@ -1,25 +1,30 @@
 ---
-title: 'Data Formats: Dates and factors'
+title: 'Lecture 10: Data Formats: Dates and factors'
 author: "IE 0015 Information Systems"
 date: "March 2018"
-output:
-  html_document: default
-  pdf_document: default
+output: 
   slidy_presentation: default
+  pdf_document: default
   beamer_presentation: default
+  html_document: default
 ---
+
 
 ```{r, echo=FALSE, warnings=FALSE}
 library(ggplot2)
-library(readxl)
-library(magrittr)
+library(lubridate)
 library(dplyr)
-FemPreg <- read.csv("../data/nsfgFemPreg.csv",
-                     header=TRUE,sep=",")
+library(magrittr)
+library(readxl)
+# Trashwheel data from http://baltimorewaterfront.com/healthy-harbor/water-wheel/
+trashwheel <- HealthyHarborWaterWheelTotals2018_3_1 <- read_excel("C:/Users/louis/Downloads/HealthyHarborWaterWheelTotals2018-3-1.xlsx",
+sheet = "Mr. Trash Wheel")
+trashwheel <- trashwheel %>% filter(!is.na(Dumpster))
 ```
 
 Dates
 =======
+
 
 Date and time formats
 =====================
@@ -27,7 +32,9 @@ Date and time formats
 -  Many ways to represent dates
 -  What does this mean
   -  02-03-2015
-  
+```{r}
+trashwheel$Date[1]
+```
 
 How do we think about date and time
 =======================
@@ -98,6 +105,21 @@ class(ndate) = 'Date'
 ndate
 ```
 
+
+Origin notes for Excel
+========
+
+-  MS Excel represents dates differently than all other computer systems.
+    - See help(as.Date)
+-  MS says they used "1900-01-01" as origin (day 1)
+    - But they actually used 1899-12-30 (they also forgot that 1900 is not a leap year)
+    - If you see a date field that is in the 40000's, this is what happened.
+
+```{r}
+print(as.Date(43171, origin = "1899-12-30"))
+```
+
+
 Other representations of date
 ============================
 
@@ -167,6 +189,7 @@ Extract day of week
 strftime(mydate, format = '%A %w')
 ```
 
+
 Lubridate
 ==============
 
@@ -196,6 +219,13 @@ Lubridate will also work with date-times
 ```{r}
 ymd_hms("2017 March 13 13:16:00")
 mdy_hm("03/13/2017 13:16")
+```
+
+There is also a data type for `yearmon`
+===============
+```{r}
+library(zoo)
+as.yearmon(trashwheel$Date) %>% head()
 ```
 
 You can also set the time zone
@@ -330,25 +360,132 @@ Division also works
 (today() %--% next_year) %/% ddays(1)
 ```
 
-Making bins
-================
+Plotting dates
+=============
 
-- If you need to take dates and group them (e.g. into months) you can use the `cut()` function with dates. (actually, uses `cut.Date` when `cut` recognizes it is being used with `Date` formatted data)
+-  In ggplot, you can have datetime based scales
+-  `scale_x_date, scale_y_date`
+-  `scale_x_datetime, scale_y_datetime`
+-  `scale_x_time, scale_y_time`
+-  `scale_x_yearmon` (from `zoo` package)
 
-
+Trashwheel data
+====================
+- Look at month over month collection of trash.
+- First, create a variable to hold the month, then sum the weight over all dumpsters collected that month.
 ```{r}
-HealthyHarborWaterWheelTotals2017_1 <- read_excel("../data/HealthyHarborWaterWheelTotals2017-1.xlsx",
-skip = 1)
-waterwheeldata <- HealthyHarborWaterWheelTotals2017_1 %>% 
-  filter(!is.na(Dumpster))
-waterwheeldata$monthly <- as.Date(cut.Date(as.Date(waterwheeldata$Date), breaks="month"))
-```
-```{r}
-waterwheeldata <- waterwheeldata %>%
-  group_by(monthly, Date) %>%
-  summarize(Dailyweight = sum(`Weight (tons)`), Dailyvolume = sum(`Volume (cubic yards)`))
+trashwheel$yearmon <-  as.yearmon(trashwheel$Date)
 ```
 
+Plotting time series
+============
+```{r}
+ggplot(trashwheel) + geom_point(aes(x=Date, y=`Weight (tons)`)) + 
+  ggtitle("Tons of waste collected at Mr. Trashwheel") +
+  ylab("waste (tons)") + xlab("Date dumpster filled") + theme_bw()
+```
+
+Now, group by date
+==================
+```{r}
+trashwheel %>%
+  group_by(Date) %>%
+  summarise(dailytons = sum(`Weight (tons)`)) %>%
+  ggplot() + geom_point(aes(x=Date, y=dailytons)) + 
+  ggtitle("Tons of waste collected at Mr. Trashwheel per day") +
+  ylab("waste (tons)") + xlab("Date") + theme_bw()
+```
+
+Now, group by date
+==================
+```{r}
+trashwheel %>%
+  group_by(Date) %>%
+  summarise(dailytons = sum(`Weight (tons)`)) %>%
+  ggplot() + geom_point(aes(x=Date, y=dailytons)) + 
+  ggtitle("Tons of waste collected at Mr. Trashwheel per day") +
+  ylab("waste (tons)") + xlab("Date") +
+  scale_x_datetime() + theme_bw()
+```
+
+Now, group by month
+==================
+```{r}
+monthlytrashwheel <- trashwheel %>%
+  group_by(yearmon) %>%
+  summarise(monthlytons = sum(`Weight (tons)`))
+monthlytwplot <- ggplot(monthlytrashwheel) + geom_point(aes(x=yearmon, y=monthlytons)) + 
+  ggtitle("Tons of waste collected at Mr. Trashwheel per month") +
+  ylab("waste (tons)") + xlab("Month") +
+  scale_x_yearmon()  + theme_bw()
+monthlytwplot
+```
+
+Having multiple data streams and axis
+====================
+-  There looks like an obvious pattern here.
+-  Is there anything else that can be compared to?
+-  Since this is in a bay, look at rainfall (which washes trash in the Chesapeake Bay watershed into Baltimore Harbor)
+
+```{r}
+Precipitation2014 <- read_excel("C:/Users/louis/Downloads/HealthyHarborWaterWheelTotals2018-3-1.xlsx",
+sheet = "2014 Precipitation", skip = 1)
+Precipitation2014 <- Precipitation2014 %>% filter(!is.na(Month))
+Precipitation2015 <- read_excel("C:/Users/louis/Downloads/HealthyHarborWaterWheelTotals2018-3-1.xlsx",
+sheet = "2015 Precipitation", skip = 1)
+Precipitation2015 <- Precipitation2015 %>% filter(!is.na(Month))
+Precipitation2016 <- read_excel("C:/Users/louis/Downloads/HealthyHarborWaterWheelTotals2018-3-1.xlsx",
+sheet = "2016 Precipitation", skip = 1)
+Precipitation2016 <- Precipitation2016 %>% filter(!is.na(Month))
+Precipitation2017 <- read_excel("C:/Users/louis/Downloads/HealthyHarborWaterWheelTotals2018-3-1.xlsx",
+sheet = "2017 Precipitation", skip = 1)
+Precipitation2017 <- Precipitation2017 %>% filter(!is.na(Month))
+```
+
+Convert date to yearmon and combine years
+==========================
+- from `help(yearmon)`
+- paste `floor(year + (month+ 0.001)/12 )`
+```{r}
+Precipitation2014 <- Precipitation2014 %>% 
+  mutate(yearmon = as.yearmon(2014 + Month/12.))
+Precipitation2015 <- Precipitation2015 %>% 
+  mutate(yearmon = as.yearmon(2015 + Month/12.))
+Precipitation2016 <- Precipitation2016 %>% 
+  mutate(yearmon = as.yearmon(2016 + Month/12.))
+Precipitation2017 <- Precipitation2017 %>% 
+  mutate(yearmon = as.yearmon(2017 + Month/12.))
+precipitation <- rbind(Precipitation2014,
+                       Precipitation2015,
+                       Precipitation2016,
+                       Precipitation2017)
+```
+
+Combine the two datasets
+==========
+```{r}
+monthlytrashwheel <- monthlytrashwheel %>%
+  left_join(precipitation)
+```
+
+Plot monthly precipitation
+========================
+
+```{r}
+ggplot(precipitation) + geom_bar(aes(x=yearmon, y=Total), stat="Identity", fill="white", color="black") + 
+  xlab("Month") + ylab("Preciptiation (in)") + 
+  scale_x_yearmon() + theme_bw()
+```
+
+Now, put them together using dual y-axis
+=========================
+- use the `sec.axis` argument to have superimpose two plots
+```{r}
+ggplot(monthlytrashwheel) + geom_bar(aes(x=yearmon, y=Total), stat="Identity", fill="white", color="black") + 
+               xlab("Month") + ylab("Precipitation (in)") + 
+  scale_x_yearmon() + theme_bw() + geom_point(aes(x=yearmon, y=monthlytons/5)) +
+  scale_y_continuous(sec.axis=sec_axis(~.*5, name = "Tons collected"))
+```
 
 Factors
 =======
@@ -364,21 +501,23 @@ Using factors
 Example of factors
 ====================
 ```{r}
-ggplot(FemPreg[(FemPreg$BIRTHWGT_LB1<99 & !is.na(FemPreg$BIRTHWGT_LB1)),], aes(as.factor(pregordr), BIRTHWGT_LB1)) +
-  geom_boxplot() + xlab("Pregnancy order") + ylab("Birthweight (lbs)") + ggtitle("Birthweight by pregnancy order as factor")
+FemPreg <- read.csv("../data/nsfgFemPreg.csv",
+                    header=TRUE, sep=",")
+FemPreg$BIRTHORD <- as.factor(FemPreg$BIRTHORD)
+FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
 ```
 ```{r}
-ggplot(FemPreg[(FemPreg$BIRTHWGT_LB1<99 & !is.na(FemPreg$BIRTHWGT_LB1)),], aes(as.integer(pregordr), BIRTHWGT_LB1, group=pregordr)) +
-  geom_boxplot() + xlab("Pregnancy order") + ylab("Birthweight (lbs)") + ggtitle("Birthweight by pregnancy order as integer")
+ggplot(FemPreg[FemPreg$BIRTHWGT_LB1<99,]) + geom_boxplot(aes(x=as.factor(pregordr), y=BIRTHWGT_LB1)) +
+                                                           xlab("Pregnancy order") + ylab("Birthweight (lbs)") +
+  ggtitle("Birthweight by pregnancy order")
 ```
+
 Summarizing factor variables
 ===========
 
 ```{r}
-summary(as.factor(FemPreg$pregordr))
-```
-```{r}
-summary(as.integer(FemPreg$pregordr))
+summary(FemPreg$pregordr)
+unique(FemPreg$pregordr)
 ```
 
 Renaming factors
@@ -472,88 +611,3 @@ Defining breakpoints
 quarters = cut(everyday, breaks="3 months", labels = paste('Q', 1:5, sep=''))
 tail(quarters)
 ```
-
-Strings
-=========
-
-stringr package
-=============
-
-- the `stringr` package makes working with strings easier
-- Includes functions for:
-  i. Character manipulation
-  ii. Whitespace tools
-  iii. Locale specific
-  iv. Pattern matching
-  
-Character manipulation
-===============
-
-Things you may want to do:
-
-  1. Find the length of a string
-  2. Get or set individual characters
-  3. Modify substrings
-  
-Manipulating strings
-============
-
-```{r}
-library(stringr)
-str_length("abc")
-x <- c("abcde", "ghifjk")
-# the 3rd character of each item in x
-str_sub(x,  3, 3)
-# the 2nd to 2nd to last character of each item in x
-str_sub(x, 2, -2)
-```
-
-Whitespace
-=================
-
-You can add, remove or modify whitespace
-
-- `str_pad()` pads a string by adding whitespace to left, right or both sides to make the string a specific length
-```{r}
-str_pad(x, 10)
-str_pad(x, 10, "right")
-str_pad(x, 10, "both")
-```
-
-- You can also use other characters besides a space
-
-```{r}
-str_pad(x, 10, pad = "0")
-```
-
-Locale sensitive
-================
-
-- Some parts of the world/publications use different capitalization rules for titles and sorting
-
-Capitalization
-==============
-
-```{r}
-horses <- "I like horses"
-str_to_upper(horses)
-str_to_title(horses)
-str_to_lower(horses)
-str_to_lower(horses, locale="tr") # Turkish i without a dot
-```
-String ordering and sorting
-=========================
-
-```{r}
-someletters <- c("y", "i", "k")
-str_sort(someletters)
-str_sort(someletters, locale="lt") # Lithuanian
-```
-
-Pattern Matching
-==============
-
-- Uses regular expressions (like `regexpr` and `gregexpr`)
-
-```{r}
-

@@ -1,5 +1,5 @@
-\documentclass[12pt, addpoints, answers]{exam}
-%\documentclass[12pt, letter, addpoints]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, letter, addpoints]{exam}
 \usepackage{multirow}
 \usepackage{pdflscape}
 %\usepackage{amssymb}
@@ -80,7 +80,7 @@
 {\bf IE 0015 Spring 2018 Midterm}
 
 \centering
-{\bf B}
+{\bf D}
 
 
 <<echo=FALSE>>=
@@ -104,7 +104,7 @@ library(ggplot2)
 \item
   Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
 \item
-  You have until 2:30 PM to finish. There are 100 points total divided among 4 questions.
+  You have until 10:30 PM to finish. There are 100 points total divided among 4 questions.
 \end{enumerate}
 
 \pagebreak
@@ -116,29 +116,31 @@ library(ggplot2)
 
 \question[28]
 
-The United States Department of Agriculture has identified a new invasive species of borer (an insect that can kill trees) that infects Ginkgo trees.  The Pittsburgh Department of Public works needs to make a plan to go through all public works districts and make a schedule to inspect then either treat or cull (cut down) every Ginkgo tree in the city.
+The Audubon Society of Western Pennsylvania (ASWP), is the local chapter of the National Audubon Society, concentrates on local education and conservation issues in your own backyard, with a focus on habitat and 
+
+As the wintering range of various migratory birds is shifting over time, the ASWP is interested in evaluating the population of conifer trees (Families are pine, cedar, Douglas-fir, fir, cypress, juniper, larch, hemlock, spruce, yew) in Pittsburgh as specific migratory species spend their winters further north and look for new habitats.  Being able to identify potential habitats may help ASWP monitor areas for bird species that are not historically present in SW Pennsylvania and also identify areas were suitable trees may be planted to provide new habitats.
 
 \begin{parts}
-\part   Create a CoNVO statement from the point of view of an analyst helping the Pittsburgh Department of Public Works create a schedule for crews to treat or cull all Ginkgo trees in the city across Pittsburgh's 90 neighborhoods.  Note: each section should have 2-4 sentences.
+\part   Create a CoNVO statement from the point of view of an analyst assisting the ASWP in identifying some of Pittsburgh's 90 neighborhoods to focus future efforts. Note: each section should have 2-4 sentences.
 
 \begin{solution}[3in]
 
   \begin{itemize}
     \item Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.  
 
-Here, the context is the Department of Public Works has to take care of city trees.
+Here, the context is the WPC wants to create green spaces.
 
   \item  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
 
-The DPW needs to know where Ginkgo trees are to send crews and estimate how long it will take them.
+The WPC wants to know where trees are sparse so that it can focus efforts on creating green spaces and gardens.
 
   \item  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all." Another common mistake is to be too vague. The Vision in particular needs to be concrete enough so that a potential client has a picture of what she will be getting at the end of an analysis project and how she can use it.
 
-For each neighborhood (or other subdivision) list the number of Ginkgo trees. Or create a visualization with a heatmap. Or plot all Gingko trees on a map.
+An example would be plotting the density of trees by neighborhood (or similar sized subdivision).  Another could be heatmaps or table with the total number of trees by neighborhood.  Another could be a density plot of trees overlaid on top of a map of neighborhoods.
   
   \item  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context and lead to the decision identified in the Need. There should be more than one possible outcome (if not, there is no reason to do the project, the organization should take that route now). One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.  
 
-DPW could create a schedule that allocates crews based on how many trees per day they would be expected to take care of.
+Here, the WPA would identify neighborhoods with low numbers of trees for creating green spaces.
 
   \end{itemize}
 
@@ -163,97 +165,108 @@ address_number = col_character(),
 id = col_character()))
 @
 
-The following are a sample of the scientific names of trees that are in the database. A scientific name has two parts, *genus* and *species*.  Most people would be able to distinguish between two trees of different *genus* visually. Only people with some training in identifying trees would be able to distinguish between different *species* of the same *genus*.
-
-<<>>=
-city_trees_data %>% select(scientific_name) %>%
-  unique() %>% arrange(scientific_name) %>% head()
+The following is a sample of the common names of trees that are in the database. Most people think of trees using the family name (Maple, Poplar, Ash, etc.).  
+<<echo=FALSE, warning=FALSE, message=FALSE>>=
+city_trees_data %>% select(common_name) %>%
+  unique() %>% arrange(common_name) %>% head()
 @
 
-In the following question, ignore "Vacant Site" and "NA" entries for "scientific name".
+Most people know of tree families, not the name of the specific tree species.  In the following question, ignore "Vacant Site" and "NA" entries for "Common Name".
+
 \begin{parts}
-\part  How is the tree *genus* set apart from the *species*?
-\part  Write a process map that extracts the *genus* from the scientific name.
-\part  Write a process map that counts the total number of trees by *genus* by ward. Remember to remove "Vacant".
-\part  Write a process map that makes a list of the top 10 tree genus by total count for the city of Pittsburgh. Remember to remove "Vacant".
+\part  How is the tree family name set apart from the name of the specific species?
+\part  Write a process map that extracts the family name from the common name.
+\part  Write a process map that counts the total number of trees by family by named neighborhood.  Remember to remove "Vacant".
+\part  Write a process map that identifies the 10 neighborhoods with the largest number of conifers.  Conifers are those whose are members of the following families:  pine, cedar, Douglas-fir, fir, cypress, juniper, larch, hemlock, spruce, yew.
 \end{parts}
 
 \begin{solution}[3in]
 
--  By a space " "
+-  By a colon ":"
 
 <<>>=
 city_trees_data <- city_trees_data %>% 
-  mutate(genus = as.factor(str_split(scientific_name, pattern = " ",
-                                     simplify = TRUE)[,1])) %>%
-  filter(genus != "Vacant") 
+  mutate(family = as.factor(str_split(common_name, pattern = ":", 
+                                      simplify = TRUE)[,1])) %>%
+  filter(family !="Vacant Site Small") 
 @
 
 <<>>=
-city_trees_topgenus <- city_trees_data %>%
-  group_by(genus) %>%
+conifers <- c("Pine", "Cedar", "Douglas-fir", "Fir", "Cypres", "Juniper", "Larch", "Hemlock", "Spruce", "Yew")
+city_trees_conifers <- city_trees_data %>%
+  filter(family %in% conifers) %>%
+  group_by(neighborhood) %>%
   summarize(count = n()) %>%
-  arrange(desc(count)) %>%
-  head(6)
+  arrange(desc(count)) #%>%
+#  head(10)
 @
-
-
-
 \end{solution}
 
 
 \pagebreak
 
-\question[12] There are a number of columns that look at the economic value of trees. In particular you want to look at total unrealized benefits (i.e. not including property value benefits, so you cannot use the overall\_benefits\_dollar\_value
-field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  Write/draw a process map that accomplishes this.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of  from a tree into a single column.  Note: you only need to name three value fields on the process map, I'll assume you can identify the others.
+\question[12]  There are a number of columns that look at the environmental effect of trees. In particular you want to look at the quantity of CO2  benefits. (i.e. all fields that look at "lbs" of CO2 benefits) In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  
 
 \begin{parts}
-\part Write/draw a process map that can generate this dollar value by neighborhood.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of a tree into a single column.
-\part Sketch a visualization that shows the dollar benefit of trees by neighborhood.
+\part Write/draw a process map that can generate this quantity by neighborhood.  Note that the first part of the process map should combine the fields that quantify various aspects in lbs of CO2 from a tree into a single column. Note: You may NOT use the "co2\_benefits\_totalco2\_lbs" field. You only need to identify 3 relevant fields (I will assume you can find the rest.)
+\part Sketch a visualization that shows the total quantity of CO2 benefits by neighborhood.
 \end{parts}
 
 \begin{solution}[4in]
 
-1.  Gather dollar value (total) fields into two fields titled benefit types and value.
+1.  Gather dollar value fields into two fields titled air quality types and value.
 2.  Group by neighborhood.
-3.  Take the sum of all dollar values for each neighborhood.
+3.  Take the sum of all air quality values for each neighborhood.
 
 For the visualization, they could use bar graphs with a bar for each neighborhood. Another options is a map with bars.  Or circles with the size for each neighborhood.  Many possible answers.
-\end{solution}
 
+<<>>=
+city_trees_data %>%
+  gather(source, lbs, c(co2_benefits_avoided_lbs,
+         co2_benefits_sequestered_lbs, 
+         co2_benefits_decomp_lbs,
+         co2_benefits_maint_lbs)) %>%
+  select(id, source, lbs, neighborhood) %>%
+  group_by(neighborhood) %>%
+  summarize(totalco2 = sum(lbs, na.rm=TRUE)) %>%
+  arrange(desc(totalco2)) %>%
+  head()
+@
+\end{solution}
 \pagebreak
 \question[20]
-Below is a bar graph with the distribution of the six most common tree families in each of the six public works divisions.
-    
-<<echo=FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
-city_trees_data %>% 
-  filter(genus %in% city_trees_topgenus$genus, !is.na(public_works_division)) %>%
-  ggplot() + geom_bar(aes(x=genus, fill=as.factor(public_works_division)), position="dodge") + 
-  scale_color_brewer("Set3") +
-  scale_fill_discrete("Public Works \n Division") + 
-  ggtitle("Common tree genus in Pittsburgh by Public Works Division") +
-  theme(axis.text.x=element_text(angle = -90, hjust = 0))
-@
+Below is a bar graph with the distribution each conifer family across the six public works divisions.
 
 \begin{parts}
   \part Design and sketch a single visualization that shows:
-    \begin{itemize}
-      \item  Total trees per public works division.
-      \item  Distribution of trees by genus within the public works division.
-      \item  Relative location of public works division.
+      \begin{itemize}
+      \item  Total conifers per public works division (note that this is NOT what the example shows).
+      \item  Distribution of conifers by family within the public works division.
+      \item  Relative location of public works divisions.  (Note: relative location means that you would be able to tell roughly where divisions are located in relation to each other.)
     \end{itemize}
-
+    
   \part  Explain how your visualization meets all three criteria and what priority you gave each.
 \end{parts}
-
+<<echo=FALSE, warning=FALSE, fig=TRUE>>=
+city_trees_data %>%
+  filter(family %in% conifers) %>%
+  group_by(family, public_works_division) %>%
+  #summarize(count = n()) %>%
+  ggplot() + geom_bar(aes(x=family, fill=as.factor(public_works_division)), position="dodge") +   scale_fill_discrete("Public Works \n Division") + 
+  scale_color_brewer("Paired") +  
+#  scale_color_brewer("Greys") +
+  ggtitle("Common conifer families in Pittsburgh by Public Works Division") +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
+@
 
 \begin{solution}[4in]
 
-One example would be stacked bar charts by public works division where each bar was the total number of trees, and the bar was divided into the number of trees by genus  Another example is pie charts on a map of Pittsburgh, where the size of the pie is the total and the slices represent the proportion of each tree genus
+One example would be stacked bar charts by public works division where each bar was the total number of trees, and the bar was divided into the number of trees by family.  Another example is pie charts on a map of Pittsburgh, where the size of the pie is the total and the slices represent the proportion of each tree family.
+
+Note: if you try to plot trees, in principle, the number of trees would overwhelm any plot (see diamonds data). So any attempt here would require that you somehow reduce the volume of trees to be shown.  e.g. sampling, using shapes or sizes to represent multiple trees, alpha, etc. 
 
 1. Shows total by public works division
-2. Shows division distribution of genus
-
+2. Shows division distribution
 \end{solution}
 \end{questions}
 

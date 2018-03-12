@@ -56,7 +56,7 @@ city_trees_topfamily <- city_trees_data %>%
   group_by(family) %>%
   summarize(count = n()) %>%
   arrange(desc(count)) %>%
-  head(6)
+  head(10)
 ```
 In the following question, ignore "Vacant Site" and "NA" entries for "scientific name".
 
