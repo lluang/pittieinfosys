@@ -1,11 +1,11 @@
 ---
 title: 'Data Formats: Dates and factors'
 author: "IE 0015 Information Systems"
-date: "March 2017"
+date: "March 2018"
 output:
-  slidy_presentation: default
-  pdf_document: default
   html_document: default
+  pdf_document: default
+  slidy_presentation: default
   beamer_presentation: default
 ---
 
