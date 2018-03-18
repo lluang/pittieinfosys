@@ -1,0 +1,890 @@
+---
+title: 'Lecture 11: Advanced programming concepts'
+author: "IE 0015 Information Systems"
+date: "March 19, 2018"
+output:
+  pdf_document: default
+  html_document: default
+  slidy_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(ggplot2)
+```
+```{r, warning=FALSE, message=FALSE}
+# load tidywho from Homeworks
+data(who)
+tidywho <- who %>% select("country", "iso2", "year", "new_sp_m014",  "new_sp_m1524","new_sp_m2534", "new_sp_m3544", "new_sp_m4554", "new_sp_m5564", "new_sp_m65", "new_sp_f014", "new_sp_f1524", "new_sp_f2534", "new_sp_f3544", "new_sp_f4554", "new_sp_f5564", "new_sp_f65",  
+"new_sn_m014",  "new_sn_m1524", "new_sn_m2534", "new_sn_m3544", "new_sn_m4554", "new_sn_m5564","new_sn_m65",   "new_sn_f014",  "new_sn_f1524", "new_sn_f2534", "new_sn_f3544", "new_sn_f4554","new_sn_f5564", "new_sn_f65",   
+"new_ep_m014",  "new_ep_m1524", "new_ep_m2534", "new_ep_m3544","new_ep_m4554", "new_ep_m5564", "new_ep_m65",   "new_ep_f014",  "new_ep_f1524", "new_ep_f2534","new_ep_f3544", "new_ep_f4554", "new_ep_f5564", "new_ep_f65",   
+"newrel_m014",  "newrel_m1524","newrel_m2534", "newrel_m3544", "newrel_m4554", "newrel_m5564", "newrel_m65",   "newrel_f014","newrel_f1524", "newrel_f2534", "newrel_f3544", "newrel_f4554", "newrel_f5564", "newrel_f65") %>%
+  gather(`new_sp_m014`, `new_sp_m1524`, `new_sp_m2534`, `new_sp_m3544`, `new_sp_m4554`, `new_sp_m5564`, `new_sp_m65`,   `new_sp_f014`, `new_sp_f1524`, `new_sp_f2534`, `new_sp_f3544`, `new_sp_f4554`, `new_sp_f5564`, `new_sp_f65`, 
+`new_sn_m014`,  `new_sn_m1524`, `new_sn_m2534`, `new_sn_m3544`, `new_sn_m4554`, `new_sn_m5564`,`new_sn_m65`,   `new_sn_f014`,  `new_sn_f1524`, `new_sn_f2534`, `new_sn_f3544`, `new_sn_f4554`,`new_sn_f5564`, `new_sn_f65`,   
+`new_ep_m014`,  `new_ep_m1524`, `new_ep_m2534`, `new_ep_m3544`,`new_ep_m4554`, `new_ep_m5564`, `new_ep_m65`,   `new_ep_f014`,  `new_ep_f1524`, `new_ep_f2534`,`new_ep_f3544`, `new_ep_f4554`, `new_ep_f5564`, `new_ep_f65`,   
+`newrel_m014`,  `newrel_m1524`,`newrel_m2534`, `newrel_m3544`, `newrel_m4554`, `newrel_m5564`, `newrel_m65`,   `newrel_f014`,`newrel_f1524`, `newrel_f2534`, `newrel_f3544`, `newrel_f4554`, `newrel_f5564`, `newrel_f65`, key = "subgroup", value="cases") %>%
+  mutate(year = as.integer(year))
+```
+
+# Advanced programming concepts
+
+-  Functions
+-  Transformations
+-  Flow control
+-  Vectorization
+
+# Advanced programming concepts for data analysis
+
+- To perform data analysis beyond the surface, you need to be able to program.
+- Programming is communication
+  - You telling the computer what to do
+  - You telling others what you did
+  
+![](./figures/data-science-communicate.png)
+
+Software engineering goals
+========================
+
+- Software engineering is about how to organize programming better.
+- Balancing the need to architect large structures but having to manage small details.
+- Communicating with people who are imprecise using language written for computers that is precise.
+
+Four tools
+=============
+
+- Pipes
+- Functions
+- Vectors
+- Iterations
+
+
+
+Four ways to do the same thing
+====================
+
+1. Save each intermediate step as a new object.
+2. Overwrite the original object many times.
+3. Use a pipe.
+4. Compose functions.
+
+
+Using intermediate steps as a new object
+=================================
+
+-  Run, then look at Environment
+
+```{r}
+tidy1 <- group_by(tidywho, country, year) 
+tidy2 <- summarize(tidy1, newcases=sum(cases, na.rm=TRUE))
+tidy3 <- left_join(tidy2, population)
+tidy4 <- mutate(tidy3, rate=newcases/population*100000)
+```
+
+Problems with intermediate objects
+=====
+
+1. The code is cluttered with variable names that are not important.
+2. To follow the code, you have to follow a carefully thought out rule in creating variable names (and do so throughout the script)
+
+Overwrite the original
+=================
+- Note: I don't want to ruin the rest of my lecture, so I will create a new dataframe to start off.
+```{r}
+tidywhoyear <- group_by(tidywho, country, year) 
+tidywhoyear <- summarize(tidywhoyear, newcases=sum(cases, na.rm=TRUE))
+tidywhoyear <- left_join(tidywhoyear, population)
+tidywhoyear <- mutate(tidywhoyear, rate=newcases/population*100000)
+```
+
+Problems with overwriting
+==========
+
+1. Debugging is painful: if you make a mistake you’ll need to re-run the complete pipeline from the beginning.
+
+2. The repetition of the object being transformed (we’ve written `tidywhoyear` eight times!) obscures what’s changing on each line.
+
+
+Function composition
+====================
+-  Pass the result of a function as an argument to another function. 
+
+```{r}
+tidywhocomp <- mutate(
+                  left_join(
+                    summarize(
+                      group_by(tidywho, country, year), 
+                      newcases=sum(cases, na.rm=TRUE)), 
+                    population),
+            rate=newcases/population*100000)
+```
+
+Problems with composition
+=========
+
+1. Here the disadvantage is that you have to read from inside-out, from right-to-left, which is not how english works.
+2. Function arguments end up spread far apart (evocatively called the Dagwood sandwich problem). 
+
+
+Pipes
+==========
+
+- Pipes are a tool for clearly expressing a series of expressions.
+- You have used them as part of `dplyr` in sequencing the standard data manipulation verbs.
+
+Pipe Example
+=======
+
+```{r}
+tidywhopipe <- tidywho %>% 
+    group_by(country, year) %>%
+      summarize(newcases=sum(cases, na.rm=TRUE)) %>%
+        left_join(population) %>%
+          mutate(rate=newcases/population*100000)
+```
+
+Benefits of pipes
+=================
+
+1. Focus is on verbs (actions), not nouns.
+2. You can read the code like a series of commands (which is how the computer should understand it)
+
+When pipes do not work
+======================
+
+1. Pipes are long (e.g. longer than 10 steps). If so, break the pipe into segments, with each intermediate statements generating objects with meaningful names.
+2. You have multiple inputs or outputs. e.g. you are combining multiple objects together (note that a `join` is an exception to this)
+3. The process is not a linear construct. Although, you could write a function to be called with the `mutate` function to make this work.
+4. If you are working with functions that do not have a data-frame API (the first argument of the function is not `.data`)
+
+Functions
+============
+
+Functions
+============
+
+1.  Functions are the first form of abstraction that you learn in programming.
+    - An abstraction is a way of expressing a concept that does not require that you discuss all of the details.
+2.  Functions are especially useful when you have to repeat a process for many data sets.
+
+
+Benefits of functions
+==================
+
+1.  You can give a function an evocative name that makes your code easier to understand.
+2.  As requirements change, you only need to update code in one place, instead of many.
+3. You eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).
+
+When should you write a function
+================
+
+1. You should consider writing a function whenever you’ve copied and pasted a block of code more than twice.
+
+
+What does this do?
+=================
+
+- compare original `a, b, c, d` with their counterpart `a1, b1, c1, d1`
+
+```{r}
+df <- data.frame(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+df <- df %>% mutate(
+    a1 = (a - min(a, na.rm = TRUE)) / 
+    (max(a, na.rm = TRUE) - min(a, na.rm = TRUE)),
+    b1 = (b - min(b, na.rm = TRUE)) /
+    (max(b, na.rm = TRUE) - min(a, na.rm = TRUE)),
+    c1 = (c - min(c, na.rm = TRUE)) / 
+    (max(c, na.rm = TRUE) - min(c, na.rm = TRUE)),
+    d1 = (d - min(d, na.rm = TRUE)) / 
+    (max(d, na.rm = TRUE) - min(d, na.rm = TRUE))
+  )
+
+```
+
+Convert this to a function
+================
+
+Ask some questions?
+
+1. First analyse the code. How many inputs does it have?
+    -  Sometimes, it may make sense to create a variable with a general name.
+2. Think of opportunities to create variables with names for intermediate steps.
+3. Check that it still works.
+
+Three key steps to creating a new function
+===========
+
+1. You need to pick a name for the function. Here I’ve used `rescale01` because this function rescales a vector to lie between 0 and 1.
+
+2. You list the inputs, or arguments, to the function inside function. Here we have just one argument. If we had more the call would look like `function(x, y, z)`.
+
+3. You place the code you have developed in body of the function, a `{...}` block that immediately follows `function(...)`.
+
+Hint
+=======
+
+-  Make a function after figuring out how to make it work with a simple input. 
+- It’s easier to start with working code and turn it into a function than   to create a function and then try to make it work.
+
+Function version of above
+===============
+
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+rescale01(c(0, 5, 10))
+```
+
+Testing the function
+===========
+```{r}
+df <- df %>% mutate(
+              ascaled = rescale01(a),
+              bscaled = rescale01(b),
+              cscaled = rescale01(c),
+              dscaled = rescale01(d)
+)
+```
+
+Functions are for people and computers
+=========================
+
+- Note: the computer does not care what you call your function or the names of the variables, but your teammates will when they try to understand what you did.
+- So will you a month from now. Or six months from now. Or next year.
+- Names of functions or variables should clearly explain its meaning.
+    - RStudio and other programmer's tools have auto-complete, don't worry about typing in long names.
+- Generally, function names should be verb phrases, variable names should be noun phrases.
+    - Exception, a lot of your functions seem to start with the same verb.
+
+Have a convention for multi-word names
+=================
+
+1. Underscore_between_words
+2. CamelCase
+3. If functions do similar things, give them similar names.
+
+```
+input_select()
+input_checkbox()
+input_text()
+```
+
+4.  Avoid using existing function and variable names.
+
+Comments
+==============
+
+-  Comments are used to explain the *why* of your code.
+-  You should not use comments to explain *what* or *how*.
+    - Your code should do that itself.
+    - Exception: you are specifying the algorithm that you are implementing.
+    - If the code is not understandable, rewrite it. Use more explanatory variable names, break out code
+-  Use comments to break code into chunks
+    - e.g. use comments that have `-` characters to draw a line in your code file
+  
+Conditional execution (control flow)
+============================
+
+- If statement
+- For statement
+- While
+
+```
+if (condition) {
+  # code executed when condition is TRUE
+} else {
+  # code executed when condition is FALSE
+}
+```
+
+Conditions
+===========
+
+- A *condition* must evaluate as *TRUE* or *FALSE*
+- If the condition is a vector, you get a warning
+- If the condition is `NA`, you get an error.
+
+A vector as a condition
+=================
+
+- If your condition is a vector, 
+
+1. Determine if it should have been a vector (i.e. a mistake earlier)
+2. Use `any()` or `all()` to collapse the vector of *TRUE/FALSE* into a single *TRUE* or *FALSE*
+
+
+For multiple conditions
+===========
+
+- Use `||` (or) or `&&` (and)
+  - Note that `|` and `&` are vectorized operators
+
+Testing for equality
+=============
+
+- Note that `==` is vectorized, so collapse with `all()` or `any()` if you want to look at many conditions.
+- If you want to check if two vectors are identical, use `identical()`, which returns a single *TRUE* or *FALSE*
+- Be careful of comparing floating point numbers to anything, because numerical operations cause rounding.
+    - Especially floating point numbers to integers.
+  
+Multiple conditions (if..else if.. else)
+==================
+
+``` 
+if (this) {
+  # do that
+} else if (that) {
+  # do something else
+} else {
+  # 
+}
+```
+
+Switch instead of chaining if-else
+=================
+
+```
+function(x, y, op) 
+   switch(op,
+     plus = x + y,
+     minus = x - y,
+     times = x * y,
+     divide = x / y,
+     stop("Unknown op!")
+   )
+}
+```
+
+Function arguments
+========
+
+- Functions have two types of arguments
+    - data
+    - options
+- e.g. for log function
+    - `x` data
+    - `base` the base of the logarithm
+- e.g. for mean
+    - `x` data
+    - `trim` fraction of extreme observations to remove
+    - `na.rm` if `NA` values should be removed before computing.
+- Data elements should go first
+- Detail arguments should have default values
+    - Should be common values
+    - Should enable safety (i.e. do not silently ignore missing values)
+    
+Common variable names (don't use them for other things)
+=============
+
+The names of the arguments are also important. R doesn’t care, but the readers of your code (including future-you!) will. Generally you should prefer longer, more descriptive names, but there are a handful of very common, very short names. It’s worth memorizing these:
+
+```
+x, y, z: vectors.
+w: a vector of weights.
+df: a data frame.
+i, j: numeric indices (typically rows and columns).
+n: length, or number of rows.
+p: number of columns.
+```
+
+Function return values
+===================
+
+There are two things you should consider when returning a value:
+
+1.  Does returning early make your function easier to read? (usually, it is the last computation)
+2.  Can you make your function pipeable? 
+Figuring out what your function should return is usually straightforward: it’s why you created the function in the first place! 
+
+Pipeable functions
+==============
+
+1. Transformative functions - take a data frame, return a modified version of the data frame
+2. Side-effect - Take a data frame, do something, pass the original data frame for the next function. (e.g. `print` or `head`)
+  - Use `invisible(df)` to pass the function along without extraneous printing.
+  
+Vectorization
+=====================
+
+Vectors
+=======
+
+- Vectors are important because vectors and matrices are the foundation of computational math.
+- Vectors allow operations to be defined without regard to scale.
+  - Computers allow for very large scales compared to paper or spreadsheets.
+-  This is why you learned `.` operators in Matlab.
+  - Matlab, R, and Python share this capability.
+
+Least squares Normal equations example
+========================
+
+$$b_1 = \frac{n \sum_{i=1}^n x_i y_i - \left(\sum_{i=1}^n x_i\right) \left(\sum_{i=1}^n y_i\right) } {n \sum_{i=1}^n x_i^2 - \left(\sum_{i=1}^n x_i\right)^2}$$
+
+$$b_0 = \frac{n \sum_{i=1}^n y_i - b_1\sum_{i=1}^n x_i}{n}$$
+
+Comparison
+
+
+$$\bf{b} = \bf{(X^{T} X)^{-1}X^{T}y}$$
+
+
+
+Vector basics
+================
+
+-  *Atomic* vectors - Six types: **logical, integer, double, character, complex**, and **raw**
+-  *Lists*.  Note: Lists can contain other lists
+-  *Atomic* vectors are *homogeneous*, the can only contain one data type.
+-  *Lists can be heterogeneous, they can contain multiple data types.
+-  'NULL' is the absence of a vector.  Compare with 'NA' which is the absence of a value.
+
+Vector properties
+===================
+
+- Every vector has two key properties
+  1. Type - Determined with `typeof()`
+  2. Length - Determined with `length()`
+- And then there are augmented vectors  
+  - Factors - Based on integers
+  - Date and date-times - Based on numeric vectors
+  - Data frames - Based on lists
+  
+Logical vectors
+===================
+
+- Each element can take on one of three values
+  1.  `TRUE`
+  2.  `FALSE`
+  3.  `NA`
+
+```{r}
+1:10 %% 3 == 0
+```
+
+Numeric vectors
+==================
+
+-  Numbers in R are doubles by default.
+-  To make an integer, include a `L` after a number, or use `as.integer`
+-  Identify either integers or doubles by using `is.numeric()`
+
+```{r}
+print(typeof(2))
+print(typeof(2L))
+```
+
+Integers vs doubles
+======================
+
+-  All floating point numbers (doubles) are approximations. Integers can be exact.
+-  Integers can have only one special value `NA`
+-  Doubles can have `NA`, `NaN`, `Inf`, `-Inf`
+  - zero divided by zero results in `NaN`
+  - Number divided by zero results in `Inf`
+  -  Uses `is.finite()`, `is.infinite()`, or `is.nan()` to check for these.
+  - `is.na()` will identify both `NA` and `NaN`
+  
+Character vectors
+================
+
+-  Each element of a character vector is a string
+  - Strings can contain an arbitrary amount of data (can be of any length)
+
+
+Test functions
+===============
+
+- If your code is misbehaving and you cannot identify a logical error, check types.
+
+```
+is_logical()
+is_integer()
+is_double()
+is_numeric()
+is_character()
+is_atomic()
+is_list()
+is_vector()
+```
+
+Scalars and recycling
+=====================
+
+- If you try to run an operation on vectors that are not of same length, R will *recycle* vectors.
+- The smaller vector will be repeated as needed to make a vector the same length of another.
+
+```{r}
+print(sample(10) + 100)
+print(1:10 + 1:2)
+```
+- It will trigger a warning if the longer vectors is not an integer multiple of the smaller.
+  - Be wary of silent failures
+  - You can use the `rep()` function to cause recycling intentionally.
+```{r}
+1:10 + 1:3
+```
+
+Vector elements can be named
+=============
+```{r}
+c(x = 1, y = 2, z = 4)
+x <- c("one", "two", "three", "four", "five")
+x[c(3, 2, 5)]
+```
+
+Negative valued indices drop the elements at the specified positions
+=================
+```{r}
+x[c(-1, -3, -5)]
+```
+- But you should not try to mix positive and negative values. Either pick elements or discard, but not both.
+```
+x[c(1, -1)]
+```
+
+Logical subsetting
+===================
+
+- We can use a logical vector to indicate if we should include elements
+- This is very common
+```{r}
+x <- c(10, 3, NA, 5, 8, 1, NA)
+print(x[!is.na(x)])
+print(x[x%%2 ==0])
+```
+
+Iteration
+============
+
+Iterations
+===========
+
+- Another method of reducing duplication in code is *iteration*
+- Do the same thing to multiple inputs
+- Two programming paradigms apply different forms of iteration
+  - *Imperative programming* (this is what you learned in Matlab and C)
+  - *Functional programming*
+
+For loops
+==========
+
+If we have a data frame
+```{r}
+df <- data.frame(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+```
+We can compute the mean of each column
+
+```{r}
+median(df$a)
+median(df$b)
+median(df$c)
+median(df$d)
+```
+
+Don't repeat yourself
+======================
+
+- But that breaks the rule of not using copy and paste more than twice.
+-  Try a for loop
+```{r}
+output <- vector("double", ncol(df))  # 1. output
+for (i in seq_along(df)) {            # 2. sequence
+  output[[i]] <- median(df[[i]])      # 3. body
+}
+output
+```
+
+Parts of a for loop
+=======================
+
+1. **Output** - `output <- vector("double", ncol(df))`  A data structure that will hold the output.  Usually a sized vector.
+2. **Sequence** `(i in seq_along(df)`  What determines what to loop over. Usually a list.
+  -  Note: `seq_along(df)` is like `1:length(df)`
+3. **Body** - `output[[i]] <- median(df[[i]])`  The statements that are run for each element.
+
+Variations on for loops
+======================
+
+1.  Modifying an existing object, instead of creating a new object.
+2.  Looping over names or values, instead of indices.
+3.  Handling outputs of unknown length.
+4.  Handling sequences of unknown length.
+
+
+Over names or indices
+===================
+
+- Loop over elements: `for (x in xs)` 
+- Loop over names `for (nm in names(xs())`
+- Loop over numeric indices (most common) `for (i in seq_along(df))` `for (i in 1:length(df))`
+
+Over unknown output length
+==========================
+
+- use concatenate `c()` to add to the vector with each iteration
+```{r}
+means <- c(0, 1, 2)
+
+output <- double()
+for (i in seq_along(means)) {
+  n <- sample(100, 1)
+  output <- c(output, rnorm(n, means[[i]]))
+}
+str(output)
+```
+
+- But this is inefficient.
+
+Using a list
+==================
+
+- Better to create a list, then combine into a single vector when done
+
+```{r}
+out <- vector("list", length(means))
+for (i in seq_along(means)) {
+  n <- sample(100, 1)
+  out[[i]] <- rnorm(n, means[[i]])
+}
+str(out)
+str(unlist(out))
+```
+- The vector is created using `unlist(out)` which takes a list of vectors and flattens them into a single vector.
+
+Unknown sequence length
+================
+
+-  `while` loops continue until a stopping condition is reached
+
+```
+while (condition) {
+  # body
+}
+```
+
+Functional programming
+=======================
+
+- In *functional* programming, you can pass a function to another function.
+- You already learned the `apply` family of functions (`apply()`, `lapply()`, `tapply()`, etc)
+
+-  What would change about this function to use it for other summary functions (measures of central tendency like median or standard deviation)?
+
+```{r}
+col_mean <- function(df) {
+  output <- vector("double", length(df))
+  for (i in seq_along(df)) {
+    output[i] <- mean(df[[i]])
+  }
+  output
+}
+```
+
+
+Removing duplicates
+===================
+- If functions are very much identical, you could add an argument that captures the difference
+```
+f1 <- function(x) abs(x - mean(x)) ^ 1
+f2 <- function(x) abs(x - mean(x)) ^ 2
+f3 <- function(x) abs(x - mean(x)) ^ 3
+```
+```
+f <- function(x, i) abs(x - mean(x)) ^ i
+```
+
+- Now there is only one function instead of 3, and you can make sure the one function is correct.
+
+Using a function as a parameter
+=============================
+
+- You can do the same thing with a function 
+
+```{r}
+col_summary <- function(df, fun) {
+  out <- vector("double", length(df))
+  for (i in seq_along(df)) {
+    out[i] <- fun(df[[i]])
+  }
+  out
+}
+col_summary(df, median)
+col_summary(df, mean)
+col_summary(df, sd)
+```
+
+Map functions
+=================
+
+- Math set theory, a *map* is how you connect one list to another.
+- e.g. names of states and state capitals
+- Map functions take a vector, applies a function, and returns a new vector that has the same length (and label names) as the input.
+- The benefit over for loops is clarity (this makes it explicit that the input and output are related on a one:one basis)
+- Use the `purrr` library
+
+- `map()` makes a list.
+- `map_lgl()` makes a logical vector.
+- `map_int()` makes an integer vector.
+- `map_dbl()` makes a double vector.
+- `map_chr()` makes a character vector
+
+Map function examples
+=================
+
+```{r}
+library(purrr)
+map_dbl(df, mean)
+map_dbl(df, median)
+map_dbl(df, sd)
+```
+
+The purrr library works with pipes
+=============
+```{r}
+df %>% map_dbl(mean)
+df %>% map_dbl(median)
+df %>% map_dbl(sd)
+```
+
+
+You can pass additional parameters after the function name
+==================
+
+- If a function requires additional parameters, you add them after the function name.
+  - Arguments are data, function name, other parameters
+
+```{r}
+map_dbl(df, mean, trim = 0.5)
+map_dbl(df, mean, rm.na = TRUE)
+```
+
+Purpose of advanced programming methods
+================
+
+- Efficiency - R is very good at some things (e.g. vectors and matrices) and not good at others (for loops). Advanced programming constructs focus on what R is good for.
+- Expressiveness - Expressive syntax make R code match the way you think about operations.
+
+
+Three key steps to creating a new function
+===========
+
+1. You need to pick a name for the function. Here I used `rescale01` because this function rescales a vector to lie between 0 and 1.
+
+2. You list the inputs, or arguments, to the function inside function. Here we have just one argument. If we had more the call would look like `function(x, y, z)`.
+
+3. You place the code you have developed in body of the function, a `{` block that immediately follows `function(...)`.
+
+Starting points
+=======
+
+-  Write a process map. The process map covers the logic of the function. Make sure you understand the logic, then try to figure out the details in implementing it.
+-  Make a function after figuring out how to make it work with a simple input. 
+  -  Start a code block that you will turn into a function by assigning values to what will be the parameters
+  -  Make this work, then try it with different parameter inputs
+  -  For testing, make each possible outcome occur, so you know it works every time.
+- It’s easier to start with working code and turn it into a function than   to create a function and then try to make it work.
+- Note: If you know how to use debugging tools from other IDE (e.g. MS Visual Studio, Eclipse), they are available in R Studio as well.
+  -  If you do not, adding print statements to show the parameters being passed to functions that are not working is helpful.
+
+Transforming data
+============================
+
+- We transform data because it allows us to more clearly identify patterns in the data.
+- We think there is a relationship, a transform allows us to see if the relationship is strong.
+- Many numerical methods (e.g. linear regression) can work better if the model is transformed.
+
+Some transforms you already know
+===========================
+
+- Filtering - Examine a specific part of the dataset or remove outlier cases.
+  - Or filter to look at outliers more closely.
+
+
+```{r, echo=FALSE}
+library(ggplot2, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
+library(modelr) # this is in tidyverse, but we have not used it before
+```
+```{r}
+data(diamonds)
+nrow(diamonds)
+ggplot(diamonds, aes(x,y)) + geom_bin2d() 
+```
+
+```{r}
+diamonds_ok <- filter(diamonds, x>0, y>0, y < 20)
+ggplot(diamonds_ok) + geom_bin2d(aes(x,y)) + geom_abline(slope=1, color="white", alpha=0.5)
+```
+
+Logical operators for filters
+===========
+
+- `x==y`: x and y are equal.
+- `x!=y`: x and y are not equal.
+- `x %in% c("a", "b", "c")`: x is one of the values in the set right hand side.
+- `x > y, x >= y, x < y, x <= y`: greater than, greater than or equal to, less than, less than or equal to.
+
+
+
+And combine them with logical operators:
+======
+
+- `!x` - Not x, flips TRUE and FALSE
+- `x&y`: TRUE if both x and y are TRUE.
+- `x|y`: TRUE if either x or y (or both) are TRUE.
+- `xor(x,y)`: TRUE if either x or y are TRUE, but not both (exclusive or).
+
+Transforming data
+=================
+
+- Some typical transformations
+
+- Log transforms - turns multiplicative (compounding) relationships into additive relationships.
+  - Often used to compress data that ranges over several orders of magnitude.
+- Relative difference - Use log(x/y) instead of the actual values x and y. (note: this is better than x/y because it is symmetric, the order of x and y does not matter)
+- Integrating or differentiating to transform variables.  E.g. transform distance and time to speed or acceleration.
+- Cartesian (rectangular) to/from polar coordinates
+- Centering and scaling 
+  - Converting to standard normal subtracting from a mean and dividing by standard deviation
+  - Converting point to a percentile of the entire range
+  
+Rescale example from last lecture
+==========
+
+```{r}
+rescale01 <- function(x) {
+  rng <- range(x, na.rm = TRUE)
+  (x - rng[1]) / (rng[2] - rng[1])
+}
+rescale01(c(0, 5, 10))
+```
+
+Note: statistical software and rescaling
+==============
+
+- R, SAS, SPSS do this automatically in their statistical routines.
+- For other statistical software, the accuracy of results may be improved if you do this.
+
+
+In dplyr
+============
+
+- Use mutate to do the transformation
