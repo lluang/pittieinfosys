@@ -1,0 +1,66 @@
+---
+title: 'Lab9: TVM and Advanced programming'
+author: "Louis Luangkesorn"
+date: "March 19, 2018"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits=2)
+```
+
+Note: Knit this document to HTML before starting. There are equations that will render.
+
+# Investment projects
+
+As a manager with an investment budget, you need to allocate your funds across projects to get the highest overall rate of return. Each investment has an associated discount rate (based on the loan that could be obtained for it), up front investment required, and results in an annual cash flow for a specified period of years.  This assignment will build a function that will help choose which combination of projects to pick.
+
+Project  |  Discount  | Investment  |  Annual   |  Project life,
+         |   rate, %  |             | cash flow |   Years
+=========|============|=============|===========|============
+  A      |    10      |     3       |     1     |   5
+  B      |    12      |     4       |     1     |   8
+  C      |     8      |     5       |     2     |   5
+  D      |     8      |     3       |     1.5   |   4
+  E      |    12      |     3       |     1     |   6
+
+# Time value of money
+
+The time value of money relates the present value (PV) to future value (FV) based on an interest rate (r) and the time horizon (t).
+
+$$PV = \frac{FV}{(1+r)^t}$$
+
+$$FV = PV {(1+r)^t}$$
+
+So the expression $1/(1+r)^t$ is the discount factor, of the present value of \$1 received in year $t$.
+
+# 1. Write time value of money functions [2 pts]
+
+    a. Write a function in R to calculate PV given $FV, r,$ and $t$.
+    b. Write a function in R to calculate FV given $PV, r,$ and $t$.
+    c. Use the PV function to solve for the present value of \$1,000 to be paid in twenty-five years when the annual interest rate is 8.53\%.
+    d. Use the FV function to calculate the future value of \$1,200 that is put in the bank now in two years when the annual interest rate is 8\%.
+
+**ANSWER**
+
+```{r tvmfunctions}
+# (a)
+PVM <- function(FV, r, t){
+  PVM <- FV / ((1+r)^t)
+}
+# (b)
+FVM <- function(PV, r, t){
+  FVM <- PV * ((1+r)^t)
+}
+
+# (c)
+PV1000 <- PVM(1000, 0.0853, 25)
+# (d)
+FV1200 <- FVM(1200, 0.08, 2)
+print(c(PV1000, FV1200))
+```
+
+# 2.  Create a function that values a 
