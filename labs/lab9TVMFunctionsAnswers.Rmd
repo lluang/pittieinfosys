@@ -18,15 +18,15 @@ Note: Knit this document to HTML before starting. There are equations that will 
 
 As a manager with an investment budget, you need to allocate your funds across projects to get the highest overall rate of return. Each investment has an associated discount rate (based on the loan that could be obtained for it), up front investment required, and results in an annual cash flow for a specified period of years.  This assignment will build a function that will help choose which combination of projects to pick.
 
-Project  |  Discount  | Investment  |  Annual   |  Project life,
-         |   rate, %  |             | cash flow |   Years
-=========|============|=============|===========|============
-  A      |    10      |     3       |     1     |   5
-  B      |    12      |     4       |     1     |   8
-  C      |     8      |     5       |     2     |   5
-  D      |     8      |     3       |     1.5   |   4
-  E      |    12      |     3       |     1     |   6
-
+```{r}
+project <- data.frame(project = c('A', 'B', 'C', 'D', 'E'),
+                      r = c(0.10, 0.12, 0.08, 0.08, 0.12),
+                      investment = c(3, 4, 5, 3, 3),
+                      paymentvalue = c(1, 1, 2, 1.5, 1),
+                      years = c(5, 8, 5, 4, 6)
+                      )
+project
+```
 # Time value of money
 
 The time value of money relates the present value (PV) to future value (FV) based on an interest rate (r) and the time horizon (t).
@@ -37,9 +37,9 @@ $$FV = PV {(1+r)^t}$$
 
 So the expression $1/(1+r)^t$ is the discount factor, of the present value of \$1 received in year $t$.
 
-# 1. Write time value of money functions [2 pts]
+# 1. Write time value of money functions [3 pts]
 
-    a. Write a function in R to calculate PV given $FV, r,$ and $t$.
+    a. Write a function in R to calculate PV given $FV, r,$ and $t$. Note for this and (b), you need to have comments in the function that specify what the parameters are.
     b. Write a function in R to calculate FV given $PV, r,$ and $t$.
     c. Use the PV function to solve for the present value of \$1,000 to be paid in twenty-five years when the annual interest rate is 8.53\%.
     d. Use the FV function to calculate the future value of \$1,200 that is put in the bank now in two years when the annual interest rate is 8\%.
@@ -49,11 +49,19 @@ So the expression $1/(1+r)^t$ is the discount factor, of the present value of \$
 ```{r tvmfunctions}
 # (a)
 PVM <- function(FV, r, t){
+  # FV - Future value
+  # r - interest rate
+  # t - time periods
   PVM <- FV / ((1+r)^t)
+  PVM
 }
 # (b)
 FVM <- function(PV, r, t){
+  # PV - Present value
+  # r - interest rate
+  # t - time periods
   FVM <- PV * ((1+r)^t)
+  FVM
 }
 
 # (c)
@@ -63,4 +71,50 @@ FV1200 <- FVM(1200, 0.08, 2)
 print(c(PV1000, FV1200))
 ```
 
-# 2.  Create a function that values a 
+# 2.  Bond valuation [3]
+
+    a.  Create a function that finds the present value a bond.  A bond consists of a series of future payments, a final payout at maturity,  and the current interest rate.  Note: you should use the PVM function you have created in (1) while doing this.  Also, you need to have comments in the function that specify what the parameters are.
+    b.  Find the present values of the following bonds:
+        (i)  Payments of \$100 at the end of every year for three years, payout at maturity at the end of year 3 of \$1000 (note that one of the annual payments occurs simultaneously), and a rate of return of 10\%.
+        
+```{r bondpayments}
+bondvalue <- function(payment, npayments, payout, maturitytime, r){
+  # payment are the regular payments,
+  # npayments are the number of payments/periods
+  # payout is the value at maturity
+  # r is the interest rate.
+  paymentvalue <- sum(PVM(payment, r, 1:npayments))
+  payoutvalue <- PVM(payout, r, maturitytime)
+  PV <- paymentvalue + payoutvalue
+  PV
+}
+payment = 100
+npayments = 3
+maturitytime = 3
+r = 0.1
+payout = 1000
+print(bondvalue(payment, npayments, payout, maturitytime, r))
+```
+
+# Value of projects [5]
+
+    a.  Calculate the present value of each of the projects from the table above.  Use your bond function and present value functions as appropriate.
+    b.  What is the best combination of investments for an \$8 million budget?
+
+Note: initial investment is modeled as a negative payout.
+
+** ANSWER **
+```{r projectvalue}
+valueA <- bondvalue(payment = project$paymentvalue[1], npayments = project$years[1], payout = 0, maturitytime = project$years[1], r = project$r[1]) - project$investment[1]
+
+valueB <- bondvalue(payment = project$paymentvalue[2], npayments = project$years[2], payout = 0, maturitytime = project$years[2], r = project$r[2]) - project$investment[2]
+
+valueC <- bondvalue(payment = project$paymentvalue[3], npayments = project$years[1], payout = 0, maturitytime = project$years[3], r = project$r[3]) - project$investment[3]
+
+valueD <- bondvalue(payment = project$paymentvalue[4], npayments = project$years[4], payout = 0, maturitytime = project$years[4], r = project$r[4]) - project$investment[4]
+
+valueE <- bondvalue(payment = project$paymentvalue[5], npayments = project$years[5], payout = 0, maturitytime = project$years[5], r = project$r[5]) - project$investment[5]
+c(valueA, valueB, valueC, valueD, valueE)
+```
+
+So, the best investment will be the largest total for investments adding up to 8. So projects C and D.
