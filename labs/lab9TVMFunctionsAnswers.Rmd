@@ -117,4 +117,5 @@ valueE <- bondvalue(payment = project$paymentvalue[5], npayments = project$years
 c(valueA, valueB, valueC, valueD, valueE)
 ```
 
-So, the best investment will be the largest total for investments adding up to 8. So projects C and E.
+So, the best investment will be the largest total for investments adding up to 8. So projects C and D.
+
