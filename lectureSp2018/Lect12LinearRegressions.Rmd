@@ -3,9 +3,9 @@ title: 'Lecture 12: Linear Regression'
 author: "IE0015 Information Systems Engineering"
 date: "March 26, 2018"
 output:
-  pdf_document: default
-  html_document: default
   slidy_presentation: default
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r, warning=FALSE, message=FALSE}

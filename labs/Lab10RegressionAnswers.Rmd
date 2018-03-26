@@ -1,7 +1,7 @@
 ---
-title: 'Lab 11: Regression'
+title: 'Lab 10: Regression'
 author: "IE 0015 Information Systems Engineering"
-date: "April 2017"
+date: "March 29/30, 2018"
 output:
   html_document: default
   pdf_document: default
@@ -13,6 +13,7 @@ This lab will use the Titanic data. You should modify the `read.csv` function ca
 options(digits = 3, scipen=4)
 library(ggplot2, quietly = TRUE, warn.conflicts = FALSE)
 library(dplyr, quietly = TRUE, warn.conflicts = FALSE)
+library(magrittr)
 library(modelr, quietly = TRUE, warn.conflicts = FALSE)
 
 titanic <- read.csv("../data/titanic3.csv",
@@ -36,19 +37,23 @@ You think that the age is related to the following:
   i.  Sex
   ii.  Pclass
 
-  a.  Remove lines in the data that do not have an age
-  b.  Develop a multiple linear regression model for the age based on these characteristics.
-  c.  Display the summary and the analysis of variance tables for this model. 
-  d.  Display diagnostics plots. Discuss the assumptions of regression models.
-  e.  Do you think this is an adequate model?
+a.  Remove lines in the data that do not have an age
+b.  Develop a multiple linear regression model for the age based on these characteristics.
+c.  Display the summary and the analysis of variance tables for this model. 
+d.  Display diagnostics plots. Discuss the assumptions of regression models.
+e.  Do you think this is an adequate model?
   
 **ANSWER**
 
 
 a-b-c. Model
 ```{r}
-titanic <- titanic[!is.na(titanic$age),]
+#a 
+titanic <- titanic %>%
+  filter(!is.na(titanic$age))
+#b
 age.lm <- lm(age ~ sex + pclass, data=titanic)
+#c
 summary(age.lm)
 anova(age.lm)
 ```
@@ -80,16 +85,18 @@ a. Compare the residuals against the Title, then fare.
 
 ```{r}
 titanic$lmresiduals <- age.lm$residuals
-ggplot(titanic) + geom_boxplot(aes(Title, lmresiduals))
+ggplot(titanic) + geom_boxplot(aes(Title, lmresiduals)) + 
+  ggtitle("Age prediction errors by social title") +ylab("Residuals on age prediction")
 ```
 
 ```{r}
-ggplot(titanic) + geom_point(aes(fare, lmresiduals))
+ggplot(titanic) + geom_point(aes(fare, lmresiduals)) + 
+  ggtitle("Age prediction errors by fare") +ylab("Residuals on age prediction")
 ```
 
-The residuals for each fare seem to have the same range for most values of the fare.  But their are large differences in the boxplots when plotting against the title, indicating that the title is informative, so add the title.
+The residuals for each fare seem to have the same range for most values of the fare.  But their are large differences in the boxplots when plotting against the title, indicating that the title is informative, so add the title to the regression model.
 
-b.
+b.  
 
 ```{r}
 age.lm2 <- lm(age ~ sex + pclass + Title, titanic)
@@ -97,11 +104,14 @@ summary(age.lm2)
 anova(age.lm2)
 ```
 
+Diagnostic plots
+
 ```{r}
 par(mfrow=c(2,2))
 plot(age.lm2)
 par(mfrow=c(1,1))
 ```
+
 
 c. 
 There are more varied predicted values of age. Many of the residuals are very small because of few samples. For those with many samples, the residuals are smaller, and about even.
@@ -110,3 +120,10 @@ There are more varied predicted values of age. Many of the residuals are very sm
 - QQ plot looks better at the upper end of the range.
 - Sum of squares residuals is much smaller. 127776 vs 177602
 - Adjusted R^2 increases from 0.18 to 0.401
+- Plot of errors by title shows reduced residuals (note that y-axis is much smaller)
+
+```{r}
+titanic$lmresiduals2 <- age.lm2$residuals
+ggplot(titanic) + geom_boxplot(aes(Title, lmresiduals2)) + 
+  ggtitle("Age prediction errors by social title - 2") +ylab("Residuals on age prediction")
+```
