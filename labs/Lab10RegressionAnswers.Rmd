@@ -3,8 +3,8 @@ title: 'Lab 10: Regression'
 author: "IE 0015 Information Systems Engineering"
 date: "March 29/30, 2018"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 This lab will use the Titanic data. You should modify the `read.csv` function call to correspond to your system.
@@ -65,11 +65,11 @@ par(mfrow=c(1,1))
 ```
 
 -  Normality (looks pretty good, only breaks off the 45 degree line near the top of the distribution)
--  Error distribution seems independent (very young and old are different, but that may be because so few points)
+-  Error distribution seems independent looking at the Residuals vs fitted and scale-location graphs (i.e. the standardized residuals cover the same range)
 -  Constant variance (only changes as for passengers that are  very young or very old)
--  Bonus: Cook's distance does not show the outer boundaries, so it passes.
+-  Bonus: Cook's distance does not show the outer boundaries in the plot (i.e. the boundaries are out of the plot limits), so it passes.
 
-e. You should comment that there are only 6 predicted values, so this does not look complete.
+e. It is adequate (i.e. all tests pass)  You could comment that there are only 6 predicted values, because of the combination of gender and pclass, so it seems too discrete while ages are continuous.
 
 # 2. Adding to the model. (5 pts)
 
@@ -114,9 +114,9 @@ par(mfrow=c(1,1))
 
 
 c. 
-There are more varied predicted values of age. Many of the residuals are very small because of few samples. For those with many samples, the residuals are smaller, and about even.
+There are more varied predicted values of age. Many of the residuals (young and old) are very small because of few samples. For those with many samples, the residuals are smaller than before, and about even.
 
-- Note that Cook's distance is still within the lines.
+- Note that Cook's distance is still within the dotted lines. (the lower bound may not show up)
 - QQ plot looks better at the upper end of the range.
 - Sum of squares residuals is much smaller. 127776 vs 177602
 - Adjusted R^2 increases from 0.18 to 0.401
@@ -127,3 +127,5 @@ titanic$lmresiduals2 <- age.lm2$residuals
 ggplot(titanic) + geom_boxplot(aes(Title, lmresiduals2)) + 
   ggtitle("Age prediction errors by social title - 2") +ylab("Residuals on age prediction")
 ```
+
+
