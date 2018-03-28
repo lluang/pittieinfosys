@@ -1,0 +1,481 @@
+---
+title: "Probability distributions"
+author: "IE 0015 Information Systems"
+date: "April 2018"
+output:
+  slidy_presentation: default
+  beamer_presentation: default
+  html_document: default
+  pdf_document: default
+---
+
+
+
+Input Modeling
+==============
+
+```{r libraries, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(grid)
+library(foreach)
+library(fitdistrplus)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+```
+
+
+# Purpose of input modeling
+
+- Input modeling is choosing a probability model to represent uncertainty in a system.
+- This may or may not be performed with data.
+- We often use this in simulation models.
+- We can relate a process to a probability distribution.
+
+# Using data
+
+We can specify a distribution based on data
+
+-  Use observed data directly in the simulation (i.e. for each use a historical value is chosen from the historical data set. e.g. for hospital stays for patients) trace-driven simulation
+-  Define an empirical distribution based on the observed data. (i.e. randomly draw from this observed data)
+-  Fit a theoretical distribution into a distribution family then perform hypothesis tests to determine goodness of fit.
+
+
+# Theoretical distribution
+
+If a distribution can be found that fits the observed data reasonably well, we like to use the theoretical distribution over the empirical distribution.
+
+- Empirical distributions can have irregularities, especially if only limited data is available.  If a process fits a theoretical distribution, the distribution provides information on the underlying process and smooths out the data.
+- It is not possible to generate values beyond the range of what is observed in empirical distribution.  Theoretical distributions allow for the possibility of extreme events which the system needs to be able to respond too.
+- Theoretical distributions are more compact ways of representing a set of values.
+- Theoretical distributions are easier to change.  e.g. when modeling changes to the system.
+
+
+# Probability Distributions in R
+
+
+- In **R**, probability distributions have four different related functions
+- The probability distributions are described in [*An Introduction to R*, Chapter 8, Probability Distributions.]
+(https://cran.r-project.org/doc/manuals/r-release/R-intro.html#Probability-distributions)
+
+# Functions for probability distributions
+
+
+1. *d*dist - Density function. Given the a list of values of x and parameters of the distribution, return the corresponding list of values of y
+2. *p*dist - CDF. Given the list of quantiles (values of x) and parameters of the distribution, return the corresponding cumulative probabilities.
+3. *q*dist - Quantile. Given the list of probabilities and parameters of the distribution, return the corresponding quantiles (values of x)
+4. *r*dist - Random. Given the parameters of the distribution and a required number, generate random values from that distribution.
+
+
+# Triangular distribution
+
+- There are various packages for distributions that are used in specific situations that are not included in base R.
+
+```{r}
+library(triangle)
+```
+
+
+# Triangular distribution plot
+
+- *d* function
+
+```{r}
+xval <- seq(0.1, 10, by = 0.1)
+yval <- dtriangle(xval, 0, 10, 4)
+```
+```{r, echo=FALSE}
+triangleexample <- data.frame(xval, yval)
+ggplot(triangleexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("density  plot generated graph")
+```
+
+
+# Triangular CDF plot
+
+- *p* function
+```{r}
+yval <- seq(0.1, 1, by = 0.01)
+xval <- ptriangle(yval, 0, 10, 4)
+```
+```{r, echo=FALSE}
+triangleexample <- data.frame(xval, yval)
+ggplot(triangleexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("Probability plot generated graph")
+```
+
+
+# Triangular quantile plot
+
+- *q* function
+
+```{r}
+xval <- qtriangle(yval, 0, 10, 4)
+```
+```{r, echo=FALSE}
+triangleexample <- data.frame(xval, yval)
+ggplot(triangleexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("Probability plot generated graph")
+```
+
+
+# Triangular random number plot
+
+- *r* function generates random numbers from that distribution
+
+```{r}
+xval <- rtriangle(100000, 0, 10, 4)
+```
+```{r, echo=FALSE}
+triangledensity <- data.frame(xval)
+ggplot(triangledensity) + geom_histogram(aes(xval)) + theme_bw() + ggtitle("Triangle distribution")
+```
+
+
+# Goodness of fit
+
+If we think the arrivals are stationary, we can test if they are Poisson using *goodness of fit* tests.
+
+-  H0 : the chosen distribution with the estimated parameters is correct
+-  H1 : the chosen distribution with the estimated parameters is incorrect.
+
+
+# How goodness of fit tests fail
+
+1.  The distribution of the data may be substantially different from what we thought.
+2.  The distribution of arrivals may not be stationary.
+3.  We might have too much data.
+
+Real data does not come from a mathematically defined probability distribution, so if there is enough data, it *will* fail a test to see if it comes from a distribution. e.g. drawn from a random number generator.
+
+Discrete distributions - Chi-squared test for goodness of fit
+==============================
+
+- For discrete distributions, use Chi-squared test for goodness of fit.
+- Compare observed proportions against expected proportions.
+
+```{r}
+Input =("
+Tree              Value      Count   Total Proportion  Expected
+'Douglas fir'     Observed   70      156   0.4487      0.54
+'Douglas fir'     Expected   54      100   0.54        0.54
+'Ponderosa pine'  Observed   79      156   0.5064      0.40
+'Ponderosa pine'  Expected   40      100   0.40        0.40
+'Grand fir'       Observed    3      156   0.0192      0.05
+'Grand fir'       Expected    5      100   0.05        0.05
+'Western larch'   Observed    4      156   0.0256      0.01
+'Western larch'   Expected    1      100   0.01        0.01
+")
+  
+Forage = read.table(textConnection(Input),header=TRUE)
+```
+
+Data munging
+============
+
+Specify order of factors of value
+
+
+```{r}
+Forage = 
+mutate(Forage,
+       Tree = factor(Tree, levels=unique(Tree)),
+       Value = factor(Value, levels=unique(Value))
+       )
+```
+
+```{r}
+ggplot(Forage, 
+   aes(x = Tree, y = Proportion, fill = Value))  +
+       geom_bar(stat="identity", position = "dodge", width = 0.7) +
+       geom_bar(stat="identity", position = "dodge", 
+                colour = "black", width = 0.7, 
+                show_guide = FALSE)  +
+       scale_y_continuous(breaks = seq(0, 0.60, 0.1), 
+                limits = c(0, 0.60), 
+                expand = c(0, 0))  +
+       scale_fill_manual(name = "Count type" , 
+                 values = c('grey80', 'grey30'), 
+                 labels = c("Observed value", 
+                            "Expected value"))
+```
+
+Chi-squared gof test
+=====================
+
+```{r}
+observed = c(423, 133)   
+expected = c(0.75, 0.25)
+  
+chisq.test(x = observed,
+           p = expected)
+```
+
+```{r}
+chisq.test(x = Forage[Forage$Value=="Observed",]$Proportion,
+           p = Forage[Forage$Value=="Expected",]$Proportion)
+```
+
+Continuous Example using Mater Mother's Hospital Maternity data
+=====================
+
+* Forty-four babies **a new record** were born in one 24-hour period at the Mater Mothers' Hospital in Brisbane, Queensland, Australia, on December 18, 1997. 
+* For each of the 44 babies, The Sunday Mail recorded the time of birth, the sex of the child, and the birth weight in grams. 
+* Additional information about these data can be found in the "Datasets and Stories" article "A Simple Dataset for Demonstrating Common Distributions" in the Journal of Statistics Education (Dunn 1999).
+
+
+# Arrival Data
+
+- Birth time
+- Gender
+- Weight (g)
+
+
+```{r}
+brisbanebirths <- data.frame( 
+  birthTime24hr = c('0005', '0104', '0118', '0155', '0257', '0405', '0407', '0422', '0431', '0708', '0735', '0812', '0814', '0909',
+                '1035', '1049', '1053', '1133', '1209','1256', '1305', '1406', '1407', '1433', '1446', '1514',
+                '1631', '1657', '1742', '1807', '1825', '1854', '1909', '1947', '1949', '1951', '2010', '2037',
+                '2051', '2104', '2123', '2217', '2327', '2355'),
+      gender = c(1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 1,
+         1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 1, 2, 1, 2,
+         2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 1, 1),
+      weight = c(3837, 3334, 3554, 3838, 3625, 2208, 1745, 2846, 3166, 3520, 
+        3380, 3294, 2576, 3208, 3521, 3746, 3523, 2902, 2635, 3920, 
+        3690, 3430, 3480, 3116, 3428, 3783, 3345, 3034, 2184, 3300, 
+        2383, 3428, 4162, 3630, 3406, 3402, 3500, 3736, 3370, 2121, 
+        3150, 3866, 3542, 3278),
+      minuteofday = c(5, 64, 78, 115, 177, 245, 247, 262, 271, 428,
+        455, 492, 494, 549, 635, 649, 653, 693, 729, 776,
+        785, 846, 847, 873, 886, 914, 991, 1017, 1062, 1087,
+        1105, 1134, 1149, 1187, 1189, 1191, 1210, 1237, 1251, 1264, 
+        1283, 1337, 1407, 1435))
+```
+
+
+# Explore the data - weight distribution
+
+```{r weightdistribution}
+ggplot(brisbanebirths) + geom_histogram(aes(weight)) + ggtitle("Birthweights") + 
+  xlab("weight (oz)") + ylab("Number of births") + theme_bw()
+```
+
+# Explore the data - arrival times
+
+```{r timedistribution}
+ggplot(brisbanebirths) + geom_histogram(aes(floor(minuteofday/60)), binwidth = 1, center=0) + ggtitle("Births by time of day") + 
+  xlab("Time (hour of day)") + xlim(0,24) +
+  ylab("Number of births") +  theme_bw()
+```
+# We want interarrival time
+
+- Data munging, calculate interarrival time
+- `foreach` vectorizes a `for` loop
+
+```{r}
+brisbanebirths$interarrival <- (foreach(i=1:nrow(brisbanebirths), .combine=c) 
+  %do% 
+    (max(1, brisbanebirths$minuteofday[i] - 
+            brisbanebirths$minuteofday[max(1,i-1)]
+         )
+    )
+)
+print(summary(brisbanebirths$interarrival[2:44]))
+print(tail(brisbanebirths$interarrival))
+```
+
+
+#  Look at the distribution
+
+- Plot histogram and CDF
+
+```{r fitdist}
+library(fitdistrplus)
+plotdist(brisbanebirths$interarrival)
+```
+
+
+Check 3rd and 4th moments (skewness and kurtosis)
+=======
+
+- Cullen and Frey graph
+- Usually, first and second moments were used in fitting the parameters.
+- Skewness and kurtosis help identify a reasonable distribution.
+- Looks very close to an exponential distribution
+
+```{r}
+descdist(brisbanebirths$interarrival)
+```
+
+
+Fit distribution and check goodness of fit
+========
+
+-`fitdist`, takes data vector and the name of the probability distribution in R
+- Returns
+
+```{r}
+birth_dist <- fitdist(brisbanebirths$interarrival, "exp")
+summary(birth_dist)
+birth_dist$estimate
+```
+
+
+# Goodness of fit plots
+
+- `denscomp` compares distributions to candidate
+- `qqcomp` shows Quantile-Quantile plot compared to the hypothesis. distribution. Focuses on errors in tails of distribution.
+- `cdfplot` shows cumulative distribution functionl
+- `ppcomp` probability plot. Focuses on middle of distribution.
+
+```{r}
+par(mfrow = c(2,2))
+denscomp(birth_dist)
+qqcomp(birth_dist)
+cdfcomp(birth_dist)
+ppcomp(birth_dist)
+par(mfrow = c(1,1))
+```
+
+
+# Goodness of fit tests
+
+- Kolmogorov-Smirnov often used for normal distribution.
+- Anderson-Darling used for all continuous distributions.
+
+```{r}
+test<- gofstat(birth_dist)
+```
+```{r}
+test$ks
+```
+```{r}
+test$kstest
+```
+
+Exercise at home:
+
+1.  Generate values from a probability distribution.
+2.  Take 50000 values, test for goodness of fit.  Repeat for 5000, 500, 50.
+
+What is another way of collecting data to see if an arrival distribution is Poisson?
+
+Three-parameter fitting
+=======================
+
+-  Most distributions are two parameter (shape and scale).
+-  A *shift* or *threshold* parameter may be used if there is a true minimum value (as most distributions use 0 as a minimum value)
+    - Arena and other distribution fitting software use numeric search methods to estimate the correct shift. (find threshold that leads to maximizing $R^2$)
+-  Can use a fraction (0.9) of the minimum value as a rough estimate of the shift parameter.
+-  A more rigorous way would be to look at Q-Q plot, if the left tail of a Q-Q plot falls, search for a threshold that brings the tail back to the 45 degree line.
+
+
+Hypothesizing families of distributions
+=======================================
+
+
+# What not to do.
+
+1.  Take distribution fitting software/function and list of available probability distributions.
+2.  Fit data to distribution.
+3.  Take distribution where the fitted data yields the smallest (best) test score on a goodness-of-fit test.
+
+Why is this wrong?
+
+
+
+Determining a distribution family
+=================================
+
+1.    Step 1 in selecting an input distribution is to decide what general distribution family should be used.
+2.    This is on the basis of the shape of the family (i.e. be familiar with the pictures found in most probability books.  Look at a histogram.
+3.    Next, use prior knowledge about the source of the random variable.  i.e. the process that generates the random event
+      - If customers arrive one at a time, constant rate, each time interval is independent of adjacent time intervals, maybe exponential
+      - If events are a result of a series of stages, maybe gamma (if stages are identical length, Erlang)
+      - If variable is a process that has random errors, maybe normal
+      - Consider if the physical model matches the underlying process for discrete distributions
+      - Consider if the distribution should be bounded
+
+
+#  Summary statistics
+
+- Include mean, median, minimum, maximum, variance, coefficient of variation, skewness
+- Minimum and maximum give an estimate of the range
+- If mean $\approx$ median, then distribution is symmetrical
+- c.v. $\approx$ 1 is potentially exponential
+
+
+# Turnaround time example
+
+```{r}
+turnaround <- c(239, 273, 308, 230, 312, 324, 534, 283, 86, 102,
+                60, 103, 1211, 228, 341, 119, 104, 186, 151, 519,
+                50, 53, 61, 98, 157, 109, 118, 82, 130, 163,
+                70, 70, 125, 144, 159, 59, 68, 161, 45, 44,
+                164, 68, 156, 169, 72, 89, 159, 176, 252, 260,
+                89, 126, 136, 158, 103, 53, 54, 175, 179, 149,
+                152, 67, 229, 79, 89, 75, 84, 111, 180, 121,
+                241, 53, 46, 46, 51, 80, 91, 93, 828, 70,
+                186, 82, 270, 29, 115, 197, 40, 89, 54, 50,
+                107, 28, 181, 83, 373, 150, 153, 205, 64, 204,
+                74, 37, 87, 117, 151, 391, 120, 76, 93, 144,
+                152, 155, 229, 63, 241, 78, 102, 172, 217, 226,
+                323, 85, 169, 215, 26, 56, 52, 188, 128, 265,
+                160, 196, 63, 170, 211, 96, 268, 54, 55, 114,
+                205, 428, 95, 141, 216, 109, 36, 87, 297, 44,
+                109, 84, 110, 8, 79, 135, 39, 61, 241, 293,
+                335, 36, 46, 116, 120, 138, 143, 28, 164, 82,
+                36, 13, 702, 94, 53, 112, 170, 189, 50, 62,
+                72, 258, 79, 32, 66, 84, 124, 136, 561, 144,
+                231, 168, 35, 128, 128, 130, 179, 225, 186)
+
+turnaround_df <- data.frame(turnaround)
+summary(turnaround)
+```
+
+#  Histogram
+
+Plot a histogram.  Vary the number of bins so you can see patterns (remembering that we have 199 data points)
+
+```{r}
+ggplot(turnaround_df) + geom_histogram(aes(turnaround)) + theme_bw()
+```
+
+# Skewness and Kurtosis 
+
+```{r}
+descdist(turnaround_df$turnaround)
+```
+
+
+# Fit to a lognormal distribution
+
+```{r}
+turnaround_lnorm <- fitdist(turnaround_df$turnaround, "lnorm")
+gofstat(turnaround_lnorm)
+```
+```{r}
+par(mfrow = c(2, 2))
+denscomp(turnaround_lnorm)
+qqcomp(turnaround_lnorm)
+cdfcomp(turnaround_lnorm)
+ppcomp(turnaround_lnorm)
+par(mfrow = c(1,1))
+```
+
+# Fit to a gamma distribution
+
+```{r}
+turnaround_gamma <- fitdist(turnaround_df$turnaround, "gamma")
+gofstat(turnaround_gamma)
+```
+```{r}
+par(mfrow = c(2, 2))
+denscomp(turnaround_gamma)
+qqcomp(turnaround_gamma)
+cdfcomp(turnaround_gamma)
+ppcomp(turnaround_gamma)
+par(mfrow = c(1,1))
+```
+
+
+# References
+
+Delignette-Muller and Dutang, 2015, fitdistrplus: An R Package for Fitting Distributions, Journal of Statistical Software, v. 64, n. 4, doi:10.18637/jss.v064.i04, https://www.jstatsoft.org/v064/i04.
