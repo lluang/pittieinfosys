@@ -30,7 +30,7 @@ unique(titanic$Title)
 ```
 
 
-# 1. Multiple linear regression (5 pts)
+# 1. Multiple linear regression (4 pts)
 
 You think that the age is related to the following:
 
@@ -71,7 +71,7 @@ par(mfrow=c(1,1))
 
 e. It is adequate (i.e. all tests pass)  You could comment that there are only 6 predicted values, because of the combination of gender and pclass, so it seems too discrete while ages are continuous.
 
-# 2. Adding to the model. (5 pts)
+# 2. Adding to the model. (4 pts)
 
 There are two variables that are generally present but are not currently in the model: fare and Title. 
 
@@ -129,3 +129,19 @@ ggplot(titanic) + geom_boxplot(aes(Title, lmresiduals2)) +
 ```
 
 
+3.  Use the final model from problem 2 to predict the ages of the individuals listed below. (2 points)  
+
+Hint: look up `predict` in help.
+
+Note: remember to explain the output.
+
+```{r predictpassenger}
+predicttitanic <- titanic[c(13, 51), c("pclass", "name", "sex", "sibsp", "embarked", "Title")]
+predicttitanic
+```
+
+```{r}
+predict(age.lm2, predicttitanic)
+```
+
+The predicted age for Mme. Auburt is 51, the predicted age for Master Carter is 15.
