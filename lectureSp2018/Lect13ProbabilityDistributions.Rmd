@@ -61,71 +61,70 @@ If a distribution can be found that fits the observed data reasonably well, we l
 # Functions for probability distributions
 
 
-1. *d*dist - Density function. Given the a list of values of x and parameters of the distribution, return the corresponding list of values of y
-2. *p*dist - CDF. Given the list of quantiles (values of x) and parameters of the distribution, return the corresponding cumulative probabilities.
-3. *q*dist - Quantile. Given the list of probabilities and parameters of the distribution, return the corresponding quantiles (values of x)
-4. *r*dist - Random. Given the parameters of the distribution and a required number, generate random values from that distribution.
+1. *d*dist - Density function. Given the a list of values of x and parameters of the distribution, return the corresponding list of values of y. 
+2. *p*dist - CDF. Given the list of quantiles (values of x) and parameters of the distribution, return the corresponding cumulative probabilities. This is what is in your probability tables.
+3. *q*dist - Quantile. Given the list of probabilities and parameters of the distribution, return the corresponding quantiles (values of x). Reverse of your probability tables.
+4. *r*dist - Random. Given the parameters of the distribution and a required number, generate random values from that distribution. Used in simulation.
 
 
-# Triangular distribution
+# Normal distribution examples
 
-- There are various packages for distributions that are used in specific situations that are not included in base R.
-
+-  Generate a normal distribution $N(10,1)$
 ```{r}
-library(triangle)
+help(dnorm)
 ```
 
 
-# Triangular distribution plot
+# Distribution distribution plot
 
 - *d* function
 
 ```{r}
-xval <- seq(0.1, 10, by = 0.1)
-yval <- dtriangle(xval, 0, 10, 4)
+xval <- seq(5, 15, by = 0.1)
+yval <- dnorm(xval, 10, 1)
 ```
 ```{r, echo=FALSE}
-triangleexample <- data.frame(xval, yval)
-ggplot(triangleexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("density  plot generated graph")
+normexample <- data.frame(xval, yval)
+ggplot(normexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("density  plot generated graph")
 ```
 
 
-# Triangular CDF plot
+# Normal CDF plot
 
 - *p* function
 ```{r}
 yval <- seq(0.1, 1, by = 0.01)
-xval <- ptriangle(yval, 0, 10, 4)
+xval <- pnorm(yval, 10, 1)
 ```
 ```{r, echo=FALSE}
-triangleexample <- data.frame(xval, yval)
-ggplot(triangleexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("Probability plot generated graph")
+normalexample <- data.frame(xval, yval)
+ggplot(normalexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("Probability plot generated graph")
 ```
 
 
-# Triangular quantile plot
+# Normal quantile plot
 
 - *q* function
 
 ```{r}
-xval <- qtriangle(yval, 0, 10, 4)
+xval <- qnorm(yval, 10, 1)
 ```
 ```{r, echo=FALSE}
-triangleexample <- data.frame(xval, yval)
-ggplot(triangleexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("Probability plot generated graph")
+normalexample <- data.frame(xval, yval)
+ggplot(normalexample) + geom_point(aes(xval, yval)) + theme_bw() + ggtitle("Probability plot generated graph")
 ```
 
 
-# Triangular random number plot
+# Normal random number plot
 
 - *r* function generates random numbers from that distribution
 
 ```{r}
-xval <- rtriangle(100000, 0, 10, 4)
+xval <- rnorm(100000, 10, 1)
 ```
 ```{r, echo=FALSE}
-triangledensity <- data.frame(xval)
-ggplot(triangledensity) + geom_histogram(aes(xval)) + theme_bw() + ggtitle("Triangle distribution")
+normaldensity <- data.frame(xval)
+ggplot(normaldensity) + geom_histogram(aes(xval)) + theme_bw() + ggtitle("Normal distribution")
 ```
 
 
