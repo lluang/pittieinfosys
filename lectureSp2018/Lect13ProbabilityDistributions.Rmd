@@ -3,9 +3,8 @@ title: "Probability distributions"
 author: "IE 0015 Information Systems"
 date: "April 2018"
 output:
-  slidy_presentation: default
-  beamer_presentation: default
   html_document: default
+  slidy_presentation: default
   pdf_document: default
 ---
 
@@ -15,13 +14,13 @@ Input Modeling
 ==============
 
 ```{r libraries, warning=FALSE, message=FALSE}
+library(dplyr)
+library(magrittr)
+library(tidyr)
 library(ggplot2)
 library(grid)
 library(foreach)
 library(fitdistrplus)
-library(dplyr)
-library(magrittr)
-library(tidyr)
 ```
 
 
@@ -70,10 +69,6 @@ If a distribution can be found that fits the observed data reasonably well, we l
 # Normal distribution examples
 
 -  Generate a normal distribution $N(10,1)$
-```{r}
-help(dnorm)
-```
-
 
 # Distribution distribution plot
 
@@ -186,8 +181,8 @@ ggplot(Forage,
        geom_bar(stat="identity", position = "dodge", width = 0.7) +
        geom_bar(stat="identity", position = "dodge", 
                 colour = "black", width = 0.7, 
-                show_guide = FALSE)  +
-       scale_y_continuous(breaks = seq(0, 0.60, 0.1), 
+                show.legend = FALSE)  +
+                scale_y_continuous(breaks = seq(0, 0.60, 0.1), 
                 limits = c(0, 0.60), 
                 expand = c(0, 0))  +
        scale_fill_manual(name = "Count type" , 
@@ -286,7 +281,7 @@ print(tail(brisbanebirths$interarrival))
 - Plot histogram and CDF
 
 ```{r fitdist}
-library(fitdistrplus)
+#library(fitdistrplus)
 plotdist(brisbanebirths$interarrival)
 ```
 
@@ -474,6 +469,60 @@ ppcomp(turnaround_gamma)
 par(mfrow = c(1,1))
 ```
 
+Using random numbers for simulation
+=============================
+
+-  We can use samples of random numbers for simulating settings.
+    -  Called *Monte Carlo Simulation*, after the city on the Meditterranean known for gambling.
+    -  Often useful for determining probabilities when there is no analytic solution or the solution is too complex.
+-  Result is a probability distribution of the outcome.
+    -  Not only a point estimate or a mean and variance.
+
+
+Setup simulation
+==================
+
+-  Identify outcomes
+-  Identify probability of outcomes
+-  Generate samples
+-  Calculate statistics as needed
+    -  e.g. quantiles
+
+Simple simulation
+================
+
+```{r}
+simplesim <- function(points){
+  xval <- runif(n=points, 0, 1)
+  yval <- runif(n=points, 0, 1)
+  inside <- ifelse(xval^2 + yval^2 <= 1, 
+                   1, 
+                   0)
+  result <- sum(inside)/points
+}
+print(simplesim(100))
+```
+
+Many samples gives a confidence interval
+===============
+
+```{r}
+points = 100
+pointsreps = rep(100, points)
+simplesimresults <- sapply(pointsreps, simplesim)
+summary(simplesimresults)
+```
+
+```{r}
+hist(simplesimresults, main="Distribution of simplesim results", xlab="simplesim output")
+```
+
+Find quantiles or other statistics
+==============
+
+```{r}
+quantile(simplesimresults, probs = c(0.025, 0.05, 0.5, 0.95, 0.975))
+```
 
 # References
 

@@ -21,7 +21,10 @@ library(HH, quietly = TRUE, warn.conflicts = FALSE)
 ```
 
 
-This lab will use data from the following sources:
+
+1.  [10 points]  Forecast for company X monthly sales
+
+This problem will use data from the following source:
   - Monthly sales of company X Jan 65 - May 71, C. Cahtfield
     - https://datamarket.com/data/set/22q3/monthly-sales-of-company-x-jan-65-may-71-c-cahtfield
 
@@ -34,8 +37,6 @@ One application of linear regression is in forecasting a time series.  Specifica
 
 $value \sim b0 + b1 * time\_period + b2 * seasonality\_factor$
 
-1.  [7]  Forecast for company X monthly sales
-
 Download and load into the R the monthly sales data. Note that as part of importing the data into an R data frame you will need to edit the source file and adjust the parameters. In addition, if you attempt to import from Excel, beware of blank columns. (these are hard to see, best to explicitly delete columns that should be empty in Excel)
 
 ```{r}
@@ -43,14 +44,18 @@ monthly_sales_of_company_x_jan_6 <- read_excel("monthly-sales-of-company-x-jan-6
 
 ```
 
-  a. [3] You will need to create columns to represent the trend (total number of months) and the seasonality factor (month of the year). Using the Date field, create three fields: the year, the month of year (numeric), and the month of the study (this will go from 1 to 77).
+  a. [2] You will need to create columns to represent the trend (total number of months) and the seasonality factor (month of the year). Using the Date field, create three fields: the year, the month of year (numeric), and the month of the study (this will go from 1 to 77).
   b. [2] Create a Linear regression model that has sales as a function of the month of year and the time in the study (in months) along with a constant term and print out the summary of the linear regression model and ANOVA table. Comment on its correctness.
-  d. [2] Print out the four diagnostic plots: residuals by predicted value, QQ plot of residuals, scale-location of residuals, residuals vs. leverage (Cook's distance)
+  c. [2] Print out the four diagnostic plots: residuals by predicted value, QQ plot of residuals, scale-location of residuals, residuals vs. leverage (Cook's distance)
 
+  d.  [2] For the monthly sales of company X, use your model to predict the last two years of the data (from June 1969 through May 1971).  Use the `predict` function with the linear model you made in problem 1 to do this. (See the help file on `predict`)
+  e.  [2] Print the confidence interval and prediction intervals for the model from (1). Discuss the results in context of the June 1969 - May 1971 time period.
+
+(Note: in reality, you should have cut the data at May 1969 before making the model, but we will not worry about that for this assignment.)
 
 Notes:
 
-i. We covered dates in lecture 9
+i. We covered dates in lecture.
 ii. After you create a column for the month of the study, you should look at the data frame to confirm it is working correctly.
 iii. Look at the help page for `lubridate` to see how to pull out the month from the date.  The month of the time series is done for you.
 
@@ -62,16 +67,18 @@ monthly_sales_of_company_x_jan_6$monthnum <- 1:77
 
 **ANSWER**
 
-```{r}
-
+```{r 1ab}
+# 1a
 monthly_sales_of_company_x_jan_6 <- monthly_sales_of_company_x_jan_6 %>%
   mutate(monthyear = month(Month)) %>%
   mutate(year = year(Month))
 
+# 1b
 lmmonthly <- lm(Sales ~ monthnum + monthyear, data=monthly_sales_of_company_x_jan_6)
 summary(lmmonthly)
 ```
-```{r}
+```{r 1c}
+#1c
 par(mfrow=c(2,2))
 plot(lmmonthly)
 par(mfrow=c(1,1))
@@ -79,30 +86,23 @@ par(mfrow=c(1,1))
 
 You should comment that the residuals seem to be increasing over time.  the Q-Q plot shows a few point off the line at top and bottom, but there are only around 7 of them. But it looks OK.
 
-2.  [4] Predictions
-
-  a.  [2] For the monthly sales of company X, use your model to predict the last two years of the data (from June 1969 through May 1971).  Use the `predict` function with the linear model you made in problem 1 to do this. (See the help file on `predict`)
-  b.  [2] Print the confidence interval and prediction intervals for the model from (1). Discuss the results in context of the June 1969 - May 1971 time period.
-
-(Note: in reality, you should have cut the data at May 1969 before making the model, but we will not worry about that for this assignment.)
-
-**ANSWER**
 
 You need to pass in a data set made up of only the last 24 months of data that need to be predicted
 
-```{r}
+```{r 1d}
 newmonths <- monthly_sales_of_company_x_jan_6[51:74, c("monthnum", "monthyear")]
-predict(lmmonthly, newdata = newmonths, interval="confidence")
-predict(lmmonthly, newdata = newmonths, interval="prediction")
-```
-```{r}
-monthly_sales_of_company_x_jan_6$lmresiduals <- lmmonthly$residuals
-ggplot(monthly_sales_of_company_x_jan_6) + geom_point(aes(monthnum, lmresiduals))
 ```
 
-You should note that residuals are increasing over time.
+```{r 1e}
+cilm <- predict(lmmonthly, newdata = newmonths, interval="confidence")
+pilm <- predict(lmmonthly, newdata = newmonths, interval="prediction")
+print(head(cilm))
+print(head(pilm))
+```
 
-3.  [6] Baseball
+
+
+3.  [8 points] Baseball
 
 You would like to predict the number of runs a Major League Baseball (MLB) team scores in a season based on team statistics. The following file has MLB statistics from the 2011 season.
 
@@ -112,8 +112,8 @@ load("mlb11.RData")
 ```
 This contains several variables traditionally used in evaluating team performance: runs, at-bats, hits, home runs, batting average, strikeouts, stolen bases, and wins. There are also three newer variables: on-base percentage, slugging percentage, and on-base plus slugging.  You are interested in predicting runs.
 
-  a. [2] The most obvious predictive variable for runs are the number of team at-bats. (more offensive opportunities yield more scoring opportunities). Create a linear regression model that relates at-bats to runs and evaluate the linear model of at-bats to runs using the summary statistics, ANOVA output, and four diagnostic plots.
-  c. [2] Examine the residuals by adding each of the remaining variables in the dataset one at a time.  Discuss the performance of the traditional variables against the three newer variables.  Discuss which variable you would add to the model of at-bats and runs.
+  a. [3] The most obvious predictive variable for runs are the number of team at-bats. (more offensive opportunities yield more scoring opportunities). Create a linear regression model that relates at-bats to runs and evaluate the linear model of at-bats to runs using the summary statistics, ANOVA output, and four diagnostic plots.
+  c. [3] Examine the residuals by adding each of the remaining variables in the dataset one at a time.  Discuss the performance of the traditional variables against the three newer variables.  Discuss which variable you would add to the model of at-bats and runs.
   d. [2] Create the new linear regression model relating at-bats to runs, adding the variable you choose in (c).  Print out the summary statistics, ANOVA and explain how the model is improved or not (or inconclusive).
 
 **ANSWER**
@@ -169,7 +169,7 @@ mlbplot + geom_point(aes(x=new_obs))
 
 The new predictors seem to have an impact when plotting against residuals. Specifically, after accounting for at-bats there seems to have a linear relationship. It is hard to pick against the new predictors, so add any one of them.  Try to add new_obs to the model.
 
-From the old predictors, most of them seem to show independently distributed residuals, meaning that they do not provide information.  Wins and home runs also show linear relationships with the residuals, but because there is a close relationship with runs, that seems to be expected.  The fact that obs, slugging, and onbase show the relationship without being so closely related to the target variable provides useful understanding.
+From the old predictors, most of them seem to show independently distributed residuals, meaning that they do not provide information.  Wins and home runs also show linear relationships with the residuals, but because there is a close relationship with runs, that seems to be expected.  The fact that obs, slugging, and on base show the relationship without being so closely related to the target variable provides useful understanding.
 
 ```{r}
 lmobs <- lm(runs ~ at_bats + new_obs, mlb11)
@@ -184,7 +184,7 @@ par(mfrow=c(1,1))
 For discussion, the diagnostic plots are still good.  R^2 improved from 0.3505 to 0.9301, Sum of squares of residuals improved from 4419 to 475.
 
 
-4. [7] Simulation
+4. [7 points] Simulation
 
 In the 2009 NBA finals Kobe Bryant of the LA Lakers won the most valuable player (MVP) playing against the Orlando Magic. (note: after you run this once, you can comment out the `download.file` line.).  The `kobe.RData` file includes a dataset with 133 shots taken during the finals along with their outcomes.
 
@@ -235,7 +235,7 @@ streak5 <- data.frame(streak=calc_streak(simkobe$rep5))
 
 ```{r plotstreaks}
 ggplot(kobestreak) + geom_histogram(aes(streak), binwidth=1) +
-  xlim(0,8)
+  xlim(0,8) + ylim(0, 50)
 ```
 ```{r}
 ggplot(streak1) + geom_histogram(aes(streak), binwidth=1) +
@@ -243,18 +243,21 @@ ggplot(streak1) + geom_histogram(aes(streak), binwidth=1) +
 ```
 ```{r}
 ggplot(streak2) + geom_histogram(aes(streak), binwidth=1) +
-  xlim(0,8)
+  xlim(0,8) + ylim(0, 50)
 ```
 ```{r}
 ggplot(streak3) + geom_histogram(aes(streak), binwidth=1) +
-  xlim(0,8)
+  xlim(0,8) + ylim(0, 50)
 ```
 ```{r}
 ggplot(streak4) + geom_histogram(aes(streak), binwidth=1) +
-  xlim(0,8)
+  xlim(0,8) + ylim(0, 50)
 ```
 ```{r}
 ggplot(streak5) + geom_histogram(aes(streak), binwidth=1) +
-  xlim(0,8)
+  xlim(0,8) + ylim(0, 50)
 ```
 
+Note xlim and lim should be set to ensure comparability.
+
+Should say something like the actual data does not seem out of line than the simulated versions.

@@ -1,0 +1,112 @@
+---
+title: 'Lab 11: Probability and simulation'
+author: "IE 0015 Information Systems"
+date: "April 5-6, 2018"
+output: html_document
+---
+
+```{r libraries, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(grid)
+library(foreach)
+library(fitdistrplus)
+library(openintro)
+```
+
+# Bookstore (5 points)
+
+A bookstore offers a chemistry textbook for \$159 and a book supplement for \$41.  From past experience, they know about 25\% of chemistry students just buy the textbook while 60\% buy both the textbook and supplement.  No students buy the supplement without the textbook.
+
+a.  [1] Build a table with the probability and revenue for a single student (i.e. you will be able to use the table to get the expected revenue per student).
+
+b.  [3] Simulate a class of 20 students 10000 times.  Calculate the mean and standard deviation of the revenue.  Calculate the percentage of classes that fall within one, two, and three standard deviations of mean.
+
+Hint:  Build a function that simulates a class once, then call that function 10000 times.
+
+c.  [1] Comment on the result of (b).  What probability distribution did you compare this to and why (or why was this different).
+
+**ANSWER**
+
+1a
+
+Event        | Probability | Revenue (\$)
+-------------|-------------|--------------
+text         |  0.25       | 159
+text + suppl |  0.60       | 200
+none         |  0.15       |  0
+
+1b
+```{r 1b}
+nstudents <- 15
+nclasses <- 10000
+classrevenue <- function(nstudents){
+  pvalues <- runif(nstudents)
+  revenue <- ifelse(pvalues < 0.25, 
+         159, 
+         ifelse(pvalues < 0.85, 
+                200,
+                0)
+         )
+  result <- sum(revenue)
+  result
+}
+chemclasses <- sapply(rep(20, nclasses), classrevenue)
+summary(chemclasses)
+```
+
+```{r}
+sdchem = sd(chemclasses)
+print(sdchem)
+meanchem <- mean(chemclasses)
+plus1sd <- meanchem + sdchem
+plus2sd <- meanchem + 2 * sdchem
+plus3sd <- meanchem + 3 * sdchem
+minus1sd <- meanchem - sdchem
+minus2sd <- meanchem - 2 * sdchem
+minus3sd <- meanchem - 3 * sdchem
+```
+
+```{r}
+chemin1sd <- length(chemclasses[(chemclasses >= minus1sd & chemclasses <= plus1sd)])/nclasses
+chemin2sd <- length(chemclasses[(chemclasses >= minus2sd & chemclasses <= plus2sd)])/nclasses
+chemin3sd <- length(chemclasses[(chemclasses >= minus3sd & chemclasses <= plus3sd)])/nclasses
+
+print(c(chemin1sd, chemin2sd, chemin3sd))
+```
+
+```{r}
+hist(chemclasses)
+```
+
+Should compare to a t-distribution.  Note that it is not symmetrical.
+
+#  NBA player heights
+
+Does the height of NBA players fit a normal distribution?
+
+a.  [4] Load in the NBA player heights and test if it fits a normal distribution.  You should generate plots of skewness and kurtosis, goodness of fit plots, and goodness of fit tests.
+
+b.  [1] Discuss the results of the plots and tests. Do you think that the distribution of NBA players fit a normal distribution.  Why or why not?
+
+```{r}
+data("nba.heights")
+descdist(nba.heights$h.in) # Note could also use meters
+```
+```{r}
+fitnbanorm <- fitdist(nba.heights$h.in, distr = 'norm')
+summary(fitnbanorm)
+
+```
+```{r}
+gofstat(fitnbanorm)
+```
+
+```{r}
+plot(fitnbanorm)
+```
+
+Should generally agree based on not failing the gof tests, qq-plot and pp plot generally following the line.  One thing that makes it not normal is the fact that NBA players are chosen to fit positions, so this may be a non-independent variable.
