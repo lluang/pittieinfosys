@@ -140,6 +140,9 @@ predicttitanic <- titanic[c(13, 51), c("pclass", "name", "sex", "sibsp", "embark
 predicttitanic
 ```
 
+
+**ANSWER**
+
 ```{r}
 predict(age.lm2, predicttitanic)
 ```
