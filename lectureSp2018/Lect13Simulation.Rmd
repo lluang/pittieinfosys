@@ -1,0 +1,461 @@
+---
+title: "Lecture 13 Simulation"
+author: "IE0015 Information Systems Engineering"
+date: "April 2018"
+output:
+  html_document: default
+  pdf_document: default
+  slidy_presentation: default
+---
+
+Schedule
+=============
+
+- This week: Monte Carlo and Bootstrap simulation
+- Next week: R and the IE curriculum
+    -  Graphic user interfaces:  RCmdr, RCmdr.HH, RCmdr.IPSUR
+    -  Differential equations
+    -  Stochastic methods/Probability
+    -  Linear programming
+    -  Discrete event simulation
+- Datasets for final by Tuesday
+- Review for final next Wednesday
+
+Simulation
+=============
+
+```{r}
+library(ggplot2)
+library(foreach)
+library(deSolve)
+```
+
+
+
+Simulation in data analysis
+=============================
+
+-  Simulation is the use of sampling through random numbers to obtain a distribution of a dependent variable.
+-  e.g. Discrete event simulation (IE 1083), Monte Carlo simulation
+-  Useful when we do not have a direct way of determining the value of a dependent variable.
+
+Some types of computer simulation
+================
+
+-  Monte Carlo
+-  Bootstrap (resampling)
+-  Discrete event simulation
+-  Continuous simulation
+-  Agent based simulation
+
+Monte Carlo
+=====================
+
+Monte Carlo Simulation
+==============
+
+-  Based on repeated use of random numbers.
+    -  Name refers to the casinos in Monte Carlo by France
+-  If the problem can be stated as the interaction of independent random numbers
+- Often used for integration type problems. (area under the curve or probability)
+
+
+Random numbers in R
+===================
+
+
+In R
+========
+
+```{r}
+maxi = 1000
+i = (1:maxi)
+x <- runif(maxi)
+y <- runif(maxi)
+incircle <- ifelse(x^2 + y^2 <= 1, 1.0, 0.0)
+ratio <- unlist(foreach(i=1:maxi) %do% 
+                  mean(incircle[1:i]))
+```
+
+Monte Carlo
+============
+
+```{r}
+head(ratio)
+```
+
+- What is this doing?
+
+Trend of `mean(incircle[1:i]))`
+==============
+```{r}
+plot(1:maxi, ratio)
+title("mean(incircle[1:i])")
+```
+
+Monte Carlo convergence
+======================
+
+-  Run Monte Carlo until the confidence interval of the estimate of the mean is within a certain tolerance.
+-  Take the first 30 iterations (Monte Carlo runs are fast)
+-  Compute the sample standard deviation $s$.
+-  Solve for $n$
+
+$$CI = z_{\alpha/2} s/\sqrt{n}$$
+```{r}
+meanratio <-mean(incircle)
+sdratio <- sd(incircle)
+print(meanratio, digits = 10)
+print(sdratio, digits = 10)
+```
+```{r}
+ci = pnorm(q = 0.975) * sdratio/sqrt(maxi)
+print(ci)
+```
+
+Usually, set ci to be some fraction of mean and solve for n
+==============
+
+$$n = \left(\frac{z_{(1-\alpha/2)} * S}{\bar{x} * 0.05}\right)$$
+
+
+Bootstrap
+======
+
+Resampling methods
+==============================
+
+-  Each determination of the dependent variable (performance measure) based on random simulation is a *sample*.
+-  Results in a *sampling distribution* of the dependent variable.
+    - Note: this is *not* the same as a single, "correct" answer.
+    - Answers in statistics are given as probability distributions.
+        - "There is a 95% probability that the true average is between __ and __"
+-  We assume there is a true underlying distribution. The simulation allows us to have an estimate of it.
+
+Advantages of simulation
+==============================
+
+-  Fewer assumptions:  we do not require that the underlying population is normally distributed or that the sample size is large.
+-  Greater accuracy: Many statistical methods are based on having rough upper bounds or use Taylor series expansions.  Simulations can be replicated based on the desired accuracy.
+-  Generality - Resampling methods can be applied to a large class of problems, so do not require developing and implementing methods specific to that problem definition.
+-  What if? - We can use samples to create a study population with certain characteristics (e.g. oversample currently underrepresented sub-population) and explore what would happen if the current population changes.
+
+
+Using bootstrap sampling
+=======================
+
+-  We have a small enough of observed data but not enough to identify a distribution.
+-  *Bootstrap* - resample with replacement from the observed data.
+
+Steps in the bootstrap
+=========================
+1.  Create samples of the independent variables $x_1^*, ..., x_M^*$, called *resamples*, by sampling *with replacement* from the data.
+
+2.  Calculate the statistic of interest $S(x_1^*), ..., S(x_M^*)$ for each resample. The distribution of the result of the resample is the *bootstrap distribution*.
+
+3.  The bootstrap distribution gives information about the sampling distribution of the original, unobservable, statistic *S*.  It gives an approximation of the center, spread, and shape of *S*.
+
+Standard errors
+=================
+
+-  Errors from bootstrapping come from two sources
+    -  The observed data does not the same exact distribution as the population from which it was drawn.
+    -  The resampled sample will have a different distribution than the observed data.
+  
+Standard error example
+============================
+
+-  Look at a sample where the underling population is normally distributed $X \sim N(\mu=3, \sigma=1)$.
+-  Look at $\bar{x}$
+-  We know that $\bar{x} \sim N(\mu, 1/\sqrt{n})$
+-  Take mean of 25 samples $N(3,1)$ (sd = $1/\sqrt{25}$)
+-  1000 samples
+
+Example
+=====
+
+
+```{r}
+options(digits=2)
+srs <- rnorm(25, mean = 3)
+resamps <- replicate(1000, sample(srs, 25, TRUE), simplify = FALSE)
+xbarstar <- sapply(resamps, mean, simplify = TRUE)
+hist(xbarstar, breaks = 40, prob = TRUE, xlim=c(2, 4),
+  main="Mean of 25 N(3,1) distributions, 1000 replications",
+  xlab="Mean of replication")
+curve(dnorm(x, 3, 0.2), add = TRUE)
+```
+
+Compare simulation to the theoretical mean
+=========================================
+
+-  Expected confidence interval of the mean
+    - $sd/\sqrt{n} = 1/\sqrt{25} = 0.2$
+```{r}
+print(mean(xbarstar), digits=10)
+print(sd(xbarstar), digits=10)
+```
+-  Within expectation
+
+Improving the errors
+======================
+
+-  What would happen if we took more samples?
+-  More samples would make the sample look more like the observed data.
+    - Does not make the observed data closer to the true underlying population distribution.
+  
+Implementing using the boot package
+===================
+
+-  The function `boot` is in the *boot* package.
+-  Define a summary function, then apply it using bootstrap.
+
+```{r}
+library(boot)
+mean_fun <- function(x, indices) mean(x[indices])
+boot(data = srs, statistic = mean_fun, R = 1000)
+```
+
+Try the same thing with a different statistic
+========================
+
+```{r}
+median_fun <- function(x, indices) median(x[indices])
+boot(data = rivers, statistic = median_fun, R = 1000)
+```
+
+Confidence intervals
+===================
+
+- Typically, we calculated confidence intervals by assuming that outputs were normally distributed.
+    - e.g. use c.i. as a function of the *t*-distribution.
+- Using simulation, we can apply the definition of the c.i. directly.
+    - "95% of the estimates are between __ and __"
+    - Using simulation, use the 0.025 and 0.975 quantiles of the simulation results. (e.g. equal tails)
+    - Another choice if you believe that the distribution is to use the smallest range that gives a 0.95 interval.
+        - Question: Why are these not the same thing?
+    
+C.I. example
+====================
+
+```{r}
+btsamps <- replicate(2000, sample(stack.loss, 21, TRUE), simplify = FALSE)
+thetast <- sapply(btsamps, median, simplify = TRUE)
+mean(thetast)
+```
+
+Percentile interval of the median
+===============
+```{r}
+median(stack.loss)
+quantile(thetast, c(0.025, 0.975))
+```
+
+Now, using the boot function
+===============
+```{r}
+med_fun <- function(x, ind) median(x[ind])
+med_boot <- boot(stack.loss, med_fun, R = 2000)
+boot.ci(med_boot, type = c("perc", "norm", "bca"))
+```
+
+Note: *bca* = bias-corrected and adjusted
+
+Use with the t-interval
+=======================
+
+- We usually use the *t*-statistic to calculate confidence intervals.
+
+$$\bar{X} \pm t_{\alpha/2, df=n-1}\frac{S}{\sqrt{n}}$$
+
+-  If we know that our outcome statistics will be bell shaped (e.g. symmetric with a shape similar to the normal), we can use the *t*-statistics along with our bootstrap 
+
+$$statistic  \pm t_{\alpha/2, df=n-1} * SE(statistic)$$
+
+
+Hypothesis testing
+====================
+
+Used to test if two groups are significantly different or if two groups are reasonably similar.  Standard method
+
+- Collect information/data from the two groups and calculate a statistic for comparison.  e.g.
+  $$\bar{X}_1 - \bar{X}_2$$
+- Presume there is no difference between the groups ($H_0$).  Find the distribution of the statistic in 1.  e.g. assume *mean=0* and calculate *sd*
+- Locate the observed value of the statistic with respect to the distribution found in 2. If the value is not in the main body of the distribution, then it provides evidence *against* the null hypothesis.  We usually compute the *p*-value to decide this.
+
+Hypothesis testing with simulation
+====================
+
+
+-  Example: the common dosage for an anti-retroviral drug AZT is 300mg. Higher doses are potentially more effective, but also have more side effects. Question: are the side effects significantly higher?
+
+1.  Calculate the difference in means between two groups: AZT with 300 mg and AZT with 600 mg dose.
+
+```{r}
+azt300 <- c(284, 279, 289, 292, 287, 295, 285, 279, 306, 298)
+azt600 <- c(298, 307, 297, 279, 291, 335, 299, 300, 306, 291)
+mean(azt300, digits=1)
+mean(azt600, digits=1)
+delta300600 <- mean(azt600) - mean(azt300)
+delta300600
+```
+
+Significance with bootstrap
+===========================
+
+2.  Resample from the data to generate a distribution of differences.
+    -  Presuming there are no differences, sample 10 from the *combined* data to generate a *a300* group, with the remainder in the *a600* group. (*Q: why 10?, why the combined group?*)
+    -  Calculate and save the differences in mean.
+3.  Draw the *permutation distribution* of these differences. Locate the observed difference that you observed when you had two distinct datasets (300.3-298.4 = 10.9) and determine its *p-value* from the *permutation distribution*. If *p* is small, this is evidence against the null hypothesis
+
+```{r}
+set.seed(1234)
+permdistfun <- function(azt){
+  pdelta <- c()
+  tf10 <- c(rep(FALSE, 10), rep(TRUE, 10))
+  select <- sample(tf10, 20, replace =FALSE)
+  azt3 <- azt[select]
+  azt6 <- azt[!select]
+  delta <- mean(azt6)-mean(azt3)
+  delta
+}
+```
+
+
+Now, apply bootstrap and to get the permutation distribution
+=====
+```{r}
+azt <- c(azt300, azt600)
+samples = 1000
+pdist <- sort(replicate(samples,permdistfun(azt)))
+```
+```{r, echo=FALSE}
+summary(pdist)
+hist(pdist, breaks=seq(-20, 20, by=1))
+```
+
+
+Find the p-value of the observed difference
+=================
+```{r}
+qdist <- max(which(pdist<delta300600))/samples
+pvalue <- min(qdist, 1-qdist)
+pvalue
+```
+
+Compare to normal hypothesis testing
+==========================
+
+- the `t.test` function can be used for one or two sample t-tests on vectors of data
+- Q: how would you use this for a paired t-test?
+
+```{r}
+t.test(x=azt300, y=azt600)
+```
+
+-  Why the difference?
+
+
+Another example - Categorical variables
+====================
+
+- Claim (HA) is that a treatment leads to a change in the population from the control.
+- Null hypothesis is that the treatment has not change.
+- Simulate the sample the size of a treatment, and determine the $p$ that observed values were seen.
+
+Quadcopter rotor blades
+==========
+
+A quadcopter company is considering a new manufacturer
+for rotor blades. The new manufacturer would be more expensive but their higher-quality blades are more reliable, resulting in happier customers and fewer warranty
+claims. However, management must be convinced that the more expensive blades are worth the conversion before they approve the switch. 
+
+If there is strong evidence of a more than 3\% improvement in the percent of blades that pass inspection, management says they will switch suppliers, otherwise they will maintain the current supplier. 
+
+Data
+=======
+
+Rotor blade failures
+
+Group           Pass    Fail
+-------------- ------ --------
+Current         899     101
+Prospective     958     42
+
+```{r}
+rotor <- data.frame(pass = c(899, 958),
+                    fail = c(101, 42))
+pfailnull <- sum(rotor$fail[1])/sum(rotor)
+```
+
+Simulate assuming that all data is from the control group
+==========================
+```{r}
+rotorsim <- function(i){
+              successes <- sum(sample(x=0:1, size = 1000, replace=TRUE, prob=c(pfailnull, (1-pfailnull))))
+}
+rotorout <-sapply(1:10000, rotorsim)
+```
+
+Look at the histogram of the result and find the HA
+======================
+```{r}
+hist(rotorout, breaks = 100)
+```
+
+```{r}
+print(length(rotorout[rotorout>958])/length(rotorout))
+```
+
+Other types of simulation
+========
+
+Continuous simulation
+=================
+
+- AKA system dynamics
+- Change in system state described by differential equations
+- Simulate by advancing state of system in time steps
+- Example: the Susceptible-Infected-Recovered (SIR) model of infectious diseases
+
+SIR model
+===========
+
+$$\frac{dS}{dt} = \frac{-\lambda}{N} I S$$
+$$\frac{dI}{dt} = \frac{-\lambda}{N} I S - v I$$
+
+$$\frac{dR}{dT} = vI$$
+
+-Where
+    - $\lambda$ is the force of infection, where $\lambda$ is a function of the contact rate and the probability of transmission per contact,
+    - v is the recovery rate, 
+    - S is the number of susceptible individuals at a given time,
+    - I is the number of infected individuals at a given time,
+    - R is the number of recovered individuals at a given time.
+
+
+Discrete event simulation
+=============
+
+- Create entities that interact with each other.
+- Simulation advanced based on when the next interaction will be (discrete time step)
+- This will be covered IE 1083
+    - Models tend to be easier to build using a package like Arena or Simio if the setting corresponds to what they were designed for.
+    - Programming language based simulation more flexible in analysis.
+    - In R, there is the `simmer` package that implements DES.
+
+Agent based simulation
+==================
+
+- Entities in system (agents) have information.
+- At each interaction, the agents involved use the information they have to make a decision on what to do next.
+- E.g. disease modeling. If two people interact, check to see if one is already infected, then determine if the infection spreads.
+-  Pitt GSPH - FRED simulation
+
+Summary
+======
+
+-  Simulation often used when some data is unobservable.
+    -  Ask the question: could I have seen the result I saw if *X* was true?
+-  Resampling can be used for hypothesis testing in the case of little data or if normal assumption is not true.
+    -  Bootstrapping can be used to identify what the system would look like if more data were available or if the source population changes.
