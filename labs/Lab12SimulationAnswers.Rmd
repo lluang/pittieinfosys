@@ -11,6 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(magrittr)
+library(tidyr)
 library(ggplot2)
 ```
 
@@ -137,18 +138,19 @@ A shop processes jobs through a single machine.  Currently, the shop runs on a F
 
 ```{r}
 job <- data.frame(job = c(1, 2,3, 4, 5, 6, 7, 8), 
-                  processingtime = c(2, 3, 2, 1, 4, 3, 2, 2),
-                  duedate = c(5, 4, 13, 6, 12, 10, 15, 19))
+                  processingtime = c(2, 3, 2, 1, 4, 3, 4, 2),
+                  duedate = c(7, 3, 11, 5, 13, 10, 15, 17))
 ```
 
 a. [2] You want to generate through bootstrapping a large number of simulated days.  Write a function that takes the current jobs, then samples from that eight jobs (with replacement), and assigns them randomly sampled due dates from the historical data (WITHOUT replacement).  Run this one time to prove that it works.
 
-b. [2] Write methods that implement the following scheduling strategies and calculates the total lateness (time past due that an order is completed).  Apply this to the same example created in (a):
+b. [2] Write functions that implement the following scheduling strategies and calculates the total lateness (time past due that an order is completed).  Apply this to the same example created in (a). Hint: use `arrange` to sort the orders:
     i. First-in First-out
     ii.  Earliest Due date first (sequence orders in order of due date, ties settled using shortest processing time first).
     iii.  Shortest processing time (sequence orders in order of processing time, with ties settled with earliest due date first).
     
-c. [2] Simulate each method 20 times.  Return a mean and 95% confidence interval of the mean lateness for each of the three scheduling strategies.  Which is the best?
+c. [2] Simulate each method 50 times.  Show the results using a plot that shows variance. (remember to add titles and labels)  Which is the best in reducing lateness.
+
 
 ```{r}
 lateness <- function(duedate, completiondate){
@@ -159,13 +161,18 @@ lateness <- function(duedate, completiondate){
 **ANSWER**
 
 ```{r 2a}
-jobnumber <- sample(job$job, size = 8, replace = TRUE)
+jobnumber <- sample(job$job, size = 8, replace = FALSE)
 jobsim <- data.frame(job = jobnumber,
                      processingtime = job$processingtime[jobnumber], 
                      duedate = sample(job$duedate, size=8, replace = FALSE))
+
+
 ```
 
 ```{r 2b}
+fifosort <- job
+eddsort <- job %>% arrange(duedate, processingtime)
+sptsort <- job %>% arrange(processingtime,duedate)
 fifolate <- function(joblist){
    joblength <- length(joblist$job)
    totallateness <- 0
@@ -203,9 +210,14 @@ sptlate <- function(joblist){
 ```
 
 ```{r}
-fifolateness <- fifolate(jobsim)
-eddlateness <- eddlate(jobsim)
-sptlateness <- sptlate(jobsim)
+print("original lateness")
+print(fifolate(job))
+print(eddlate(job))
+print(sptlate(job))
+print("lateness of sampled order")
+print(fifolate(jobsim))
+print(eddlate(jobsim))
+print(sptlate(jobsim))
 ```
 
 ```{r 2c}
@@ -213,7 +225,9 @@ sptlateness <- sptlate(jobsim)
 fifolatesim <- c()
 eddlatesim <- c()
 sptlatesim <- c()
-for (t in 1:20){
+set.seed(1234)
+for (t in 1:50){
+  jobnumber <- sample(job$job, size = 8, replace = TRUE)
   jobsim <- data.frame(job = jobnumber,
                      processingtime = job$processingtime[jobnumber], 
                      duedate = sample(job$duedate, size=8, replace = FALSE))
@@ -223,8 +237,21 @@ for (t in 1:20){
 }
 ```
 ```{r 2c results}
-latesimresults <- data.frame((fiforesults = fifolatesim, 
-                              eddresults = eddlatesim,
-                              sptresults =  sptlatesim))
-ggplot(latesimresults) + geom_boxplot(aes(fiforesults)) + geom_boxplot(aes(eddresults)) + geom_boxplot(aes(sptresults))
+latesimresults <- data.frame(FIFO = fifolatesim, 
+                              EDD = eddlatesim,
+                              SPT =  sptlatesim)
+ggplot(latesimresults) + geom_boxplot(aes(x="FIFO", y=FIFO)) + geom_boxplot(aes(x="EDD", y=EDD)) + geom_boxplot(aes(x="SPT", y=SPT)) +
+  ylab("Total delay in completion") + ylim(0, 100) + xlab("Scheduling rule") +
+  ggtitle("Lateness by scheduling rule")
+```
+
+Same thing, but use gather to collect results into a single column and with a violin plot instead of box and whiskers.
+
+```{r}
+# Alternative way of creating graph
+latesimresults %>% 
+  gather(key=rule, value=lateness, FIFO, EDD, SPT) %>%
+  ggplot() + geom_violin(aes(x=rule, y=lateness)) + 
+  ylab("Total delay in completion") + ylim(0, 100) + xlab("Scheduling rule") +
+  ggtitle("Lateness by scheduling rule")
 ```
