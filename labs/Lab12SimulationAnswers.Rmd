@@ -9,6 +9,9 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
 ```
 
 ## 1. Monte Carlo simulation
@@ -74,15 +77,15 @@ $$V = \frac{4}{3} \Pi * A * B * C$$
 4/3*pi * maxx * maxy * maxz
 ```
 
-## 2. Hypothesis testing
+## 1. Hypothesis testing (4 points)
 
 Assisted Reproductive Technology (ART) is a collection of techniques that help facilitate pregnancy (e.g. in vitro fertilization). A 2008 report by the Centers for Disease Control and Prevention estimated that ART has been successful in leading to a live birth in 31\% of cases. A new fertility clinic claims that their success rate is higher than average. A random sample of 30 of their patients yielded a success rate of 40\%. 
 A consumer watchdog group would like to determine if this provides strong evidence to support the company's claim.
 
-a.  Write the hypothesis ($H0$ and $HA$) to test if the success rate for ART at this clinic is significantly higher than the success rate reported by the CDC.
-b.  Write a simulation that models the null hypothesis.
-c.  Run the simulation 10,000 times and plot the result.
-d.  Estimate the p-value of the clinic's result and evaluate the claim that the clinic's success rate is higher than average.
+a. [1] Write the hypothesis ($H0$ and $HA$) to test if the success rate for ART at this clinic is significantly higher than the success rate reported by the CDC.
+b. [1] Write a simulation that models the null hypothesis.
+c.  [1] Run the simulation 10,000 times and plot the result.
+d.  [1] Estimate the p-value of the clinic's result and evaluate the claim that the clinic's success rate is higher than average.
 
 
 **ANSWER**
@@ -127,3 +130,101 @@ print(length(clinicresults[clinicresults>0.40])/length(clinicresults))
 ```
 
 This is the p-value, so compare this against a target p-value (usually 0.05).  Because you do not reject the null hypothesis, this result does not support the claim that the clinic success rate is higher than average.
+
+# 3 Scheduling problem (6 points)
+
+A shop processes jobs through a single machine.  Currently, the shop runs on a First-in First-out basis, where orders are completed in the order they arrive.  However, there are a large number of late jobs (which are handled through expediting which leads to large amounts of Work In Progress). Evaluate some alternative scheduling rules using bootstrap simulation.
+
+```{r}
+job <- data.frame(job = c(1, 2,3, 4, 5, 6, 7, 8), 
+                  processingtime = c(2, 3, 2, 1, 4, 3, 2, 2),
+                  duedate = c(5, 4, 13, 6, 12, 10, 15, 19))
+```
+
+a. [2] You want to generate through bootstrapping a large number of simulated days.  Write a function that takes the current jobs, then samples from that eight jobs (with replacement), and assigns them randomly sampled due dates from the historical data (WITHOUT replacement).  Run this one time to prove that it works.
+
+b. [2] Write methods that implement the following scheduling strategies and calculates the total lateness (time past due that an order is completed).  Apply this to the same example created in (a):
+    i. First-in First-out
+    ii.  Earliest Due date first (sequence orders in order of due date, ties settled using shortest processing time first).
+    iii.  Shortest processing time (sequence orders in order of processing time, with ties settled with earliest due date first).
+    
+c. [2] Simulate each method 20 times.  Return a mean and 95% confidence interval of the mean lateness for each of the three scheduling strategies.  Which is the best?
+
+```{r}
+lateness <- function(duedate, completiondate){
+  lateness <- max(0, completiondate - duedate)
+}
+```
+
+**ANSWER**
+
+```{r 2a}
+jobnumber <- sample(job$job, size = 8, replace = TRUE)
+jobsim <- data.frame(job = jobnumber,
+                     processingtime = job$processingtime[jobnumber], 
+                     duedate = sample(job$duedate, size=8, replace = FALSE))
+```
+
+```{r 2b}
+fifolate <- function(joblist){
+   joblength <- length(joblist$job)
+   totallateness <- 0
+   completion <- 0
+   for(i in 1:joblength){
+     completion <- completion + joblist$processingtime[i]
+     totallateness <- totallateness + lateness(joblist$duedate, completion)
+   } 
+   totallateness
+}
+
+eddlate <- function(joblist){
+   joblength <- length(joblist$job)
+   sortedd <- joblist %>% arrange(duedate, processingtime)
+   totallateness <- 0
+   completion <- 0
+   for(i in 1:joblength){
+     completion <- completion + sortedd$processingtime[i]
+     totallateness <- totallateness + lateness(sortedd$duedate, completion)
+   } 
+   totallateness
+}
+
+sptlate <- function(joblist){
+   joblength <- length(joblist$job)
+   sortspt <- joblist %>% arrange(processingtime, duedate)
+   totallateness <- 0
+   completion <- 0
+   for(i in 1:joblength){
+     completion <- completion + sortspt$processingtime[i]
+     totallateness <- totallateness + lateness(sortspt$duedate, completion)
+   } 
+   totallateness
+}
+```
+
+```{r}
+fifolateness <- fifolate(jobsim)
+eddlateness <- eddlate(jobsim)
+sptlateness <- sptlate(jobsim)
+```
+
+```{r 2c}
+
+fifolatesim <- c()
+eddlatesim <- c()
+sptlatesim <- c()
+for (t in 1:20){
+  jobsim <- data.frame(job = jobnumber,
+                     processingtime = job$processingtime[jobnumber], 
+                     duedate = sample(job$duedate, size=8, replace = FALSE))
+  fifolatesim <- c(fifolatesim, fifolate(jobsim))
+  eddlatesim <- c(eddlatesim, eddlate(jobsim))
+  sptlatesim <- c(sptlatesim, sptlate(jobsim))
+}
+```
+```{r 2c results}
+latesimresults <- data.frame((fiforesults = fifolatesim, 
+                              eddresults = eddlatesim,
+                              sptresults =  sptlatesim))
+ggplot(latesimresults) + geom_boxplot(aes(fiforesults)) + geom_boxplot(aes(eddresults)) + geom_boxplot(aes(sptresults))
+```
