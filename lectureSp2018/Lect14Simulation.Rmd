@@ -221,8 +221,12 @@ Try the same thing with a different statistic
 
 ```{r}
 median_fun <- function(x, indices) median(x[indices])
-boot(data = rivers, statistic = median_fun, R = 1000)
+riversboot <- boot(data = rivers, statistic = median_fun, R = 1000)
+print(riversboot)
+hist(riversboot$t, main="Distribution of median of 25 sample", xlab = "median of 25 values")
 ```
+
+
 
 Confidence intervals
 ===================
@@ -238,16 +242,19 @@ Confidence intervals
 C.I. example
 ====================
 
+Using Operational data of a plant for the oxidation of ammonia to nitric acid.
+
 ```{r}
-btsamps <- replicate(2000, sample(stack.loss, 21, TRUE), simplify = FALSE)
-thetast <- sapply(btsamps, median, simplify = TRUE)
+data("stackloss")
+btsamps <- replicate(2000, sample(stackloss$stack.loss, 21, replace=TRUE), simplify = FALSE)
+thetast <- sapply(btsamps, FUN = median, simplify = TRUE)
 mean(thetast)
 ```
 
 Percentile interval of the median
 ===============
 ```{r}
-median(stack.loss)
+median(stackloss$stack.loss)
 quantile(thetast, c(0.025, 0.975))
 ```
 
@@ -255,10 +262,13 @@ Now, using the boot function
 ===============
 ```{r}
 med_fun <- function(x, ind) median(x[ind])
-med_boot <- boot(stack.loss, med_fun, R = 2000)
+med_boot <- boot(stackloss$stack.loss, med_fun, R = 2000)
 boot.ci(med_boot, type = c("perc", "norm", "bca"))
 ```
 
+```{r}
+hist(med_boot$t, main="Stack loss for ammonia oxidation plant", xlab="Stack Loss", breaks = 20)
+```
 Note: *bca* = bias-corrected and adjusted
 
 Use with the t-interval
@@ -406,6 +416,35 @@ hist(rotorout, breaks = 100)
 ```{r}
 print(length(rotorout[rotorout>958])/length(rotorout))
 ```
+
+
+Processing time example
+=======================
+
+- Find the standard deviation of processing time
+- Only one day of orders is available.
+
+```{r}
+machining <- data.frame(jobnumber=c(1,2,3,4,5,6,7,8,9,10),
+                        processingtime = c(11, 29, 31, 3, 2, 9, 15, 20, 22, 25))
+```
+
+```{r}
+samplemachine <- function(joblist){
+  joblist <- machining
+  joborder <- sample(x = joblist$jobnumber, size = length(joblist$jobnumber), replace = TRUE)
+  totaltime <- sum(machining$processingtime[joborder])
+  totaltime
+}
+```
+```{r}
+sampletime <- rep(0, 50)
+for (i in 1:50){
+  sampletime[i]<- samplemachine(machining)
+}
+hist(sampletime, main="Distribution of processing time")
+```
+
 
 Other types of simulation
 ========
