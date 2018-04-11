@@ -65,9 +65,9 @@ fifolate <- function(joblist){
 ```
 
     
-c. [3] Simulate each method 50 days (replications).  Show the results using a plot that shows variance. (remember to add titles and labels)  Which is the best in reducing lateness?
+c. [3] Simulate each method 250 days (replications).  Show the results using a plot that shows variance. (remember to add titles and labels)  Which is the best in reducing lateness?
 
-Hint: create a `for` loop that iterates 50 days. For each day, generate a joblist and apply each sequencing method to it. And save the results to lists that you will combine into a data frame.
+Hint: create a `for` loop that iterates 250 days. For each day, generate a joblist and apply each sequencing method to it. And save the results to lists that you will combine into a data frame.
 
 **ANSWER**
 
@@ -119,7 +119,7 @@ print(sptlate(jobsim))
 ```
 
 ```{r 2c}
-days <- 50
+days <- 250
 fifolatesim <- c()
 eddlatesim <- c()
 sptlatesim <- c()

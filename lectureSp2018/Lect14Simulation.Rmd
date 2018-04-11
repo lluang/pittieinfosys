@@ -8,6 +8,40 @@ output:
   slidy_presentation: default
 ---
 
+Project Report
+=====
+
+- Maximum of 8 pages.
+- CoNVO
+  -  Vision should be the realized data presentation
+  -  Outcome should be a hypothetical outcome based on what you actually saw in your visualization.
+- Data discussion: Volume, Velocity, Variety, Veracity
+- Process - What did you do (discussion and process map)
+- Outcome (Visualization and hypothetical Outcome based on actual results)
+- Appendices allowed if needed (does not count against the 8 pages).
+
+4 V's
+=====
+
+-  Volume - How many observations?  What constitutes an observation
+-  Variety - What information is available on each observation?  Are they very similar, or do they describe a range of different aspects of the observation
+-  Velocity - Is data added over time? Does the underlying environment that produced the data change?  Does data expire?  Is the Need time sensitive (you can only use recent data)
+-  Veracity - Is the data accurate?  Are there missing values or data errors?  Is data collection complete or are there missing observations?  Are data fields defined well enough so that entries mean what they seem to mean.
+
+
+
+Project Presentation
+========
+
+- Maximum 8 minutes
+- 8-10 slides
+- Cover CONVO, data source and 4 V's
+  - Vision and Outcome introduced in a pre-project form
+- Process map of data manipulation and data processing
+- Actual visualizations (realization of the V in CoNVO)
+- Hypothetical outcome, given what you actually saw
+
+
 Schedule
 =============
 
