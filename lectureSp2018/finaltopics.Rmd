@@ -1,0 +1,78 @@
+---
+title: "Final topics"
+author: "IE 0015 Information Systems"
+date: "April 16, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##  Format
+
+- Same as midterm
+- 3, 4 questions. Intent is to make it possible for one hour. You will have two hours
+- CoNVO statement will center on announced datasets
+- Expect questions around statistics and simulation
+    -  May include process map to manipulate data.
+
+## Programming
+
+-  For all questions that are based on algorithms, you may represent your answer in one of the following ways
+    -  Process map
+    -  Enumerated (numbered) outline
+    -  Pseudocode (R, do not worry about getting the syntax correct)
+
+## CoNVO statements
+
+- Given a setting, write a CoNVO statement (four paragraphs)
+
+## Process maps
+
+-  Data manipulation verbs
+-  Spread and gather
+-  Operations
+    -  String operations (stringr)
+    -  Date manipulation (lubridate)
+    -  Statistical operations (mutate using statistics)
+    -  Simulation (random sampling)
+    
+##  Data manipulation verbs 
+
+1.  Filter (SELECT)
+2.  Arrange (ORDER BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (SELECT . . . AS new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+## Strings, Factors, Dates
+
+- Lecture 10
+- Be able to describe the process of taking data and convert it to dates
+
+## Transforms and modeling
+
+-  Lecture 11
+-  Scaling
+-  Implementing scaling
+
+## Linear Regression
+
+-  Lecture Lecture 12
+-  Representing multiple linear regression model
+-  Plotting residuals and interpreting residual plots
+-  Identifying variables to add to linear regression model
+-  Regression model diagnostics summaries, plots, and interpretation
+
+## Simulation
+
+-  Lecture 13, 14
+-  Probability distribution fitting
+-  Use of Monte Carlo simulation
+-  Use of bootstrap simulation
+-  Simulation for hypothesis testing
+-  Interpreting simulation results for hypothesis testing
+-  Interpretting p-values in simulation results
