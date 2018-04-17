@@ -1,0 +1,45 @@
+---
+title: "Fire and violations data for final"
+author: "IE 0015 Information Systems"
+date: "April 16, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(readr)
+```
+
+```{r readdata}
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
+col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
+arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
+census_tract = col_character(),
+council_district = col_character(),
+incident_type = col_character(),
+pli_division = col_character(), police_zone = col_character(),
+public_works_division = col_character(),
+tract = col_character(), ward = col_character()))
+
+pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_violations.csv"),
+col_types = cols(COUNCIL_DISTRICT = col_character(),
+PLI_DIVISION = col_character(), POLICE_ZONE = col_character(),
+PUBLIC_WORKS_DIVISION = col_character(),
+STREET_NUM = col_character(), TRACT = col_character(),
+WARD = col_character(), `_id` = col_character()))
+```
+
+```{r}
+pittsburgh_fire_incidents[1,]
+```
+
+```{r}
+pittsburgh_PLI_violations[1,]
+```
