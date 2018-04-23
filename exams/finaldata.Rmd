@@ -17,29 +17,92 @@ library(readr)
 ```
 
 ```{r readdata}
-datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
-col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
-arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
-census_tract = col_character(),
-council_district = col_character(),
-incident_type = col_character(),
-pli_division = col_character(), police_zone = col_character(),
-public_works_division = col_character(),
-tract = col_character(), ward = col_character()))
+    col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
+    arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
+    census_tract = col_character(),
+    council_district = col_character(),
+    incident_type = col_character(),
+    pli_division = col_character(), police_zone = col_character(),
+    public_works_division = col_character(),
+    tract = col_character(), ward = col_character())
+)
 
 pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_violations.csv"),
-col_types = cols(COUNCIL_DISTRICT = col_character(),
-PLI_DIVISION = col_character(), POLICE_ZONE = col_character(),
-PUBLIC_WORKS_DIVISION = col_character(),
-STREET_NUM = col_character(), TRACT = col_character(),
-WARD = col_character(), `_id` = col_character()))
+    col_types = cols(COUNCIL_DISTRICT = col_character(),
+    PLI_DIVISION = col_character(), POLICE_ZONE = col_character(),
+    PUBLIC_WORKS_DIVISION = col_character(),
+    STREET_NUM = col_character(), TRACT = col_character(),
+    WARD = col_character(), `_id` = col_character())
+)
 ```
 
-```{r}
-pittsburgh_fire_incidents[1,]
+#  Pittsburgh 9th district
+
+Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstical to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land ownders to put the property on the market or outright seizure for violations of a range of ordinances.
+
+
+
+#  Data wrangling
+
+
+a. What follows are the top ten types of fires in the Pittsburgh fire incidents databases.  Draw the process map that generates this list. (Note: "Type" is "type_description" in the Pittsburgh fire database)
+
+
+```{r, echo=FALSE, warnings=FALSE, message=FALSE}
+names(pittsburgh_fire_incidents)[which(names(pittsburgh_fire_incidents) == "type_description")] <- "Type"
+pittsburgh_fire_incidents %>%
+  group_by(Type) %>%
+  summarize(number=n()) %>%
+  arrange(desc(number)) %>%
+  head(10)
 ```
 
+b.  Because Councilman Burgess is only interested in property neglect fires, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash in Council District 9. Note: look for the words "building", "structure", or "trash" in the Type description. Check the list above to make sure you cover all cases.
+
+c.  Notice that the addresses in the fire and incidents databases are recorded differently (see example in attachement. Note that they should indicate a match when you are done).  Draw a process map that will convert the addresses so that they do match each other.  Note that addresses ending in "00" indicate that it is not an exact address, but identifies the block on the street.  (i.e. when you are done, the field(s) with the address will match using `join` commands that identify equalities)
+
+
+
+i. Search for any of the words (includine possibility of initial capital) within the type description.
+ii. Include if one of the words is available, or if the council_district == 9
+
+
 ```{r}
-pittsburgh_PLI_violations[1,]
+keywordsregex <- "[B|b]uilding|[S|s]tructure|[T|t]rash"
+streetnumberregex <- "^\\d|"
+pittsburgh_building <- pittsburgh_fire_incidents %>%
+  filter(str_detect(Type, keywordsregex),
+         !str_detect(address, "\\&")) %>%
+  mutate(STREET_NUM= str_extract(address, "[:digit:]+(?=[:space:])"),
+         STREET_NAME = str_extract(address, "(?<=BLOCK[:space:])[[:alpha:]+[:space:]]*(?=,)"),
+         block_num=floor(as.numeric(STREET_NUM)/100)*100)
 ```
+
+From the fire incidents data
+i. Pull out the number at the beginning of `address` if available and call this STREET_NUM.
+ii.  Skip the word 'BLOCK'
+iii. Pull remainder of street name after BLOCK up to the comma and call this STREET_NAME
+iv.
+
+
+#  You 
+
+```{r}
+pittsburgh_PLI_violations %>%
+  group_by(STREET_NUM, STREET_NAME) %>%
+  summary(number = n()) %>%
+  head(10)
+```
+```{r}
+pittsburgh_PLI_violations %>%
+  mutate(block_num=floor(as.numeric(STREET_NUM)/100)*100) %>%
+  distinct(block_num, STREET_NAME) %>%
+  summarize(count=n())
+```
+```{r}
+unique(pittsburgh_building$STREET_NUM)
+```
+
