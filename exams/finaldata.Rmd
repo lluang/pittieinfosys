@@ -16,9 +16,58 @@ library(ggplot2)
 library(readr)
 ```
 
+```{r multiplot, echo=FALSE, warning=FALSE, message=FALSE}
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+
 ```{r readdata}
-#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
-datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
@@ -115,7 +164,116 @@ pittsburgh_PLI_violations %>%
 unique(pittsburgh_building$STREET_NUM)
 ```
 
-# Regression
+# Duke GPA
+
+1. A survey of 55 Duke University students asked about their GPA, number of hours
+they study at night, number of nights they go out, and their gender.
+```{r}
+library(openintro)
+data(gpa)
+gpa_lm1 <- lm(gpa ~ studyweek, data=gpa)
+anova(gpa_lm1)
+```
+
+
+```{r}
+par(mfrow=c(2,2))
+plot(gpa_lm1)
+par(mfrow=c(1,1))
+title("Diagnostic plots")
+
+```
+
+a.  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
+b.  The three other variables collected were number of hours the students slept per night, number of nights they go out, and gender. (note that `studyweek` is already in the model)  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+
+```{r}
+gpa$residulas <- gpa_lm1$residuals
+```
+
+```{r}
+gpaplot <- ggplot(gpa, aes(y=residulas))
+p1 <- gpaplot + geom_point(aes(x=studyweek))
+p2 <- gpaplot + geom_point(aes(x=sleepnight))
+p3 <- gpaplot + geom_point(aes(x=out))
+p4 <- gpaplot + geom_point(aes(x=gender))
+multiplot(p1, p2, p3, p4, cols=2)
+```
+
+
+# Baby weights
+
+
+1. The Child Health and Development Studies investigate a range of
+topics. One study considered all pregnancies between 1960 and 1967 among women in the Kaiser
+Foundation Health Plan in the San Francisco East Bay area. Here, we study the relationship
+between smoking and parity and weight of the baby. The variable `smoke` is coded 1 if the mother is a smoker, and 0 if not. The variable `parity` is coded 0 if first born, 1 otherwise.  
+```{r}
+library(openintro)
+data(babies)
+babies <- babies[complete.cases(babies),]
+babies_lm1 <- lm(bwt ~ smoke + parity, data=babies)
+anova(babies_lm1)
+```
+
+
+```{r}
+par(mfrow=c(2,2))
+plot(babies_lm1)
+par(mfrow=c(1,1))
+```
+
+a.  Comment on the quality of the model given the four diagnostic plots and the linear regression summary table.
+b.  Other variables of interest include length of pregnancy in days (gestation), mother's age in years (age), mother's height in inches (height), and mother's pregnancy weight in pounds (weight). Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+
+```{r}
+babies$residuals <- babies_lm1$residuals
+```
+
+```{r}
+babiesplot <- ggplot(babies, aes(y=residuals))
+b1 <- babiesplot + geom_point(aes(x=gestation))
+b2 <- babiesplot + geom_point(aes(x=age))
+b3 <- babiesplot + geom_point(aes(x=height))
+b4 <- babiesplot + geom_point(aes(x=weight))
+multiplot(b1, b2, b3, b4, cols=2)
+```
+
+# North Carolina Baby weights
+
+
+1. In 2004, the state of North Carolina released to the public a large data set containing information on births recorded in this state. This data set has been of interest to medical researchers who are studying the relationship between habits and practices of expectant mothers and the birth of their children. This is a random sample of 1,000 cases from this data set looking at the length of the pregnancy in weeks at birth (weeks) and if the baby was female or male.
+
+
+```{r}
+data(ncbirths)
+ncbirths <- ncbirths[complete.cases(ncbirths),]
+ncbirths_lm <- lm(weight ~ weeks + gender, data=ncbirths)
+anova(ncbirths_lm)
+```
+
+
+```{r}
+par(mfrow=c(2,2))
+plot(ncbirths_lm)
+par(mfrow=c(1,1))
+```
+
+a.  Comment on the quality of the model given the four diagnostic plots and the linear regression summary table.
+b.  Other variables of interest include the number of hospital visits during pregnancy (visits), the amount of weight gained by the mother (gained), if the mother was a smoker or not (habit) and the mothers age in years (mage) . Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+
+```{r}
+ncbirths$residuals <- ncbirths_lm$residuals
+```
+
+```{r}
+ncbirthsplot <- ggplot(ncbirths, aes(y=residuals))
+n1 <- ncbirthsplot + geom_point(aes(x=visits))
+n2 <- ncbirthsplot + geom_point(aes(x=gained))
+n3 <- ncbirthsplot + geom_point(aes(x=habit))
+n4 <- ncbirthsplot + geom_point(aes(x=mage))
+multiplot(n1, n2, n3, n4, cols=2)
+```
 
 
 # Simulation 
