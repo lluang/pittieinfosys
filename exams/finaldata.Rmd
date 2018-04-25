@@ -17,8 +17,8 @@ library(readr)
 ```
 
 ```{r readdata}
-datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
-#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
@@ -43,7 +43,16 @@ pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_v
 
 Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstical to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land ownders to put the property on the market or outright seizure for violations of a range of ordinances.
 
+# Company real estate
 
+A company is looking at buying a very large quantity of commercial and industrial space. They are looking for large amounts of space available in relatively close proximity. As they are big enough to justify new construction, they look at permit, licensing, and inspection violations as well as previous history of fire as opportunities to purchase property at a low price.  So they are looking for both good quality locations (no violations) and locations that are potentially inexpensive for new construction.
+
+#  Commercial property insurance
+
+Insurance companies sell policies to commercial property owners so that in the case of major damage such as a fire the property owners will have resources to repair their property. 
+The insurance company wants to set rates so that in the long run, they receive more in insurance premiums (rates) than they pay out in claims. 
+However, if they set premiums too high, competitors can charge less and still make a long term profit.
+An insurance company believes that a history of permits, licensing, and inspection violations as well as major and minor fire incidents should be used to adjust premiums.  
 
 #  Data wrangling
 
@@ -106,3 +115,7 @@ pittsburgh_PLI_violations %>%
 unique(pittsburgh_building$STREET_NUM)
 ```
 
+# Regression
+
+
+# Simulation 
