@@ -14,7 +14,7 @@
 \newcommand{\bs}{\texorpdfstring{\char`\\}{}}
 
 \newcommand{\docversion}{2.5}
-\newcommand{\docdate}{April 27, 2016}
+\newcommand{\docdate}{April 28, 2016}
 %\newcommand{\docdate}{\today}
 
 %--------------------------------------------------------------------
@@ -93,11 +93,11 @@
 \date{\docdate}
 \maketitle
 \centering
-{\bf D}
+{\bf A}
 
 \begin{enumerate}
 \item  Write your name at the top of this page.
-\item  There are four questions (4 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  There are four questions (7 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
 \item  You may have a double sided sheet of paper for notes (crib sheet).
 \item  The phrase {\em describe the process} can be answered using any of the following:
   \begin{enumerate}
@@ -125,6 +125,7 @@ library(stringr)
 library(lubridate)
 library(ggplot2)
 library(readr)
+library(openintro)
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -215,6 +216,7 @@ Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which i
 
 \end{parts}
 \newpage
+
 \question Fires and PLI
 
 \begin{parts}
@@ -263,63 +265,62 @@ iv.
 
 
 \newpage
-\question Duke GPA
+\question Body measurements of active individuals 
 
-A survey of 55 Duke University students asked about their GPA, number of hours they study at night, 
-number of nights they go out, and their gender.
+Researchers studying anthropometry collected body girth measurements and skeletal diameter measurements, as well as age, weight, height and gender for 507 physically active individuals.  Below is the result for a model relating the weight measured in kilograms and the hip girth measured in centimeters.
+
 <<echo = FALSE, warning=FALSE, message=FALSE>>=
-library(openintro)
-data(gpa)
-gpa_lm1 <- lm(gpa ~ studyweek, data=gpa)
-summary(gpa_lm1)
+data(bdims)
+bdims_lm <- lm(wgt ~ hip.gi, data=bdims)
+summary(bdims_lm)
 @
 
 
-<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE, height=4>>=
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 par(mfrow=c(2,2))
-plot(gpa_lm1)
+plot(bdims_lm)
 par(mfrow=c(1,1))
 title("Diagnostic plots")
 @
 
 \begin{parts}
 \part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
-\part[10]  The three other variables collected were number of hours the students slept per night, number of nights they go out, and gender. (note that `studyweek` is already in the model)  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+\part[10]  Four other variables collected were the waist girth, chest girth, shoulder girth, and thigh girth  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
 
-<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE, height=4>>=
-gpa$residulas <- gpa_lm1$residuals
-gpaplot <- ggplot(gpa, aes(y=residulas))
-p1 <- gpaplot + geom_point(aes(x=studyweek))
-p2 <- gpaplot + geom_point(aes(x=sleepnight))
-p3 <- gpaplot + geom_point(aes(x=out))
-p4 <- gpaplot + geom_point(aes(x=gender))
-multiplot(p1, p2, p3, p4, cols=2)
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+bdims$residuals <- bdims_lm$residuals
+bdimsplot <- ggplot(bdims, aes(y=residuals)) + ylab("Weight (kg)")
+b1 <- bdimsplot + geom_point(aes(x=wai.gi)) + xlab("Waist girth (cm)") + ggtitle("Residuals by waist girth")
+b2 <- bdimsplot + geom_point(aes(x=che.gi)) + xlab("Chest girth (cm)") +ggtitle("Residuals by chest girth")
+b3 <- bdimsplot + geom_point(aes(x=sho.gi)) + xlab("Shoulder girth (cm)") +ggtitle("Residuals by shoulder girth")
+b4 <- bdimsplot + geom_point(aes(x=thi.gi)) + xlab("Thigh girth (cm)") +ggtitle("Residuals by thigh girth")
+multiplot(b1, b2, b3, b4, cols=2)
 @
 \end{parts}
 
-\begin{solution}[2in]
+\begin{solution}[4in]
 
 \end{solution}
-\newpage
-\question Heart transplant success.
 
-The Stanford University Heart Transplant Study was conducted to determine whether an experimental heart transplant program increased lifespan. Each patient entering the program was officially designated a heart transplant candidate, meaning that he was gravely ill and might benefit from a new heart. 
-Patients were randomly assigned into treatment and control groups. Patients in the treatment group received a transplant, and those in the control group did not. The table below displays how many patients survived and died in each
-group.
+\newpage
+\question The Daily Show
+.
+A 2010 Pew Research foundation poll indicates that among 1,099 college graduates, 33\% watch The Daily Show. Meanwhile, 22\% of the 1,110 people with a high
+school degree but no college degree in the poll watch The Daily Show.
+
+
 
 <<echo=FALSE>>=
-heart <- data.frame(outcome=c("alive", "dead"),
-                    control=c(6, 22),
-                    treatment=c(24, 51))
-heart
+dailyshow <- data.frame(outcome=c("Watch", "no watch"),
+                    college=c(366, 733),
+                    hs=c(294, 816))
+dailyshow
 @
 
 
 \begin{parts}
-\part[10]  Write a process map that will allow you to answer the question if receiving a transplant was more likely to survive than not receiving a transplant.
-
+\part[10]  Write a process map that will allow you to answer the question if the proportion of people with college degrees that watch The Daily Show is different from the proportion of people without college degrees (HS or less) that watch the Daily Show using simulation to the 5\% significance level.
 \part[5] Write the null and alternative hypothesis for this question (from (a)).
-
 \part[10] This figure is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
 
 
@@ -327,16 +328,16 @@ heart
 <<echo=FALSE, fig=TRUE>>=
 #VERSION D
 set.seed(1234)
-pControl <- 6./28
-heartsim <- function(i){
+pControl <- 294./1110
+dailysim <- function(i){
               control <- sum(sample(x=c(1,0), 
-                            size=75, prob = c(pControl, 1-pControl), 
+                            size=1099, prob = c(pControl, 1-pControl), 
                             replace = TRUE))
 }
-heartout <-sapply(1:10000, heartsim)
-tailnulltrue <- length(heartout[heartout > 24])/length(heartout)
+dailyout <-sapply(1:10000, dailysim)
+tailnulltrue <- length(dailyout[dailyout > 366])/length(dailyout)
 #iint(tailnulltrue)
-hist(heartout, breaks = 36, main = "Simulation of heart transplant study", xlab = "Survived", xlim=c(0, 35))
+hist(dailyout, breaks=30, main = "Simulation of 1099 college students watching The Daily Show", xlab = "Watchers")
 @
 
 
@@ -352,6 +353,7 @@ Process map:
 
 \end{solution}
 \end{parts}
+
 
 \end{questions}
 \end{document}

@@ -14,7 +14,7 @@
 \newcommand{\bs}{\texorpdfstring{\char`\\}{}}
 
 \newcommand{\docversion}{2.5}
-\newcommand{\docdate}{April 27, 2016}
+\newcommand{\docdate}{April 28, 2016}
 %\newcommand{\docdate}{\today}
 
 %--------------------------------------------------------------------
@@ -93,11 +93,11 @@
 \date{\docdate}
 \maketitle
 \centering
-{\bf D}
+{\bf A}
 
 \begin{enumerate}
 \item  Write your name at the top of this page.
-\item  There are four questions (4 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  There are four questions (7 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
 \item  You may have a double sided sheet of paper for notes (crib sheet).
 \item  The phrase {\em describe the process} can be answered using any of the following:
   \begin{enumerate}
@@ -125,6 +125,7 @@ library(stringr)
 library(lubridate)
 library(ggplot2)
 library(readr)
+library(openintro)
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -194,9 +195,14 @@ pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_v
 @
 
 \begin{questions}
-\question [25] Pittsburgh 9th district
+\newpage
+\question [25]
+Commercial property insurance
 
-Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstacle to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land owners to put the property on the market or outright seizure for violations of a range of ordinances.
+Insurance companies sell policies to commercial property owners so that in the case of major damage such as a fire the property owners will have resources to repair their property. 
+The insurance company wants to set rates so that in the long run, they receive more in insurance premiums (rates) than they pay out in claims. 
+However, if they set premiums too high, competitors can charge less and still make a long term profit.
+An insurance company believes that a history of permits, licensing, and inspection violations as well as major and minor fire incidents should be used to adjust premiums.  
 
 \begin{parts}
 
@@ -214,8 +220,9 @@ Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which i
 \end{solution}
 
 \end{parts}
-\newpage
-\question Fires and PLI
+
+\question 
+Fires and PLI
 
 \begin{parts}
 \part[10] What follows are the top ten types of fires in the Pittsburgh fire incidents databases.  Draw the process map that generates this list. (Note: "Type" is "type\_description" in the Pittsburgh fire database)
@@ -229,7 +236,7 @@ pittsburgh_fire_incidents %>%
   head(10)
 @
 
-\part[10]  Because Councilman Burgess is only interested in property neglect fires, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash in Council District 9. Note: look for the words "building", "structure", or "trash" in the Type description. Check the list above to make sure you cover all cases.
+\part[10]  Because your client is only interested in property neglect fires, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash. Note: look for the words "building", "structure", or "trash" in the Type description. Check the list above to make sure you cover all cases.
 
 \part[10]  Notice that the addresses in the fire and incidents databases are recorded differently (see example in attachment. Note that they should indicate a match when you are done).  Draw a process map that will convert the addresses so that they do match each other.  Note that addresses ending in "00" indicate that it is not an exact address, but identifies the block on the street.  (i.e. when you are done, the field(s) with the address will match using `join` commands that identify equalities)
 
@@ -237,7 +244,7 @@ pittsburgh_fire_incidents %>%
 
 \begin{solution}[2in]
 i. Search for any of the words (including possibility of initial capital) within the type description.
-ii. Include if one of the words is available, or if the council\_district == 9
+ii. Include if one of the words is available
 
 
 <<warning=FALSE, message=FALSE>>=
@@ -246,10 +253,8 @@ streetnumberregex <- "^\\d|"
 pittsburgh_building <- pittsburgh_fire_incidents %>%
   filter(str_detect(Type, keywordsregex),
          !str_detect(address, "\\&")) %>%
-  mutate(STREET_NUM=str_extract(address, 
-                     "[:digit:]+(?=[:space:])"),
-         STREET_NAME=str_extract(address, 
-                     "(?<=BLOCK[:space:])[[:alpha:]+[:space:]]*(?=,)"),
+  mutate(STREET_NUM= str_extract(address, "[:digit:]+(?=[:space:])"),
+         STREET_NAME = str_extract(address, "(?<=BLOCK[:space:])[[:alpha:]+[:space:]]*(?=,)"),
          block_num=floor(as.numeric(STREET_NUM)/100)*100)
 @
 
@@ -260,46 +265,47 @@ iii. Pull remainder of street name after BLOCK up to the comma and call this STR
 iv.
 \end{solution}
 
-
-
 \newpage
-\question Duke GPA
+\question Analytical skills of gifted children
 
-A survey of 55 Duke University students asked about their GPA, number of hours they study at night, 
-number of nights they go out, and their gender.
+An investigator is interested in understanding the relationship, if any, between the analytics skills of young gifted children and the following variables: father's IQ, mother's IQ, age in month when the child first said 'mummy' or 'daddy', age in month when the child first counted to 10 successfully, average number of hours per week the child's mother or father reads to the child, average number of hours per week the child watched an educational program on TV during the past three months, average number of hours per week the child watched cartoons on TV during the past three months. The analytical skills are evaluated using a standard testing procedure, and the score on this test is used as the response variable.
+
+Data were collected from schools in a large city on a set of thirty-six children who were identified as gifted children soon after they reached the age of four.  Below is a regression model looking at analytical skills test score as a function of the mother's IQ along with the diagnostic plots.
+
+
 <<echo = FALSE, warning=FALSE, message=FALSE>>=
-library(openintro)
-data(gpa)
-gpa_lm1 <- lm(gpa ~ studyweek, data=gpa)
-summary(gpa_lm1)
+data(gifted)
+gifted_lm <- lm(score ~ motheriq, data=gifted)
+summary(gifted_lm)
 @
 
 
-<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE, height=4>>=
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 par(mfrow=c(2,2))
-plot(gpa_lm1)
+plot(gifted_lm)
 par(mfrow=c(1,1))
-title("Diagnostic plots")
+title("Diagnostic plots for analytical score vs Mother's IQ")
 @
 
 \begin{parts}
 \part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
-\part[10]  The three other variables collected were number of hours the students slept per night, number of nights they go out, and gender. (note that `studyweek` is already in the model)  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+\part[10]  Four other variables collected were the father's IQ (fathersiq), average number of hours per week the child's parents read  to the child (read), average number of hours per week the child watched educational programming on TV (edutv), and the average number of hours per week the child watched cartoons (cartoons). Which variable(s) should be added to the model and why?
 
-<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE, height=4>>=
-gpa$residulas <- gpa_lm1$residuals
-gpaplot <- ggplot(gpa, aes(y=residulas))
-p1 <- gpaplot + geom_point(aes(x=studyweek))
-p2 <- gpaplot + geom_point(aes(x=sleepnight))
-p3 <- gpaplot + geom_point(aes(x=out))
-p4 <- gpaplot + geom_point(aes(x=gender))
-multiplot(p1, p2, p3, p4, cols=2)
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+gifted$residuals <- gifted_lm$residuals
+giftedplot <- ggplot(gifted, aes(y=residuals)) + ylab("Score") 
+g1 <- giftedplot + geom_point(aes(x=fatheriq)) + xlab("Father's IQ") + ggtitle("Residuals by father's IQ")
+g2 <- giftedplot + geom_point(aes(x=read)) + xlab("Reading (hours per day)") +ggtitle("Residuals by hours of reading")
+g3 <- giftedplot + geom_point(aes(x=edutv)) + xlab("Educational TV (hours per day)") +ggtitle("Residuals by hours of educational tv")
+g4 <- giftedplot + geom_point(aes(x=cartoons)) + xlab("Cartoons (hour per day)") +ggtitle("Residuals by hours of cartoons ")
+multiplot(g1, g2, g3, g4, cols=2)
 @
 \end{parts}
 
-\begin{solution}[2in]
+\begin{solution}[4in]
 
 \end{solution}
+
 \newpage
 \question Heart transplant success.
 
@@ -316,7 +322,7 @@ heart
 
 
 \begin{parts}
-\part[10]  Write a process map that will allow you to answer the question if receiving a transplant was more likely to survive than not receiving a transplant.
+\part[10]  Write a process map that will allow you to answer the question if receiving a transplant was more likely to survive than not receiving a transplant using simulation to the 5\% significance level.
 
 \part[5] Write the null and alternative hypothesis for this question (from (a)).
 
@@ -352,6 +358,8 @@ Process map:
 
 \end{solution}
 \end{parts}
+
+
 
 \end{questions}
 \end{document}

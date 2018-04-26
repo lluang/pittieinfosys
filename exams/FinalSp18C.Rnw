@@ -14,7 +14,7 @@
 \newcommand{\bs}{\texorpdfstring{\char`\\}{}}
 
 \newcommand{\docversion}{2.5}
-\newcommand{\docdate}{April 27, 2016}
+\newcommand{\docdate}{April 28, 2016}
 %\newcommand{\docdate}{\today}
 
 %--------------------------------------------------------------------
@@ -93,11 +93,11 @@
 \date{\docdate}
 \maketitle
 \centering
-{\bf D}
+{\bf C}
 
 \begin{enumerate}
 \item  Write your name at the top of this page.
-\item  There are four questions (4 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  There are four questions (7 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
 \item  You may have a double sided sheet of paper for notes (crib sheet).
 \item  The phrase {\em describe the process} can be answered using any of the following:
   \begin{enumerate}
@@ -125,6 +125,7 @@ library(stringr)
 library(lubridate)
 library(ggplot2)
 library(readr)
+library(openintro)
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -194,9 +195,11 @@ pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_v
 @
 
 \begin{questions}
-\question [25] Pittsburgh 9th district
+\newpage
+\\question [25]
+Pittsburgh 9th district
 
-Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstacle to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land owners to put the property on the market or outright seizure for violations of a range of ordinances.
+Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstical to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land ownders to put the property on the market or outright seizure for violations of a range of ordinances.
 
 \begin{parts}
 
@@ -205,7 +208,7 @@ Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which i
 \begin{solution}[4.7in]
 
 \begin{itemize}
-  \item Context - Councilman Burgess
+  \item Context - Concilman Burgess
   \item Need - relationship between PLI violations and fires.
   \item Vision - Show relationship between number of violations and likelihood of fires on that block
   \item Outcome - Identify properties with many violations and refer them to City agencies for potential seizure.
@@ -214,8 +217,10 @@ Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which i
 \end{solution}
 
 \end{parts}
-\newpage
-\question Fires and PLI
+
+
+\question 
+Fires and PLI
 
 \begin{parts}
 \part[10] What follows are the top ten types of fires in the Pittsburgh fire incidents databases.  Draw the process map that generates this list. (Note: "Type" is "type\_description" in the Pittsburgh fire database)
@@ -229,7 +234,7 @@ pittsburgh_fire_incidents %>%
   head(10)
 @
 
-\part[10]  Because Councilman Burgess is only interested in property neglect fires, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash in Council District 9. Note: look for the words "building", "structure", or "trash" in the Type description. Check the list above to make sure you cover all cases.
+\part[10]  Because your client is only interested in property neglect fires in the 9th district, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash in the 9th district. Note: look for the words "building", "structure", or "trash" in the Type description. Check the list above to make sure you cover all cases.
 
 \part[10]  Notice that the addresses in the fire and incidents databases are recorded differently (see example in attachment. Note that they should indicate a match when you are done).  Draw a process map that will convert the addresses so that they do match each other.  Note that addresses ending in "00" indicate that it is not an exact address, but identifies the block on the street.  (i.e. when you are done, the field(s) with the address will match using `join` commands that identify equalities)
 
@@ -237,7 +242,7 @@ pittsburgh_fire_incidents %>%
 
 \begin{solution}[2in]
 i. Search for any of the words (including possibility of initial capital) within the type description.
-ii. Include if one of the words is available, or if the council\_district == 9
+ii. Include if one of the words is available
 
 
 <<warning=FALSE, message=FALSE>>=
@@ -246,10 +251,8 @@ streetnumberregex <- "^\\d|"
 pittsburgh_building <- pittsburgh_fire_incidents %>%
   filter(str_detect(Type, keywordsregex),
          !str_detect(address, "\\&")) %>%
-  mutate(STREET_NUM=str_extract(address, 
-                     "[:digit:]+(?=[:space:])"),
-         STREET_NAME=str_extract(address, 
-                     "(?<=BLOCK[:space:])[[:alpha:]+[:space:]]*(?=,)"),
+  mutate(STREET_NUM= str_extract(address, "[:digit:]+(?=[:space:])"),
+         STREET_NAME = str_extract(address, "(?<=BLOCK[:space:])[[:alpha:]+[:space:]]*(?=,)"),
          block_num=floor(as.numeric(STREET_NUM)/100)*100)
 @
 
@@ -260,66 +263,66 @@ iii. Pull remainder of street name after BLOCK up to the comma and call this STR
 iv.
 \end{solution}
 
-
-
 \newpage
-\question Duke GPA
+\question Body measurements of active individuals 
 
-A survey of 55 Duke University students asked about their GPA, number of hours they study at night, 
-number of nights they go out, and their gender.
+Researchers studying anthropometry collected body girth measurements and skeletal diameter measurements, as well as age, weight, height and gender for 507 physically active individuals.  Below is the result for a model relating the weight measured in kilograms and the hip girth measured in centimeters.
+
 <<echo = FALSE, warning=FALSE, message=FALSE>>=
-library(openintro)
-data(gpa)
-gpa_lm1 <- lm(gpa ~ studyweek, data=gpa)
-summary(gpa_lm1)
+data(bdims)
+bdims_lm <- lm(wgt ~ hip.gi, data=bdims)
+summary(bdims_lm)
 @
 
 
-<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE, height=4>>=
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 par(mfrow=c(2,2))
-plot(gpa_lm1)
+plot(bdims_lm)
 par(mfrow=c(1,1))
 title("Diagnostic plots")
 @
 
 \begin{parts}
 \part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
-\part[10]  The three other variables collected were number of hours the students slept per night, number of nights they go out, and gender. (note that `studyweek` is already in the model)  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+\part[10]  Four other variables collected were the waist girth, chest girth, shoulder girth, and thigh girth  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
 
-<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE, height=4>>=
-gpa$residulas <- gpa_lm1$residuals
-gpaplot <- ggplot(gpa, aes(y=residulas))
-p1 <- gpaplot + geom_point(aes(x=studyweek))
-p2 <- gpaplot + geom_point(aes(x=sleepnight))
-p3 <- gpaplot + geom_point(aes(x=out))
-p4 <- gpaplot + geom_point(aes(x=gender))
-multiplot(p1, p2, p3, p4, cols=2)
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+bdims$residuals <- bdims_lm$residuals
+bdimsplot <- ggplot(bdims, aes(y=residuals)) + ylab("Weight (kg)")
+b1 <- bdimsplot + geom_point(aes(x=wai.gi)) + xlab("Waist girth (cm)") + ggtitle("Residuals by waist girth")
+b2 <- bdimsplot + geom_point(aes(x=che.gi)) + xlab("Chest girth (cm)") +ggtitle("Residuals by chest girth")
+b3 <- bdimsplot + geom_point(aes(x=sho.gi)) + xlab("Shoulder girth (cm)") +ggtitle("Residuals by shoulder girth")
+b4 <- bdimsplot + geom_point(aes(x=thi.gi)) + xlab("Thigh girth (cm)") +ggtitle("Residuals by thigh girth")
+multiplot(b1, b2, b3, b4, cols=2)
 @
 \end{parts}
 
-\begin{solution}[2in]
+\begin{solution}[4in]
 
 \end{solution}
-\newpage
-\question Heart transplant success.
 
-The Stanford University Heart Transplant Study was conducted to determine whether an experimental heart transplant program increased lifespan. Each patient entering the program was officially designated a heart transplant candidate, meaning that he was gravely ill and might benefit from a new heart. 
-Patients were randomly assigned into treatment and control groups. Patients in the treatment group received a transplant, and those in the control group did not. The table below displays how many patients survived and died in each
-group.
+
+\newpage
+\question Offshore drilling in California
+
+A 2010 survey asked 827 randomly sampled registered voters in California "Do you support? Or do you oppose? Drilling for oil and natural gas off the Coast of
+California? Or do you not know enough to say?" 
+Below is the distribution of responses, separated based on whether or not the respondent graduated from college.
+
+
 
 <<echo=FALSE>>=
-heart <- data.frame(outcome=c("alive", "dead"),
-                    control=c(6, 22),
-                    treatment=c(24, 51))
-heart
+oil <- data.frame(outcome=c("Support", "Oppose", "Do not know"),
+                    college=c(154, 180, 104),
+                    no_college=c(132, 126, 131))
+oil
 @
 
 
 \begin{parts}
-\part[10]  Write a process map that will allow you to answer the question if receiving a transplant was more likely to survive than not receiving a transplant.
-
+\part[10]  Write a process map that will allow you to conduct a hypothesis test to determine if the data provide strong evidence that the proportion
+of college graduates who support off-shore drilling in California is different than that of non-college graduates. using simulation to the 5\% significance level.
 \part[5] Write the null and alternative hypothesis for this question (from (a)).
-
 \part[10] This figure is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
 
 
@@ -327,16 +330,16 @@ heart
 <<echo=FALSE, fig=TRUE>>=
 #VERSION D
 set.seed(1234)
-pControl <- 6./28
-heartsim <- function(i){
+pControl <- 132./389
+oilsim <- function(i){
               control <- sum(sample(x=c(1,0), 
-                            size=75, prob = c(pControl, 1-pControl), 
+                            size=sum(oil$college), prob = c(pControl, 1-pControl), 
                             replace = TRUE))
 }
-heartout <-sapply(1:10000, heartsim)
-tailnulltrue <- length(heartout[heartout > 24])/length(heartout)
+oilout <-sapply(1:10000, oilsim)
+tailnulltrue <- length(oilout[oilout > 154])/length(oilout)
 #iint(tailnulltrue)
-hist(heartout, breaks = 36, main = "Simulation of heart transplant study", xlab = "Survived", xlim=c(0, 35))
+hist(oilout, breaks=30, main = "Simulation of 438 college students asked if they support off shore drilling in California", xlab = "Watchers")
 @
 
 
@@ -352,6 +355,5 @@ Process map:
 
 \end{solution}
 \end{parts}
-
 \end{questions}
 \end{document}
