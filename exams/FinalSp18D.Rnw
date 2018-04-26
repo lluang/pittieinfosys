@@ -1,0 +1,357 @@
+\documentclass[12pt, addpoints]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
+\usepackage{Sweave}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{makeidx}
+
+\usepackage[colorlinks]{hyperref}
+
+% In case we're not using hyperref.sty:
+\providecommand{\texorpdfstring}[2]{#1}
+% The following can be used in \section commands
+% without generating pdf warnings:
+\newcommand{\bs}{\texorpdfstring{\char`\\}{}}
+
+\newcommand{\docversion}{2.5}
+\newcommand{\docdate}{April 27, 2016}
+%\newcommand{\docdate}{\today}
+
+%--------------------------------------------------------------------
+%
+% Changes since version 2.4 are described in the comments
+% near the beginning of the file exam.cls.
+%
+%--------------------------------------------------------------------
+
+\makeindex
+
+\newcommand{\indc}[1]{\index{#1@\texttt{\char`\\#1}}}
+\newcommand{\indcsub}[2]{\index{#1@\texttt{\char`\\#1}!#2}}
+\newcommand{\indcstart}[1]{\index{#1@\texttt{\char`\\#1}|(}}
+\newcommand{\indcstop}[1]{\index{#1@\texttt{\char`\\#1}|)}}
+
+\newcommand{\indt}[1]{\index{#1@\texttt{#1}}}
+\newcommand{\indtsub}[2]{\index{#1@\texttt{#1}!#2}}
+\newcommand{\indtstart}[1]{\index{#1@\texttt{#1}|(}}
+\newcommand{\indtstop}[1]{\index{#1@\texttt{#1}|)}}
+
+%---------------------------------------------------------------------
+\newenvironment{example}%
+   {\bigskip\filbreak
+    \subsubsection{Example:}
+   }%
+   {}
+
+\def\samplehead#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    \hbox to \textwidth{%
+      \rlap{\parbox[b]{\textwidth}{\raggedright#1\strut}}%
+      \hfil\parbox[b]{\textwidth}{\centering#2\strut}\hfil
+      \llap{\parbox[b]{\textwidth}{\raggedleft#3\strut}}%
+    }% hbox
+    #4
+  \end{trivlist}
+}
+
+\def\samplefoot#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    #1
+    \vskip 3pt
+
+    \hbox to \textwidth{%
+      \rlap{\parbox[t]{\textwidth}{\raggedright#2}}%
+      \hfil\parbox[t]{\textwidth}{\centering#3}\hfil
+      \llap{\parbox[t]{\textwidth}{\raggedleft#4}}%
+    }% hbox
+  \end{trivlist}
+}
+
+% \makeatletter
+%   \@ifundefined{AmS}{\def\AmS{{\protect\the\textfont\tw@
+%     A\kern-.1667em\lower.5ex\hbox{M}\kern-.125emS}}}
+%     {}
+% \makeatother
+
+
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{IE 0015 Information Systems Final}
+
+
+\author{Spring 2018}
+\date{\docdate}
+\maketitle
+\centering
+{\bf D}
+
+\begin{enumerate}
+\item  Write your name at the top of this page.
+\item  There are four questions (4 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  You may have a double sided sheet of paper for notes (crib sheet).
+\item  The phrase {\em describe the process} can be answered using any of the following:
+  \begin{enumerate}
+    \item Outline
+    \item Pseudocode
+    \item Flow chart/process map
+  \end{enumerate}
+  Remember, answers should be complete enough to enable a non-engineer programmer to write the program.
+\item  Answer questions in the space provided. You may also use the back of a sheet in the exam if needed.
+\item  You have 2 hours for the exam.
+\item  Staple crib sheet to the exam when you turn it in.
+\end{enumerate}
+
+\centering
+\gradetable
+
+\newpage
+
+<<echo=FALSE, warning=FALSE, message=FALSE>>=
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(readr)
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
+    col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
+    arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
+    census_tract = col_character(),
+    council_district = col_character(),
+    incident_type = col_character(),
+    pli_division = col_character(), police_zone = col_character(),
+    public_works_division = col_character(),
+    tract = col_character(), ward = col_character())
+)
+
+pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_violations.csv"),
+    col_types = cols(COUNCIL_DISTRICT = col_character(),
+    PLI_DIVISION = col_character(), POLICE_ZONE = col_character(),
+    PUBLIC_WORKS_DIVISION = col_character(),
+    STREET_NUM = col_character(), TRACT = col_character(),
+    WARD = col_character(), `_id` = col_character())
+)
+@
+
+\begin{questions}
+\question [25] Pittsburgh 9th district
+
+Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstacle to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land owners to put the property on the market or outright seizure for violations of a range of ordinances.
+
+\begin{parts}
+
+\part Write a CoNVO statement that corresponds to this narrative.
+
+\begin{solution}[4.7in]
+
+\begin{itemize}
+  \item Context - Councilman Burgess
+  \item Need - relationship between PLI violations and fires.
+  \item Vision - Show relationship between number of violations and likelihood of fires on that block
+  \item Outcome - Identify properties with many violations and refer them to City agencies for potential seizure.
+\end{itemize}
+
+\end{solution}
+
+\end{parts}
+\newpage
+\question Fires and PLI
+
+\begin{parts}
+\part[10] What follows are the top ten types of fires in the Pittsburgh fire incidents databases.  Draw the process map that generates this list. (Note: "Type" is "type\_description" in the Pittsburgh fire database)
+
+<<echo = FALSE, warning=FALSE, message=FALSE>>=
+names(pittsburgh_fire_incidents)[which(names(pittsburgh_fire_incidents) == "type_description")] <- "Type"
+pittsburgh_fire_incidents %>%
+  group_by(Type) %>%
+  summarize(number=n()) %>%
+  arrange(desc(number)) %>%
+  head(10)
+@
+
+\part[10]  Because Councilman Burgess is only interested in property neglect fires, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash in Council District 9. Note: look for the words "building", "structure", or "trash" in the Type description. Check the list above to make sure you cover all cases.
+
+\part[10]  Notice that the addresses in the fire and incidents databases are recorded differently (see example in attachment. Note that they should indicate a match when you are done).  Draw a process map that will convert the addresses so that they do match each other.  Note that addresses ending in "00" indicate that it is not an exact address, but identifies the block on the street.  (i.e. when you are done, the field(s) with the address will match using `join` commands that identify equalities)
+
+\end{parts}
+
+\begin{solution}[2in]
+i. Search for any of the words (including possibility of initial capital) within the type description.
+ii. Include if one of the words is available, or if the council\_district == 9
+
+
+<<warning=FALSE, message=FALSE>>=
+keywordsregex <- "[B|b]uilding|[S|s]tructure|[T|t]rash"
+streetnumberregex <- "^\\d|"
+pittsburgh_building <- pittsburgh_fire_incidents %>%
+  filter(str_detect(Type, keywordsregex),
+         !str_detect(address, "\\&")) %>%
+  mutate(STREET_NUM=str_extract(address, 
+                     "[:digit:]+(?=[:space:])"),
+         STREET_NAME=str_extract(address, 
+                     "(?<=BLOCK[:space:])[[:alpha:]+[:space:]]*(?=,)"),
+         block_num=floor(as.numeric(STREET_NUM)/100)*100)
+@
+
+From the fire incidents data
+i. Pull out the number at the beginning of `address` if available and call this STREET\_NUM.
+ii.  Skip the word 'BLOCK'
+iii. Pull remainder of street name after BLOCK up to the comma and call this STREET\_NAME
+iv.
+\end{solution}
+
+
+
+\newpage
+\question Duke GPA
+
+A survey of 55 Duke University students asked about their GPA, number of hours they study at night, 
+number of nights they go out, and their gender.
+<<echo = FALSE, warning=FALSE, message=FALSE>>=
+library(openintro)
+data(gpa)
+gpa_lm1 <- lm(gpa ~ studyweek, data=gpa)
+summary(gpa_lm1)
+@
+
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE, height=4>>=
+par(mfrow=c(2,2))
+plot(gpa_lm1)
+par(mfrow=c(1,1))
+title("Diagnostic plots")
+@
+
+\begin{parts}
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
+\part[10]  The three other variables collected were number of hours the students slept per night, number of nights they go out, and gender. (note that `studyweek` is already in the model)  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE, height=4>>=
+gpa$residulas <- gpa_lm1$residuals
+gpaplot <- ggplot(gpa, aes(y=residulas))
+p1 <- gpaplot + geom_point(aes(x=studyweek))
+p2 <- gpaplot + geom_point(aes(x=sleepnight))
+p3 <- gpaplot + geom_point(aes(x=out))
+p4 <- gpaplot + geom_point(aes(x=gender))
+multiplot(p1, p2, p3, p4, cols=2)
+@
+\end{parts}
+
+\begin{solution}[2in]
+
+\end{solution}
+\newpage
+\question Heart transplant success.
+
+The Stanford University Heart Transplant Study was conducted to determine whether an experimental heart transplant program increased lifespan. Each patient entering the program was officially designated a heart transplant candidate, meaning that he was gravely ill and might benefit from a new heart. 
+Patients were randomly assigned into treatment and control groups. Patients in the treatment group received a transplant, and those in the control group did not. The table below displays how many patients survived and died in each
+group.
+
+<<echo=FALSE>>=
+heart <- data.frame(outcome=c("alive", "dead"),
+                    control=c(6, 22),
+                    treatment=c(24, 51))
+heart
+@
+
+
+\begin{parts}
+\part[10]  Write a process map that will allow you to answer the question if receiving a transplant was more likely to survive than not receiving a transplant.
+
+\part[5] Write the null and alternative hypothesis for this question (from (a)).
+
+\part[10] This figure is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
+
+
+
+<<echo=FALSE, fig=TRUE>>=
+#VERSION D
+set.seed(1234)
+pControl <- 6./28
+heartsim <- function(i){
+              control <- sum(sample(x=c(1,0), 
+                            size=75, prob = c(pControl, 1-pControl), 
+                            replace = TRUE))
+}
+heartout <-sapply(1:10000, heartsim)
+tailnulltrue <- length(heartout[heartout > 24])/length(heartout)
+#iint(tailnulltrue)
+hist(heartout, breaks = 36, main = "Simulation of heart transplant study", xlab = "Survived", xlim=c(0, 35))
+@
+
+
+\begin{solution}[3in]
+Process map:
+\begin{enumerate}
+  \item  Calculate the probability of a member of the control group yawning.
+  \item  Create a simulation that draws samples of the same size as the treatment group, with the probability of yes being the same as the control group.
+  \item  Rerun that simulation 10000 times
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the treatment group that yawned.
+  \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
+\end{enumerate}
+
+\end{solution}
+\end{parts}
+
+\end{questions}
+\end{document}
