@@ -336,7 +336,9 @@ multiplot(d1, d2, d3, d4, cols=2)
 \end{parts}
 
 \begin{solution}[2in]
-a. The study week has a high p-value, so it is likely not informative.  The residuals vs fitted looks good
+a. The study week has a high p-value, so it is likely not informative.  The residuals vs fitted looks good.  The qqplot is questionable.
+
+b. None of the variables look very good.  Hours of sleep per night could make the arguement that the extreme low end disappears as hours increases so that could be a candidate.
 \end{solution}
 
 \newpage
@@ -373,8 +375,11 @@ multiplot(b1, b2, b3, b4, cols=2)
 @
 \end{parts}
 
-\begin{solution}[4in]
+\begin{solution}[2in]
+a. The hip girth looks significant based on p-value. For the diagnostic plots, all of the plots do not seem that good. 
+The qq plot is off. Scale-location is not flat. Cook's distance identifies outliers.
 
+b. Waist, shoulder, and chest girth all look significant as the residual plots show trends.  Thigh does not.  Potentially, it is correlated with hip as they are close to each other.
 \end{solution}
 
 
@@ -416,7 +421,9 @@ multiplot(g1, g2, g3, g4, cols=2)
 \end{parts}
 
 \begin{solution}[4in]
+a.  Mother's iq has a very low p-value so it is significant.  All plots are roughly right, so you would not reject the model, but it could be improved.
 
+b.  Hours of reading is the most promising candidate. Next is father's iq.  Hours on educational or cartoon programming are not promising.
 \end{solution}
 
 \newpage
@@ -460,15 +467,19 @@ hist(heartout, breaks = 36, main = "Simulation of heart transplant study", xlab 
 
 
 \begin{solution}[3in]
-Process map:
+a. Process map:
 \begin{enumerate}
-  \item  Calculate the probability of a member of the control group yawning.
+  \item  Calculate the probability of a member of the control group surviving.
   \item  Create a simulation that draws samples of the same size as the treatment group, with the probability of yes being the same as the control group.
   \item  Rerun that simulation 10000 times
-  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the treatment group that yawned.
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the treatment group that survived
   \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
 \end{enumerate}
 
+b.  H0: The treatment group has the same probability of survival as the control group.
+    H1: The treatment group has a better probability of survival as the control group.
+
+c.  Draw a line on the histogram corresponding to the number of people in the treatment group that survived (24)
 \end{solution}
 \end{parts}
 
@@ -513,15 +524,19 @@ hist(dailyout, breaks=30, main = "Simulation of 1099 college students watching T
 
 
 \begin{solution}[3in]
-Process map:
+a. Process map:
 \begin{enumerate}
-  \item  Calculate the probability of a member of the control group yawning.
-  \item  Create a simulation that draws samples of the same size as the treatment group, with the probability of yes being the same as the control group.
+  \item  Calculate the probability of a member of the control group (HS) watching the Daily Show.
+  \item  Create a simulation that draws samples of the same size as the treatment group (college), with the probability of yes being the same as the control group (HS).
   \item  Rerun that simulation 10000 times
-  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the treatment group that yawned.
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the college group that watch The Daily Show.
   \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
 \end{enumerate}
 
+b.  H0: The College group has the same probability of watching The Daily show as the High school group.
+    H1: The College group has a higher probability of watching The Daily show as the High school group.
+
+c.  Draw a line on the histogram corresponding to the number of people in the college group that watch The Daily Show (366)
 \end{solution}
 \end{parts}
 
@@ -567,14 +582,19 @@ hist(oilout, breaks=30, main = "Simulation of 438 college students asked if they
 
 
 \begin{solution}[3in]
-Process map:
+a. Process map:
 \begin{enumerate}
-  \item  Calculate the probability of a member of the control group yawning.
-  \item  Create a simulation that draws samples of the same size as the treatment group, with the probability of yes being the same as the control group.
+  \item  Calculate the probability of a member of the control group (HS) watching the Daily Show.
+  \item  Create a simulation that draws samples of the same size as the treatment group (college), with the probability of yes being the same as the control group (HS).
   \item  Rerun that simulation 10000 times
-  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the treatment group that yawned.
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the college group that watch The Daily Show.
   \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
 \end{enumerate}
+
+b.  H0: The College group has the same probability of supporting off shore drilling as the non-college graduates.
+    H1: The College group has a different probability of supporting off shore drilling as the non-college graduates.
+
+c.  Draw a line on the histogram corresponding to the number of people in the college group that supporting off shore drilling  (154)
 
 \end{solution}
 \end{parts}
