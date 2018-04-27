@@ -114,7 +114,7 @@
 \centering
 \gradetable
 
-\newpage
+% newpage
 
 <<echo=FALSE, warning=FALSE, message=FALSE>>=
 knitr::opts_chunk$set(echo = TRUE)
@@ -125,6 +125,7 @@ library(stringr)
 library(lubridate)
 library(ggplot2)
 library(readr)
+library(broom)
 library(openintro)
 # Multiple plot function
 #
@@ -172,8 +173,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
-datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
@@ -218,7 +219,7 @@ Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which i
 \end{parts}
 
 
-\newpage
+% newpage
 \question [25]
 Commercial property insurance
 
@@ -282,7 +283,6 @@ pittsburgh_building <- pittsburgh_fire_incidents %>%
 
 From the fire incidents data
 
-
 From the Pittsburgh Fire data
 i. Search for any of the words (includine possibility of initial capital) within the type description.
 ii. Include row if one of the words is available
@@ -305,11 +305,12 @@ Duke GPA
 
 A survey of 55 Duke University students asked about their GPA, number of hours
 they study at night, number of nights they go out, and their gender.
-<<echo = FALSE, warning=FALSE, message=FALSE>>=
+
+<<warning=FALSE, message=FALSE>>=
 library(openintro)
 data(gpa)
 gpa_lm1 <- lm(gpa ~ studyweek, data=gpa)
-summary(gpa_lm1)
+tidy(gpa_lm1)
 @
 
 
@@ -341,15 +342,15 @@ a. The study week has a high p-value, so it is likely not informative.  The resi
 b. None of the variables look very good.  Hours of sleep per night could make the arguement that the extreme low end disappears as hours increases so that could be a candidate.
 \end{solution}
 
-\newpage
+% newpage
 \question Body measurements of active individuals 
 
 Researchers studying anthropometry collected body girth measurements and skeletal diameter measurements, as well as age, weight, height and gender for 507 physically active individuals.  Below is the result for a model relating the weight measured in kilograms and the hip girth measured in centimeters.
 
-<<echo = FALSE, warning=FALSE, message=FALSE>>=
+<<warning=FALSE, message=FALSE>>=
 data(bdims)
 bdims_lm <- lm(wgt ~ hip.gi, data=bdims)
-summary(bdims_lm)
+tidy(bdims_lm)
 @
 
 
@@ -383,7 +384,7 @@ b. Waist, shoulder, and chest girth all look significant as the residual plots s
 \end{solution}
 
 
-\newpage
+% newpage
 \question Analytics skills of gifted children
 
 An investigator is interested in understanding the relationship, if any, between the analytical skills of young gifted children and the following variables: father's IQ, mother's IQ, age in month when the child first said ‘mummy’ or ‘daddy’, age in month when the child first counted to 10 successfully, average number of hours per week the child's mother or father reads to the child, average number of hours per week the child watched an educational program on TV during the past three months, average number of hours per week the child watched cartoons on TV during the past three months. The analytical skills are evaluated using a standard testing procedure, and the score on this test is used as the response variable.
@@ -391,10 +392,11 @@ An investigator is interested in understanding the relationship, if any, between
 Data were collected from schools in a large city on a set of thirty-six children who were identified as gifted children soon after they reached the age of four.  Below is a regression model looking at analytical skills test score as a function of the mother's IQ along with the diagnostic plots.
 
 
-<<echo = FALSE, warning=FALSE, message=FALSE>>=
+
+<<warning=FALSE, message=FALSE>>=
 data(gifted)
 gifted_lm <- lm(score ~ motheriq, data=gifted)
-summary(gifted_lm)
+tidy(gifted_lm)
 @
 
 
@@ -426,7 +428,7 @@ a.  Mother's iq has a very low p-value so it is significant.  All plots are roug
 b.  Hours of reading is the most promising candidate. Next is father's iq.  Hours on educational or cartoon programming are not promising.
 \end{solution}
 
-\newpage
+% newpage
 \question Heart transplant success.
 
 The Stanford University Heart Transplant Study was conducted to determine whether an experimental heart transplant program increased lifespan. Each patient entering the program was officially designated a heart transplant candidate, meaning that he was gravely ill and might benefit from a new heart. 
@@ -484,7 +486,7 @@ c.  Draw a line on the histogram corresponding to the number of people in the tr
 \end{parts}
 
 
-\newpage
+% newpage
 \question The Daily Show
 .
 A 2010 Pew Research foundation poll indicates that among 1,099 college graduates, 33\% watch The Daily Show. Meanwhile, 22\% of the 1,110 people with a high
@@ -540,7 +542,7 @@ c.  Draw a line on the histogram corresponding to the number of people in the co
 \end{solution}
 \end{parts}
 
-\newpage
+% newpage
 \question Offshore drilling in California
 
 A 2010 survey asked 827 randomly sampled registered voters in California "Do you support? Or do you oppose? Drilling for oil and natural gas off the Coast of
