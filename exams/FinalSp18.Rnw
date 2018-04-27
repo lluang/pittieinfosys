@@ -172,8 +172,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
-#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
@@ -207,10 +207,10 @@ Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which i
 \begin{solution}[4.7in]
 
 \begin{itemize}
-  \item Context - Concilman Burgess
-  \item Need - relationship between PLI violations and fires.
-  \item Vision - Show relationship between number of violations and likelihood of fires on that block
-  \item Outcome - Identify properties with many violations and refer them to City agencies for potential seizure.
+  \item Context - Concilman Burgess is concerned with economic development in his district and thinks that PLI violations are a sign of neglect and such properties should be considered for seizure.
+  \item Need - Demonstrate a relationship between PLI violations and fires.
+  \item Vision - Show relationship between number of violations and the probability of a fire for a property.
+  \item Outcome - Identify properties with many violations and refer them to City agencies for additional inspection or seizure.
 \end{itemize}
 
 \end{solution}
@@ -234,10 +234,10 @@ An insurance company believes that a history of permits, licensing, and inspecti
 \begin{solution}[4.7in]
 
 \begin{itemize}
-  \item Context - Concilman Burgess
-  \item Need - relationship between PLI violations and fires.
-  \item Vision - Show relationship between number of violations and likelihood of fires on that block
-  \item Outcome - Identify properties with many violations and refer them to City agencies for potential seizure.
+  \item Context - An insurance company gives competive quotes on insurance policies but need to ensure it covers the expected long term cost for paying out claims.
+  \item Need - relationship between PLI violations and the risk of fires.
+  \item Vision - Based on PLI violations and other data, what is the risk of fire for a property.
+  \item Outcome - Use risk of fire to help in setting insurance rates.
 \end{itemize}
 
 \end{solution}
@@ -266,8 +266,7 @@ pittsburgh_fire_incidents %>%
 \end{parts}
 
 \begin{solution}[2in]
-i. Search for any of the words (includine possibility of initial capital) within the type description.
-ii. Include if one of the words is available
+
 
 
 <<warning=FALSE, message=FALSE>>=
@@ -282,10 +281,19 @@ pittsburgh_building <- pittsburgh_fire_incidents %>%
 @
 
 From the fire incidents data
-i. Pull out the number at the beginning of `address` if available and call this STREET\_NUM.
-ii.  Skip the word 'BLOCK'
-iii. Pull remainder of street name after BLOCK up to the comma and call this STREET\_NAME
-iv.
+
+
+From the Pittsburgh Fire data
+i. Search for any of the words (includine possibility of initial capital) within the type description.
+ii. Include row if one of the words is available
+iii. Pull out the number at the beginning of `address` if available and call this STREET\_NUM.
+iv.  Skip the word 'BLOCK'
+v. Pull remainder of street name after BLOCK up to the comma and call this STREET\_NAME
+
+From PLI data
+i. In address, round to nearest 100
+
+Join Fire data on PLI data using rounded number and street name.
 \end{solution}
 
 
@@ -313,22 +321,22 @@ title("Diagnostic plots")
 @
 
 \begin{parts}
-\part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the linear regression summary table.
 \part[10]  The three other variables collected were number of hours the students slept per night, number of nights they go out, and gender. (note that `studyweek` is already in the model)  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
 
 <<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 gpa$residulas <- gpa_lm1$residuals
 gpaplot <- ggplot(gpa, aes(y=residulas))
-p1 <- gpaplot + geom_point(aes(x=studyweek))
-p2 <- gpaplot + geom_point(aes(x=sleepnight))
-p3 <- gpaplot + geom_point(aes(x=out))
-p4 <- gpaplot + geom_point(aes(x=gender))
-multiplot(p1, p2, p3, p4, cols=2)
+d1 <- gpaplot + geom_point(aes(x=studyweek))
+d2 <- gpaplot + geom_point(aes(x=sleepnight))
+d3 <- gpaplot + geom_point(aes(x=out))
+d4 <- gpaplot + geom_point(aes(x=gender))
+multiplot(d1, d2, d3, d4, cols=2)
 @
 \end{parts}
 
-\begin{solution}[4in]
-
+\begin{solution}[2in]
+a. The study week has a high p-value, so it is likely not informative.  The residuals vs fitted looks good
 \end{solution}
 
 \newpage
@@ -351,7 +359,7 @@ title("Diagnostic plots")
 @
 
 \begin{parts}
-\part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the linear regression summary table.
 \part[10]  Four other variables collected were the waist girth, chest girth, shoulder girth, and thigh girth  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
 
 <<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
@@ -393,7 +401,7 @@ title("Diagnostic plots for analytical score vs Mother's IQ")
 @
 
 \begin{parts}
-\part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the linear regression summary table.
 \part[10]  Four other variables collected were the father's IQ (fathersiq), average number of hours per week the child's parents read  to the child (read), average number of hours per week the child watched educational programming on TV (edutv), and the average number of hours per week the child watched cartoons (cartoons). Which variable(s) should be added to the model and why?
 
 <<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
