@@ -93,11 +93,11 @@
 \date{\docdate}
 \maketitle
 \centering
-{\bf A}
+{\bf B}
 
 \begin{enumerate}
 \item  Write your name at the top of this page.
-\item  There are four questions (7 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  There are four questions (8 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
 \item  You may have a double sided sheet of paper for notes (crib sheet).
 \item  The phrase {\em describe the process} can be answered using any of the following:
   \begin{enumerate}
@@ -172,8 +172,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
-#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
@@ -272,7 +272,10 @@ An investigator is interested in understanding the relationship, if any, between
 
 Data were collected from schools in a large city on a set of thirty-six children who were identified as gifted children soon after they reached the age of four.  Below is a regression model looking at analytical skills test score as a function of the mother's IQ along with the diagnostic plots.
 
-
+\begin{parts}
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the regression summary table.
+\part[10]  Four other variables collected were the father's IQ (fathersiq), average number of hours per week the child's parents read  to the child (read), average number of hours per week the child watched educational programming on TV (edutv), and the average number of hours per week the child watched cartoons (cartoons). Which variable(s) should be added to the model and why?
+\end{parts}
 <<echo = FALSE, warning=FALSE, message=FALSE>>=
 data(gifted)
 gifted_lm <- lm(score ~ motheriq, data=gifted)
@@ -287,10 +290,6 @@ par(mfrow=c(1,1))
 title("Diagnostic plots for analytical score vs Mother's IQ")
 @
 
-\begin{parts}
-\part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
-\part[10]  Four other variables collected were the father's IQ (fathersiq), average number of hours per week the child's parents read  to the child (read), average number of hours per week the child watched educational programming on TV (edutv), and the average number of hours per week the child watched cartoons (cartoons). Which variable(s) should be added to the model and why?
-
 <<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 gifted$residuals <- gifted_lm$residuals
 giftedplot <- ggplot(gifted, aes(y=residuals)) + ylab("Score") 
@@ -300,9 +299,8 @@ g3 <- giftedplot + geom_point(aes(x=edutv)) + xlab("Educational TV (hours per da
 g4 <- giftedplot + geom_point(aes(x=cartoons)) + xlab("Cartoons (hour per day)") +ggtitle("Residuals by hours of cartoons ")
 multiplot(g1, g2, g3, g4, cols=2)
 @
-\end{parts}
 
-\begin{solution}[4in]
+\begin{solution}[2in]
 
 \end{solution}
 

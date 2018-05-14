@@ -97,7 +97,7 @@
 
 \begin{enumerate}
 \item  Write your name at the top of this page.
-\item  There are four questions (7 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  There are four questions (8 pages) and the data dictionaries associated with the Fire and Permits, Licencing, and Inspection data from the WPRDC (2 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
 \item  You may have a double sided sheet of paper for notes (crib sheet).
 \item  The phrase {\em describe the process} can be answered using any of the following:
   \begin{enumerate}
@@ -172,8 +172,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
-#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
@@ -196,7 +196,7 @@ pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_v
 
 \begin{questions}
 \newpage
-\\question [25]
+\question [25]
 Pittsburgh 9th district
 
 Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstical to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land ownders to put the property on the market or outright seizure for violations of a range of ordinances.
@@ -218,7 +218,7 @@ Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which i
 
 \end{parts}
 
-
+\newpage
 \question 
 Fires and PLI
 
@@ -274,6 +274,10 @@ bdims_lm <- lm(wgt ~ hip.gi, data=bdims)
 summary(bdims_lm)
 @
 
+\begin{parts}
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the regression summary table.
+\part[10]  Four other variables collected were the waist girth, chest girth, shoulder girth, and thigh girth  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+\end{parts}
 
 <<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 par(mfrow=c(2,2))
@@ -281,10 +285,6 @@ plot(bdims_lm)
 par(mfrow=c(1,1))
 title("Diagnostic plots")
 @
-
-\begin{parts}
-\part[10]  Comment on the quality of the model given the four diagnostic plots and the ANOVA table.
-\part[10]  Four other variables collected were the waist girth, chest girth, shoulder girth, and thigh girth  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
 
 <<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 bdims$residuals <- bdims_lm$residuals
@@ -295,9 +295,8 @@ b3 <- bdimsplot + geom_point(aes(x=sho.gi)) + xlab("Shoulder girth (cm)") +ggtit
 b4 <- bdimsplot + geom_point(aes(x=thi.gi)) + xlab("Thigh girth (cm)") +ggtitle("Residuals by thigh girth")
 multiplot(b1, b2, b3, b4, cols=2)
 @
-\end{parts}
 
-\begin{solution}[4in]
+\begin{solution}[2in]
 
 \end{solution}
 
