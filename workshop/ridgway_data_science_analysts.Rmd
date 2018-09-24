@@ -1,0 +1,238 @@
+---
+title: "Introduction to Analytics for Policy Studies"
+author: "Louis Luangkesorn"
+date: "September 26, 2018"
+output:
+  beamer_presentation:
+    slide_level: 2
+    theme: "AnnArbor"
+  slidy_presentation:
+    slide_level: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+#  Introduction
+
+## Who am I
+
+-  Louis Luangkesorn
+-  Assistant Professor of Industrial Engineering
+-  Former Associate Operations Researcher RAND Corporation
+-  Current research:
+    -  Health care operations
+    -  Disaster response
+    -  Simulation methods
+    
+## What we will cover
+
+-  What is analytics?
+-  What questions can we answer using quantitative methods?
+-  How do I ask good questions as a consumer of quantiative analysis?
+-  How can I work with quantitative analysts?
+
+#  What is analytics?
+
+## Definition of analytics
+
+- *The Analytics Section of INFORMS is focused on promoting the use of data-driven analytics and fact-based decision making in practice. The Section recognizes that analytics is seen as both (i) a complete business problem solving and decision making process, and (ii) a broad set of analytical methodologies that enable the creation of business value.*  
+    -  INFORMS Section on Analytics
+
+
+## Three categories of Analytics
+
+- Descriptive analytics
+    - Prepares and analyzes historical data
+    - Identifies patterns from samples for reporting of trends
+- Predictive analytics
+    - Predicts future probabilities and trends
+    - Finds relationships in data that may not be readily apparent with descriptive analysis
+- Prescriptive analytics
+    - Evaluates and determines new ways to operate
+    - Targets business objectives
+    - Balances all constraints
+
+## Some methods used analytics (i.e. buzzwards)
+
+-  Business Intelligence - Focus on displaying data summaries from data found in databases. Often refers to visualizations.
+-  Statistics - Methods of testing hypothesis using observed data.
+-  Data science - Predictive models
+-  Operations Research - Mathematical models of operations
+    -  Optimization
+    -  Queueing
+    -  Simulation
+    
+    
+#  What questions can we answer using quantitative methods?
+
+##  Descriptive analytics
+
+-  How does $A$ compare with $B$?
+-  How does $A$ change over time?
+-  How much does $A$ vary?
+
+## Predictive analytics
+
+-  What is the current trend of A?
+-  There is a new observation $a$ which is a type of A, what are its characteristics?
+-  How does my system perform?
+-  Event $C$ just occurred, what will A be in the future?
+
+## Prescriptive analytics
+
+-  What is the best way of designing my system?
+-  What is the best way to allocating figures for a goal?
+-  I am trying to stop someone from accomplishing their goals? What is the best way for them to accomplish their goals, and what is the best way for me to stop them?
+
+#  How do I ask good questions as a consumer of quantitative analysis?
+
+## Why are you talking to an analyst?
+
+-  What are potential results of the data analysis?
+-  What kind of argument will you make with the data?
+-  What kind of decisions will result from seeing outcomes?
+
+## Talking about results
+
+-  How will the data be used to support the decisions?
+-  How should the data be presented to best support the use of the data?
+-  Mockups of the output
+    -  Example reports of outcomes
+    -  Simplified graphs
+    -  Sketches of displays or user interfaces to spark discussion of using a tool
+
+## Why are we talking to an analyst?
+
+-  The results of data analysis should be a decision.
+-  The results need to advocate one choice over another.
+-  Question:  What makes a convincing case of one choice over another?  Will the data analysis provide that case?
+
+## Aspects of an argument
+
+-  Who needs to be convinced? What is their background, their priorities?
+-  Are they interested in subjective or objective measurements?
+-  Do they need an experiment?
+
+This defines how simple or complex the data analysis needs to be.
+
+## Outcome
+
+-  How will the data analysis be used?
+-  How will it be integrated into the organization?
+-  Who will own the integration?
+-  Who will use it?
+-  How will success be measured?
+
+## Who will have to use the results
+
+-  Who will interpret or act on the work?
+-  Who are they?
+-  What are their requirements?
+
+## Four Aspects of data you need to know
+
+- Volume
+- Velocity
+- Variety
+- Veracity
+
+![3Vs of Big data](figures/BigData3vs.png)<!-- .element height="50%" width="50%" -->
+
+
+## Varacity
+
+
+-  Is the data we are looking at relevant to the question being asked?
+-  Data is of uncertain origin, of uncertain quality, and of uncertain relevance.
+-  Contrast with the case where the data collection is designed for the purpose of doing the analysis.
+-  e.g.  data collection errors, typos, misdefined.
+
+
+## Volume
+
+<div class="columns-2">
+-  How much are you working with?
+-  How was it collected?
+-  How complete is it?
+
+![3Vs of Big data](figures/BigData3vs.png)
+</div>
+
+## Variety
+
+-  How many different examples are in the data set?
+-  Does diversity in the dataset match the population of interest?
+-  How to ensure that you are not missing entire sections of the population?
+    - Did you take special measures to sample difficult to sample elements?
+    - Are minority or uncommon elements accounted for in data collection and analysis?
+
+## Velocity
+
+-  Data can be time sensitive.
+-  Static data (census)
+-  Changing slowly over time (popularity)
+-  Linked to an incident where an immediate response is required (natural disaster, major accident, disease outbreak)
+
+
+
+
+## Measures of centrality and variance
+
+-  For every number, there should be a measure of centrality, and a measure of the variation or error.
+-  e.g. mean and standard deviation
+-  All values should have an estimate of variance.
+
+#  How can I work with quantitative analysts?
+
+##  What is the role of the analysts?
+
+![The aspects of the data scientist](figures/Data_Science_VD.png)
+##  How do quantitative analysts work?
+
+![Analysts workflow](figures/tidy1.png)
+
+##  Analysts workflow
+
+-  Read in the data
+-  Convert data into usable form
+-  Exploratory data analysis
+-  Develop hypothesis
+-  Data manipulation
+-  Modeling
+-  Communicate result
+
+##  Working with data
+
+![Analysts workflow](figures/datasciencemethod.png)
+
+## Exploratory Data Analysis
+
+-  Visualizations
+-  Tell potential stories through the visualization
+-  Raise questions, develop alternative hypothesis
+
+## Transform and model
+
+-  Create falsifiable hypothesis
+-  Create experiment/approach to test hypothesis
+-  Develop statistical/mathematical model
+-  Communicate results with subject matter expert
+-  Develop new thesis and epeat
+
+##  Communicate results
+
+-  How to report results
+-  How to communicate with stakeholders
+-  How to let stakeholders explore scenarios
+
+
+##  How to ask good questions?
+
+##  What can quantitive analysists do?
+
+##  What forms should the data need to be in?
+
+##  
