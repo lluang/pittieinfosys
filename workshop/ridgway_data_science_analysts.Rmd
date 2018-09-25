@@ -36,6 +36,14 @@ knitr::opts_chunk$set(echo = FALSE)
 
 #  What is analytics?
 
+## Why are we talking to an analyst?
+
+-  The results of data analysis should be a decision.
+-  What is the driver/key variable that will drive the decision to be made?
+    -  What information will drive the decision?
+    -  What are the possible alternative data outcomes and how will they change your decision?
+-  What is the alternative?
+
 ## Definition of analytics
 
 - *The Analytics Section of INFORMS is focused on promoting the use of data-driven analytics and fact-based decision making in practice. The Section recognizes that analytics is seen as both (i) a complete business problem solving and decision making process, and (ii) a broad set of analytical methodologies that enable the creation of business value.*  
@@ -59,11 +67,12 @@ knitr::opts_chunk$set(echo = FALSE)
 
 -  Business Intelligence - Focus on displaying data summaries from data found in databases. Often refers to visualizations.
 -  Statistics - Methods of testing hypothesis using observed data.
--  Data science - Predictive models
+-  Data science - Predictive models -  Predict an outcome
 -  Operations Research - Mathematical models of operations
     -  Optimization
     -  Queueing
     -  Simulation
+    -  Used when determining resources needed or effect of resources employed.
     
     
 #  What questions can we answer using quantitative methods?
@@ -109,6 +118,8 @@ knitr::opts_chunk$set(echo = FALSE)
 -  The results of data analysis should be a decision.
 -  The results need to advocate one choice over another.
 -  Question:  What makes a convincing case of one choice over another?  Will the data analysis provide that case?
+    -  What information will drive the decision?
+    -  What are the possible alternative data outcomes and how will they change your decision?
 
 ## Aspects of an argument
 
@@ -231,8 +242,67 @@ This defines how simple or complex the data analysis needs to be.
 
 ##  How to ask good questions?
 
-##  What can quantitive analysists do?
+-  Define the problem
+    -  Usually a potential decision that needs to be made.
+    -  What are the alternative decisions?
+-  Think about how the results will be used?
+    -  What choices correspond to the possible outcomes of the analysis?
+-  What is the role of uncertainty?
+    -  How sensitive is the decision making to the possible outcomes of the analysis?
+    -  What is the cost of the sensitivity?
 
-##  What forms should the data need to be in?
+#  Example - Hurricane Florence Mass Care resources
 
-##  
+##  Hurricane Florence path
+
+![Hurricane Florence Spaghetti Models](figures/Hurricane-Florence-spaghetti-model-1502236.jpg)
+
+
+##  Decision to be made
+
+-  How much sheltering and feeding resources should be mobilized to be sent into North and South Carolina (and GA and VA) for Hurricane Florence?
+    -  Shelter supplies (cots, blankets, showers)
+    -  Feeding (kitchens, meals, water, fuel)
+    -  People (sheltering, feeding, and kitchen staff)
+-  How sensitive is this to errors?
+    -  Location?
+    -  Quantity?
+
+## What information do we need to decide how much and where?
+
+-  If we cannot get that information, is there a useful proxy?
+-  If the information is not directly available, can we build a model?
+    - Statistical
+    - Operations research
+
+
+##  What data is available?
+
+-  Hurricane track and estimated wind.
+-  Hydrology (river forecasts)
+-  Demographics
+
+##  Hydrology
+
+![AHPS Flood gages 09/15/2018](figures/ahpsHURFLORENCE20180915.png)
+
+##  Specific hydrology
+
+![Hurricane Florence Flood gage](figures/chin7HURFLORENCE20180915.png)
+
+## Sources of uncertainty
+
+-  Path it will take
+-  Wind
+-  Level of flooding on rivers
+-  What is the impact on uncertainty?
+
+##  Impact of uncertainty
+
+-  How uncertain is the hurricane location?
+-  A truck can travel around 400 miles in a day.
+-  What is the impact of being off by 10% on sheltering needs? Feeding needs?
+    - 20%
+    - what if you would have a better answer the next day?
+    
+## 
