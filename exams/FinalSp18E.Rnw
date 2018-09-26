@@ -1,5 +1,5 @@
-\documentclass[12pt, addpoints]{exam}
-%\documentclass[12pt, addpoints, answers]{exam}
+%\documentclass[12pt, addpoints]{exam}
+\documentclass[12pt, addpoints, answers]{exam}
 \usepackage{Sweave}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -14,7 +14,7 @@
 \newcommand{\bs}{\texorpdfstring{\char`\\}{}}
 
 \newcommand{\docversion}{2.5}
-\newcommand{\docdate}{April 27, 2016}
+\newcommand{\docdate}{May 14, 2018}
 %\newcommand{\docdate}{\today}
 
 %--------------------------------------------------------------------
@@ -93,7 +93,7 @@
 \date{\docdate}
 \maketitle
 \centering
-{\bf D}
+{\bf E}
 
 \begin{enumerate}
 \item  Write your name at the top of this page.
@@ -126,6 +126,7 @@ library(lubridate)
 library(ggplot2)
 library(readr)
 library(openintro)
+library(broom)
 # Multiple plot function
 #
 # ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
@@ -172,8 +173,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
-datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
@@ -195,9 +196,13 @@ pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_v
 @
 
 \begin{questions}
-\question [25] Pittsburgh 9th district
+\question [25]
+Commercial property insurance
 
-Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstacle to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land owners to put the property on the market or outright seizure for violations of a range of ordinances.
+Insurance companies sell policies to commercial property owners so that in the case of major damage such as a fire the property owners will have resources to repair their property. 
+The insurance company wants to set rates so that in the long run, they receive more in insurance premiums (rates) than they pay out in claims. 
+However, if they set premiums too high, competitors can charge less and still make a long term profit.
+An insurance company believes that a history of permits, licensing, and inspection violations as well as major and minor fire incidents should be used to adjust premiums.  
 
 \begin{parts}
 
@@ -206,15 +211,16 @@ Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which i
 \begin{solution}[4.7in]
 
 \begin{itemize}
-  \item Context - Councilman Burgess
-  \item Need - relationship between PLI violations and fires.
-  \item Vision - Show relationship between number of violations and likelihood of fires on that block
+  \item Context - insurance company needs to make money on insurance policies
+  \item Need - Show relationship between PLI violations and fire risk.
+  \item Vision - Show relationship between number of violations and likelihood of fires on that block.  Plots showing frequency. 
   \item Outcome - Identify properties with many violations and refer them to City agencies for potential seizure.
 \end{itemize}
 
 \end{solution}
 
 \end{parts}
+
 \newpage
 \question Fires and PLI
 
@@ -230,9 +236,9 @@ pittsburgh_fire_incidents %>%
   head(10)
 @
 
-\part[10]  Because Councilman Burgess is only interested in property neglect fires, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash in Council District 9. Note: look for the words "building", "structure", or "trash" in the Type description. Check the list above to make sure you cover all cases.
+\part[10]  Because Councilman Burgess is only interested in property neglect fires, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash in Council District 9. Note: look for the words "building", "structure", or "trash" in the Type description. Check your answer against the list above to consider if you will include Type descriptions that you cannot see.
 
-\part[10]  Notice that the addresses in the fire and incidents databases are recorded differently (see example in attachment. Note that they should indicate a match when you are done).  Draw a process map that will convert the addresses so that they do match each other.  Note that addresses ending in "00" indicate that it is not an exact address, but identifies the block on the street.  (i.e. when you are done, the field(s) with the address will match using `join` commands that identify equalities)
+\part[10]  Notice that the addresses in the fire and incidents databases are recorded differently (see example in attachment. Note that the examples should match each other when you are done).  Draw a process map that will convert the addresses so that they do match each other.  Note that addresses ending in "00" indicate that it is not an exact address, but identifies the block on the street.  (i.e. when you are done, the field(s) with the address will match using `join` commands that identify equalities)
 
 \end{parts}
 
@@ -269,13 +275,13 @@ An investigator is interested in understanding the relationship, if any, between
 Data were collected from schools in a large city on a set of thirty-six children who were identified as gifted children soon after they reached the age of four.  Below is a regression model looking at analytical skills test score as a function of the mother's IQ along with the diagnostic plots.
 
 \begin{parts}
-\part[10]  Comment on the quality of the model given the four diagnostic plots and the regression summary table.
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the regression summary table. Note p-value, spread of residuals over x-axis, qq-line, scale-leverage (presence or lack of cook's distance). Note R-squared not applicable to evaluating a single model.
 \part[10]  Four other variables collected were the father's IQ (fathersiq), average number of hours per week the child's parents read  to the child (read), average number of hours per week the child watched educational programming on TV (edutv), and the average number of hours per week the child watched cartoons (cartoons). Which variable(s) should be added to the model and why?
 \end{parts}
 <<echo = FALSE, warning=FALSE, message=FALSE>>=
 data(gifted)
 gifted_lm <- lm(score ~ motheriq, data=gifted)
-summary(gifted_lm)
+tidy(gifted_lm)
 @
 
 
@@ -297,7 +303,10 @@ multiplot(g1, g2, g3, g4, cols=2)
 @
 
 \begin{solution}[2in]
-
+\begin{itemize}
+  \item  Answer to evaluation should note low p-value. r-squared not applicable as only one model is being evaluated.  Should also note following qq-plot, patterns in residuals (or lack), and if there are outliers, evidenced by the cook's distance appearing in scale-location plots
+  \item Adding a variable: should choose variables by finding a pattern in residuals when sorted by that variable.  Adding that variable to the model will then allow the model to include variation due to that variable.  Specifically, do NOT add variables where the residuals are random, as that variable imparts no information.
+\end{itemize}
 \end{solution}
 \newpage
 \question Offshore drilling in California
@@ -336,7 +345,7 @@ oilsim <- function(i){
 oilout <-sapply(1:10000, oilsim)
 tailnulltrue <- length(oilout[oilout > 154])/length(oilout)
 #iint(tailnulltrue)
-hist(oilout, breaks=30, main = "Simulation of 438 college students asked if they support off shore drilling in California", xlab = "Watchers")
+hist(oilout, breaks=30, main = "Simulation of 438 college students from (a)\n asked if they support off shore drilling in California", xlab = "Watchers")
 @
 
 

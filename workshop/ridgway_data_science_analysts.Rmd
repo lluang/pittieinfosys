@@ -1,6 +1,8 @@
 ---
-title: "Introduction to Analytics for Policy Studies"
+title: "Introduction to Quantitative Analytics for Policy Analysts"
+
 author: "Louis Luangkesorn"
+institute: "Department of Industrial Engineering"
 date: "September 26, 2018"
 output:
   beamer_presentation:
@@ -49,57 +51,68 @@ library(dplyr)
 ## Three categories of Analytics
 
 - Descriptive analytics
-    - Prepares and analyzes historical data
-    - Identifies patterns from samples for reporting of trends
 - Predictive analytics
-    - Predicts future probabilities and trends
-    - Finds relationships in data that may not be readily apparent with descriptive analysis
 - Prescriptive analytics
-    - Evaluates and determines new ways to operate
-    - Targets business objectives
-    - Balances all constraints
 
-## Some methods used analytics (i.e. buzzwards)
-
--  Business Intelligence - Focus on displaying data summaries from data found in databases. Often refers to visualizations.
--  Statistics - Methods of testing hypothesis using observed data.
--  Data science - Predictive models -  Predict an outcome
--  Operations Research - Mathematical models of operations
-    -  Optimization
-    -  Queuing
-    -  Simulation
-    -  Used when determining resources needed or effect of resources employed.
-    
-    
-#  What questions can we answer using quantitative methods?
-
-
-## Why are we talking to an analyst?
-
--  The results of data analysis should be a decision.
--  What is the driver/key variable that will drive the decision to be made?
-    -  What information will drive the decision?
-    -  What are the possible alternative data outcomes and how will they change your decision?
--  What is the alternative to the analyst?
+```{r, out.width = "150px", echo=FALSE}
+knitr::include_graphics("figures/typesofAnalyticsFramework-Figure4.jpg")
+```
 
 ##  Descriptive analytics
 
+- Identifies patterns from samples for reporting of trends
 -  How does $A$ compare with $B$?
 -  How does $A$ change over time?
 -  How much does $A$ vary?
 
 ## Predictive analytics
 
+- Predicts future probabilities and trends
+- Finds relationships in data that may not be readily apparent with descriptive analysis
 -  What is the current trend of A?
 -  There is a new observation $a$ which is a type of A, what are its characteristics?
 -  How does my system perform?
 -  Event $C$ just occurred, what will A be in the future?
 
 ## Prescriptive analytics
-
+- Evaluates and determines new ways to operate
+- Targets business objectives
+- Balances all constraints
 -  What is the best way of designing my system?
 -  What is the best way to allocating figures for a goal?
 -  I am trying to stop someone from accomplishing their goals? What is the best way for them to accomplish their goals, and what is the best way for me to stop them?
+
+
+## Some methods used analytics (i.e. buzzwards)
+
+-  Business Intelligence - Focus on displaying data summaries from data found in databases. Often refers to visualizations.
+-  Statistics - Methods of testing hypothesis using observed data.
+    -  Data science - Predictive models -  Predict an outcome
+-  Operations Research - Mathematical models of operations
+
+   
+```{r, out.width = "150px", echo=FALSE}
+knitr::include_graphics("figures/typesofAnalyticsFramework-Figure4.jpg")
+```
+    
+#  What questions can we answer using quantitative methods?
+
+
+## What is the use of analytics?
+
+-  The results of data analysis should be a decision.
+-  What is the driver/key variable that will drive the decision to be made?
+    -  What information will drive the decision?
+    -  What are the possible alternative data outcomes and how will they change your decision?
+-  What is the alternative to analysis?
+
+##  All models are wrong
+
+* *Remember that all models are wrong; the practical question is how wrong do they have to be to not be useful.*
+    - George Box
+* *Everything should be a simple as possible, but no simpler.*
+    - Einstein (attributed)
+
 
 #  How do I ask good questions as a consumer of quantitative analysis?
 
@@ -132,7 +145,8 @@ This defines how simple or complex the data analysis needs to be.
 -  Mockups of the output
     -  Example reports of outcomes
     -  Simplified graphs
-    -  Sketches of displays or user interfaces to spark discussion of using a tool
+    -  Sketches of displays or user interfaces to spark discussion of on what information is required
+-  Build intuition
     
 ## Outcome
 
@@ -157,10 +171,13 @@ knitr::include_graphics("figures/BigData3vs.png")
 
 
 -  Is the data we are looking at relevant to the question being asked?
--  Data is of uncertain origin, of uncertain quality, and of uncertain relevance.
+-  Is the data is of uncertain origin, of uncertain quality, and of uncertain relevance.
 -  Contrast with the case where the data collection is designed for the purpose of doing the analysis.
 -  e.g.  data collection errors, typos, incorrectly defined.
 
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("figures/BigData3vs.png")
+```
 
 ## Volume
 
@@ -176,25 +193,29 @@ knitr::include_graphics("figures/BigData3vs.png")
 
 -  How many different examples are in the data set?
 -  Does diversity in the dataset match the population of interest?
--  How to ensure that you are not missing entire sections of the population?
-    - Did you take special measures to sample difficult to sample elements?
-    - Are minority or uncommon elements accounted for in data collection and analysis?
+-  How to ensure that you are not missing minority members of the population?
+
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("figures/BigData3vs.png")
+```
 
 ## Velocity
 
 -  Data can be time sensitive.
 -  Static data (census)
--  Changing slowly over time (popularity)
--  Linked to an incident where an immediate response is required (natural disaster, major accident, disease outbreak)
+-  Does data change in character over time (changing setting or procedures)
+-  Does a decision need to be made with only current information
 
-
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("figures/BigData3vs.png")
+```
 
 
 ## Measures of centrality and variance
 
 -  For every number, there should be a measure of centrality, and a measure of the variation or error.
 -  e.g. mean and standard deviation
--  All values should have an estimate of variance.
+-  All values should have an estimate of variance and error.
 
 #  How can I work with quantitative analysts?
 
@@ -233,11 +254,11 @@ knitr::include_graphics("figures/datasciencemethod.png")
 
 ## Five basic visualizations
 
-- scatterplots
-- linegraphs
-- boxplots
-- histograms
-- barplots
+- Scatterplots
+- Linegraphs
+- Boxplots
+- Histograms
+- Barplots
 
 ## Scatterplots - Display the data points and patterns
 
@@ -245,7 +266,8 @@ knitr::include_graphics("figures/datasciencemethod.png")
 all_alaska_flights <- flights %>% 
   filter(carrier == "AS")
 ggplot(data = all_alaska_flights, mapping = aes(x = dep_delay, y = arr_delay)) + 
-  geom_point() + ggtitle("Flights arrival delay vs departure delay")
+  geom_point() + ggtitle("Flights arrival delay vs departure delay") + theme_bw() +
+  xlab("Arrival delay") + ylab("Departure delay")
 ```
 
 ## Line plots - show trends
@@ -254,25 +276,25 @@ ggplot(data = all_alaska_flights, mapping = aes(x = dep_delay, y = arr_delay)) +
 early_january_weather <- weather %>% 
   filter(origin == "EWR" & month == 1 & day <= 15)
 ggplot(data = early_january_weather, mapping = aes(x = time_hour, y = temp)) +
-  geom_line() +ggtitle("Weather in January")
+  geom_line() +ggtitle("Weather in January") + theme_bw() +ylab("Hourly temperature")
 ```
 
 ## Histograms - Show distribution
 ```{r, echo=FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
 ggplot(data = weather, mapping = aes(x = temp)) +
-  geom_histogram()
+  geom_histogram() + theme_bw()+ xlab("Days") +ylab("Daily temperature")
 ```
 
 ## Boxplots - Variation and outliers
 ```{r, echo=FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
 ggplot(data = weather, mapping = aes(x = factor(month), y = temp)) +
-  geom_boxplot() +ggtitle("Temperature by month")
+  geom_boxplot() +ggtitle("Temperature by month") + theme_bw() + xlab("Month") +ylab("Daily temperature")
 ```
 
 ##  Bar plots - Comparing values and percentages
 ```{r, echo=FALSE, fig.width=8, fig.height=4, warning=FALSE}
-ggplot(data = flights, mapping = aes(x = carrier)) +
-  geom_bar()
+ggplot(data = flights, mapping = aes(x = carrier)) + ylab("Number of flights") +
+  geom_bar() + theme_bw()
 ```
 
 ## Transform and model
@@ -303,7 +325,7 @@ ggplot(data = flights, mapping = aes(x = carrier)) +
 
 ## Preparing data
 
-- You are preparing data for use in analysis, not to make a table for presentation
+- You are preparing data for use in computation and analysis, not to make a table for presentation
 - Data analysts prefer data that is dis-aggregated, they should be able to aggregate and summarize easily as needed
 - Data table
     -  Rows represent observations
@@ -318,13 +340,13 @@ ggplot(data = flights, mapping = aes(x = carrier)) +
 
 Some data operations that are easy so data analysts do not want you to aggregate data
 
-1.  Filter (select rows)
-2.  Arrange (sort)
-3.  Select columns
-5.  Distinct rows (UNIQUE)
-6.  Mutate (calculations)
-7.  Summarize (sum, average, etc.)
-8.  Random sample (for simulation)
+*  Filter (select rows)
+*  Arrange (sort)
+*  Select columns
+*  Distinct rows (UNIQUE)
+*  Mutate (calculations)
+*  Summarize (sum, average, etc.)
+*  Random sample (for simulation)
 
 #  Example - Hurricane Florence Mass Care resources
 
