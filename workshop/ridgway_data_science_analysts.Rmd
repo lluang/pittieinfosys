@@ -12,6 +12,9 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(nycflights13)
+library(ggplot2)
+library(dplyr)
 ```
 
 
@@ -25,24 +28,17 @@ knitr::opts_chunk$set(echo = FALSE)
 -  Current research:
     -  Health care operations
     -  Disaster response
+    -  Data science
     -  Simulation methods
     
 ## What we will cover
 
 -  What is analytics?
 -  What questions can we answer using quantitative methods?
--  How do I ask good questions as a consumer of quantiative analysis?
+-  How do I ask good questions as a consumer of quantitative analysis?
 -  How can I work with quantitative analysts?
 
 #  What is analytics?
-
-## Why are we talking to an analyst?
-
--  The results of data analysis should be a decision.
--  What is the driver/key variable that will drive the decision to be made?
-    -  What information will drive the decision?
-    -  What are the possible alternative data outcomes and how will they change your decision?
--  What is the alternative?
 
 ## Definition of analytics
 
@@ -70,12 +66,21 @@ knitr::opts_chunk$set(echo = FALSE)
 -  Data science - Predictive models -  Predict an outcome
 -  Operations Research - Mathematical models of operations
     -  Optimization
-    -  Queueing
+    -  Queuing
     -  Simulation
     -  Used when determining resources needed or effect of resources employed.
     
     
 #  What questions can we answer using quantitative methods?
+
+
+## Why are we talking to an analyst?
+
+-  The results of data analysis should be a decision.
+-  What is the driver/key variable that will drive the decision to be made?
+    -  What information will drive the decision?
+    -  What are the possible alternative data outcomes and how will they change your decision?
+-  What is the alternative to the analyst?
 
 ##  Descriptive analytics
 
@@ -104,16 +109,7 @@ knitr::opts_chunk$set(echo = FALSE)
 -  What kind of argument will you make with the data?
 -  What kind of decisions will result from seeing outcomes?
 
-## Talking about results
-
--  How will the data be used to support the decisions?
--  How should the data be presented to best support the use of the data?
--  Mockups of the output
-    -  Example reports of outcomes
-    -  Simplified graphs
-    -  Sketches of displays or user interfaces to spark discussion of using a tool
-
-## Why are we talking to an analyst?
+## Goals of a data analysis
 
 -  The results of data analysis should be a decision.
 -  The results need to advocate one choice over another.
@@ -129,6 +125,15 @@ knitr::opts_chunk$set(echo = FALSE)
 
 This defines how simple or complex the data analysis needs to be.
 
+## Talking about results
+
+-  How will the data be used to support the decisions?
+-  How should the data be presented to best support the use of the data?
+-  Mockups of the output
+    -  Example reports of outcomes
+    -  Simplified graphs
+    -  Sketches of displays or user interfaces to spark discussion of using a tool
+    
 ## Outcome
 
 -  How will the data analysis be used?
@@ -137,12 +142,6 @@ This defines how simple or complex the data analysis needs to be.
 -  Who will use it?
 -  How will success be measured?
 
-## Who will have to use the results
-
--  Who will interpret or act on the work?
--  Who are they?
--  What are their requirements?
-
 ## Four Aspects of data you need to know
 
 - Volume
@@ -150,27 +149,28 @@ This defines how simple or complex the data analysis needs to be.
 - Variety
 - Veracity
 
-![3Vs of Big data](figures/BigData3vs.png)<!-- .element height="50%" width="50%" -->
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("figures/BigData3vs.png")
+```
 
-
-## Varacity
+## Veracity
 
 
 -  Is the data we are looking at relevant to the question being asked?
 -  Data is of uncertain origin, of uncertain quality, and of uncertain relevance.
 -  Contrast with the case where the data collection is designed for the purpose of doing the analysis.
--  e.g.  data collection errors, typos, misdefined.
+-  e.g.  data collection errors, typos, incorrectly defined.
 
 
 ## Volume
 
-<div class="columns-2">
 -  How much are you working with?
 -  How was it collected?
 -  How complete is it?
 
-![3Vs of Big data](figures/BigData3vs.png)
-</div>
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("figures/BigData3vs.png")
+```
 
 ## Variety
 
@@ -199,11 +199,15 @@ This defines how simple or complex the data analysis needs to be.
 #  How can I work with quantitative analysts?
 
 ##  What is the role of the analysts?
+```{r, out.width = "200px", echo=FALSE}
+knitr::include_graphics("figures/Data_Science_VD.png")
+```
 
-![The aspects of the data scientist](figures/Data_Science_VD.png)
 ##  How do quantitative analysts work?
 
-![Analysts workflow](figures/tidy1.png)
+```{r, out.width = "300px", echo=FALSE}
+knitr::include_graphics("figures/tidy1.png")
+```
 
 ##  Analysts workflow
 
@@ -217,7 +221,9 @@ This defines how simple or complex the data analysis needs to be.
 
 ##  Working with data
 
-![Analysts workflow](figures/datasciencemethod.png)
+```{r, out.width = "300px", echo=FALSE}
+knitr::include_graphics("figures/datasciencemethod.png")
+```
 
 ## Exploratory Data Analysis
 
@@ -225,13 +231,57 @@ This defines how simple or complex the data analysis needs to be.
 -  Tell potential stories through the visualization
 -  Raise questions, develop alternative hypothesis
 
+## Five basic visualizations
+
+- scatterplots
+- linegraphs
+- boxplots
+- histograms
+- barplots
+
+## Scatterplots - Display the data points and patterns
+
+```{r, echo=FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+all_alaska_flights <- flights %>% 
+  filter(carrier == "AS")
+ggplot(data = all_alaska_flights, mapping = aes(x = dep_delay, y = arr_delay)) + 
+  geom_point() + ggtitle("Flights arrival delay vs departure delay")
+```
+
+## Line plots - show trends
+
+```{r, echo=FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+early_january_weather <- weather %>% 
+  filter(origin == "EWR" & month == 1 & day <= 15)
+ggplot(data = early_january_weather, mapping = aes(x = time_hour, y = temp)) +
+  geom_line() +ggtitle("Weather in January")
+```
+
+## Histograms - Show distribution
+```{r, echo=FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+ggplot(data = weather, mapping = aes(x = temp)) +
+  geom_histogram()
+```
+
+## Boxplots - Variation and outliers
+```{r, echo=FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+ggplot(data = weather, mapping = aes(x = factor(month), y = temp)) +
+  geom_boxplot() +ggtitle("Temperature by month")
+```
+
+##  Bar plots - Comparing values and percentages
+```{r, echo=FALSE, fig.width=8, fig.height=4, warning=FALSE}
+ggplot(data = flights, mapping = aes(x = carrier)) +
+  geom_bar()
+```
+
 ## Transform and model
 
 -  Create falsifiable hypothesis
 -  Create experiment/approach to test hypothesis
 -  Develop statistical/mathematical model
 -  Communicate results with subject matter expert
--  Develop new thesis and epeat
+-  Develop new thesis and repeat
 
 ##  Communicate results
 
@@ -250,6 +300,31 @@ This defines how simple or complex the data analysis needs to be.
 -  What is the role of uncertainty?
     -  How sensitive is the decision making to the possible outcomes of the analysis?
     -  What is the cost of the sensitivity?
+
+## Preparing data
+
+- You are preparing data for use in analysis, not to make a table for presentation
+- Data analysts prefer data that is dis-aggregated, they should be able to aggregate and summarize easily as needed
+- Data table
+    -  Rows represent observations
+    -  Columns represent variables describing observations
+    -  Some columns uniquely define the row (e.g. keys)
+    -  Some columns are informative
+- Each cell should have one piece of information
+    - Numbers should be separated to enable computation
+-  Database professionals know how to organize data so that this can work if you are unable.
+
+## Basic data operations
+
+Some data operations that are easy so data analysts do not want you to aggregate data
+
+1.  Filter (select rows)
+2.  Arrange (sort)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (calculations)
+7.  Summarize (sum, average, etc.)
+8.  Random sample (for simulation)
 
 #  Example - Hurricane Florence Mass Care resources
 
@@ -300,9 +375,33 @@ This defines how simple or complex the data analysis needs to be.
 ##  Impact of uncertainty
 
 -  How uncertain is the hurricane location?
--  A truck can travel around 400 miles in a day.
 -  What is the impact of being off by 10% on sheltering needs? Feeding needs?
     - 20%
     - what if you would have a better answer the next day?
     
-## 
+## Modeling
+
+- Gather data from historical damage assessment, historical floods, demographics, and current flood gages
+- Create a predictive model
+
+```{r, out.width = "250px", echo=FALSE}
+knitr::include_graphics("figures/OrangeDiagramFloodpredictiveModels.png")
+```
+
+
+##  Output
+
+- Predict damage by county
+- Show forecasted flood stage and duration
+- Used in other models to estimate other resource requirements.
+
+# Conclusion
+
+## Key questions
+
+-  The results of data analysis should be a decision.
+-  What is the driver/key variable that will drive the decision to be made?
+    -  What information will drive the decision?
+    -  What are the possible alternative data outcomes and how will they change your decision?
+    
+# Questions?
