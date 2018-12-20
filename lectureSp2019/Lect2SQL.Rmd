@@ -1,0 +1,341 @@
+---
+title: "Data Queries and SQL"
+author: "IE 0015"
+date: "January 2019"
+output:
+  slidy_presentation: default
+  pdf_document: default
+---
+
+What is SQL
+========================================================
+
+- Sometimes thought of as standing for Structured Query Language
+- A declarative language for specifying operations to be made on *relational* data tables
+- Result of an SQL query is another table
+- *Declarative* language - States what the outcome will be, not how to do it
+  - How to accomplish the outcome is determined by the DBMS.
+
+What can SQL do
+===============
+
+1.  Filter (SELECT)
+2.  Arrange (ORDER BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (SELECT . . . AS new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+How to think about SQL queries
+==============================
+
+1.  Each data table is a set
+2.  The result is another set
+3.  Specify what needs to be in the new set
+
+Where is SQL used
+===================
+
+- In databases
+  - Visual query tools like MS Access generate SQL
+- In programs that interact with databases
+  - You can pass an SQL query in R to a database
+
+Five basic SQL Query types
+======================
+
+1.  SELECT
+2.  CREATE
+3.  INSERT
+4.  UPDATE
+5.  DELETE
+
+SELECT Statements
+=================
+
+```
+SELECT  col1, col2, col3 /* some things */
+FROM  table1             /* places */
+WHERE  col1="term"       /* conditions */
+ORDER BY col2            /* display order */
+```
+
+-  Note the convention of using upper case for SQL keywords
+
+SELECT example
+=====
+```
+SELECT  PassengerID, Pclass, Name, Sex, Age, Cabin, Embarked
+FROM  titanictrain
+WHERE  Pclass="1"
+ORDER BY Name
+```
+
+SELECT with multiple tables
+=======================
+
+```
+  SELECT  t1.col1, t1.col2, t2.col1
+  FROM t1 INNER JOIN t2
+  ON  t1.col2 = t2.col2
+```
+
+Note: Only columns where BOTH are present will be in the result
+
+SELECT LEFT JOIN
+=========================
+```
+  SELECT  t1.col1, t1.col2, t2.col1
+  FROM t1 LEFT JOIN t2
+  ON  t1.col2 = t2.col2
+```
+
+- ALL rows from t1 will be in the result.
+- Only rows that are part of a match from t2 will be in the result.
+
+SELECT OUTER JOIN
+====================
+```
+  SELECT  t1.col1, t1.col2, t2.col1
+  FROM t1 LEFT OUTER JOIN t2
+  ON  t1.col2 = t2.col2
+```
+
+-  All rows will be in the result.
+-  If there is no corresponding row in the other table, the fields will be blank.
+-  Note "LEFT OUTER JOIN"
+
+CROSS JOIN
+==========
+
+``` 
+  SELECT  t1.col1, t1.col2, t2.col1
+  FROM t1 CROSS JOIN t2
+```
+-  Each row in Table 1 matched with EACH row in Table 2
+-  When will you use this?
+
+GROUP BY
+========
+
+'GROUP BY' is used to calculate summaries such as SUM, AVE, or COUNT
+
+- Example, count households that have children in north Pittsburgh
+- Look up which columns represent households having children
+
+COUNT
+=====
+
+```
+SELECT FPARC, COUNT(SERIALNO)
+FROM ss12hpa
+WHERE FPARC IN ("1", "2", "3")
+GROUP BY FPARC
+```
+
+
+CREATE Statements
+===================
+
+-  Used to create the format for a new table or to create a named view
+  -  A saved query
+
+CREATE TABLE Example
+====================
+
+```
+CREATE TABLE titanictest
+(PassengerId INT,
+Survived INT,
+Pclass INT,
+Name VARCHAR(50),
+Sex VARCHAR(10),
+Age INT,
+SibSp INT,
+Parch INT,
+Ticket VARCHAR(20),
+Fare FLOAT
+Cabin VARCHAR(20),
+Embarked VARCHAR(1))
+ CONSTRAINT pk_passenger PRIMARY_KEY (PassengerId))
+```
+
+CREATE VIEW Example
+===================
+
+```
+CREATE VIEW passengerlist AS
+SELECT  PassengerID, Pclass, Name, Sex, Age, Cabin, Embarked
+FROM  titanictrain
+WHERE  Pclass="1"
+ORDER BY Name
+```
+
+
+INSERT
+======
+
+- Inserts data in an existing table.
+- Normally, use this by making a list of data fields and a list of values.
+
+```
+INSERT INTO person (passenger_id, name, sex, Age)
+VALUES (null, 'Braund, Mr. Owen Harris', 'M', 22)
+```
+
+UPDATE
+======
+
+-  Updates an existing record
+-  Usually includes a WHERE clause to ensure only one (or a few) records are updated.
+
+```
+UPDATE person
+SET address = '1225 Tremont St.', city = 'Boston', state='MA',
+country = 'USA', postalcode = '02138'
+WHERE person_id = 1
+```
+
+DELETE
+======
+
+- Deletes records where a condition is true
+
+```
+DELETE FROM person
+WHERE person_id = 2
+```
+
+Primary keys
+============
+
+- In the CREATE TABLE example we specified a PRIMARY KEY
+
+```
+ CONSTRAINT pk_passenger PRIMARY_KEY (Passenger_id))
+```
+-  A *Primary key* is an identifier for a unique record in a table.
+-  It is typically used to link all other tables to the table.
+-  When a reference to another table is required, the other table's primary key is used as a *Foreign key*.
+-  Example:  A student id for student records.
+  -  Because two students can have the same name.
+
+Filtering
+============
+
+- SELECT statements are used for filtering.
+- Filtering is required if you are trying to do an operation on only some (SELECT) rows of a table.
+- Accomplished by the WHERE clause of the SELECT statement.
+
+Condition evaluation
+====================
+
+```
+WHERE title = "Mr." and embarked = "S"
+```
+
+
+
+Truth statements
+================
+
+X AND Y - Both X and Y must be true
+X OR Y - Either X or Y or both must be true
+
+NOT operator
+===============
+
+(X AND Y) AND NOT Z -  X and Y must be true, Z must be false
+
+
+Building conditions
+====================
+
+Conditions can be:
+
+-  Numbers
+-  Strings
+-  Result of a function
+-  A subquery
+-  An element of a list
+
+Operators
+===========
+
+Conditions can be comprised of
+
+-  Comparison operators
+  -  =, !=, <, >, <>, LIKE, IN, BETWEEN
+-  Arithmetic operators
+  -  +, -, *, /
+
+Condition types
+===============
+
+
+-  Equality =
+-  Inequality  !=, <, >, <>
+-  Range conditions
+  -  WHERE Age < 21 AND Age > 5
+  -  WHERE Age BETWEEN 5 and 21
+
+SQL Functions
+================
+
+-  A Function in SQL is part of a clause and takes and argument, usually a column name.
+-  Examples:  COUNT(), SUM(), AVG(), MIN(), MAX()
+-  Also used in extensions to SQL.
+  - PL/SQL (Oracle)
+  - PL/pgSQL (PostgreSQL)
+  - Transact-SQL (MS SQL Server)
+  - SQL PL (IBM DB2)
+  - SQLPSM (ANSI Persistant Stored Modules)
+  
+CAST
+======
+
+-  If a value is of one datatype, you can tell the computer that it is another data type by using CAST.
+-  CAST(p.AGE AS INTEGER)
+-  This feature is also present in most programming languages
+  -  as.integer(), as.numeric(), as.factor()
+  
+  
+Subqueries
+===========
+
+A condition may be that a value is part of a result of another query
+
+
+JOIN
+====================
+
+Combine two tables
+
+- Example: look at how many children per single parent household in northern Pittsburgh.
+- ss12hpa tells us if it is a single parent household (which field?) and if there are children
+- ss12ppa tells us about each child
+- So, identify households, then count children.
+
+Identify households
+====================
+
+```
+SELECT SERIALNO
+FROM ss12hpa
+WHERE FPARC IN ("1", "2", "3")
+AND FEC IN ("5", "6", "7", "8")
+```
+
+Now find people 18 and under in those households
+======
+```
+SELECT p.SERIALNO, p.AGEP, h.FPARC, h.FES
+FROM ss12ppa AS p JOIN ss12hpa as h
+ON p.SERIALNO=h.SERIALNO
+WHERE CAST(p.AGEP as INTEGER) BETWEEN 0 AND 18
+AND h.FPARC IN ("1", "2", "3")
+AND h.FES IN ("5", "6", "7", "8")
+ORDER BY p.AGEP
+```
+
