@@ -3,8 +3,12 @@ title: "Thinking About Data"
 author: "IE 0015"
 date: "January 2019"
 output:
+  pdf_document:
+    default
   slidy_presentation: default
-  beamer_presentation: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
 ---
 
 
@@ -60,7 +64,7 @@ Sources of contexts
 Example
 =======
 
-- The Allegheny County Department of Human Services is responsible for the welfare of children.
+- A gym or fitness center is interested in the fitness of its clientele
 
 Needs
 ======
@@ -97,7 +101,7 @@ What makes a good need
 -  Information could be related to a bigger strategic question in meeting the organizations larger goals.
 -  Without a good definition of need, the work is fluff.
 -  A need is a problem, the need is never *we need a tool*.
--  What does the Allegheny County Department of Human Services need to do with child welfare calls?  Why is this hard?
+-  How does a gym or a trainer program activity for clients to meet their individual goals?
 
 Vision
 ======
@@ -125,7 +129,7 @@ Talking about results
   -  Example reports of outcomes
   -  Simplified graphs
   -  Sketches of displays or user interfaces to spark discussion of using a tool
--  How can data analysis be used to assist screeners at the Department of Human Services?
+-  How can fitness be defined and quantified? How can the performance of workouts be compared and improvement measured?
 
 Thinking about arguments
 =========================
@@ -174,7 +178,7 @@ What do we hope will change after we finish the work?
 
 -  What will change in the organization?
 -  How do we verify the change?
--  What kind of results does the Department of Human Services see?
+-  What kind of results does a trainer hope to see?
 
 Course datasets
 ===============
@@ -193,10 +197,8 @@ National Survey of Family Growth
 =================================
 
 - Conducted by the U.S. Centers for Disease Control
-- Intended to gather “information on family life, marriage and divorce, preg-
-nancy, infertility, use of contraception, and men’s and women’s health. The
-survey results are used ... to plan health services and health education pro-
-grams, and to do statistical studies of families, fertility, and health*
+- Intended to gather “information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health. The
+survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health*
 - We will focus on the Female pregnancy file.
 - What questions can we ask?
 - E.g. "are first babies born late"

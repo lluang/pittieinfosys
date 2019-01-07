@@ -3,7 +3,12 @@ title: "Course Introduction"
 author: "IE 0015"
 date: "January 2019"
 output:
+  pdf_document:
+    default
   slidy_presentation: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
 ---
 
 Rendering this file (Rmd)
@@ -63,14 +68,14 @@ Labs and Homeworks
 Project
 =========
 
-##  Identify a large, complex data set
+#  Identify a large, complex data set
   -  Large - Larger than you can take the time to look at the entire set in Excel.
   -  Variables that span a range of characteristics (you may need to get two data sources to do this)
   -  Western PA Regional Data Center http://www.wprdc.org/
   -  U.S. Govt https://www.data.gov/
   
   
-##  Process the data
+#  Process the data
 
   -  The data must need processing
   -  Missing values
@@ -78,12 +83,12 @@ Project
   -  Data entry errors
   -  Collapsing categories
 
-##  Summarize it
+#  Summarize it
   -  Data summaries
   -  Visual
     - Make it pretty
     
-##  Tell a story
+#  Tell a story
   -  Context
   -  Needs
   -  Vision
@@ -303,7 +308,7 @@ Lower right
 - Files: file directory browser
 - Plots: plot history for the current session
 - Packages: packages manager. Use this to access package documentation or install packages.
-  - Vignettes: Little story. Quality packages will include a vignette that provides an example of use and explaination of how it works.
+  - Vignettes: Little story. Quality packages will include a vignette that provides an example of use and explanation of how it works.
 - Help: Easy access to resources (e.g. Introduction to R and R Studio help) and searchable help files
   - Note: two search boxes. Upper right searches all help files.  Left box searches current page (topic)
 - Viewer
