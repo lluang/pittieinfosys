@@ -1,7 +1,7 @@
 ---
 title: "Reading data into databases"
 author: "IE0015 Lab 1"
-date: "January 11/12, 2018"
+date: "January 10/11, 2019"
 output:
   word_document: default
   pdf_document: default
