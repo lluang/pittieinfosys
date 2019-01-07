@@ -9,87 +9,58 @@ output:
 
 Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.  When a query is required, you may use the MS Access Query Wizard to design the query, then use the SQL View to display the resulting SQL that will go into your answer. 
 
-1. [1] Download the Titanic data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
+1. [1] Download the Affiliate data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
 
-What character separates fields in this file?  What character identifies text that should be kept in the same data field?  What would happen if you did not identify text that should be kept together?
+What character separates fields in this file?  What character identifies text that should be kept in the same data field? (Note: only some records need to especially identify text, what distinguishes them) What would happen if you did not identify text that should be kept together?
 
+**ANSWER**
 
-comma, "", the name would be broken into two columns.
-
-2. [1]  Using the MS Access, import the Titanic data. How many rows and columns are in the resulting table?  
-
-1309 rows, 14 columns. (15 if you added a primary key)  Can look at the bottom of the table to get the number of rows. You could count the number of columns by hand. 
-
-Note: If you get 1310 that means you didn't select the first rows as field name. Remember to select first row as field name when you importing csv into database.
+comma, "", If there is punctuation in the address, it will be broken into two columns.
 
 
-3. [1]  There are generally commas in the name and the home.dest field data.  Why did these not cause the data to be divided into two different columns.
+2. [1]  Using the MS Access, import the Affiliate list data using default settings. How many rows and columns are in the resulting table?  
 
-The double quotes keep the text together.
-
-4.  [2] Use the query wizard to create an SQL query to determine, from each port of embarkation, how many females (women and girls) were embarked.  This will involve creating a Crosstab where rows are the port of embarkation and columns are gender.
-
-Your answer should include a table with the answer (note that you should name the cities, not only the initial) and the final SQL query that allowed you to answer the question.
+**ANSWER**
+14844 rows. If off by one, check that field names are headers.
+10 columns.  Can be 11 columns if an index column is created.
 
 
+3. [1]  Using default settings, for several records the data fields are in the wrong column.  What causes this error?  Re-import the Affiliate list and set the options so this is done correctly.  Set the Affiliate ID to be the primary key.
 
-Embarked | sex | 0 (peris) | 1 (survived)
----------|--------|------|--------------
-Cherbourg | female | 11 | 102
-Cherbourg | male | 109 | 48
-Queenstown | female | 23 | 37
-Queenstown | male | 56 | 7
-Southampton | female | 93 | 198
-Southampton | male | 517 | 106
-(blank) | female | 0 | 2
+**ANSWER**
+Some of the records have an extra fields, so fields beginning with the City are in the wrong column.  Need to identify the double quote \" character as text delimiter to keep the address from being split across two fields.  Especitally when there is a suite number as part of the address.
+
+4. [1]  Look at the Women 2017 Rx dataset in a text editor. Import the Women 2017 Rx dataset.  Set the UserID to be the primary key. Check that the field types make sense. Allow for duplicates.  What happened to the column names?
+
+**ANSWER** 
+You should notice that the periods (.) in the column names disappeared.
+
+5. [2]  Load in the remainder of the data files (Women 2018 Rx, Men 2017 Rx, Men 2018 Rx).  Check for import errors.  What import errors were there?  Find the errors in the original CSV file (import in Excel).  Lookup the workout on google (search for CrossFit Open (year)) and explain the error in terms of the workout.
+
+**ANSWER**
+There were scores that were in days minutes hours format while most scores were in seconds.
+
+For problems 5 and 6, you will do the lab based on your last name and your birth month.
+
+Last (family) name:  A-L: Women,  M-Z: Men
+Birth month:  Jan - June:  2017,  July-December: 2018
+
+5. [1]  The final result of the CrossFit Open is the sum of the ranks.  Modify the table design that calculates the sum of the ranks of athletes in your dataset, then sort the athletes by rank.  Confirm that this gives the same results as the field "Overall rank"
+
+Write how you modified the table design (include a copy and paste of the equation) and copy and paste in a table that shows the correct result.
 
 
-```
-TRANSFORM Count(Titanic3.ID) AS CountOfID
-SELECT Titanic3.embarked, Titanic3.sex
-FROM Titanic3
-GROUP BY Titanic3.embarked, Titanic3.sex
-PIVOT Titanic3.survived;
+6. [3]  Create a query that does the following:
 
-```
-
-5. [1] Download and look at the data from the two American Community Survey (ACS) Pennsylvania tables using a text editor.  How are columns separated?  How is text that should not be separated identified? What column(s) should be guaranteed to be unique and can serve as a primary key?
-
-
-comma, "", 
-
-SERIALNO (for household record) Alternative PK_UID
- 
-SERIALNO and SPORDER (for person record, do not take off if they did not get SPORDER)
+    i. For each affiliate (gym), identify the number of athletes who entered the CrossFit Open that year.
+    ii.  What is the minimum (best) sum of ranks for that affiliate.
+    iii.  What is the maximum (worst) sum of ranks for that affiliate.
+    
+Select SQL View and copy and paste the results of the SQL view.  Also submit a table (copy and paste into word) with the top 10 affiliates, sorted by the number of athletes entered.
 
 
 
-6. [*] Load both tables into MS Access.  What error messages did you see? (Note: we will do something about this in Lab 2)
-
-The personal file does not load because it has more than 255 columns.  
-
-
-7. [1] In the ACS Household Record, how many [1] Determine the fields which identify the number of people in the household, and the type of household ownership (Group Quarter (i.e. dorms, prisons, military barracks), Rental, Own) You will need to access the ACS Data Dictionary from the ACS website. (hint, search for the words in the categories you are looking for.)
-
-ANSWERS
-
-- TEN identifies type of ownership
-- NP identifies people in household
-
-8.  [2] Determine the number of people who live in Group Quarters/vacant, Rent, Own (with mortgage), own (no mortgage), or are not currently paying for housing.  Include query(ies), the resulting table, and the written value of the tenure.  Note that the table should use words to indicate tenure (the type of ownership) and not a number.
-
-```
-SELECT Ss16hpa.TEN, TEN.TEN, Sum(Ss16hpa.NP) AS People, Count(Ss16hpa.SERIALNO) AS Households
-FROM Ss16hpa LEFT JOIN TEN ON Ss16hpa.TEN = TEN.ID
-GROUP BY Ss16hpa.TEN, TEN.TEN;
-```
-Note: they may not have the GQ/Vacant (blank) row. Do not take off for that. I created a table called TEN that filled in the name of the tenure categories for me. It is not necessary for the assignment.
-
-Tenure| TEN	| SumOfNP (people) | CountOfSERIALNO (households)
----|---|---|---
-GQ/vacant | (blank)|	7446 |	12880
-Owned with mortgage or loan (include home equity loans) | 1	| 60414	| 21846
-Owned free and clear | 2	| 33343 |	16255
-Rent | 3	| 24102	| 11614
-Occupied without payment of rent | 4	| 1965 | 972
-
+SELECT Affiliate_list.[Affiliate_id], Affiliate_list.[Affiliate_name], Affiliate_list.[State], Affiliate_list.[Country], Count(Women_Rx_2017.Userid) AS CountOfUserid, Min(Women_Rx_2017.Overallrank) AS MinOfOverallrank, Max(Women_Rx_2017.Overallrank) AS MaxOfOverallrank
+FROM Affiliate_list INNER JOIN Women_Rx_2017 ON Affiliate_list.Affiliate_id = Women_Rx_2017.Affiliateid
+GROUP BY Affiliate_list.[Affiliate_id], Affiliate_list.[Affiliate_name], Affiliate_list.[State], Affiliate_list.[Country]
+ORDER BY Count(Women_Rx_2017.Userid) DESC;

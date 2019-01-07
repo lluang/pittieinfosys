@@ -1,5 +1,5 @@
 ---
-title: 'Lab 2: SQL Joins'
+title: 'Lab 2: Database form design'
 author: "IE 0015 Information Systems Engineering"
 date: "01/18-19/2018"
 output:
@@ -8,104 +8,19 @@ output:
   html_document: default
 ---
 
-This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh, North for 2012 (your version of Excel is not able to handle all of the PA that you used last week).  Create a new Access database importing Pittsburgh data. You should have the same result (housing data was imported, person data generated an error).  The data dictionary is at 
-http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html.  You should open up the data dictionary in a searchable format to do this lab.  
+This lab uses the CrossFit Open data you used in last week's lab. You should start with the database from then that includes the affiliate data and Men's and Women's data from 2017 and 2018.  The goal for this lab is creation of a database tool that an affiliate can use to evaluate its own performance.
 
-1. [1] In Lab 1, you determined that MS Access was not able to import the Person record of the ACS PUMS because of the number of columns in the person record.  We will break the table into two tables and use queries to connect them together and with the Household record.
+Last (family) name:  A-L: Women,  M-Z: Men
 
-In the Person Record (ss12ppa) what fields in combination uniquely identify each row and what kinds of values do they take? (remember, you should look at the data dictionary to identify what the codes in the database stand for. This dataset is from 2012, but the field names and definitions do not change much over time.) Hint: start using the data dictionary by searching for 'PERSON RECORD'.
+1. [2] Create a query that identifies all athletes who competed in both the 2017 and 2018 CrossFit Open, shows their overall rank and percentile, and calculates the change in rank and percentile for each athlete
 
-ANSWERS
+2. [2] Create a query that for a given affiliate, collect the data of all athletes from that affiliate and gives the number of repeat athletes and the mean and standard deviation of the change in rank between 2017 and 2018.
 
-SERIALNO   7      
-    Housing unit/GQ person serial number    
-           0000001..9999999 .Unique identifier
+For question 3, use your state or province of birth if you were born in the U.S., Canada, or Australia, your country of birth otherwise.  If there is no applicable affiliate, pick your favorite U.S. state :-)
 
-SPORDER    2      
-    Person number
-           01..20 .Person number
+3. [2] Create a query that for a given state/country, provides a list of all affiliates with repeat athletes in that state/country, with the number of athletes, and the mean and standard deviation of their change in rank between 2017 and 2018.
 
+4. [4]  Create a form that does the following:
 
-2. [1] You will create two tables from the Person Record so you can import them separately, then you will combine them.  For the Person Record, it turns out that the last batch of columns are 'weights' that are used in statistical analysis of population data. How can you recognize them? How many such columns are there (look at the data dictionary)? 
-
-ANSWER
-THere are 80 columns, each of which has a name starting with 'PWGTP'
-
-3.  [3] To split the person record in MS Excel, make two additional spreadsheet tabs. Give them meaningful names (e.g. the name of your ss12ppa with part1 or part2 appended). You want to create links in each to the original data (i.e. write a formula, do not cut and paste values, '=ss12ppaPittsburgh01701!A1'). The first columns for each should be the columns identified in answer 1 which will be used to link the two tables together. In Excel, these columns should be formatted as text. The remaining columns are links to the Excel cells you need copies of.
-
-After you are done, create tables in your MS Access database by importing each tab. Make sure that the columns identified in question 1 are of type 'short text' (not a number).  Then create a query that joins the two tables and includes:
-
-1. The columns from question 1
-2. Each person's age
-3. Each person's grade attending
-5. The first weight value that you put in the second table in question 2
-
-Save this query. Copy the resulting SQL and the top four rows of the resulting query to turn in.
-
-ANSWER
-
-```
-SELECT ss12ppapt1.SERIALNO, ss12ppapt1.SPORDER, ss12ppapt1.AGEP, ss12ppapt1.SCHG, ss12ppapt1.DDRS, ss12ppapt2.pwgtp1
-FROM ss12ppapt1 INNER JOIN ss12ppapt2 ON (ss12ppapt1.SPORDER = ss12ppapt2.SPORDER) AND (ss12ppapt1.SERIALNO = ss12ppapt2.SERIALNO);
-```
-NOTE: the students will have different values in the top four. The structure must be correct (SQL has no guarantees on the order).
-
-SERIALNO |	SPORDER | AGEP |	SCHG	| DDRS |	pwgtp1
---|--|--|--|--|--
-2647	| 1	| 55	| 0	| 2	| 109
-2647	| 2	| 51	| 0	| 2	| 94
-2647	| 3	| 14	| 10	| 2	| 99
-2647	| 4	| 22	| 16	| 2	| 122
-
-
-3.  [2] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Allegheny County? 
-  a.  How do you identify if a child is in preschoool? In Kindergarten?
-  b.  Generate a query that identifies the school status of 4 and 5 year olds. Do not include children currently in Kindergarden  (because they have finished eligibility for Pre-school)
-  c.  What is the fraction of 4 and 5 year olds who are in pre-school? (Note: you will be able to calculate this with the results of part (a))
-  
-ANSWERS
-
-  a.  
-
-```
-SELECT ss12ppapt1.SCHG, Count(ss12ppapt1.SERIALNO) AS CountOfSERIALNO
-FROM ss12ppapt1
-WHERE (((ss12ppapt1.AGEP)=4)) OR (((ss12ppapt1.AGEP)=5))
-GROUP BY ss12ppapt1.SCHG, ss12ppapt1.SCHG
-HAVING (((ss12ppapt1.SCHG)<>2));
-```
-
-  b.
-
-  14/22
-  0.636 (or 63%)
-
-4.  [3] What fraction of pre-school age children (under 6) live in households with a grandparent?
-  a.  What field and values in what table identifies the presence and age of children under 6 in a household?
-  b.  What field in what table identifies if a  grandparent living with grandchildren the household?
-  c.  Create a query determines how many children under 6 are living in a household?  Note: the query you created in question 3 is available to you just like any table.
-  d.  Determine what fraction of children of pre-school age (under 6) live in households with a grandparent.
-  
-ANSWERS
-
-  a.  HUPAC in the household table (=1, 3 if children under 6 present) Remember 3 indicates children under 6 and children over 6.
-  b.  HUGCL in the household table (=1 if grandparents with grandchildren)
-  c.  Note that the count has to come from a field in the person record, as the household record only indicates that children are present, not how many. (you could get number of people in the household, but you would not know which ones were children)  
-  
-```
-SELECT Ss12hpaPittsburgh01701.HUGCL, Count(ss12ppapt1.SERIALNO) AS CountOfSERIALNO
-FROM Ss12hpaPittsburgh01701 INNER JOIN ss12ppapt1 ON Ss12hpaPittsburgh01701.SERIALNO = ss12ppapt1.SERIALNO
-WHERE (((Ss12hpaPittsburgh01701.HUPAC)="1") AND ((ss12ppapt1.AGEP)<6)) OR (((Ss12hpaPittsburgh01701.HUPAC)="3"))
-GROUP BY Ss12hpaPittsburgh01701.HUGCL;
-
-```
-
-d.  
-
-Number children under 6 | Grandparents present
----|---
-"85" |  "0"
-"6"	| "1"
-
-6/(85+6) = 0.066 (or 6.6%)
-
+    i.  Select an affiliate
+    ii. Display all athletes that are competed in both the 2017 and 2018 CrossFit Open with their ranks for each event.
