@@ -3,24 +3,121 @@ title: 'Lab 2: Database form design'
 author: "IE 0015 Information Systems Engineering"
 date: "01/18-19/2018"
 output:
-  word_document: default
   pdf_document: default
   html_document: default
+  word_document: default
 ---
 
 This lab uses the CrossFit Open data you used in last week's lab. You should start with the database from then that includes the affiliate data and Men's and Women's data from 2017 and 2018.  The goal for this lab is creation of a database tool that an affiliate can use to evaluate its own performance.
 
 Last (family) name:  A-L: Women,  M-Z: Men
 
-1. [2] Create a query that identifies all athletes who competed in both the 2017 and 2018 CrossFit Open, shows their overall rank and percentile, and calculates the change in rank and percentile for each athlete
+1. [2] Create a query that identifies all athletes who competed in both the 2017 and 2018 CrossFit Open, shows their overall rank for each, and calculates the improvement in rank for each athlete. (Note: lower rank is better)  Sort by their 2018 rank.
+
+
+**ANSWER**
+```
+SELECT Women_Rx_2017.Userid, Women_Rx_2017.Affiliateid, Women_Rx_2017.Overallrank, Women_Rx_2018.Overall_rank, [Women_Rx_2017].[Overallrank]-[Women_Rx_2018].[Overall_rank] AS Improverank
+FROM Women_Rx_2017 INNER JOIN Women_Rx_2018 ON Women_Rx_2017.Userid = Women_Rx_2018.User_id
+ORDER BY Women_Rx_2018.Overall_rank;
+
+```
+Userid | Affiliateid | Overallrank | Overall_rank | Improverank
+123582 | 16524 | 5 | 1 | 4
+2942 | 269 | 11 | 2 | 9
+239148 | 718 | 56 | 3 | 53
+8404 | 386 | 3 | 4 | -1
+18588 | 2025 | 7 | 5 | 2
+168305 | 1741 | 9 | 6 | 3
+279929 | 5894 | 49 | 7 | 42
+55121 | 505 | 10 | 8 | 2
+264512 | 10868 | 4 | 9 | -5
+430191 | 9465 | 46 | 10 | 36
 
 2. [2] Create a query that for a given affiliate, collect the data of all athletes from that affiliate and gives the number of repeat athletes and the mean and standard deviation of the change in rank between 2017 and 2018.
 
+**ANSWER**
+```
+SELECT Affiliate_list.Affiliate_id, Affiliate_list.Affiliate_name, Count([Repeat athletes].Improverank) AS CountOfImproverank, Avg([Repeat athletes].Improverank) AS AvgOfImproverank, StDev([Repeat athletes].Improverank) AS StDevOfImproverank
+FROM Affiliate_list INNER JOIN [Repeat athletes] ON Affiliate_list.Affiliate_id = [Repeat athletes].Affiliateid
+GROUP BY Affiliate_list.Affiliate_id, Affiliate_list.Affiliate_name
+ORDER BY Count([Repeat athletes].Improverank) DESC;
+```
+
+Affiliate_id | Affiliate_name | CountOfImproverank | AvgOfImproverank | StDevOfImproverank
+------------ | -------------- | ------------------ | ---------------- | ------------------
+5741 | Paradiso CrossFit Venice | 50 | -2149.96 | 24341.0789742571
+372 | CrossFit Oslo | 46 | -671.413043478261 | 28105.0145668594
+837 | CrossFit NYC | 45 | 308.266666666667 | 25151.369911543
+1168 | CrossFit Huntsville | 42 | 708.904761904762 | 33094.0916182857
+2025 | Reebok CrossFit ReykjavÃk | 42 | 9414.90476190476 | 30944.1544066392
+14583 | CrossFit High Gear | 41 | 2828.70731707317 | 16639.1662369902
+4468 | CrossFit Syracuse | 40 | -5525.45 | 23892.6374776512
+8299 | CrossFit Maxpuls | 39 | 6291.46153846154 | 25016.5575483688
+4201 | CrossFit Blade | 37 | -3261.75675675676 | 15069.8933388642
+196 | CrossFit Takeover | 36 | -1978.16666666667 | 32356.1423724858
+
 For question 3, use your state or province of birth if you were born in the U.S., Canada, or Australia, your country of birth otherwise.  If there is no applicable affiliate, pick your favorite U.S. state :-)
 
-3. [2] Create a query that for a given state/country, provides a list of all affiliates with repeat athletes in that state/country, with the number of athletes, and the mean and standard deviation of their change in rank between 2017 and 2018.
+3. [3] Create a query that for a given state/country, provides a list of all affiliates with repeat athletes in that state/country, with the number of athletes, and the mean and standard deviation of their change in rank between 2017 and 2018.
 
-4. [4]  Create a form that does the following:
+**ANSWER**
+```
+SELECT Affiliate_list.State, Affiliate_list.Affiliate_id, Affiliate_list.Affiliate_name, Count([Repeat athletes].Improverank) AS NumberAthletes, Avg([Repeat athletes].Improverank) AS AvgImprove, StDev([Repeat athletes].Improverank) AS STImprove
+FROM Affiliate_list INNER JOIN [Repeat athletes] ON Affiliate_list.Affiliate_id = [Repeat athletes].Affiliateid
+GROUP BY Affiliate_list.State, Affiliate_list.Affiliate_id, Affiliate_list.Affiliate_name
+HAVING (((Affiliate_list.State)="MO"))
+ORDER BY Count([Repeat athletes].Improverank) DESC;
+```
 
-    i.  Select an affiliate
-    ii. Display all athletes that are competed in both the 2017 and 2018 CrossFit Open with their ranks for each event.
+State | Affiliate_id | Affiliate_name | NumberAthletes | AvgImprove | STImprove
+------ | ------| ------ | ------ | ------ | ------
+MO | 6970 | CrossFit Fig | 23 | 8486.60869565217 | 27824.7062334229
+MO | 8161 | Condition One CrossFit | 20 | 963 | 33700.9015059804
+MO | 12557 | CrossFit Wildwood | 18 | -4971.83333333333 | 26646.5335704952
+MO | 7634 | St. Peters CrossFit | 17 | 1276.41176470588 | 13535.7782010253
+MO | 4736 | Muddy Water CrossFit | 15 | 8391.6 | 17737.7552565948
+MO | 6930 | HealthPoint CrossFit | 13 | -7410.92307692308 | 22752.5409586913
+MO | 3585 | CrossFit Nixa | 13 | -4094 | 20697.8147719351
+MO | 3387 | CrossFit Believe | 13 | -4373.07692307692 | 22266.736740639
+MO | 12001 | CrossFit Higginsville | 12 | -885.25 | 20939.8943347382
+MO | 11384 | Share the Burden CrossFit | 12 | 2570.75 | 10930.1751805391
+
+4. [3]  Create a query that does the following:
+
+    i.  Select the top affiliate in the state from question 3 using the Affiliate ID.
+    ii. Display all athletes that are competed in both the 2017 and 2018 CrossFit Open with their overall ranks.
+    
+**ANSWER**
+```
+SELECT Affiliate_list.Affiliate_name, Women_Rx_2017.Userid, Women_Rx_2017.Affiliateid, Women_Rx_2017.Overallrank, Women_Rx_2018.Overall_rank, [Women_Rx_2017].[Overallrank]-[Women_Rx_2018].[Overall_rank] AS Improverank
+FROM (Women_Rx_2017 INNER JOIN Women_Rx_2018 ON Women_Rx_2017.Userid = Women_Rx_2018.User_id) INNER JOIN Affiliate_list ON Women_Rx_2018.Affiliate_id = Affiliate_list.Affiliate_id
+WHERE (((Women_Rx_2017.Affiliateid)=6970))
+ORDER BY Women_Rx_2018.Overall_rank;
+```
+    
+Affiliate_name | Userid | Affiliateid | Overallrank | Overall_rank | Improverank
+----- | ----- | ----- | ----- | ----- | ----- | 
+CrossFit Fig | 266351 | 6970 | 3234 | 3176 | 58
+CrossFit Fig | 1034985 | 6970 | 12704 | 8856 | 3848
+CrossFit Fig | 221462 | 6970 | 15738 | 11837 | 3901
+CrossFit Fig | 517047 | 6970 | 14379 | 12514 | 1865
+CrossFit Fig | 590561 | 6970 | 40921 | 17744 | 23177
+CrossFit Fig | 697541 | 6970 | 23094 | 18000 | 5094
+CrossFit Fig | 699836 | 6970 | 48179 | 18898 | 29281
+CrossFit Fig | 944541 | 6970 | 70312 | 19449 | 50863
+CrossFit Fig | 538646 | 6970 | 31864 | 24525 | 7339
+CrossFit Fig | 520191 | 6970 | 30108 | 30837 | -729
+CrossFit Fig | 534971 | 6970 | 41853 | 34002 | 7851
+CrossFit Traverse | 918395 | 6970 | 93809 | 34525 | 59284
+CrossFit Fig | 517207 | 6970 | 1999 | 42980 | -40981
+CrossFit Fig | 1040306 | 6970 | 41756 | 43388 | -1632
+CrossFit Fig | 531380 | 6970 | 55204 | 44720 | 10484
+CrossFit Fig | 692207 | 6970 | 52495 | 58739 | -6244
+CrossFit Fig | 918692 | 6970 | 73883 | 59228 | 14655
+CrossFit Fig | 299813 | 6970 | 49557 | 63795 | -14238
+CrossFit Fig | 940594 | 6970 | 93501 | 66258 | 27243
+CrossFit Fig | 908030 | 6970 | 64775 | 70819 | -6044
+CrossFit Fig | 918485 | 6970 | 126308 | 72107 | 54201
+CrossFit Fig | 701736 | 6970 | 105448 | 75205 | 30243
+CrossFit Fig | 984838 | 6970 | 51310 | 115637 | -64327
