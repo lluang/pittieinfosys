@@ -209,6 +209,7 @@ CrossFit Open 2017-2018
 -  Performance data of a mass participation worldwide fitness competition
 -  Countries, affiliates (gym) 
 -  How do individuals compare across a range of fitness workouts?
+-  **Look up what these events are on the internet before lab**
 
 American Community Survey
 =========================

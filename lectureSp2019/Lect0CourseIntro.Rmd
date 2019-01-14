@@ -3,12 +3,12 @@ title: "Course Introduction"
 author: "IE 0015"
 date: "January 2019"
 output:
-  pdf_document:
-    default
-  slidy_presentation: default
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
+  slidy_presentation: default
+  pdf_document:
+    default
 ---
 
 Rendering this file (Rmd)
@@ -22,9 +22,12 @@ Notecard
 =========
 
 - Name:
-- Where are you from: (city or region)
+- Where are you from: (city/state/province)
 - Year and degree program:
-- Possible project subject:
+- Possible project topic:
+
+- Download the ACS personal and household data files from Courseweb -> Course Documents -> data
+- If English is not your first language, please stay back after class for a chat.
 
 Course Outline
 ==============
@@ -37,12 +40,13 @@ Course goals - Working with data
 2.  Data manipulation
 3.  Exploratory data analysis and visualization
 4.  Modeling and simulation
+5.  Summer internships, coops, and senior design
 
 Course requirements
 ==============
 
-- Labs weekly (1-2)
-- Homework (individual)
+- Labs weekly (*Individual*) 
+- Homework (*1-2*)
 - Midterm and final
 - Case Study (1-3)
 - Project (teams of 1-3)
@@ -54,7 +58,7 @@ Data sets
 -  Titanic survivors (Lectures)
 -  National Survey of Family Growth (Lectures and Labs)
 -  American Community Survey (Lectures and labs)
--  CrossFit Open 2017-2018 (Homeworks)
+-  CrossFit Open 2017-2018 (Labs and Homeworks)
 -  Western PA Regional Data Center http://www.wprdc.org/
 
 Labs and Homeworks
@@ -65,34 +69,52 @@ Labs and Homeworks
 -  Industry practice is that programmers work in pairs. I expect and encourage you to work together to resolve coding problems on labs and homeworks.  But your final submission, which includes your explanation and interpretation of results, must be your own.
 -  All figures and tables must be annotated.  Axis must be labeled (include units), tables and figures need titles and captions, tables and figures should be accompanied by narrative. The annotations and narratives must be your own.  (i.e. your code may be similar to someone else's, but your explanations should be unique.)
 
+Plagerism
+==========
+
+-  Your final submission on labs must be your own.
+    -  You may help each other, but the final submission is yours.
+-  We recognize that code will be similar.  But there are many ways of answering the question in this course.
+-  All homework assignments will have narrative parts to questions. This part must be done individually.
+-  We expect that elements such as table and chart titles, axis labels, and narrative will be unique to each individual.  Providing your own titles, labels, and narrative is required in each assignment.
+-  
+
 Project
 =========
 
+#  Case study
+
+-  Use the case study in January to help scope your project
+-  Case study will be a realistic case faced by a realistic company using a dataset that has been scaled for classroom use.
+-  Many students have been putting the case study on their resumes. **This is inapproprieate**
+
 #  Identify a large, complex data set
-  -  Large - Larger than you can take the time to look at the entire set in Excel.
-  -  Variables that span a range of characteristics (you may need to get two data sources to do this)
-  -  Western PA Regional Data Center http://www.wprdc.org/
-  -  U.S. Govt https://www.data.gov/
-  
+-  Be aggressive in choosing a topic.  
+    - Your goal should be to have something to talk about in interviews.
+-  Large - Larger than you can take the time to look at the entire set in Excel.
+-  Variables that span a range of characteristics (you may need to get two related data sources to do this)
+-  Western PA Regional Data Center http://www.wprdc.org/
+-  U.S. Govt https://www.data.gov/
+-  **If you have a real world project, with an actual client who is interested in the results, see me**
   
 #  Process the data
 
-  -  The data must need processing
-  -  Missing values
-  -  Calculating intermediate values
-  -  Data entry errors
-  -  Collapsing categories
+-  The data must need processing
+-  Missing values
+-  Calculating intermediate values
+-  Data entry errors
+-  Collapsing categories
 
 #  Summarize it
-  -  Data summaries
-  -  Visual
-    - Make it pretty
+-  Data summaries
+-  Visual
+  - Make it pretty
     
 #  Tell a story
-  -  Context
-  -  Needs
-  -  Vision
-  -  Outcome
+-  Context
+-  Needs
+-  Vision
+-  Outcome
 
 Course goals
 ============
@@ -311,5 +333,11 @@ Lower right
   - Vignettes: Little story. Quality packages will include a vignette that provides an example of use and explanation of how it works.
 - Help: Easy access to resources (e.g. Introduction to R and R Studio help) and searchable help files
   - Note: two search boxes. Upper right searches all help files.  Left box searches current page (topic)
-- Viewer
+- Viewer:  The output of an Rmd file.
 
+
+Project
+===========
+- Allegheny Health Network - Center for Inclusion Health
+- Pitt Office of Sustainability
+- Pitt Department of Athletics

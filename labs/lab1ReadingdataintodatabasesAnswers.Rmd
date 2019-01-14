@@ -3,8 +3,10 @@ title: "Reading data into databases"
 author: "IE0015 Lab 1"
 date: "January 10/11, 2019"
 output:
-  word_document: default
+  html_document:
+    df_print: paged
   pdf_document: default
+  word_document: default
 ---
 
 Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.  When a query is required, you may use the MS Access Query Wizard to design the query, then use the SQL View to display the resulting SQL that will go into your answer. 
