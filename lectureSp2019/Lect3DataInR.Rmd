@@ -3,13 +3,16 @@ title: "Data In R"
 author: "IE 0015"
 date: "January 2019"
 output:
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
   pdf_document: default
   html_document: default
   slidy_presentation: default
 ---
 
-Note: It will help to have R Studio open and follow along in this lecture.
-Lines 175, 179 refer to the ACS data sets from lab.
+- It will help to have R Studio open and follow along in this lecture.
+- Download ACS housing and personal data as well as the data dictionary
 
 Data analysis language
 ========================================================
@@ -173,11 +176,11 @@ Read housing and personal record
 
 ```{r readhousing}
 # Need to point this to lab datasets
-acshousing <- read.csv("../data/ss12hpa.csv")
+acshousing <- read.csv("../data/ss12hpaPittsburgh01701.csv")
 head(acshousing[,1:10])
 ```
 ```{r readpersonal}
-acspersonal <- read.csv("../data/ss12ppa.csv")
+acspersonal <- read.csv("../data/ss12ppaPittsburgh01701.csv")
 head(acspersonal[,1:10])
 
 ```
@@ -230,8 +233,8 @@ Reading data from an Excel spreadsheet
 - Excel spreadsheets can be read using the package *readxl* (included in `tidyverse`)
 
 ```{r readxl, warning=FALSE}
-library(tidyr)
 library(dplyr)
+library(readxl)
 ```
 
 Using *readxl*
@@ -313,48 +316,79 @@ Filter
 ========
 
 ```{r filtergryffindor}
-hogwartstudents[hogwartstudents$house=="G",]
-```
-```{r}
-hogwartstudents %>% filter(house=='G')
+hogwartstudents %>%
+  filter(house=='G')
 ```
 
 Arrange
 ==========
 ```{r sorthogwarts}
-hogwartstudents[order(hogwartstudents$year, hogwartstudents$name),]
+hogwartstudents %>% 
+  arrange(year, name)
 ```
 
 Select columns
 ==============
 
-```{r columnshogwarts}
-hogwartstudents[order(hogwartstudents$house, hogwartstudents$name),c('name', 'house')]
-```
-
 ```{r}
 hogwartstudents %>% select(name, house)
+```
+
+Distinct rows
+================
+
+- Remove duplicates from a dataset
+
+```
+newdf <- olddf %>% distinct()
+```
+
+Calculations (Mutate)
+==============
+```{r}
+acshousing %>%
+  mutate(incomeper=ADJINC/NP) %>%
+  select(SERIALNO, ADJINC, NP, incomeper) %>%
+  head()
 ```
 
 Summarize (Group By)
 ====================
 ```{r summarizehogwarts}
-hogwartstudents %>% count('house')
+hogwartstudents %>% 
+  group_by(house) %>%
+  summarize(n())
 ```
 
 Random sample
 ====================
+
+- Sampling can specify number or probability
+
 ```{r studentsrandom}
-hogwartstudents[sample(nrow(hogwartstudents),size = 3),]
+hogwartstudents %>%
+  sample_n(3)
 ```
 
-SQL
+```{r studentsrandomfrac}
+hogwartstudents %>%
+  sample_frac(.3)
+```
+
+two-table verbs (JOIN)
 ======
 
 - We can replace all of the `JOIN` operations from SQL in R as well.
 - One way is to use logical statements in the brackets (as in above)
 - Another way is to use the `join` and `filter` statements from the `dplyr` package (part of `tidyverse`)
 
+```{r}
+acshousing %>%
+  left_join(acspersonal, by="SERIALNO") %>% 
+  filter(FES %in% c("5", "6", "7", "8")) %>%
+  select(SERIALNO, SPORDER, FES, AGEP, HINCP) %>%
+  head()
+```
 
 
 Plotting with ggplot2
@@ -536,7 +570,7 @@ ggplot(dsmall, aes(x=color, y=price/carat)) + geom_jitter()
 alpha
 ======
 
-- `alpha` adjusts the transparancy, so it is more apparent that multiple data points overlap.
+- `alpha` adjusts the transparency, so it is more apparent that multiple data points overlap.
 ```{r}
 ggplot(dsmall, aes(x=color, y=price/carat)) + geom_point(alpha = 1/5)
 ```

@@ -1,0 +1,142 @@
+---
+title: 'Homework 1: Data manipulation'
+author: "IE 0015"
+date: "February 14, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+For the homework assignments, code and narrative should be written using R Markdown. Where process maps are needed you may write them in as pseudocode, draw them and add them to a Word Document You should render (knit) the R Markdown as a Word document, print the output, and staple with the process maps for the complete submission.
+
+The first part of this homework assignment you will repeat labs 1 and 2, but you will do them in R using the dplyr/magrittr packages. Then you will generate the five basic plots.
+
+```{r, warning=FALSE}
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(readxl)
+library(readr)
+```
+
+
+
+1. Load the affiliate and the two CrossFit Open files based on the following rule:
+
+-  Use the first letter of your last name. 
+-  If you are in a team of two, use the last name of the person whose first name comes first alphabetically.
+
+Last (family) name:  A-L: Men,  M-Z: Women
+
+
+**ANSWER**
+```{r}
+Affiliate_list <- read_csv("data/Affiliate_list.csv",
+col_types = cols(Affiliate_id = col_character()))
+Men_Rx_2017 <- read_csv("data/Men_Rx_2017.csv",
+col_types = cols(Affiliateid = col_character(),
+Userid = col_character()))
+Men_Rx_2018 <- read_csv("data/Men_Rx_2018.csv",
+col_types = cols(Affiliate_id = col_character(),
+User_id = col_character()))
+```
+
+1. [15] Affiliates would like to compare where they are to other nearby affiliates.  The CrossFit Open organizes athletes into regions.  Do the following using `dplyr`, 
+Identify all athletes who participated in the CrossFit Open in both 2017 and 2018.  List the top 10 affiliates based on the athletes who competed from that affiliate in 2018 for the region that represents your place of birth. 
+
+a. [5] Make list of repeat athletes
+b. [5] Group athletes and count by affiliate based on 2018 affiliation.
+c. [5] Identify top 10 affiliates and calculate the number of repeat athletes who were there in 2018, and the average and spread of the improvement.
+
+
+Notes: 
+    -  you should use the 2018 data to identify athletes by affiliate. 
+    -  Regions are identified in the athlete table. You should find an affiliate in your state/province to figure out what region you are in.  
+    -  You should make the list of repeat athletes first, then group by and summarize by affiliate, then filter by region.
+    
+
+**ANSWER**
+a
+```{r repeatathletes}
+repeatathletes <- Men_Rx_2018 %>% 
+  left_join(Men_Rx_2017, by=c("User_id"="Userid")) 
+```
+
+
+b
+```{r affiliaterepeats}
+athletesaffiliates <- Affiliate_list %>%
+  left_join(repeatathletes, by="Affiliate_id") %>%
+  select(Affiliate_id, Affiliate_name, State, Country, Region_id, Region_name, Overall_rank, Overallrank) %>%
+  mutate(improvement = Overallrank - Overall_rank)
+```
+
+c
+```{r countaffiliateathletes}
+athletesaffiliates %>% 
+  group_by(Affiliate_name, State, Country, Region_name) %>%
+  summarize(athletes2018 = n()) %>%
+  filter(Region_name=="North Central") %>%
+  arrange(-athletes2018) %>%
+  head(10)
+```
+
+
+2. [10] For the top 10 affiliates in the region, calculate and show the number of athletes, average improvement in rank, and standard deviation of improvement who participated in  both the 2017 and 2018 Open.  
+
+**ANSWER**
+```{r}
+athletesaffiliates %>% 
+  group_by(Affiliate_name, Region_name) %>%
+  summarize(athletes2018 = n(),
+            avgimprovement = mean(improvement, na.rm=TRUE),
+            rangeimprovement = max(improvement, na.rm=TRUE)-min(improvement, na.rm=TRUE)) %>%
+  filter(Region_name=="North Central") %>%
+  arrange(-athletes2018) %>%
+  head(10)
+```
+
+3.  [15] For your region, take the top 10 affiliates and create a boxplot of the improvement in the athletes for those affiliates.  
+
+Note: that your plot needs labels for the x and y axis and a title that identifies the information presented and the region the plot is for.
+
+Note: search on the internet for "ggplot rotate axis labels" to see how to rotate the x-axis labels.
+
+**ANSWER**
+```{r}
+top10 <- athletesaffiliates %>% 
+  group_by(Affiliate_name, Affiliate_id, Region_name) %>%
+  summarize(athletes2018 = n(),
+            avgimprovement = mean(improvement, na.rm=TRUE),
+            rangeimprovement = max(improvement, na.rm=TRUE)-min(improvement, na.rm=TRUE)) %>%
+  filter(Region_name=="North Central") %>%
+  arrange(-athletes2018) %>%
+  head(10)
+```
+```{r}
+athletestop10 <- top10 %>%
+  left_join(athletesaffiliates, by="Affiliate_id")
+```
+
+```{r}
+ggplot(athletestop10) + geom_boxplot(aes(x=Affiliate_name.x, y=improvement)) +
+  ylab("Improvement in rank") + xlab("Affiliate name") + ggtitle("Improvement in affiliates in North Central Region from 2017 to 2018 CrossFit Open") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+4. [10]  For one of the top 5 affiliates in the region, create a plot that shows the improvement of each athletes who participated in both the 2017 and 2018 Open.  Assume that your client is the head coach of that affiliate.  Explain to the coach how to interpret the plot and the implication.  Note that the plot needs meaningful axis titles and a main title. 
+
+**ANSWER**
+```{r}
+Windycity <- athletestop10 %>% 
+  filter(Affiliate_name.x=="Windy City CrossFit")
+```
+
+```{r}
+ggplot(Windycity) + geom_histogram(aes(improvement)) +
+  xlab("Improvement in rank from 2017 to 2018") + 
+  ylab("Number of athletes") +
+  ggtitle("Improvement in athletes from Windy City CrossFit from 2017 to 2018 CrossFit Open")
+```
+
+Discuss if athletes generally improved, generally got worse, or were generally the same.  Discuss spread (range or variance)
