@@ -69,7 +69,8 @@ as.data.frame(summary(subset(FemPreg,select=c("education"))))
 
 3. [3]  Find the mean of number of weeks of breastfeeding  by level of education of the mother. (Note that the code above merges the ACS coded level of education with its meaning.) 
   i.  Create a data frame that only includes women who have completed breastfeeding (hint: remove those for which are not applicable, still breastfeed, or never breastfeed based on the BFEEDWKS field, a '!' indicates  The Female pregnancy data codebook identifies the codes used in the `BFEEDWKS` variable.)
-  ii.  Take the mean number of weeks of breastfeeding by education (of mother) 
+  ii.  Create a table that reports the mean number of weeks of breastfeeding by level of education (of mother) 
+
 
 **ANSWER**
 ```{r}
@@ -90,13 +91,21 @@ aggregate(completebf[,c('BFEEDWKS')],by=list(completebf$education),mean,na.rm=TR
 tapply(completebf$BFEEDWKS,completebf$education,mean)
 ```
 
-4. [3]  Find the average number of weeks of breastfeeding and weeks of maternity leave based on education and informal marital status (`education` and `marital`). Note: remember that to ignore 'NA' in the mean, use the option `na.rm=TRUE`  e.g. `mean(vector, na.rm=TRUE)`
+4. [3] Breastfeeding compared to education and marital status
+
+  i. Find the average number of weeks of breastfeeding based on education and informal marital status (`education` and `marital`).
+
+  ii.  The U.S. Centers for Disease Control and Prevention (CDC) and the American Academy of Pediatrics (AAP) recommend that infants be exclusively breastfed for the first six months and they continue to breastfeed along with complementary food for 1 year or longer.  The World Health Organization (WHO) recommends exclusive breastfeeding for six months along with complementary foods up to 2 years of age or longer. Comment on your results over this entire assignment (3 and 4) in light of these recommendations.
+  
+Note: remember that to ignore 'NA' in the mean, use the option `na.rm=TRUE`  e.g. `mean(vector, na.rm=TRUE)`
 
 **ANSWER**
 ```{r}
 completebf %>% group_by(education, marital) %>%
   summarise(avgweeks=mean(BFEEDWKS, na.rm=TRUE))
 ```
+
+For the discussion, most should be based on the answer for question 3. Higher education generally corresponds to higher number of weeks of breastfeeding. It would be difficult to say something about marital status, but living with partner seems to lead to low breastfeeding compared to other types of marital status.  For this grade loosely, pretty much anything is acceptable.  Note that this question provides evidence for plagerism if it is a direct copy.
 
 **Alternative**
 

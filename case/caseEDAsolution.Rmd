@@ -1,0 +1,78 @@
+---
+title: 'RegionEx Case: Exploratory Data Analysis'
+author: "IE 0015 Information Systems"
+date: "January 23, 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r, warning=FALSE}
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(readxl)
+library(readr)
+```
+
+**Due Wednesday February 6, 2019**
+
+1.  Using R, read in the data.  Note where you need to transform data and how you did this (e.g. declare it to be factor, ordered, normalize data, etc.). You may have to complete question 2 before you can completely answer this.
+
+Note: to declare a field as a factor, use this form:
+
+`mydf$chrdatafield <- as.factor(mydf$chrdatafield)`
+
+
+**ANSWER**
+```{r}
+inject.dots <- function(df) {names(df) <- sub(" ", ".", names(df));df}
+RegionEx <- read_excel("../case/StudentData_RegionEx_(2010-9-22).xlsx",
+col_types = c("text", "text", "text",
+"date", "date", "date", "date", "numeric",
+"text", "text", "text", "numeric"), na = c("Cancelled", "N\\A"))
+RegionEx$Airline <- as.factor(RegionEx$Airline)
+RegionEx$`Origin airport` <- as.factor(RegionEx$`Origin airport`)
+RegionEx$`Destination airport` <- as.factor(RegionEx$`Destination airport`)
+RegionEx$`Delay indicator` <- as.factor(RegionEx$`Delay indicator`)
+RegionEx$`Day of Week` <- as.factor(RegionEx$`Day of Week`)
+RegionEx$`Route Code` <- as.factor(RegionEx$`Route Code`)
+RegionEx <- inject.dots(inject.dots(inject.dots(RegionEx)))
+```
+
+Note that date fields should be explicit (otherwise they are read as numeric). Also, you had a number of error messages regarding fields that should have been na's so they need to be defined as NA.
+
+2.  Describe all of the fields in the data set. Note: you may group fields if it makes sense.
+    i. Name
+    ii. Short, one sentence description
+    iii. Description of potential values (include range, data type and units)
+    iv. Is this an outcome or a potential predictor? (dependent or independent variable)
+    
+    
+**ANSWER**
+
+    a. Airline - MDA or RegionEx
+    b. Origin Airport - DFW, MSY, PNS
+    c. Destination Airport - DFW, MSY, PNS
+    d. Departure date - September 2008
+    e. Scheduled departure time - 0635 - 2155
+    f. Scheudled arrival time - -750 - 2335
+    g. Actual arrival time - 0743 - 2353 or Cancelled
+    h. Arrival delay in minutes - -13 - 115 or N\A
+    i. Delay indicator - 0, 1, N\A
+    j. Day of week -  1-7
+    k. Route code - 1-4
+    L. Number of passengers - (RegionEx) 34-204 or blank (MDA)
+    
+3.  CoNVO statement
+
+4.  Create a pairs plot. Identify which independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select (with justification) 10 variables to include in the pairs plot.
+
+```{r}
+library(GGally)
+ggpairs(RegionEx %>% select(Airline, Origin.airport, Destination.airport, Scheduled.departure.time, Arrival.delay.in.minutes, Delay.indicator, Day.of.Week, Route.Code, Number.of.passengers))
+```
+```
+
+5.  Explore at least five independent variables as identified in the pairs plot.  Apply each of the five basic plot types at least once.  You may find that you have to build on the basic plot type to make something meaningful.

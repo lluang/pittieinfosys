@@ -1,45 +1,32 @@
 ---
-title: 'Lab 2: SQL Joins'
+title: 'Lab 2: Database form design'
 author: "IE 0015 Information Systems Engineering"
-date: "01/19/2017"
+date: "01/18-19/2018"
 output:
   word_document: default
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
-This lab uses the ACS Public Use Microdata Sample (PUMS) data for Pittsburgh (North) (Public Use Microdata Area 01701) for 2012.  The data dictionary is at 
-http://www.census.gov/programs-surveys/acs/technical-documentation/pums/documentation.2012.html.  You should open up the data dictionary in a searchable format to do this lab.
+This lab uses the CrossFit Open data you used in last week's lab. You should start with the database from then that includes the affiliate data and Men's and Women's data from 2017 and 2018.  The goal for this lab is creation of a database tool that an affiliate can use to evaluate their own performance.
 
-1. [1] In Lab 1, you determined that MS Access was not able to import the Person record of the ACS PUMS because of the number of columns in the person record.  We will break the table into two tables and use queries to connect them together and with the Household record.
+Last (family) name:  A-L: Women,  M-Z: Men
 
-In the Person Record (ss12ppa) what fields uniquely identify each row and what kinds of values do they take? (remember, you should look at the data dictionary to identify what the codes in the database stand for. This dataset is from 2012, but the field names and definitions do not change much over time.) Hint: start using the data dictionary by searching for 'PERSON RECORD'.
-
-
-2. [1] You will create two tables from the Person Record so you can import them separately, then you will combine them.  For the Person Record, it turns out that the last batch of columns are 'weights' that are used in statistical analysis of population data. How can you recognize them? How many such columns are there (look at the data dictionary)? 
-
-3.  [3] To split the person record in MS Excel, make two additional spreadsheet tabs. Give them meaningful names (e.g. the name of your ss12ppa with part1 or part2 appended). You want to create links in each to the original data (i.e. write a formula, do not cut and paste values, '=ss12ppaPittsburgh01701!A1'). The first columns for each should be the columns identified in answer 1 which will be used to link the two tables together. In Excel, these columns should be formatted as text. The remaining columns are links to the Excel cells you need copies of.
-
-After you are done, create tables in your MS Access database by importing each tab. Make sure that the columns identified in question 1 are of type 'short text' (not a number).  Then create a query that joins the two tables and includes:
-
-1. The columns from question 1
-2. Each person's age
-3. Each person's grade attending
-5. The first weight value that you put in the second table in question 2
-
-Save this query. Copy the resulting SQL and the top four rows of the resulting query to turn in.
+1. [2] Create a query that identifies all athletes who competed in both the 2017 and 2018 CrossFit Open, shows their overall rank for each, and calculates the improvement in rank for each athlete. (Note: lower rank is better)  Sort by their 2018 rank.
 
 
-3.  [2] New York City recently instituted universal Pre-Kindergarden (Pre-school) for four year-olds.  What is the fraction of 4 and 5 year olds in Pre-school in Pittsburgh (North)? 
-  a.  How do you identify if a child is in preschoool? In Kindergarten?
-  b.  Generate a query that identifies the school status of 4 and 5 year olds. Do not include children currently in Kindergarden  (because they have finished eligibility for Pre-school)
-  c.  What is the fraction of 4 and 5 year olds who are in pre-school? (Note: you will be able to calculate this with the results of part (a))
-  
+2. [2] Create a query that for a given affiliate, collect the data of all athletes from that affiliate and gives the number of repeat athletes and the mean and standard deviation of the change in rank between 2017 and 2018.
 
 
-4.  [3] What fraction of pre-school age children (under 6) live in households with a grandparent?
-  a.  What field and values in what table identifies the presence and age of children under 6 in a household?
-  b.  What field in what table identifies if a  grandparent living with grandchildren the household?
-  c.  Create a query determines how many children under 6 are living in a household?  Note: the query you created in question 3 is available to you just like any table.
-  d.  Determine what fraction of children of pre-school age (under 6) live in households with a grandparent.
-  
+
+For question 3, use your state or province of birth if you were born in the U.S., Canada, or Australia, your country of birth otherwise.  If there is no applicable affiliate, pick your favorite U.S. state :-)
+
+3. [3] Create a query that for a given state/country, provides a list of all affiliates with repeat athletes in that state/country, with the number of athletes, and the mean and standard deviation of their change in rank between 2017 and 2018.
+
+
+
+4. [3]  Create a query that does the following:
+
+    i.  Select the top affiliate in the state from question 3 using the Affiliate ID.
+    ii. Display all athletes that are competed in both the 2017 and 2018 CrossFit Open with their overall ranks.
+    

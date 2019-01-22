@@ -1,7 +1,7 @@
 ---
-title: 'Homework 1: Data manipulation'
+title: 'Homework 1: Getting started with R'
 author: "IE 0015"
-date: "February 14, 2018"
+date: "January 30, 2019"
 output:
   html_document: default
   pdf_document: default
@@ -32,12 +32,12 @@ Last (family) name:  A-L: Men,  M-Z: Women
 
 **ANSWER**
 ```{r}
-Affiliate_list <- read_csv("data/Affiliate_list.csv",
+Affiliate_list <- read_csv("../data/Affiliate_list.csv",
 col_types = cols(Affiliate_id = col_character()))
-Men_Rx_2017 <- read_csv("data/Men_Rx_2017.csv",
+Men_Rx_2017 <- read_csv("../data/Men_Rx_2017.csv",
 col_types = cols(Affiliateid = col_character(),
 Userid = col_character()))
-Men_Rx_2018 <- read_csv("data/Men_Rx_2018.csv",
+Men_Rx_2018 <- read_csv("../data/Men_Rx_2018.csv",
 col_types = cols(Affiliate_id = col_character(),
 User_id = col_character()))
 ```
@@ -60,7 +60,7 @@ Notes:
 a
 ```{r repeatathletes}
 repeatathletes <- Men_Rx_2018 %>% 
-  left_join(Men_Rx_2017, by=c("User_id"="Userid")) 
+  inner_join(Men_Rx_2017, by=c("User_id"="Userid")) 
 ```
 
 
