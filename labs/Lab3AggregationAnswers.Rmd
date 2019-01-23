@@ -52,13 +52,13 @@ FemPreg <- FemPreg %>% left_join(marital, by="RMARITAL")
 2. [2]  Using the female pregnancy data, create a table  that shows the distribution of respondents by level of education. Note that there is more than one way to approach this.  Use the dplyr functions.
 
 
-## ANSWER
+**ANSWER**
 ```{r}
 FemPreg %>% group_by(education) %>%
   summarize(count=n())
 ```
 
-# alternative solutions:
+alternative solutions:
 ```{r}
 as.data.frame(table(FemPreg$education))
 edu<-FemPreg$education
@@ -79,7 +79,7 @@ FemPreg %>% filter(!BFEEDWKS %in% c(NA, 994, 995)) %>%
     summarise(avgweeks = mean(BFEEDWKS))
 ```
 
-# Alternative solutions:
+Alternative solutions:
 
 ```{r}
 completebf <- FemPreg[!(FemPreg$BFEEDWKS %in% c(NA, 994, 995)),]

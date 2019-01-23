@@ -1,5 +1,5 @@
 ---
-title: 'Homework 1: Data manipulation'
+title: 'Homework 1: Getting started with R'
 author: "IE 0015"
 date: "January 30, 2019"
 output:
@@ -46,7 +46,6 @@ Notes:
     
 
 
-
 2. [10] For the top 10 affiliates in the region, calculate and show the number of athletes, average improvement in rank, and standard deviation of improvement who participated in  both the 2017 and 2018 Open.  
 
 
@@ -58,4 +57,3 @@ Note: search on the internet for "ggplot rotate axis labels" to see how to rotat
 
 
 4. [10]  For one of the top 5 affiliates in the region, create a plot that shows the improvement of each athletes who participated in both the 2017 and 2018 Open.  Assume that your client is the head coach of that affiliate.  Explain to the coach how to interpret the plot and the implication.  Note that the plot needs meaningful axis titles and a main title. 
-
