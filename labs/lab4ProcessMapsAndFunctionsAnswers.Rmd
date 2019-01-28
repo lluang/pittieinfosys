@@ -1,0 +1,60 @@
+---
+title: 'Lab 3: Flow Charts and writing functions'
+author: "IE 0015 Information Systems"
+date: "January 2019"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+For all questions, answer with both the answer and the code used to determine the answer.
+
+```{r, echo=FALSE, warning=FALSE}
+# standard library block
+library(dplyr, warn.conflicts = FALSE, quietly = TRUE)
+library(magrittr)
+library(readr)
+library(ggplot2, warn.conflicts = FALSE, quietly = TRUE)
+```
+
+A common problem in supply chain is the newsvendor problem.  In this problem, the vendor must purchase inventory at the beginning of a period, then sales occur during that period. If demand is greater than the inventory level, there is no opportunity to obtain more inventory and the additional demand is lost.  If the inventory purchased is greater than demand, the excess inventory is sold for salvage.  For example, winter sports fashion is often purchased in early fall and excess (such as my red winter jacket) is then sold at deep discounts in the following spring to free up space for spring/summer inventory.
+
+The relevant parameters for the newsvendor problem are the probability distribution parameters. Cost of goods, sales price, and salvage value.
+
+Take a problem where the season's demand for red winter coats at one outdoors store is normally distributed with mean 5000 and standard deviation 1000.  The cost of good (what the store pays) is \$50. The price (what the store sells it for) is \$150. The salvage value (what the store can sell it for in its end of the season clearance sale) is \$40.
+
+One way of evaluating the best order quantity is through simulation.  This assignment will work through developing this simulation.
+
+1.[3] Write a function that takes as parameters the parameters the cost of goods, sales price, salvage value, inventory level, and demand to calculate the profit for the season. Note: functions were covered in https://swcarpentry.github.io/r-novice-inflammation/.
+
+```{r}
+newsvendorprofit <- function(cost, price, salvage, inventory, demand){
+  #your code here.
+  #result <- 
+}
+```
+
+Hint:
+
+i. There should be at least two if else statements, one for determining if there is a shortage, another to determine if there is excess inventory.
+ii. You should create test case to make sure your function works.
+
+
+2.[1]  Generate a sequence of 99 values that are the 1 through 99th quantiles of the normal distribution for demand. (look up `sequence` and`qnorm` in help).  Print out the first and last 5 values.
+  
+  
+**ANSWER**
+```{r}
+points <- seq(0.01, 0.99, 0.01)
+q <- qnorm(points, mean = 5000, sd = 1000)
+print(head(q))
+print(tail(q))
+```
+
+3.  Calculate average profit.
+
+    a. [2] Draw the flow chart process map for an analysis that tests a range of inventory levels from 3000 to 7000 in increments of 250, then calculates the profit for each level of demand determined in (2).  Then calculate the average profit.
+    b. [4] Write the functions and script required to impleent 3a.
+    
+    
+Note:  The correct way to do this is a simulation instead of creating sequences with potential demand levels. We will do the simulation near the end of the semester.
