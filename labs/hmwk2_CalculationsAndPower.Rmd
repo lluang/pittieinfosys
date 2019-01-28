@@ -1,0 +1,193 @@
+---
+title: 'Homework 2: Calculations and Power'
+author: "IE 0015"
+date: "February 13, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+For the homework assignments, code and narrative should be written using R Markdown.  Process maps can be written on separate pieces of paper. You should render the R Markdown as PDF or Word then submit the hardcopy.
+
+This assignement builds on the discussion articles "What is Fitness?" and "What can exercise science learn from CrossFit?"  The purpose of those articles was to state in general terms a method of applying scientific principles to evaluting exercise and fitness.  In this homework assignment, you will operationalize the concepts in those articles 
+
+
+```{r, warning=FALSE}
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(readxl)
+library(readr)
+```
+
+
+
+1. Load the affiliate and the two CrossFit Open files based on the following rule:
+
+-  Use the first letter of your last name. 
+-  If you are in a team of two, use the last name of the person whose first name comes first alphabetically to determine men or women, use the first name of the person whose last name comes first for 2017 or 2018.
+
+Last (family) name:  A-L: Men,  M-Z: Women
+First (given) name:  A-L: 2017, M-Z: 2018
+
+
+**ANSWER**
+```{r}
+Affiliate_list <- read_csv("../data/Affiliate_list.csv",
+col_types = cols(Affiliate_id = col_character()))
+Men_Rx_2017 <- read_csv("../data/Men_Rx_2017.csv",
+col_types = cols(Affiliateid = col_character(),
+Userid = col_character()))
+Men_Rx_2018 <- read_csv("../data/Men_Rx_2018.csv",
+col_types = cols(Affiliate_id = col_character(),
+User_id = col_character()))
+```
+
+
+2. [3] Look up (search using the internet) the workouts that comprise the 2017 and 2018 CrossFit Opens (best place is games.crossfit.com).  In this assignment, you will need to calculate power output.  This requires being able to measure distance traveled.  You are only interested in vertical distance traveled in your calculations of power.  Measure the distances while standing.  Assign the results to variables. 
+
+For each workout in the year you are assigned, identify the body part (joint to joint) that would be an approximate measure of the vertical distance covered by each repetition of the movement, (for whole body movements from ground to standing, use the height from ground to your waist), measure that distance for two people (if you have two people doing the homework together, the two of you. Otherwise, find someone else in the class you can share measurements with), and average that distance.  Also estimate and average the weights for each person.  
+
+Create a data frame that 
+    i. Identifies the workout.
+    ii.  Identifies a movement within the workout
+    iii. States the vertical distance traveled for each iteration (repetition) of the movement (Note: Horizontal distance without up-down movement does not count!)
+    iv. States the mass/weight moved for that movement.
+    v. Identifies the number of repetitions of that movement in each round of the workout.
+
+Note: A similar exercise is also done in IE 1061 Human factors
+
+Note: You should start by recording your measurements as variables, then assign those values to the distance traveled as appropriate.  The values are expected to be approximate (i.e. do not be to concerned with precise definitions on body measurements. You will learn how to be precise in IE 1061.)
+
+**ANSWER**
+## 2017 Crossfit Open
+
+### 17.1
+10 dumbbell snatches
+15 burpee box jump-overs
+20 dumbbell snatches
+15 burpee box jump-overs
+30 dumbbell snatches
+15 burpee box jump-overs
+40 dumbbell snatches
+15 burpee box jump-overs
+50 dumbbell snatches
+15 burpee box jump-overs
+
+- Men use 1 x 50-lb. dumbbell and 24-in. box
+- Women use 35-lb. dumbbell and 20-in. box
+- Snatch, dumbbell ground to overhead fist
+- burpee box jump-overs.  bodyweight ground to waist + box height
+
+### 17.2
+2 rounds of:
+  50-ft. weighted walking lunge
+  16 toes-to-bars
+  8 power cleans
+Then, 2 rounds of:
+  50-ft. weighted walking lunge
+  16 bar muscle-ups
+  8 power cleans
+Etc., alternating between toes-to-bars and bar muscle-ups every 2 rounds.
+
+- Men use 2x50-lb. dumbbells
+- Women use 2x35-lb. dumbbells
+-  Walking lunge.  knees to waist.  Distance on lunge equal to one knee to waist plus one ground to knee. 
+
+## 2018 Crossfit Open
+
+### 18.1
+8 toes-to-bars
+10 dumbbell hang clean and jerks
+14-cal. row
+
+Men use 1 x 50-lb. dumbbell/Women 1 x 35-lb dumbbell
+Distance, middle of chest (sternum) to top of overhead fist
+
+### 18.2
+1-2-3-4-5-6-7-8-9-10 reps for time of:
+Dumbbell squats
+Bar-facing burpees
+
+Men use 2x50-lb. dumbbells Women 2x35 lb
+- Dumbbell squats move distance equal to knees to hips
+- burpees move body weight from ground to waist (i.e. center of gravity standing up)
+
+### 18.2a
+1-rep max clean
+
+Distance ground to shoulders
+
+### 18.3
+2 rounds for time of:
+100 double-unders
+20 overhead squats
+100 double-unders
+12 ring muscle-ups
+100 double-unders
+20 dumbbell snatches
+100 double-unders
+12 bar muscle-ups
+
+Men perform 115-lb. OHS, 50-lb. DB snatches
+Women perform 80-lb. OHS, 35-lb. DB snatches
+
+- Double unders bodyweight from ground to ankles.
+- Overhead squats from knees to hips
+- muscle ups bodyweight from waist to overhead fist (both bar and ring)
+- snatches ground to outstretched arms
+
+### 18.4
+
+For time:
+21 deadlifts, 155 lb.
+21 handstand push-ups
+15 deadlifts, 155 lb.
+15 handstand push-ups
+9 deadlifts, 155 lb.
+9 handstand push-ups
+21 deadlifts, 205 lb.
+50-ft. handstand walk
+15 deadlifts, 205 lb.
+50-ft. handstand walk
+9 deadlifts, 205 lb.
+50-ft. handstand walk
+
+-  Deadlift - ground to knee or knee to waist
+-  Handstand push-up - bodyweight elbow to shoulder
+-  handstand walk - bodyweight waist to head (only once per walk, because we are only looking at vertical work!)
+
+### 18.5
+Complete as many reps as possible in 7 minutes of:
+3 thrusters
+3 chest-to-bar pull-ups
+6 thrusters
+6 chest-to-bar pull-ups
+9 thrusters
+9 chest-to-bar pull-ups
+12 thrusters
+12 chest-to-bar pull-ups
+15 thrusters
+15 chest-to-bar pull-ups
+18 thrusters
+18 chest-to-bar pull-ups
+
+-  Thrusters - knees to waist plus shoulders to fist
+-  chest to bar pull ups.  middle of chest to overhead fist
+
+
+3. [2] Average power over time.
+
+    a.  Draw a flow chart that calculates average power over time. Each box should be a specific arithmetic operation.
+    b.  Write a function that calculates average power over time given mass, distance, time, and repetitions. You may look up *work* and *power* in Wikipedia to see the mathematical definitions for both. (you will use this later, so design the function and its parameters accordingly) (Note: writing functions is covered in the readings from https://swcarpentry.github.io/r-novice-inflammation/)
+
+
+4.  [5] For the affiliate you identified in Homework 1 (one of the top 10 affiliates by number of athletes who competed in both 2017 and 2018 in the region that represents where you were born) For each athlete,
+
+    i. Calculate the average power over time for each athlete.
+    ii. Calculate the total of theaverage across all events across that year.
+    iii.  Plot the total average against the athlete final rank for that year for each of the athletes. (Note: you have to choose the type of plot. Remember to word the title and the x and y axis appropriately so that the viewer can interpet the plots) (Note: it should be possible to see each athlete in the final plot. Choose the plot type so this is possible.)
+    iv.  Compare and discuss the two plots.
+  
+
