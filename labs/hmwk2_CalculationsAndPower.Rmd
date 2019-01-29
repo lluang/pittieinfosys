@@ -19,6 +19,8 @@ library(magrittr)
 library(ggplot2)
 library(readxl)
 library(readr)
+library(lubridate)
+library(stringr)
 ```
 
 
@@ -32,7 +34,6 @@ Last (family) name:  A-L: Men,  M-Z: Women
 First (given) name:  A-L: 2017, M-Z: 2018
 
 
-**ANSWER**
 ```{r}
 Affiliate_list <- read_csv("../data/Affiliate_list.csv",
 col_types = cols(Affiliate_id = col_character()))
@@ -44,12 +45,29 @@ col_types = cols(Affiliate_id = col_character(),
 User_id = col_character()))
 ```
 
+The code below converts scores that are written in the format "0 days HH:MM:SS" into seconds.  Apply this to each column as needed.
+```{r texttoseconds, warning=FALSE}
+texttoseconds <- function(textstring){
+  if(is.na(as.integer(textstring))){
+    seconds <- as.numeric(substr(textstring, 11, 12)) * 60 + as.numeric(substr(textstring, 14, 15))
+  }else{
+    seconds = as.numeric(textstring)
+  }
+  return(seconds)
+}
+
+men_2017_1_seconds <- sapply(Men_Rx_2017$`17.1_score`,texttoseconds)
+men_2017_3_seconds <- sapply(Men_Rx_2017$`17.3_score`,texttoseconds)
+men_2017_5_seconds <- sapply(Men_Rx_2017$`17.5_score`,texttoseconds)
+
+```
 
 2. [3] Look up (search using the internet) the workouts that comprise the 2017 and 2018 CrossFit Opens (best place is games.crossfit.com).  In this assignment, you will need to calculate power output.  This requires being able to measure distance traveled.  You are only interested in vertical distance traveled in your calculations of power.  Measure the distances while standing.  Assign the results to variables. 
 
 For each workout in the year you are assigned, identify the body part (joint to joint) that would be an approximate measure of the vertical distance covered by each repetition of the movement, (for whole body movements from ground to standing, use the height from ground to your waist), measure that distance for two people (if you have two people doing the homework together, the two of you. Otherwise, find someone else in the class you can share measurements with), and average that distance.  Also estimate and average the weights for each person.  
 
-Create a data frame that 
+Create a data frame that:
+
     i. Identifies the workout.
     ii.  Identifies a movement within the workout
     iii. States the vertical distance traveled for each iteration (repetition) of the movement (Note: Horizontal distance without up-down movement does not count!)
@@ -59,6 +77,8 @@ Create a data frame that
 Note: A similar exercise is also done in IE 1061 Human factors
 
 Note: You should start by recording your measurements as variables, then assign those values to the distance traveled as appropriate.  The values are expected to be approximate (i.e. do not be to concerned with precise definitions on body measurements. You will learn how to be precise in IE 1061.)
+
+Note: You should make a decision if you are going to use metric or Imperial/U.S. Customary  units, and convert measurements accordingly.
 
 **ANSWER**
 ## 2017 Crossfit Open
@@ -176,12 +196,31 @@ Complete as many reps as possible in 7 minutes of:
 -  Thrusters - knees to waist plus shoulders to fist
 -  chest to bar pull ups.  middle of chest to overhead fist
 
+```{r}
+groundtowaist <- 99 /2.54 #cm
+groundtoknee <- 50/2.54 #cm
+kneetowaist <- 49/2.54 #cm
+groundtoshoulder <- 149/2.54
+handtoshoulder <- 62/2.54
+chesttohand <- 76/2.54
+groundtohand <- 204/2.54
 
+```
 3. [2] Average power over time.
 
-    a.  Draw a flow chart that calculates average power over time. Each box should be a specific arithmetic operation.
-    b.  Write a function that calculates average power over time given mass, distance, time, and repetitions. You may look up *work* and *power* in Wikipedia to see the mathematical definitions for both. (you will use this later, so design the function and its parameters accordingly) (Note: writing functions is covered in the readings from https://swcarpentry.github.io/r-novice-inflammation/)
+    a.  Draw a flow chart that calculates average power over time given mass, distance, and time. Each box should be a specific arithmetic operation.
+    b.  Write a function that calculates average power over time given weight, distance and time. You may look up *work* and *power* in Wikipedia to see the mathematical definitions for both. (you will use this later, so design the function and its parameters accordingly) (Note: writing functions is covered in the readings from https://swcarpentry.github.io/r-novice-inflammation/)
 
+
+**ANSWER**
+Note that pounds is a unit of force.  Kilograms is a unit of mass. So mass needs to be multiplied by gravity to get force.
+
+```{r}
+avgpower <- function(weight, distance, time){
+  avgpower <- weight * distance/time
+  return(avgpower)
+}
+```
 
 4.  [5] For the affiliate you identified in Homework 1 (one of the top 10 affiliates by number of athletes who competed in both 2017 and 2018 in the region that represents where you were born) For each athlete,
 
