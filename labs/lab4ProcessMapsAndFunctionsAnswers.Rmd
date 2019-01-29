@@ -25,7 +25,12 @@ Take a problem where the season's demand for red winter coats at one outdoors st
 
 One way of evaluating the best order quantity is through simulation.  This assignment will work through developing this simulation.
 
-1.[3] Write a function that takes as parameters the parameters the cost of goods, sales price, salvage value, inventory level, and demand to calculate the profit for the season. Note: functions were covered in https://swcarpentry.github.io/r-novice-inflammation/.
+1.[3] Newsvendor profit function.
+
+    i. Write a function that takes as parameters the parameters the cost of goods, sales price, salvage value, inventory level, and demand to calculate the profit for the season. 
+    ii. Create and run two test cases to make sure your function works. One where demand is greater than inventory level and one where demand is less than inventory level.
+    
+Note: functions were covered in https://swcarpentry.github.io/r-novice-inflammation/.
 
 ```{r}
 newsvendorprofit <- function(cost, price, salvage, inventory, demand){
@@ -36,10 +41,28 @@ newsvendorprofit <- function(cost, price, salvage, inventory, demand){
 
 Hint:
 
-i. There should be at least two if else statements, one for determining if there is a shortage, another to determine if there is excess inventory.
-ii. You should create test case to make sure your function works.
+i. There should be an if else statements, one case if there is a shortage, the other if there is excess inventory.
 
 
+**ANSWER**
+
+```{r}
+newsvendorprofit <- function(cost, price, salvage, inventory, demand){
+  if(inventory > demand){
+    profit = (price - cost) * demand + (salvage - cost)*(inventory - demand)
+  } else {
+    profit = (price - cost) * inventory
+  }
+  return(profit)
+}
+# Pick sample data so that the math will be easy
+price <- 10
+cost <- 5
+salvage <- 3
+
+print(newsvendorprofit(cost, price, salvage, inventory=10, demand=20))
+print(newsvendorprofit(cost, price, salvage, inventory=20, demand=10))
+```
 2.[1]  Generate a sequence of 99 values that are the 1 through 99th quantiles of the normal distribution for demand. (look up `sequence` and`qnorm` in help).  Print out the first and last 5 values.
   
   
@@ -53,8 +76,31 @@ print(tail(q))
 
 3.  Calculate average profit.
 
-    a. [2] Draw the flow chart process map for an analysis that tests a range of inventory levels from 3000 to 7000 in increments of 250, then calculates the profit for each level of demand determined in (2).  Then calculate the average profit.
-    b. [4] Write the functions and script required to impleent 3a.
+    a. [2] Draw the flow chart process map for an analysis that tests a range of inventory levels from 3000 to 7000 in increments of 250, then calculates the profit for each level of demand determined in (2).  Then calculate the average profit.  Plot the profits and determine the inventory level with the maximum profit.
+    b. [4] Write the functions and script required to implement 3a.  Use cost = 50, price = 20, salvage value = 10
     
     
 Note:  The correct way to do this is a simulation instead of creating sequences with potential demand levels. We will do the simulation near the end of the semester.
+
+**ANSWER**
+
+a.  Create sequences of inventory levels
+b.  Create sequences of demands
+c.  Start at the lowest inventory level
+d.  Calculate profit for each level of demand
+e.  Calculate the average profit
+f.  Save the value along with the inventory level
+g.  Repeat with the next inventory level
+h.  Plot the average profits for each level of inventory.
+
+```{r}
+cost <- 20
+price <- 50
+salvage <- 10
+inventorylevels <- seq(3000, 7000, 250)
+avgprofit <- c()
+for (i in inventorylevels){
+  profits <- newsvendorprofit()
+}
+
+```
