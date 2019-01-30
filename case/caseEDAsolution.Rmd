@@ -43,11 +43,12 @@ RegionEx <- inject.dots(inject.dots(inject.dots(RegionEx)))
 
 Note that date fields should be explicit (otherwise they are read as numeric). Also, you had a number of error messages regarding fields that should have been na's so they need to be defined as NA.
 
-2.  Describe all of the fields in the data set. Note: you may group fields if it makes sense.
+2.  Describe the fields in the data set. Note: you may group fields if it makes sense (i.e. many fields are very similar in nature).
     i. Name
     ii. Short, one sentence description
     iii. Description of potential values (include range, data type and units)
-    iv. Is this an outcome or a potential predictor? (dependent or independent variable)
+    iv. Quantitative summary of data.  e.g. mean, median, 25/75 quartiles, range
+    v. Is this an outcome or a potential predictor? (dependent or independent variable)
     
     
 **ANSWER**
