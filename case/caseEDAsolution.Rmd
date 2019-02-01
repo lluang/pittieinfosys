@@ -27,8 +27,9 @@ Note: to declare a field as a factor, use this form:
 
 **ANSWER**
 ```{r}
-inject.dots <- function(df) {names(df) <- sub(" ", ".", names(df));df}
-RegionEx <- read_excel("../case/StudentData_RegionEx_(2010-9-22).xlsx",
+inject.dots <- function(df) { names(df) <- sub(" ", ".", names(df)); df }
+datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\case\\"
+RegionEx <- read_excel(file.path(datadirectory, "StudentData_RegionEx_(2010-9-22).xlsx"),
 col_types = c("text", "text", "text",
 "date", "date", "date", "date", "numeric",
 "text", "text", "text", "numeric"), na = c("Cancelled", "N\\A"))
@@ -74,6 +75,6 @@ Note that date fields should be explicit (otherwise they are read as numeric). A
 library(GGally)
 ggpairs(RegionEx %>% select(Airline, Origin.airport, Destination.airport, Scheduled.departure.time, Arrival.delay.in.minutes, Delay.indicator, Day.of.Week, Route.Code, Number.of.passengers))
 ```
-```
+
 
 5.  Explore at least five independent variables as identified in the pairs plot.  Apply each of the five basic plot types at least once.  You may find that you have to build on the basic plot type to make something meaningful.
