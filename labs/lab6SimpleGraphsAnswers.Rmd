@@ -1,7 +1,7 @@
 ---
-Title: 'Lab 6: Simple Graphs with ggplot2'
+Title: 'Lab 5: Simple Graphs with ggplot2'
 author: "IE 0015 Information Systems"
-date: "February 15/16, 2018"
+date: "February 7/8, 2018"
 output:
   pdf_document: default
   html_document: default
