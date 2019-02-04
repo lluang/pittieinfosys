@@ -1,0 +1,46 @@
+---
+title: "Open Educational Resources Funding Application"
+author: "Louis Luangkesorn"
+date: "February 1, 2019"
+output: html_document
+---
+
+Name:  Kiatikun Louis Luangkesorn
+Department: Industrial Engineering
+Campus address:  1028 Benedum Hall
+Email address:  lluangkesorn@pitt.edu
+Telephone number: (412) 624-9838
+
+Course name and number:  IE 0015 Information Systems Engineering
+Semester(s) course will be taught:  Spring 2020 (repeats every spring)
+Expected enrollment:  78
+Title and cost of current textbook or course materials:  R for Data Science by Wickham and Grolemund.  List price: $39.99
+
+I am requesting funds to create a brand new OER
+
+1. Describe why you wish to adopt or create an OER for your course. (Up to 100 words)
+
+The course is currently based on R, which along with Python are the two commonly used data analysis environments for data analysis in industry.  Based on conversations with students in coops and internships, Python may be in more general use by industrial engineers.  I intend to convert the course to Python to allow the course to be a better pathway for propective CS minors as well as other courses that require technical computing (but not data analysis)
+
+2. Have you found open textbooks and/or OER suitable to your course? If so, please list them here with links to their online availability. (Up to 200 words)
+
+The most similar texts are Moderndive by Charles Ismay and Albert Kim (https://moderndive.com/) and Python for Everybody by Charles Severance (https://www.py4e.com/).  Python for Everybody is intended to be a general introduction to programming in Python, with a few elements of programming for database access. As such, it does not cover data analysis.  Moderndive is written in R, but has the same audience, STEM students with a very rudimentary ability in programming, who are learning programming for data manipulation and analysis.  This differs from most programming books (which are for a general, systems programming audience) or data analysis books that presume a level of existing competency in programming which is not present in most undergraduate engineers.
+
+
+3. How will you integrate the OER resource into your course? Please provide a simple timeline that includes the develop cycle, implementation cycle, the required technology for faculty, including the technology that students will need in order to use your OER, and evaluation. (Up to 200 words)
+
+This proposal will take the structure of Moderndive (chapter and topics), and rewrite it for use with Python.  As a data language, Python and R have a design that provides the same capabilities, but their design history (Python started out as a general purpose programming language, R was developed by those in statistical computing) leads to different design decisions to implement those capabilities.  The porting of Moderndive will require writing a parallel version of the text to fit how Python developers implemented the concepts.  This similarity extends to the mathematical and statistical modeling portions of Moderndive.
+
+4. How will Pitt students access your OER (required devices, platforms, etc.)? In which open education platform do you plan to deposit your work (refer to library guide above)? (Up to 200 words)
+
+Moderndive is currently Creative Commons licensed and is available through github and related platforms.
+
+5. Describe your plan to work with the Library and Teaching Center to integrate the OER. (Up to 100 words)
+
+
+6. Describe your plan for evaluating the outcomes. What benefits do you hope to achieve by using OER, and how will you evaluate whether you met them? (Up to 200 words)
+
+I expect that 
+
+7. Include a budget showing how your funds will be used. (Template provided)
+8. Include a signed letter of support from your department chair. (Template provided)

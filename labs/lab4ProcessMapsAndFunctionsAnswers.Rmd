@@ -1,5 +1,5 @@
 ---
-title: 'Lab 3: Flow Charts and writing functions'
+title: 'Lab 4: Flow Charts and writing functions'
 author: "IE 0015 Information Systems"
 date: "January 2019"
 output:
@@ -17,7 +17,7 @@ library(readr)
 library(ggplot2, warn.conflicts = FALSE, quietly = TRUE)
 ```
 
-A common problem in supply chain is the newsvendor problem.  In this problem, the vendor must purchase inventory at the beginning of a period, then sales occur during that period. If demand is greater than the inventory level, there is no opportunity to obtain more inventory and the additional demand is lost.  If the inventory purchased is greater than demand, the excess inventory is sold for salvage.  For example, winter sports fashion is often purchased in early fall and excess (such as my red winter jacket) is then sold at deep discounts in the following spring to free up space for spring/summer inventory.
+A common problem in supply chain is the newsvendor problem.  In this problem, the vendor must purchase inventory at the beginning of a period, then sales occur during that period. If demand is greater than the inventory level, there is no opportunity to obtain more inventory and the additional demand is lost.  If the inventory purchased is greater than demand, the excess inventory is sold for salvage.  For example, winter sports fashion is often ordered by retailers in early fall and whatever is unsold at the end of the winter (such as my red winter jacket) is then sold at deep discounts in early spring to free up space for spring/summer inventory.
 
 The relevant parameters for the newsvendor problem are the probability distribution parameters. Cost of goods, sales price, and salvage value.
 
@@ -30,7 +30,7 @@ One way of evaluating the best order quantity is through simulation.  This assig
     i. Write a function that takes as parameters the parameters the cost of goods, sales price, salvage value, inventory level, and demand to calculate the profit for the season. 
     ii. Create and run two test cases to make sure your function works. One where demand is greater than inventory level and one where demand is less than inventory level.
     
-Note: functions were covered in https://swcarpentry.github.io/r-novice-inflammation/.
+Note: functions were covered in https://swcarpentry.github.io/r-novice-inflammation/ as well as R4DS chapter 19.
 
 ```{r}
 newsvendorprofit <- function(cost, price, salvage, inventory, demand){
@@ -41,8 +41,16 @@ newsvendorprofit <- function(cost, price, salvage, inventory, demand){
 
 Hint:
 
-i. There should be an if else statements, one case if there is a shortage, the other if there is excess inventory.
+i. There should be an if else statement, one case if there is a shortage, the other if there is excess inventory.  the format of an if else statement is:
 
+
+```
+if (condition){
+  statements to be run if condition is true
+} else {
+  statements to be run if condition is false
+}
+```
 
 **ANSWER**
 
@@ -77,10 +85,28 @@ print(tail(q))
 3.  Calculate average profit.
 
     a. [2] Draw the flow chart process map for an analysis that tests a range of inventory levels from 3000 to 7000 in increments of 250, then calculates the profit for each level of demand determined in (2).  Then calculate the average profit.  Plot the profits and determine the inventory level with the maximum profit.
-    b. [4] Write the functions and script required to implement 3a.  Use cost = 50, price = 20, salvage value = 10
+    b. [4] Write the functions and script required to implement 3a.  Use cost = 20, price = 40, salvage value = 10
     
     
 Note:  The correct way to do this is a simulation instead of creating sequences with potential demand levels. We will do the simulation near the end of the semester.
+
+Below is code that uses your newsvendorprofit that you can use as a starting point.
+```{r}
+cost <- 20
+price <- 40
+salvage <- 10
+inventorylevels <- seq(3000, 7000, 250)
+avgprofit <- c()
+for (i in inventorylevels){
+  profits <- c()
+  for (demand in q){
+    profits <- c(profits, newsvendorprofit(cost, price, salvage, inventory=i, demand=demand))
+  }
+  avgprofit <- c(avgprofit, mean(profits))
+}
+# Need to take results to make a data frame of inventory level and average profits
+# Need to make a graph
+```
 
 **ANSWER**
 
@@ -88,19 +114,27 @@ a.  Create sequences of inventory levels
 b.  Create sequences of demands
 c.  Start at the lowest inventory level
 d.  Calculate profit for each level of demand
-e.  Calculate the average profit
+e.  Calculate the average profit for that inventory level
 f.  Save the value along with the inventory level
 g.  Repeat with the next inventory level
 h.  Plot the average profits for each level of inventory.
+i.  Find the inventory level with the maximum profit.
 
 ```{r}
 cost <- 20
-price <- 50
+price <- 40
 salvage <- 10
 inventorylevels <- seq(3000, 7000, 250)
 avgprofit <- c()
 for (i in inventorylevels){
-  profits <- newsvendorprofit()
+  profits <- c()
+  for (demand in q){
+    profits <- c(profits, newsvendorprofit(cost, price, salvage, inventory=i, demand=demand))
+  }
+  avgprofit <- c(avgprofit, mean(profits))
 }
-
+newsvendoravgprofit <- data.frame(inventorylevels, avgprofit)
+ggplot(newsvendoravgprofit) + geom_point(aes(x=inventorylevels, y=avgprofit))
 ```
+
+```{r}

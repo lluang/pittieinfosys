@@ -9,7 +9,7 @@ output:
 
 For the homework assignments, code and narrative should be written using R Markdown.  Process maps can be written on separate pieces of paper. You should render the R Markdown as PDF or Word then submit the hardcopy.
 
-This assignement builds on the discussion articles "What is Fitness?" and "What can exercise science learn from CrossFit?"  The purpose of those articles was to state in general terms a method of applying scientific principles to evaluting exercise and fitness.  In this homework assignment, you will operationalize the concepts in those articles 
+This assignment builds on the discussion articles "What is Fitness?" and "What can exercise science learn from CrossFit?"  The purpose of those articles was to state in general terms a method of applying scientific principles to evaluating exercise and fitness.  In this homework assignment, you will operationalize the concepts in those articles 
 
 
 ```{r, warning=FALSE, message=FALSE}
@@ -81,7 +81,7 @@ Women_Rx_2018$`18_2_seconds` <- sapply(Women_Rx_2018$`18.2_score`,texttoseconds)
 
 For each workout in the year you are assigned, identify the body part (joint to joint) that would be an approximate measure of the vertical distance covered by each repetition of the movement, (for whole body movements from ground to standing, use the height from ground to your waist), measure that distance for two people (if you have two people doing the homework together, the two of you. Otherwise, find someone else in the class you can share measurements with), and average that distance.  Also estimate and average the weights for each person.  Assume that a persons weight is split evenly at the waist (top half and bottom half).
 
-Ignore cardio components (run, row, ski, double-unders) and N rep max components.
+Ignore cardio components (run, row, ski, double-unders) and $N$ rep max components.
 
 
     i. Identifies the workout.
@@ -97,6 +97,7 @@ Note: You should start by recording your measurements as variables, then assign 
 Note: You should make a decision if you are going to use metric or Imperial/U.S. Customary  units, and convert measurements accordingly.
 
 ```
+{r} #move this line to after the tick marks to create a code chunk
 # enter measurements and any calculations needed here
 # Use comments to indicate units
 groundtowaist <- 
@@ -106,40 +107,18 @@ groundtoshoulder <-
 handtoshoulder <- 
 chesttohand <- 
 groundtohand <- 
+elbowtoshoulder <-
+waisttohand <-
 bodyweight <- 
 ```
-
-**ANSWER**
-```{r}
-groundtowaist <- 99 /2.54/12 #ft
-groundtoknee <- 50/2.54/12 #ft
-kneetowaist <- 49/2.54/12 #ft
-groundtoshoulder <- 149/2.54/12 #ft
-handtoshoulder <- 62/2.54/12 #ft
-chesttohand <- 76/2.54/12 #ft
-groundtohand <- 204/2.54/12 #ft
-elbowtoshoulder <- 31/2.54/12
-waisttohand <- 105 / 2.54/12
-bodyweight <- 160 #lbs
-```
-
 
 3. [2] Average power over time.
 
     a.  Draw a flow chart that calculates average power over time given mass, distance, and time. Each box should be a specific arithmetic operation.
     b.  Write a function for each workout that calculates average power over time given weight, distance and time. Ignore all cardio (run, walk, row, bike, ski, double-unders, handstand walk, etc.) You may look up *work* and *power* in Wikipedia to see the mathematical definitions for both. (you will use this later, so design the function and its parameters accordingly) (Note: writing functions is covered in the readings from https://swcarpentry.github.io/r-novice-inflammation/)
 
+Note that pounds is a unit of force.  Kilograms is a unit of mass. So mass needs to be multiplied by gravity to get force (Newtons) if you are using kilograms.
 
-**ANSWER**
-Note that pounds is a unit of force.  Kilograms is a unit of mass. So mass needs to be multiplied by gravity to get force.
-
-```{r}
-avgpower <- function(weight, distance, repsperround, rounds, time){
-  # power <- weightmoved * distance * repsperround * rounds
-  avgpower <- weight * distance * repsperround * rounds/time
-  return(avgpower)
-}
-```
 
 ## 2017 Crossfit Open
 
@@ -160,102 +139,6 @@ avgpower <- function(weight, distance, repsperround, rounds, time){
 - Snatch, dumbbell ground to overhead fist
 - burpee box jump-overs.  bodyweight ground to waist + box height
 
-```{r}
-Open17_1 <- function(groundtohand, groundtowaist, boxheight, weight, bodyweight,  time){
-  dbsnatchpower <- (10 + 20 + 30 + 40 + 50) * weight * groundtohand
-  burpeepower <- 15 * 5 * bodyweight *(groundtowaist + boxheight)
-  avgpower <- (dbsnatchpower + burpeepower)/time
-  return(avgpower)
-}
-```
-
-### 17.2
-2 rounds of:
-  50-ft. weighted walking lunge
-  16 toes-to-bars
-  8 power cleans
-Then, 2 rounds of:
-  50-ft. weighted walking lunge
-  16 bar muscle-ups
-  8 power cleans
-Etc., alternating between toes-to-bars and bar muscle-ups every 2 rounds.
-
-- Men use 2x50-lb. dumbbells
-- Women use 2x35-lb. dumbbells
--  Walking lunge.  knees to waist.  Distance on lunge equal to one knee to waist plus one ground to knee. 
-
-```{r}
-Open17_2 <- function(kneetowaist, groundtowaist, groundtoshoulder, weight, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  walkinglungepower <- (weight + bodyweight) * kneetowaist * (50 * 12/groundtowaist) * 2 * 2
-  toestobarpower <- bodyweight/2 * kneetowaist * 16 * 2
-  powercleanspower <- weight * groundtoshoulder * 8 * 2 * 2
-  muscleupspower <- bodyweight * (2 * handtoshoulder) * 16 * 2
-  avgpower <- (walkinglungepower + toestobarpower + powercleanspower + muscleupspower)/time
-  return(avgpower)
-}
-```
-
-### 17.3
-3 rounds of:
-    6 chest-to-bar pull-ups
-    6 squat snatches, 95 lb.
-Then, 3 rounds of:
-    7 chest-to-bar pull-ups
-    5 squat snatches, 135 lb.
-*Prior to 12:00, complete 3 rounds of:
-    8 chest-to-bar pull-ups
-    4 squat snatches, 185 lb.
-*Prior to 16:00, complete 3 rounds of:
-    9 chest-to-bar pull-ups
-    3 squat snatches, 225 lb.
-*Prior to 20:00, complete 3 rounds of:
-    10 chest-to-bar pull-ups
-    2 squat snatches, 245 lb.
-Prior to 24:00, complete 3 rounds of:
-    11 chest-to-bar pull-ups
-    1 squat snatch 265 lb.
-    
-```{r}
-Open17_3 <- function(kneetowaist, groundtowaist, groundtoshoulder, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  chesttobarpower <- (bodyweight) * handtoshoulder * 2 * (6 + 7 +8 + 9 + 10 + 11) * 3
-  squatsnatchpower <- (bodyweight * kneetowaist) + (groundtohand) * (6* 95 +5 * 135+4*185 +3*225+2*245+1*265) * 3
-  avgpower <- (chesttobarpower + squatsnatchpower)/time
-  return(avgpower)
-}
-```
-### 17.4
-
-55 deadlifts, 225 lb.
-55 wall-ball shots, 20-lb. ball to 10-ft. target
-55-calorie row
-55 handstand push-ups
-
-```{r}
-Open17_4 <- function(kneetowaist, groundtoshoulder, height, weight, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  deadliftpower <- (bodyweight + weight) * kneetowaist * 55
-  wallballpower <- (bodyweight * kneetowaist + 20 * height) * 55
-  hspupower <- (bodyweight * elbowtoshoulder) * 55
-  avgpower <- (deadliftpower + wallballpower + hspupower)/time
-  return(avgpower)
-}
-```
-
-### 17.5
-10 rounds for time of:
-9 thrusters, 95 lb.
-35 double-unders
-
-```{r}
-Open17_5 <- function(kneetowaist, handtoshoulder, weight, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  thrusterpower <- (bodyweight * kneetowaist + weight * (kneetowaist + handtoshoulder)) * 9 * 10
-  avgpower <- (thrusterpower)/time
-  return(avgpower)
-}
-```
 
 ## 2018 Crossfit Open
 
@@ -268,167 +151,10 @@ Men use 1 x 50-lb. dumbbell/Women 1 x 35-lb dumbbell
 Distance, middle of chest (sternum) to top of overhead fist
 
 
-```{r}
-Open18_1 <- function(kneetowaist, handtoshoulder, weight, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  hangcleanjerkspower <- (weight) * (2*handtoshoulder) * 10
-  toestobarpower <- bodyweight/2 * kneetowaist * 8
-  
-  avgpower <- (hangcleanjerkspower + toestobarpower)/time
-  return(avgpower)
-}
-```
-
-### 18.2
-1-2-3-4-5-6-7-8-9-10 reps for time of:
-Dumbbell squats
-Bar-facing burpees
-
-Men use 2x50-lb. dumbbells Women 2x35 lb
-- Dumbbell squats move distance equal to knees to hips
-- burpees move body weight from ground to waist (i.e. center of gravity standing up)
-
-```{r}
-Open18_2 <- function(kneetowaist, groundtowaist, weight, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  dbsquatpower <- (weight + bodyweight) * (kneetowaist) * 55
-  barfacingburpees <- bodyweight * groundtowaist * 55
-  
-  avgpower <- (dbsquatpower + dbsquatpower)/time
-  return(avgpower)
-}
-```
-
-### 18.2a
-1-rep max clean
-
-Distance ground to shoulders
-
-### 18.3
-2 rounds for time of:
-100 double-unders
-20 overhead squats
-100 double-unders
-12 ring muscle-ups
-100 double-unders
-20 dumbbell snatches
-100 double-unders
-12 bar muscle-ups
-
-Men perform 115-lb. OHS, 50-lb. DB snatches
-Women perform 80-lb. OHS, 35-lb. DB snatches
-
-- Double unders bodyweight from ground to ankles.
-- Overhead squats from knees to hips
-- muscle ups bodyweight from waist to overhead fist (both bar and ring)
-- snatches ground to outstretched arms
-
-```{r}
-Open18_3 <- function(kneetowaist, handtoshoulder, groundtohand, weight, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  ohsquatpower <- (bodyweight * kneetowaist + weight * (kneetowaist + handtoshoulder)) * 20
-  ringmuscleuppower <- bodyweight * handtoshoulder*2 * 12
-  dbsnatchpower <- weight * groundtohand * 20
-  barmuscleuppower <- bodyweight * handtoshoulder*2 * 12
-  
-  
-  avgpower <- (ohsquatpower + ringmuscleuppower + dbsnatchpower + barmuscleuppower)/time
-  return(avgpower)
-}
-```
-
-### 18.4
-
-For time:
-21 deadlifts, 155 lb.
-21 handstand push-ups
-15 deadlifts, 155 lb.
-15 handstand push-ups
-9 deadlifts, 155 lb.
-9 handstand push-ups
-21 deadlifts, 205 lb.
-50-ft. handstand walk
-15 deadlifts, 205 lb.
-50-ft. handstand walk
-9 deadlifts, 205 lb.
-50-ft. handstand walk
-
--  Deadlift - ground to knee or knee to waist
--  Handstand push-up - bodyweight elbow to shoulder
--  handstand walk - bodyweight waist to hand (only once per walk, because we are only looking at vertical work!)
-
-```{r}
-Open18_4 <- function(kneetowaist, elbowtoshoulder, groundtohand, weight1, weight2, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  deadliftpower <- (bodyweight + weight1) * kneetowaist * 45 + (bodyweight + weight2) * kneetowaist * 45
-  hspupower <- bodyweight * elbowtoshoulder*2 * 45
-
-  
-  
-  avgpower <- (deadliftpower + hspupower)/time
-  return(avgpower)
-}
-```
-
-### 18.5
-Complete as many reps as possible in 7 minutes of:
-3 thrusters
-3 chest-to-bar pull-ups
-6 thrusters
-6 chest-to-bar pull-ups
-9 thrusters
-9 chest-to-bar pull-ups
-12 thrusters
-12 chest-to-bar pull-ups
-15 thrusters
-15 chest-to-bar pull-ups
-18 thrusters
-18 chest-to-bar pull-ups
-
--  Thrusters - knees to waist plus shoulders to fist
--  chest to bar pull ups.  middle of chest to overhead fist
-
-```{r}
-Open18_5 <- function(kneetowaist, handtoshoulder, chesttohand, weight1, bodyweight,  time){
-  # power <- weightmoved * distance * repsperround * rounds
-  thrusterpower <- ((bodyweight + weight) * kneetowaist  + weight * handtoshoulder)* 63
-  chesttobarpower <- bodyweight * chesttohand * 63
-  avgpower <- (thrusterpower + chesttobarpower)/time
-  return(avgpower)
-}
-```
-
-
 4.  [5] For the affiliate you identified in Homework 1 (one of the top 10 affiliates by number of athletes who competed in both 2017 and 2018 in the region that represents where you were born) For each athlete,
 
     i. Calculate the average power over time for each workout for each athlete.
     ii. Use a boxplot to plot the distribution of average power for each workout.
     iii. Use a boxplot to plot the distribution in ranks for each workout
     iv.  Compare the plots in (ii) and (iii)
-  
-```{r}
-windycityathletes <- Men_Rx_2017 %>%
-  left_join(Affiliate_list, by=c("Affiliateid"="Affiliate_id")) %>%
-  filter(Affiliate_name=="Windy City CrossFit") %>%
-  mutate(power17_1 = Open17_1(groundtohand = groundtohand, groundtowaist = groundtowaist, boxheight = 24/12, bodyweight=bodyweight, weight = 50, time = `17_1_seconds`),
-         power17_2 = Open17_2(kneetowaist = kneetowaist, groundtowaist = groundtowaist, groundtoshoulder = groundtoshoulder, bodyweight=bodyweight, weight = 100, time =`17.2_score`), 
-         power17_3 = Open17_3(kneetowaist, groundtowaist, groundtoshoulder, bodyweight=bodyweight,  time=`17_3_seconds`),
-         power17_4 = Open17_4(kneetowaist, groundtoshoulder, height=10, weight=225, bodyweight=bodyweight,  time=`17.4_score`),
-         power17_5 = Open17_5(kneetowaist, handtoshoulder, weight=95, bodyweight=bodyweight,  time=`17_5_seconds`),
-         totalpower = sum(c(power17_1, power17_2, power17_3, power17_4, power17_5), na.rm = TRUE))
-         
-```
 
-```{r}
-ggplot(windycityathletes) + geom_boxplot(aes(x="17.1", y=power17_1)) + 
-  geom_boxplot(aes(x="17.2", y=power17_2)) +  geom_boxplot(aes(x="17.3", y=power17_3)) +  geom_boxplot(aes(x="17.4", y=power17_4)) +  geom_boxplot(aes(x="17.5", y=power17_5)) + 
-  ggtitle("Distribution of average power for workouts") + 
-  xlab("Workout") + ylab("foot*pounds/sec")
-```
-
-```{r}
-ggplot(windycityathletes) + geom_boxplot(aes(x="17.1", y=`17.1_rank`)) + 
-  geom_boxplot(aes(x="17.2", y=`17.2_rank`)) +  geom_boxplot(aes(x="17.3", y=`17.3_rank`)) +  geom_boxplot(aes(x="17.4", y=`17.4_rank`)) +  geom_boxplot(aes(x="17.5", y=`17.5_rank`)) + 
-  ggtitle("Distribution of rank for workouts") + 
-  xlab("Workout") + ylab("Rank")
-```
