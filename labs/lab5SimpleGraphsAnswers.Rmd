@@ -1,20 +1,23 @@
 ---
-Title: 'Lab 5: Simple Graphs with ggplot2'
+title: 'Lab 5: Simple Graphs with ggplot2'
 author: "IE 0015 Information Systems"
 date: "February 7/8, 2018"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
-```{r loadlibraries}
+```{r loadlibraries, warning=FALSE, message=FALSE}
+library(readr)
 library(ggplot2)
 library(dplyr)
+library(magrittr)
 ```
 
 ```{r}
-FemPreg <- read.csv("../data/nsfgFemPreg.csv",
-                     header=TRUE,sep=",")
+FemPreg <- read_csv("../data/nsfgFemPreg.csv",
+col_types = cols(CASEID = col_character()))
+
 ```
 
 1.  [4 pts] Read the National Survey of Family Growth Female Pregnancy dataset into R (csv file in CourseWeb -> Course Documents -> Data). Identify the variables that corresponds to the duration of a completed pregnancy in weeks (duration of pregnancy) and the outcome (Pregnancy outcome). Plot three histograms: 
