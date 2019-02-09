@@ -1,7 +1,7 @@
 ---
-title: "Lab 7: Complex graphs"
+title: "Lab 6: Complex graphs"
 author: "IE 0015 Information Systems"
-date: "February 2018"
+date: "February 2019"
 output:
   html_document: default
   pdf_document: default
@@ -23,12 +23,13 @@ FemPreg <- read.csv("../data/nsfgFemPreg.csv",
 
     a.  Using the Female Pregnancy Data from the National Survey of Population Growth, create graphs that shows the distribution of the birthweight of newborn babies, separated by race (Note: use HISPRACE for this purpose).  Use at least three different type of plots (geom_ or stat_ commands from ggplot, different ways of displaying multiple categories on a single plot).
     b.  Explain which of the three you used is best.
-
+    c.  Does race play a factor in the distribution of birthweight?
+    
 Note: 
 
   1.  You will need both a way to display distributions, and a way to show each race in a single plot. 
   2.  Race should be identified in the plot as a label, not as a number. (which is how it is presented in the Female Pregnancy data table.)
-  3. The code below converts numeric values into their codes (see Lecture 4: Data in R). You will need to something similar later.
+  3. The code below converts numeric values into their codes (see Lecture 3: Data in R). You will need to do something similar later.
   4. Because you are getting distributions by race, you should convert counts into percentages using `y=..density..` within the `aes()` function. 
 
 ```{r}
@@ -55,6 +56,7 @@ Points for
     a. Optional change y axis to density instead of count.
 3. Each plot needs descriptive text and/or legend.
 4. They should not choose a density plot (because the birthweight is discrete), but any other answer will be accepted with explanation.
+5. Interpret graph to show that the weight distribution is different.
 
 ```{r}
 FemPreg %>% 
@@ -97,14 +99,13 @@ FemPreg %>%
 
     a.  What kind of plot will you choose and why?
     b.  Create the plot using ggplot.  Make sure you have meaningful and legible axis titles.
+    c.  Discuss if race or education shows a difference in the distributions in breastfeeding period.
 
 
 Notes: 
 
   1. Use AGEQTNURN1 indicate length of breastfeeding.  
   2. Think about what NA means for this variable.
-  3. Aggregations and summaries were covered in Lecture 6: Aggregation
-
 
   
 ```{r}
