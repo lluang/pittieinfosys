@@ -2,7 +2,9 @@
 title: "Project  Description"
 author: "Information Systems"
 date: "Spring 2019"
-output: word_document
+output:
+  pdf_document: default
+  word_document: default
 ---
 
 
@@ -17,24 +19,29 @@ output: word_document
   - Basic plotting of available data
   
 2.  Process it
-  -  The data must need processing
+  -  The data may need processing
   -  Missing values
   -  Data entry errors
   -  Collapsing categories
+  -  Reformatting data
 3.  Summarize it
   -  Data summaries
-  -  Visual
-4.  Tell a story
-5.  Show a picture
+  -  First draft of multi-dimensional visualizations
+4.  Show a picture
   -  Make it pretty.
+5.  Develop a model
+6.  Tell a story. Realize the Vision and Outcome
   
 Timeline
 --------
 
-1.  Form team. Identify a data set and a potential CoNVO and basic plots of data - February 20
+1.  Teams of 1-3.
+    Identify a data set and a potential CoNVO and basic plots of data - Part 1 above due February 20
 
 2.  Exploratory data analysis - March 20
-  -  Detailed Exploratory Data Analysis of data set
+  -  Detailed Exploratory Data Analysis of data set (2 and 3)
   -  Refine CoNVO
-3.  Final Report April 17,  Presentations April 18, 19  
+  
+3.  Final Report April 17,  Presentations April 18, 19 
+  -  Final report same format and guidelines as the case study final
 
