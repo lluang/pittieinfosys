@@ -1,0 +1,47 @@
+---
+title: "Project  Description"
+author: "Information Systems"
+date: "Spring 2019"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+
+1.  Identify a large, complex data set
+  -  Large - Larger than you can take the time to look at the entire set in Excel.
+  -  Covers a range of data (you may need to get two data sources to do this)
+  -  Consider a potential client
+    -  **Co**ntext
+    -  **N**eeds
+    -  **V**ision
+    -  **O**utcome
+  - Basic plotting of available data
+  
+2.  Process it
+  -  The data may need processing
+  -  Missing values
+  -  Data entry errors
+  -  Collapsing categories
+  -  Reformatting data
+3.  Summarize it
+  -  Data summaries
+  -  First draft of multi-dimensional visualizations
+4.  Show a picture
+  -  Make it pretty.
+5.  Develop a model
+6.  Tell a story. Realize the Vision and Outcome
+  
+Timeline
+--------
+
+1.  Teams of 1-3.
+    Identify a data set and a potential CoNVO and basic plots of data - Part 1 above due February 20
+
+2.  Exploratory data analysis - March 20
+  -  Detailed Exploratory Data Analysis of data set (2 and 3)
+  -  Refine CoNVO
+  
+3.  Final Report April 17,  Presentations April 18, 19 
+  -  Final report same format and guidelines as the case study final
+

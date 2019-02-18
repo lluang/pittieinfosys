@@ -1,11 +1,16 @@
 ---
-title: 'Lecture 5: Data Aggregation'
-author: "IE 0015 Spring 2018"
-date: "February 2018"
+title: 'Lecture 5: Data Aggregation: Mutate and summarise'
+author: "IE 0015 Spring 2019"
+date: "February 2019"
 output:
   pdf_document: default
   html_document: default
   slidy_presentation: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
+    fig_height: 4
+    fig_width: 6
 ---
 
 Note: You will need ACS data. Because this is R, you can use either the Allegheny County North or Pennsylvania data sets with no problem.
@@ -15,17 +20,29 @@ Functional programming
 
 - In data analysis, one of the most common tasks is to perform an operation on every line.
 - When this is done, every line's operations is independent of every other line.
-- This is a tenent of functional programming (as opposed to procedural programming (what you learned in Matlab or C)) or object oriented programming (if you learned objects in C++).
+- This is a tenet of functional programming (as opposed to procedural programming (what you learned in Matlab or C)) or object oriented programming (if you learned objects in C++).
 - The focus is on performing an action on data (functions are verbs) as opposed to identifying objects and their attributes and capabilities (objects are nouns with member attributes and member functions.)
+- In set theory (you learned this in high school algebra) this is *map-apply*
+    -  You apply a rule (function) to a set of objects to get another set.
+    -  e.g. $X = (1, 2, 3, 4, 5)$  `fivetimesx <- function(x) {5 * x}` 
+
+Compared to aggregation
+=======================
+
+- We may want to aggregate (summarise)
+    -  Calculations over groups of observations with something in common
+    - `group_by()` and `summarise()`
+- We may want to do an operation on every observation in the dataset
+    - `mutate()`
 
 Aggregating data
 ================
 
--  We often want to look at summarized data across groups, not individual data points.
+-  We often want to look at summarised data across groups, not individual data points.
 -  e.g. count instances, summations
 -  `table` function accomplishes this goal.
 -  `apply` family of functions can be used to work on arrays or lists.
--  Sometimes, we can do things using the `group_by` and `summarize` functions from `dplyr`. This is for when those do not work (e.g. there is a function we need to use that does not work with `summarize`)
+-  Usually, we can do things using the `mutate`, `group_by`, `summarise` functions from `dplyr`. This is for when those do not work (e.g. there is a function we need to use that does not work with `summarise`)
 
 Issues
 ======
@@ -48,19 +65,20 @@ table
 Use ACS as an example
 ============
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(tidyr)
 library(dplyr)
 library(magrittr)
 
-acsh <- read.csv("../data/ss12hpa.csv")
-acsp <- read.csv("../data/ss12ppa.csv")
+acsh <- read.csv("../data/ss12hpaPittsburgh01701.csv")
+acsp <- read.csv("../data/ss12ppaPittsburgh01701.csv")
 ```
 
 table summaries
 =================
 
-- the `table` function creates a formatted summary output of a list.
+- Simplest way of creating summaries
+- The `table` function creates a formatted summary output of a list, usually a count.
 - Look at travel arrangements
 
 ```{r}
@@ -82,13 +100,14 @@ Diversion:  recode variables
 
 - In the ACS data, many of the variables are coded as integers ("1", "2", "3", etc)
 - We would want to recode them with their values in English
-- Use ``merge`` to do an operation similar to join
+- In `dplyr` use `left_join()`
+    -  There is also a `merge()` function, but using `dplyr` is more consistent
 
 
 ```{r}
 worktransportation = data.frame(
-              JWTR = as.factor(c("bb", "01", "02", "03", "04", "05", "06",
-                     "07", "08", "09", "10", "11", "12")), 
+              JWTR = as.factor(c("bb", "1", "2", "3", "4", "5", "6",
+                     "7", "8", "9", "10", "11", "12")), 
               worktransportation = c(NA, 
                     "Car, truck, or van",
                     "Bus or trolley bus",
@@ -104,6 +123,14 @@ commutetable <- table(acsp1$worktransportation)
 as.data.frame(commutetable)
 ```
 
+Using the `merge` function (we prefer `left_join`)
+==================================================
+
+```{r}
+acsp2 <- merge(acsp, worktransportation, by='JWTR')
+commutetable2 <- table(acsp2$worktransportation)
+as.data.frame(commutetable2)
+```
 
 Thinking about aggregation
 ========================
@@ -112,10 +139,10 @@ Thinking about aggregation
 -  What is the nature of data to be operated on?
 -  What is the desired end result.
 
-dplyr group_by and summarize
+dplyr group_by and summarise
 =============================
 
-- Use `group_by` and `summarize` to create data summaries
+- Use `group_by` and `summarise` to create data summaries
 - Apply a summary function for each group defined by `group_by`
 - Center:  `mean()`, `median()`
 - Spread:  `sd()`, `IQR()`
@@ -142,6 +169,7 @@ acsh <- acsh %>% left_join(tenurevalues, by='TEN')
 acsh$watercost <- as.numeric(acsh$WATP)
 acsh$householdincome <- as.numeric(acsh$HINCP)
 acsh$numpeople <- as.numeric(acsh$NP)
+table(acsh$tenurevalues)
 ```
 
 Mean income
@@ -165,10 +193,48 @@ acsh %>% group_by(tenurevalues) %>%
             nintyfifthquant = quantile(householdincome, probs = 0.95, na.rm=TRUE))
 ```
 
+`mutate()`
+==============
+
+-  While `group_by()` and `summarise()` take groups of observations, `mutate()` takes one observation at a time.
+-  In spreadsheets (e.g. MS Excel), this is like working with rows in a spreadsheet.
+-  The operations takes from variables *within* a single observation
+
+Using `mutate()`
+================
+
+- Identify the data
+- Write the equation that creates a new variable in that data frame
+
+```{r mutateexample}
+(acsh <- acsh %>%
+  mutate(incomeperperson = FINCP/NP)) %>%
+  select(FINCP, NP, incomeperperson) %>%
+  head()
+```
+
+Using `mutate()' with an external function
+===========================================
+
+- If the function is not simple arithmetic, it may be useful to create a function and call that within `mutate()`
+- Note that because you are passing a data frame into mutate (through pipe), the function already knows to look at the data one row at a time.
+
+```{r}
+percapitaincome <- function(income, numberpeople){
+  percapitaincome <- income/numberpeople
+  return(percapitaincome)
+}
+(acsh <- acsh %>%
+  mutate(incomepercapita = percapitaincome(FINCP,NP))) %>%
+  select(FINCP, NP, incomepercapita) %>%
+  head()
+```
+
 
 The `apply` family of functions
 =============================
 
+-  These are the other ways of doing the same thing as mutate (especially if you do not have a data frame)
 -  In programming languages that have functional features (e.g. R, Matlab), we generally do not use `for` loops to loop through data.
 -  If data is organized in a matrix, array, or vector, we can **map** a function to the data structure.
 -  Apply the function to each element in the data structure.
@@ -183,10 +249,10 @@ The `for loop` counterpart
 ```{r}
 # create a matrix of 10 rows x 2 columns
 m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
-# mean of the rows, 
-rowmean <- c()
-for (i in 1:dim(m)[1]){
-  rowmean <- append(rowmean, mean(m[i,]))
+# mean of the rows 
+rowmean <- c() # Create an empty vector to store results
+for (i in 1:dim(m)[1]){ 
+  rowmean <- append(rowmean, mean(m[i,])) # Add current result to the list of past results
 }
 rowmean
 ```
@@ -205,6 +271,8 @@ sapply | Apply function over a list or vector (returns vector or matrix)
 aggregate | Summaries over columns of a data frame.
 tapply | Apply function over a ragged array
 
+- Note: data frames are lists
+
 apply: 
 =======
 
@@ -222,17 +290,41 @@ apply(m, 2, mean)
 apply(m, 1:2, function(x) x/2)
 ```
 
+Mapping a function to a matrix or array
+=====================
+
+-  Because we often do analysis based on each element in a data frame, we often use `apply` on data frames.
+-  Note that the `apply` function requires that we use the `[["name"]]` method of specifying the elements in the observation
+    - Because we are using lists
+-  Note that we are passing in a data frame (which is a list of lists (of columns)) and getting a list back (which we add as a column in the data frame.)
+-  Compare to `mutate()`, where we already specified the data frame, so we pass in the specific variables
+
+```{r}
+familypercapita <- function(acs){
+  percapita <- as.numeric(acs[["FINCP"]])/as.numeric(acs[["NP"]])
+}
+acsh$percapita <- apply(acsh, 1, familypercapita)
+summary(acsh$percapita)
+```
+
 by: data frame split by factors
 ======
 
--  Summarize data frame split by factors
+-  summarise data frame split by factors
 
 Results of grouping by a factor
 =====
 ```{r}
-by(acsh[,c('householdincome', 'numpeople', 'watercost')], acsh$tenurevalues, colMeans)
+by(acsh[,c("householdincome", 'NP', 'watercost')], acsh$tenurevalues, colMeans)
 ```
 
+
+```{r}
+acsh %>% group_by(tenurevalues) %>%
+  summarise(householdincome = mean(householdincome, na.rm=TRUE),
+            numberpeople = mean(NP, na.rm=TRUE),
+            watercost = mean(WATP, na.rm=TRUE))
+```
 lapply
 ======
 - Returns a list resulting from applying a function to the corresponding element of X
@@ -250,6 +342,7 @@ sapply
 ======
 
 - like `lapply` but returns a vector or matrix
+- This is usually more useful to us because you can perform use vector operations (linear algebra) on vectors and matrices.
 
 ```{r}
 l.mean <- sapply(l, mean)
@@ -273,7 +366,7 @@ l.fivenum
 mapply
 ======
 
--  Multivariate version of `sapply`.  Applies the function to the first elements of each arguement, second element, etc.
+-  Multivariate version of `sapply`.  Applies the function to the first elements of each argument, second element, etc.
 
 ```{r}
 l1 <- list(a = c(1:10), b = c(11:20))
@@ -292,29 +385,50 @@ Groups based on one or more group variables
 aggregate
 ==========
 
--  Summarize a columns based on defined groups
+-  summarise a columns based on defined groups
 
 ```{r}
 library(reshape2)
 library(ggplot2) #loads reshape2 package
-summary(diamonds)
 aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean) %>% head()
 ```
 
+
+dplyr counterpart
+=================
+
+- Same thing in `dplyr`
+- Note that `dplyr` style functions return a data frame instead of a table.
+
+```{r}
+diamonds %>% group_by(cut, color) %>%
+  summarise(carat = mean(carat), 
+            price = mean(price)) %>%
+  head()
+```
 tapply
 ======
 
 -  Processes a single vector based on the values of one or more grouping vectors
-
+-  Specify the data, then the gr
 ```{r}
-maxcarat <- tapply(diamonds$carat, diamonds$color, max)
+maxcarat <- tapply(diamonds$carat,diamonds$color , mean)
 maxcarat
 ```
+
+Same in 
+```{r}
+diamonds %>% group_by(color) %>%
+  summarise(carat = mean(carat), 
+            price = mean(price))
+```
+
+
 Mapping a function to a vector or list
 ====================
 
-- `lapply` - Returns output as a list
 -  `sapply` - returns output as a vector or matrix (if possible)
+- `lapply` - Returns output as a list
 -  `apply` allows choice of axis over a matrix. Returns a matrix
 -  Note: returning a vector implies that order is important, e.g. the results are matched to another vector.
 
@@ -343,23 +457,7 @@ nwords = apply(result, MARGIN=1, FUN=length)
 nwords
 ```
 
-Mapping a function to a matrix or array
-=====================
 
--  Because we often do analysis based on each element in a data frame, we often use `apply` on data frames.
--  Income per family member
--  Note that we are passing in a data frame (which is a list of lists (of columns)) and getting a list back (which we add as a column in the data frame.)
-
-```{r}
-familypercapita <- function(acs){
-  percapita <- as.numeric(acs[["HINCP"]])/as.numeric(acs[["NP"]])
-}
-acsh$FINCP <- as.numeric(acsh$FINCP)
-acsh$HINCP <- as.numeric(acsh$HINCP)
-acsh$NP <- as.integer(acsh$NP)
-acsh$percapita <- apply(acsh, 1, familypercapita)
-summary(acsh$percapita)
-```
 
 
 Mapping a function based on groups
@@ -519,7 +617,7 @@ table4a
 
 gather()
 ========
-```{r}
+```
 help(gather)
 ```
 
@@ -579,7 +677,7 @@ Using spread
 - Key is the column with the variable names (which were split into different rows)
 - Value is the column with the value of the variable for that observation.
 
-```{r}
+```
 help(spread)
 ```
 
@@ -597,7 +695,7 @@ Separate
 - Often seen in Excel spreadsheets where 2 values are put in a single cell to mimic a table.
 - `separate` will split on a non-alpha numeric character
 
-```{r}
+```
 help(separate)
 ```
 
