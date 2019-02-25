@@ -1,0 +1,229 @@
+\documentclass[12pt, addpoints, answers]{exam}
+%\documentclass[12pt, letter, addpoints]{exam}
+\usepackage{multirow}
+\usepackage{pdflscape}
+%\usepackage{amssymb}
+
+%\usepackage{makeidx}
+
+%\usiepackage[colorlinks]{hyperref}
+
+% In case we're not using hyperref.sty:
+%\providecommand{\texorpdfstring}[2]{#1}
+% Thie following can be used in \section commands
+% without generating pdf warnings:
+%\newcommand{\bs}{\texorpdfstring{\char`\\}{}}
+
+%\newcommand{\docversion}{2.5}
+%\newcommand{\docdate}{May 7, 2015}
+%\newcommand{\docdate}{\today}
+
+%--------------------------------------------------------------------
+%
+% Changes since version 2.4 are described in the comments
+% near the beginning of the file exam.cls.
+%
+%--------------------------------------------------------------------
+
+%\makeindex
+
+%\newcommand{\indc}[1]{\index{#1@\texttt{\char`\\#1}}}
+%\newcommand{\indcsub}[2]{\index{#1@\texttt{\char`\\#1}!#2}}
+%\newcommand{\indcstart}[1]{\index{#1@\texttt{\char`\\#1}|(}}
+%\newcommand{\indcstop}[1]{\index{#1@\texttt{\char`\\#1}|)}}
+
+%\newcommand{\indt}[1]{\index{#1@\texttt{#1}}}
+%\newcommand{\indtsub}[2]{\index{#1@\texttt{#1}!#2}}
+%\newcommand{\indtstart}[1]{\index{#1@\texttt{#1}|(}}
+%\newcommand{\indtstop}[1]{\index{#1@\texttt{#1}|)}}
+
+%---------------------------------------------------------------------
+\newenvironment{example}%
+   {\bigskip\filbreak
+    \subsubsection{Example:}
+   }%
+   {}
+
+\def\samplehead#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    \hbox to \textwidth{%
+      \rlap{\parbox[b]{\textwidth}{\raggedright#1\strut}}%
+      \hfil\parbox[b]{\textwidth}{\centering#2\strut}\hfil
+      \llap{\parbox[b]{\textwidth}{\raggedleft#3\strut}}%
+    }% hbox
+    #4
+  \end{trivlist}
+}
+
+\def\samplefoot#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    #1
+    \vskip 3pt
+
+    \hbox to \textwidth{%
+      \rlap{\parbox[t]{\textwidth}{\raggedright#2}}%
+      \hfil\parbox[t]{\textwidth}{\centering#3}\hfil
+      \llap{\parbox[t]{\textwidth}{\raggedleft#4}}%
+    }% hbox
+  \end{trivlist}
+}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\makebox[\textwidth]{Name:\enspace\hrulefill}
+
+\centering
+{\bf IE 0015 Spring 2019 Midterm}
+
+\centering
+{\bf A}
+
+
+<<echo=FALSE>>=
+library(xtable)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(readr)
+library(lubridate)
+library(zoo)
+library(ggplot2)
+@
+
+
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  Write your name on the top of this page.
+\item
+  Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required.
+\item
+  The exam is four pages (including cover). In addition there are three pages of reference containing the data dictionaries and an example of the data from the Pittsburgh City Trees database, and a map of Pittsburgh with neighborhoods for your reference.
+\item
+  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
+\item
+  You have until 2:30 PM to finish. There are 100 points total divided among 3 questions.
+\end{enumerate}
+
+\pagebreak
+\begin{center}
+\gradetable[v][questions]
+\end{center}
+
+\begin{questions}
+
+\question 
+
+City council [28]
+
+The University of Pittsburgh has recently opened a Community Engagement Center (CEC) in the Homewood neighborhood of Pittsburgh.  Councilman Rev. Ricky V. Burgess represents Council District 9 which includes Homewood (he is councilmanbased on municipal elections). He wishes to discuss with the Pittsburgh Police zone commanders their level fo enforcement on firearms laws because he believes the high quantity of firearms is a contributor to violent crime in his district and is asking the University of Pittsburgh for assistance.
+
+The Women's Center and Shelter of Greater Pittsburgh provides legal advocacy services for victims of domestic violence.  One outcome that often occurs is that abusers are required to turn their weapons over to police (i.e. a firearms seizure).  They have regular discussions with large law enforcement agencies, such as the Pittsburgh Bureau of Police Domestic Violence Unit, on enforcement of protection from abuse decisions by courts, which includes orders to turn over weapons.  They desire to know the historical record for Pittsburgh police enforcement of these protection from abuse orders.
+
+
+The Pittsburgh Bureau of Police is establishing a new investigations unit that will focus on domestic violence cases using a $500,000 donation from the Nina Baldwin Fisher Foundation.  One of the possible outcomes of a domestic abuse investigation is a protection from abuse (PFA) order by the court, which can include an order for the abuser to turn in firearms to police, which is recorded as a firearms seizure.   
+
+
+\begin{parts}
+\part   Create a CoNVO statement from the point of view of an analyst assisting Councilman Burgess in tracking police firearms seizures in the council district he represents.
+
+\begin{solution}[3in]
+
+  \begin{itemize}
+    \item Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.  
+
+Here, the context is the Councelman Burress trying to look at the safety of his constituents.
+
+  \item  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
+
+Councilman Burgess wants to know the level of enforcement of firearms laws, specifically enforcement of protection from abuse laws.
+
+  \item  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all." Another common mistake is to be too vague. The Vision in particular needs to be concrete enough so that a potential client has a picture of what she will be getting at the end of an analysis project and how she can use it.
+
+An example would be plotting the level of firearms seizures by neighborhood.  Another would be seizure trends by police district within his council district.
+  
+  \item  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context and lead to the decision identified in the Need. There should be more than one possible outcome (if not, there is no reason to do the project, the organization should take that route now). One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.  
+
+Councilman Burgess could ask a police zone commander about the changes in seizure rates or ask them to look at specific neighborhoods.
+
+  \end{itemize}
+
+Note: for grading I don't expect anyone to be that nuanced.  You should have either filtered incident data on something, or filtered subject resistance on something for the vision. And the outcome should have had more than one possible result.
+\end{solution}
+
+\end{parts}
+\pagebreak
+<<echo = FALSE, warning=FALSE, message=FALSE>>=
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(ggplot2)
+library(readr)
+library(stringr)
+
+pittsburghfirearmsseizures <- read_csv("data/pittsburghfirearmsseizures.csv",
+  col_types = cols(council_district = col_factor(levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9")),
+  dow = col_factor(levels = c("0",
+  "1", "2", "3", "4", "5", "6")),
+  public_works_division = col_factor(levels=c("0", "1", "2", "3", "4" , "5","6")),
+  police_zone = col_factor(levels = c("1",   "2",   "3",   "4",   "5",   "6",   "OSC")),
+  tract = col_character(), ward = col_character()))
+pittsburghfirearmsseizures$neighborhood <- as.factor(pittsburghfirearmsseizures$neighborhood)
+pittsburghfirearmsseizures$ward <- as.factor(pittsburghfirearmsseizures$ward)
+pittsburghfirearmsseizures<- pittsburghfirearmsseizures %>%
+  mutate(yearmon = as.yearmon(year + month/12))
+           
+@
+
+
+\question[40]
+
+1. Councilman Buress wishes to have a chart that shows the monthly firearms seizures in each neighborhood by year.  
+
+  a. Draw a flow chart of a process that prepares the data so that each line shows one month's firearms seizures in each neighborhood in Council District 9.
+  b. Sketch out a plot that does this.  Explain how it fits the criteria provided (i.e. state the visual cue for each part of the specification)
+  
+\begin{solution}
+<<echo=FALSE, warning=FALSE, message=FALSE>>=
+seizuresperneighborhood <- pittsburghfirearmsseizures %>% 
+  filter(council_district=="9") %>%
+  arrange(council_district, neighborhood, police_zone)
+
+ggplot(seizuresperneighborhood) + geom_bar(aes(x=month, fill=neighborhood)) + facet_grid(year ~ .) + scale_x_discrete()
+@
+\end{solution}
+
+\pagebreak
+
+\question[12]  There are a number of columns that look at the economic value of trees. In particular you want to look at the dollar value of air quality benefits, but separating out the benefits of reducing particulate matter (pm10) (so you cannot use the air\_quality\_benfits\_total\_dollar\_value field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  
+
+\begin{parts}
+\part Write/draw a process map that can generate this dollar value by neighborhood.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of air quality from a tree into a single column.
+\part Sketch a visualization that shows the dollar benefit of air quality.
+\end{parts}
+
+\begin{solution}[6in]
+
+1.  Gather dollar value fields into two fields titled air quality types and value.
+2.  Group by neighborhood.
+3.  Take the sum of all air quality values for each neighborhood.
+
+For the visualization, they could use bar graphs with a bar for each neighborhood. Another options is a map with bars.  Or circles with the size for each neighborhood.  Many possible answers.
+\end{solution}
+
+\question[20]
+Bond valuation
+
+You have the following table that shows the expected cost outlay and returns over time for a project.  The current interest rate is 0.08\%
+
+a. Draw the flow chart that presents how to calculate present value from future value given the future value, the number of time periods, and the interest rate.  This flow chart should be at the level of detail of each block showing one step of arithmetic (add, subtract, multiply, divide, exponent)
+b. Draw the flow chart that demonstrates how to find the present value of the entire cash flow presented in the table.
+\end{questions}
+
+\end{document}

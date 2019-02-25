@@ -1,0 +1,247 @@
+---
+title: "Midterm Review"
+author: "IE 0015 Information Systems"
+date: "Spring 2019"
+---
+
+R Studio
+========
+
+-  Open this file in R Studio
+-  Check location of the American Community Survey data
+-  Click on 'Knit HTML' in the editor pane menu bar
+
+```{r readcitytrees, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+library(stringr)
+library(magrittr)
+
+pittsburghfirearmsseizures <- read_csv("data/pittsburghfirearmsseizures.csv",
+  col_types = cols(council_district = col_factor(levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9")),
+  dow = col_factor(levels = c("0",
+  "1", "2", "3", "4", "5", "6")),
+  public_works_division = col_factor(levels=c("0", "1", "2", "3", "4" , "5","6")),
+  police_zone = col_factor(levels = c("1",   "2",   "3",   "4",   "5",   "6",   "OSC")),
+  tract = col_character(), ward = col_character()))
+pittsburghfirearmsseizures$neighborhood <- as.factor(pittsburghfirearmsseizures$neighborhood)
+pittsburghfirearmsseizures$ward <- as.factor(pittsburghfirearmsseizures$ward)
+```
+
+
+```{r readacs, warning=FALSE, message=FALSE}
+acsh <- read_csv("../data/ss12hpaPittsburgh01701.csv")
+acsp <- read_csv("../data/ss12ppaPittsburgh01701.csv")
+```
+
+Three types of problems
+======
+
+1.  Mini-article - CoNVO
+2.  Data Visualization
+3.  Data manipulation
+
+- Be familiar with the cheet sheets on the R Studio website for ggplot2 (data visualization) and dplyr (data manipulation/transformation)
+    - https://www.rstudio.com/resources/cheatsheets/
+
+
+CoNVO
+=====
+
+1.  I give you an article and identify an organization referenced in the article
+2.  Context
+3.  Need
+4.  Vision
+5.  Outcome
+
+Context
+=====
+
+1.  Always from an organization point of view.
+2.  Focuses on the bigger picture, why is the organization interested in the general topic of the analysis.
+3.  Does NOT focus on the analysis itself.
+
+Need
+=====
+
+1.  Requires a decision to be made.
+2.  A question that needs to be answered to make a good decision.
+3.  The question should be one that can be answered through data.
+4.  NOT what you have to do as an analyst/engineer
+
+Vision
+=====
+
+1.  What kind of information will data analysis project provide.
+2.  What form will the data analysis take (*ideally a sketch*)
+3.  How does this vision answer the need?
+4.  NOT your need as an analyst engineer.  NOT "make a chart"
+
+Outcome
+=====
+
+1.  How could the organization respond when the information in the vision is presented?
+2.  Give an example  (if . . . then . . .)
+3.  Note: This is an Exploratory Data Analysis. So the answer here is often something like *the organization could investigate doing . . .* or *the organization would provide this information to . . .  to . . .* or *the organization will focus attention on *
+
+
+
+Data visualization
+=============
+
+1.  I give you a presentation of data (description and plots) and a question
+2.  Provide interpretation
+3.  Explain how to use the data summaries to suggest directions for further investigation
+4.  Discuss what kinds of data analysis would be useful
+5.  Create a better summary (visualization) that shows info
+6.  Create a flow chart that starts with data and ends with the provided presentation (i.e. how to create the plot)
+
+Data manipulation
+=======
+
+Things that we need to be able to do with data
+=====
+
+1.  Filter (SELECT, filter)
+2.  Arrange (SORT BY, arrange)
+3.  Select columns (select)
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY, group_by, summarize)
+8.  Random sample (sample_n, sample_freq)
+9.  Spread
+10.  Gather
+
+Flow charts
+============
+
+Four ways to present flow charts to answer a data manipulation question
+
+1. Flow chart
+2. Process map
+3. Step by step instructions
+4. Pseudo-code (R-like or SQL-like)
+
+Filter
+=====
+
+-  Select rows based on some condition.
+-  All people with someone in range 11-13
+-  Then households were those people live
+
+
+
+Filter R
+=====
+```{r}
+acsp$AGEP <- as.integer(acsp$AGEP)
+p1113 <- acsp %>% filter(AGEP >= 11 & acsp$AGEP<=13) 
+# Now get the housing information for those households
+acsh$FINCP <- as.integer(acsh$FINCP)
+h1113 <- acsh %>%
+  filter(SERIALNO %in% p1113$SERIALNO)
+```
+
+
+Arrange
+=====
+
+- sort or order
+
+```{r}
+h1113 %>%
+  arrange(desc(TAXP)) %>%
+  select(SERIALNO, TAXP) %>%
+  head()
+```
+
+Select columns
+=====
+
+- We could have decided we were only interested in a small number of columns.
+- `select` in dplyr
+
+Mutate
+=====
+
+- Apply a function to each row to create a new column.
+- e.g. `gender` is coded as '1' or '2'
+- Convert this into 'Male' or 'Female'
+
+```{r}
+gender <- as.data.frame(
+           rbind(c("1","Male"),
+                 c("2","Female"))
+           )
+colnames(gender) <- c("key", "gender")
+```
+
+You can write a function to look up the value for each survey answer
+=========
+
+```{r}
+getgender <- function(x){
+gender <- gender %>%
+  filter(key==x) %>%
+  select(gender)
+return(gender)
+}
+p1113 <- p1113 %>%
+  mutate(gender = getgender(SEX))
+```
+
+
+Summarize (group_by)
+=====
+
+-  Two steps:  `group_by` to identify the variable to summarize over.
+-  `summarize` to perform the calculation for each group.
+    - Many summary functions for `summarize`.
+    - Contrast with `mutate` where you are applying any function to each row.
+
+```{r}
+p1113 %>% group_by(AGEP) %>%
+  summarize(count=n())
+```
+
+
+Another way to mutate or summarize by group - map-apply
+=================================
+
+Function name  | Description
+--------------------|------------------
+apply  | Apply function over array margin
+lapply | Apply function over a list or vector (returns list)
+sapply | Apply function over a list or vector (returns vector or matrix)
+by     | Apply function to a data frame split by factors
+aggregate | Summaries over columns of a data frame.
+
+Random sample
+========
+```{r}
+p1113 %>% sample_n(10) %>%
+  select(SERIALNO, AGEP, gender)
+```
+
+Tidy data rules
+==========
+
+1.  Each variable must have its own column.
+2.  Each observation must have its own row.
+3.  Each value must have its own cell.
+
+
+Answer a question
+================
+
+- What is the average family income for households with children of school age, by age of the child?
+-  Build a process map
+
+1.  What data do we need?
+2.  Where is that data located?
+3.  How do I pull out only the data that I need?
+4.  What data do I need to do to calculate average income?
+5.  What data do I need to do to calculate average income by child's age?
+6.  How should I calculate what is needed?
