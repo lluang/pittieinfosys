@@ -76,6 +76,8 @@ a.  Using the results of 2, (a dataframe with country, iso3, year, cases of sp, 
 
 b.  Implement this in R code.  Display the last 6 rows when sorted by name of the country.
 
+c.  Compare the table in 2(c) and the table in 3(b).  Which way of presenting the data do you prefer and why?
+
 ```{r}
 ratesp %>% select(country, iso3, year, sprate) %>%
   spread(year, sprate) %>%

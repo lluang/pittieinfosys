@@ -118,16 +118,19 @@ library(ggplot2)
 
 \begin{questions}
 
-\question 
+\question[32] CoNVO
 
-City council [28]
+City council 
 
-The University of Pittsburgh has recently opened a Community Engagement Center (CEC) in the Homewood neighborhood of Pittsburgh.  Councilman Rev. Ricky V. Burgess represents Council District 9 which includes Homewood (he is councilmanbased on municipal elections). He wishes to discuss with the Pittsburgh Police zone commanders their level fo enforcement on firearms laws because he believes the high quantity of firearms is a contributor to violent crime in his district and is asking the University of Pittsburgh for assistance.
+The University of Pittsburgh has recently opened a Community Engagement Center (CEC) in the Homewood neighborhood of Pittsburgh.  Councilman Rev. Ricky V. Burgess represents Council District 9 which includes Homewood (he is councilman based on municipal elections). He wishes to discuss with the Pittsburgh Police zone commanders their level of enforcement on firearms laws because he believes the high quantity of firearms is a contributor to violent crime in his district and is asking the University of Pittsburgh for assistance.
+
+Women's Center and Shelter of Greater Pittsburgh
 
 The Women's Center and Shelter of Greater Pittsburgh provides legal advocacy services for victims of domestic violence.  One outcome that often occurs is that abusers are required to turn their weapons over to police (i.e. a firearms seizure).  They have regular discussions with large law enforcement agencies, such as the Pittsburgh Bureau of Police Domestic Violence Unit, on enforcement of protection from abuse decisions by courts, which includes orders to turn over weapons.  They desire to know the historical record for Pittsburgh police enforcement of these protection from abuse orders.
 
+Pittsburgh Police Domestic Violence Unit
 
-The Pittsburgh Bureau of Police is establishing a new investigations unit that will focus on domestic violence cases using a $500,000 donation from the Nina Baldwin Fisher Foundation.  One of the possible outcomes of a domestic abuse investigation is a protection from abuse (PFA) order by the court, which can include an order for the abuser to turn in firearms to police, which is recorded as a firearms seizure.   
+The Pittsburgh Bureau of Police is establishing a new investigations unit that will focus on domestic violence cases using a \$500,000 donation from the Nina Baldwin Fisher Foundation.  One of the possible outcomes of a domestic abuse investigation is a protection from abuse (PFA) order by the court, which can include an order for the abuser to turn in firearms to police, which is recorded as a firearms seizure.   
 
 
 \begin{parts}
@@ -138,7 +141,7 @@ The Pittsburgh Bureau of Police is establishing a new investigations unit that w
   \begin{itemize}
     \item Context - This needs to be an organization that needs to make a decision. The focus should be on the organizations mission that put it into the place that it had to make a decision.  This is important because it gives focus to the analysis that follows.  
 
-Here, the context is the Councelman Burress trying to look at the safety of his constituents.
+Here, the context is the Councilman Burress trying to look at the safety of his constituents.
 
   \item  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
 
@@ -167,7 +170,7 @@ library(ggplot2)
 library(readr)
 library(stringr)
 
-pittsburghfirearmsseizures <- read_csv("data/pittsburghfirearmsseizures.csv",
+pittsburghfirearmsseizures <- read_csv("../data/pittsburghfirearmsseizures.csv",
   col_types = cols(council_district = col_factor(levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9")),
   dow = col_factor(levels = c("0",
   "1", "2", "3", "4", "5", "6")),
@@ -184,13 +187,21 @@ pittsburghfirearmsseizures<- pittsburghfirearmsseizures %>%
 
 \question[40]
 
-1. Councilman Buress wishes to have a chart that shows the monthly firearms seizures in each neighborhood by year.  
+Councilman Burgess wishes to have a chart that shows the monthly firearms seizures in each neighborhood by year and compare this to the incidence of violent crimes in each neighborhood by month and year since 2015.  Assume that you already have the violent crimes data in whatever form you need.  
 
-  a. Draw a flow chart of a process that prepares the data so that each line shows one month's firearms seizures in each neighborhood in Council District 9.
-  b. Sketch out a plot that does this.  Explain how it fits the criteria provided (i.e. state the visual cue for each part of the specification)
-  
+\begin{parts}
+  \part Draw a flow chart of a process that prepares the firearms seizure data so that each line shows one month's firearms seizures in each neighborhood in Council District 9.
+  \part Sketch out a plot that does this.  
+  \part Explain how your plot fits the criteria provided (i.e. state the visual cue for each part of the specification)
+\end{parts}
+
 \begin{solution}
-<<echo=FALSE, warning=FALSE, message=FALSE>>=
+Flow chart should include a filter (council district), a group by (neighborhood, month, year), and summation (count).
+
+Example plot.  One plot (facet) per year, stacked bar plot with firearms seizures x axis has months, each color (stacked) is a neighborhood. Add a line plot to show violent crimes (potentially with another axis)
+
+Points off for missing an aspect (by neighborhood, by month, or violent crimes)
+<<echo=FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
 seizuresperneighborhood <- pittsburghfirearmsseizures %>% 
   filter(council_district=="9") %>%
   arrange(council_district, neighborhood, police_zone)
@@ -199,31 +210,88 @@ ggplot(seizuresperneighborhood) + geom_bar(aes(x=month, fill=neighborhood)) + fa
 @
 \end{solution}
 
-\pagebreak
-
-\question[12]  There are a number of columns that look at the economic value of trees. In particular you want to look at the dollar value of air quality benefits, but separating out the benefits of reducing particulate matter (pm10) (so you cannot use the air\_quality\_benfits\_total\_dollar\_value field). In addition, you are interested in equity, so you want to see the distribution of value by neighborhood.  
+Domestic violence victim advocates working with police are interested in comparing firearms seizures with the rate of court orders to turn in firearms for each zone. Assume that you have the data from court orders to turn in firearms by police zone in whatever form that you need.
 
 \begin{parts}
-\part Write/draw a process map that can generate this dollar value by neighborhood.  Note that the first part of the process map should combine the fields that quantify the dollar benefit of air quality from a tree into a single column.
-\part Sketch a visualization that shows the dollar benefit of air quality.
+  \part Draw a flow chart of a process that prepares the firearms seizure data so that each line shows one month's firearms seizures in each police zone in Pittsburgh since January 2015.
+  \part Sketch out a plot that does this.  
+  \part Explain how your plot fits the criteria provided (i.e. state the visual cue for each part of the specification)
 \end{parts}
 
-\begin{solution}[6in]
+\begin{solution}
+Flow chart should include a filter (council district), a group by (police zone, month, year), and summation (count).
 
-1.  Gather dollar value fields into two fields titled air quality types and value.
-2.  Group by neighborhood.
-3.  Take the sum of all air quality values for each neighborhood.
+Example plot.  One plot (facet) per year, stacked bar plot with firearms seizures x axis has months, each color (stacked) is a zone Add a line plot to show PFA orders (potentially with another axis)
 
-For the visualization, they could use bar graphs with a bar for each neighborhood. Another options is a map with bars.  Or circles with the size for each neighborhood.  Many possible answers.
+Points off for missing an aspect (by police zone, by month, or violent crimes)
+
+<<echo=FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+seizuresperneighborhood <- pittsburghfirearmsseizures %>% 
+  filter(council_district=="9") %>%
+  arrange(council_district, neighborhood, police_zone)
+
+ggplot(pittsburghfirearmsseizures) + geom_bar(aes(x=month, fill=police_zone)) + facet_grid(year ~ .) + scale_x_discrete()
+@
 \end{solution}
 
-\question[20]
-Bond valuation
+\pagebreak
 
-You have the following table that shows the expected cost outlay and returns over time for a project.  The current interest rate is 0.08\%
 
-a. Draw the flow chart that presents how to calculate present value from future value given the future value, the number of time periods, and the interest rate.  This flow chart should be at the level of detail of each block showing one step of arithmetic (add, subtract, multiply, divide, exponent)
-b. Draw the flow chart that demonstrates how to find the present value of the entire cash flow presented in the table.
+\question[28]
+Net Present Value
+
+You have the following table that shows the expected cost outlay and returns over time for a project.  The discount (interest) rate is 20\%.
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+Year & 0 & 1 & 2 & 3 & 4\\  
+\hline
+Initial Investment  & -200 & 0 & 0 & 0 & 0 \\
+Sales & 0 & 100 & 110 & 120 & 130\\
+Costs & 0 & -30 & -35 & -40 & -45\\
+\hline
+\end{tabular}
+\caption{Cash flow}
+\end{table}
+
+
+A regional supermarket chain is deciding whether to install a tewgit machine in each of its stores.  Each machine costs \$250,000. Projected income per machine is as follows:
+
+\begin{table}[]
+\centering
+\begin{tabular}{lrrrrrr}
+\hline
+Year & 0 & 1 & 2 & 3 & 4 & 5 \\
+\hline
+Cost  & -250 &  &  &  &  &  \\
+Sales &  & 250 & 300 &  300 & 250 & 250 \\
+Operating Expenses &  & -200 &  -200 &  -200 &  -200 &  -200 \\
+\end{tabular}
+\caption{Tewgit machine cash flow 1000s of dollars}
+\end{table}
+
+\begin{parts}
+\part Draw the flow chart that presents how to calculate present value from future value given the future value, the number of time periods, and the interest rate.  This flow chart should be at the level of detail of each block showing one step of arithmetic (add, subtract, multiply, divide, exponent)
+\part Draw the flow chart that demonstrates how to find the present value of the entire cash flow presented in the table.
+\end{parts}
+
+
+
+\begin{solution}
+
+1. Multiple discount rate by number of periods
+
+2. Multiply future value by result of 1
+
+3. Apply PV to original cost
+
+4. Apply PV to each value of sale
+
+5. Apply PV to each value of ongoing costs
+\end{solution}
+
 \end{questions}
 
 \end{document}

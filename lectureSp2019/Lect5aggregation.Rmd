@@ -1,5 +1,5 @@
 ---
-title: 'Lecture 5: Data Aggregation: Mutate and summarise'
+title: 'Lecture 5: Data Aggregation: Mutate and summarize'
 author: "IE 0015 Spring 2019"
 date: "February 2019"
 output:
@@ -29,20 +29,20 @@ Functional programming
 Compared to aggregation
 =======================
 
-- We may want to aggregate (summarise)
+- We may want to aggregate (summarize)
     -  Calculations over groups of observations with something in common
-    - `group_by()` and `summarise()`
+    - `group_by()` and `summarize()`
 - We may want to do an operation on every observation in the dataset
     - `mutate()`
 
 Aggregating data
 ================
 
--  We often want to look at summarised data across groups, not individual data points.
+-  We often want to look at summarized data across groups, not individual data points.
 -  e.g. count instances, summations
 -  `table` function accomplishes this goal.
 -  `apply` family of functions can be used to work on arrays or lists.
--  Usually, we can do things using the `mutate`, `group_by`, `summarise` functions from `dplyr`. This is for when those do not work (e.g. there is a function we need to use that does not work with `summarise`)
+-  Usually, we can do things using the `mutate`, `group_by`, `summarize` functions from `dplyr`. This is for when those do not work (e.g. there is a function we need to use that does not work with `summarize`)
 
 Issues
 ======
@@ -139,10 +139,10 @@ Thinking about aggregation
 -  What is the nature of data to be operated on?
 -  What is the desired end result.
 
-dplyr group_by and summarise
+dplyr group_by and summarize
 =============================
 
-- Use `group_by` and `summarise` to create data summaries
+- Use `group_by` and `summarize` to create data summaries
 - Apply a summary function for each group defined by `group_by`
 - Center:  `mean()`, `median()`
 - Spread:  `sd()`, `IQR()`
@@ -177,14 +177,14 @@ Mean income
 
 ```{r}
 acsh %>% group_by(tenurevalues) %>%
-  summarise(meanincome = mean(householdincome, na.rm=TRUE))
+  summarize(meanincome = mean(householdincome, na.rm=TRUE))
 ```
 
 More summary examples
 =====================
 ```{r}
 acsh %>% group_by(tenurevalues) %>%
-  summarise(numberhouseholds = n(),
+  summarize(numberhouseholds = n(),
             meanincome = mean(householdincome, na.rm=TRUE),
             medianincome = median(householdincome, na.rm=TRUE),
             sdincome = sd(householdincome, na.rm=TRUE),
@@ -196,7 +196,7 @@ acsh %>% group_by(tenurevalues) %>%
 `mutate()`
 ==============
 
--  While `group_by()` and `summarise()` take groups of observations, `mutate()` takes one observation at a time.
+-  While `group_by()` and `summarize()` take groups of observations, `mutate()` takes one observation at a time.
 -  In spreadsheets (e.g. MS Excel), this is like working with rows in a spreadsheet.
 -  The operations takes from variables *within* a single observation
 
@@ -310,7 +310,7 @@ summary(acsh$percapita)
 by: data frame split by factors
 ======
 
--  summarise data frame split by factors
+-  summarize data frame split by factors
 
 Results of grouping by a factor
 =====
@@ -321,7 +321,7 @@ by(acsh[,c("householdincome", 'NP', 'watercost')], acsh$tenurevalues, colMeans)
 
 ```{r}
 acsh %>% group_by(tenurevalues) %>%
-  summarise(householdincome = mean(householdincome, na.rm=TRUE),
+  summarize(householdincome = mean(householdincome, na.rm=TRUE),
             numberpeople = mean(NP, na.rm=TRUE),
             watercost = mean(WATP, na.rm=TRUE))
 ```
@@ -385,7 +385,7 @@ Groups based on one or more group variables
 aggregate
 ==========
 
--  summarise a columns based on defined groups
+-  summarize a columns based on defined groups
 
 ```{r}
 library(reshape2)
@@ -402,7 +402,7 @@ dplyr counterpart
 
 ```{r}
 diamonds %>% group_by(cut, color) %>%
-  summarise(carat = mean(carat), 
+  summarize(carat = mean(carat), 
             price = mean(price)) %>%
   head()
 ```
@@ -419,7 +419,7 @@ maxcarat
 Same in 
 ```{r}
 diamonds %>% group_by(color) %>%
-  summarise(carat = mean(carat), 
+  summarize(carat = mean(carat), 
             price = mean(price))
 ```
 
