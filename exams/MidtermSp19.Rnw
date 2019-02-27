@@ -80,7 +80,12 @@
 {\bf IE 0015 Spring 2019 Midterm}
 
 \centering
-{\bf A}
+{\bf A
+\begin{solution}
+SOLUTION
+\end{solution}
+}
+
 
 
 <<echo=FALSE>>=
@@ -97,18 +102,19 @@ library(ggplot2)
 
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\itemsep1pt\parskip0pt\parsep0pt
+
 \item
   Write your name on the top of this page.
 \item
-  Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required.
+  Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required. You may have pens/pencils, 
 \item
-  The exam is four pages (including cover). In addition there are three pages of reference containing the data dictionaries and an example of the data from the Pittsburgh City Trees database, and a map of Pittsburgh with neighborhoods for your reference.
+  The exam is four pages (including cover). There are 100 points total divided among 3 questions. In addition there are two pages of reference containing the data dictionaries and an example of the data from the Pittsburgh Firearms Seizures database, and maps of Pittsburgh with police zones, neighborhoods, council districts, and wards for your reference.
 \item
-  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.
+  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.  Additional paper is available from the exam proctor.
 \item
-  You have until 2:30 PM to finish. There are 100 points total divided among 3 questions.
+  Where a question requests a flow chart, you may answer with a flow chart, process map, step by step instructions, or pseudocode (R or SQL) as you choose.
+\item
+  You have until 2:45 PM to finish. Staple the exam, any extra paper you used, and your crib sheet and turn this in.
 \end{enumerate}
 
 \pagebreak
@@ -122,19 +128,22 @@ library(ggplot2)
 
 City council 
 
-The University of Pittsburgh has recently opened a Community Engagement Center (CEC) in the Homewood neighborhood of Pittsburgh.  Councilman Rev. Ricky V. Burgess represents Council District 9 which includes Homewood (he is councilman based on municipal elections). He wishes to discuss with the Pittsburgh Police zone commanders their level of enforcement on firearms laws because he believes the high quantity of firearms is a contributor to violent crime in his district and is asking the University of Pittsburgh for assistance.
+The University of Pittsburgh has recently opened a Community Engagement Center (CEC) in the Homewood neighborhood of Pittsburgh.  Councilman Rev. Ricky V. Burgess represents Council District 9 which includes Homewood (he is councilman based on municipal elections). He wishes to discuss with the Pittsburgh Police zone commanders their level of enforcement on firearms laws because he believes the high quantity of firearms is a contributor to violent crime in his district and is asking the University of Pittsburgh (you) for assistance.
+
+(a)  Create a CoNVO statement as an analyst assisting Councilman Burgess in tracking police firearms seizures in the council district he represents.
 
 Women's Center and Shelter of Greater Pittsburgh
 
 The Women's Center and Shelter of Greater Pittsburgh provides legal advocacy services for victims of domestic violence.  One outcome that often occurs is that abusers are required to turn their weapons over to police (i.e. a firearms seizure).  They have regular discussions with large law enforcement agencies, such as the Pittsburgh Bureau of Police Domestic Violence Unit, on enforcement of protection from abuse decisions by courts, which includes orders to turn over weapons.  They desire to know the historical record for Pittsburgh police enforcement of these protection from abuse orders.
 
+(a)  Create a CoNVO statement as an an analyst assisting the Women's Center tracking police firearms seizures in Pittsburgh.
+
 Pittsburgh Police Domestic Violence Unit
 
 The Pittsburgh Bureau of Police is establishing a new investigations unit that will focus on domestic violence cases using a \$500,000 donation from the Nina Baldwin Fisher Foundation.  One of the possible outcomes of a domestic abuse investigation is a protection from abuse (PFA) order by the court, which can include an order for the abuser to turn in firearms to police, which is recorded as a firearms seizure.   
 
+(a)  Create a CoNVO statement as an an analyst assisting the Pittsburgh Police Domestic Violence unit tracking police firearms seizures in Pittsburgh.
 
-\begin{parts}
-\part   Create a CoNVO statement from the point of view of an analyst assisting Councilman Burgess in tracking police firearms seizures in the council district he represents.
 
 \begin{solution}[3in]
 
@@ -160,7 +169,6 @@ Councilman Burgess could ask a police zone commander about the changes in seizur
 Note: for grading I don't expect anyone to be that nuanced.  You should have either filtered incident data on something, or filtered subject resistance on something for the vision. And the outcome should have had more than one possible result.
 \end{solution}
 
-\end{parts}
 \pagebreak
 <<echo = FALSE, warning=FALSE, message=FALSE>>=
 library(dplyr)
@@ -184,13 +192,13 @@ pittsburghfirearmsseizures<- pittsburghfirearmsseizures %>%
            
 @
 
-
+\pagebreak
 \question[40]
 
 Councilman Burgess wishes to have a chart that shows the monthly firearms seizures in each neighborhood by year and compare this to the incidence of violent crimes in each neighborhood by month and year since 2015.  Assume that you already have the violent crimes data in whatever form you need.  
 
 \begin{parts}
-  \part Draw a flow chart of a process that prepares the firearms seizure data so that each line shows one month's firearms seizures in each neighborhood in Council District 9.
+  \part Draw a flow chart of a process that prepares the firearms seizure data so that each line shows the total number of firearms seized in each neighborhood in Council District 9 in a month, sorted by neighborhood and date.
   \part Sketch out a plot that does this.  
   \part Explain how your plot fits the criteria provided (i.e. state the visual cue for each part of the specification)
 \end{parts}
@@ -202,10 +210,14 @@ Example plot.  One plot (facet) per year, stacked bar plot with firearms seizure
 
 Points off for missing an aspect (by neighborhood, by month, or violent crimes)
 <<echo=FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
-seizuresperneighborhood <- pittsburghfirearmsseizures %>% 
-  filter(council_district=="9") %>%
-  arrange(council_district, neighborhood, police_zone)
-
+(seizuresperneighborhood <- pittsburghfirearmsseizures %>% 
+  filter(council_district=="9") %>% 
+  arrange(neighborhood, year, month))
+pittsburghfirearmsseizures %>% 
+  filter(council_district=="9") %>% 
+  group_by(neighborhood, year, month) %>%
+  summarize(weaponsseizures = sum(total_count)) %>%
+  arrange(neighborhood, year, month) %>% head()
 ggplot(seizuresperneighborhood) + geom_bar(aes(x=month, fill=neighborhood)) + facet_grid(year ~ .) + scale_x_discrete()
 @
 \end{solution}
@@ -213,7 +225,7 @@ ggplot(seizuresperneighborhood) + geom_bar(aes(x=month, fill=neighborhood)) + fa
 Domestic violence victim advocates working with police are interested in comparing firearms seizures with the rate of court orders to turn in firearms for each zone. Assume that you have the data from court orders to turn in firearms by police zone in whatever form that you need.
 
 \begin{parts}
-  \part Draw a flow chart of a process that prepares the firearms seizure data so that each line shows one month's firearms seizures in each police zone in Pittsburgh since January 2015.
+  \part Draw a flow chart of a process that prepares the firearms seizure data so that each line shows one month's firearms seizures in each police zone in Pittsburgh since January 2015, sorted by polize zone and date.
   \part Sketch out a plot that does this.  
   \part Explain how your plot fits the criteria provided (i.e. state the visual cue for each part of the specification)
 \end{parts}
@@ -226,9 +238,10 @@ Example plot.  One plot (facet) per year, stacked bar plot with firearms seizure
 Points off for missing an aspect (by police zone, by month, or violent crimes)
 
 <<echo=FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
-seizuresperneighborhood <- pittsburghfirearmsseizures %>% 
-  filter(council_district=="9") %>%
-  arrange(council_district, neighborhood, police_zone)
+pittsburghfirearmsseizures %>% 
+  group_by(police_zone, year, month) %>%
+  summarize(total_firearms = sum(total_count, na.rm=TRUE)) %>%
+  arrange(police_zone, year, month) %>% head()
 
 ggplot(pittsburghfirearmsseizures) + geom_bar(aes(x=month, fill=police_zone)) + facet_grid(year ~ .) + scale_x_discrete()
 @
@@ -237,10 +250,9 @@ ggplot(pittsburghfirearmsseizures) + geom_bar(aes(x=month, fill=police_zone)) + 
 \pagebreak
 
 
-\question[28]
-Net Present Value
+\question[28] Net Present Value
 
-You have the following table that shows the expected cost outlay and returns over time for a project.  The discount (interest) rate is 20\%.
+Table \ref{tbl:cashflow} shows the expected cost outlay and returns over time for a project.  The discount (interest) rate is 20\%.
 
 \begin{table}[]
 \centering
@@ -253,11 +265,11 @@ Sales & 0 & 100 & 110 & 120 & 130\\
 Costs & 0 & -30 & -35 & -40 & -45\\
 \hline
 \end{tabular}
-\caption{Cash flow}
+\caption{Cash flow \label{tbl:cashflow}}
 \end{table}
 
 
-A regional supermarket chain is deciding whether to install a tewgit machine in each of its stores.  Each machine costs \$250,000. Projected income per machine is as follows:
+A regional supermarket chain is deciding whether to install a tewgit machine in each of its stores.  Each machine costs \$250,000. Projected cash flows per machine is in Table \ref{tbl:tewgit}.
 
 \begin{table}[]
 \centering
@@ -269,7 +281,7 @@ Cost  & -250 &  &  &  &  &  \\
 Sales &  & 250 & 300 &  300 & 250 & 250 \\
 Operating Expenses &  & -200 &  -200 &  -200 &  -200 &  -200 \\
 \end{tabular}
-\caption{Tewgit machine cash flow 1000s of dollars}
+\caption{Tewgit machine cash flow 1000s of dollars \label{tbl:tewgit}}
 \end{table}
 
 \begin{parts}
