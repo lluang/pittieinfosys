@@ -1,7 +1,7 @@
 ---
-title: 'Lab 5: Character Strings'
+title: 'Homework 3: Dates and strings'
 author: "IE 0015 Information Systems"
-date: "February 8-9, 2018"
+date: "March 20, 2019"
 output:
   pdf_document: default
   html_document:
@@ -13,8 +13,113 @@ library(dplyr)
 library(tidyr)
 library(magrittr)
 library(stringr)
+library(ggplot2)
 titanic <- read.csv("../data/titanic3.csv")
 ```
+
+Read in the `beavers` data that is included in R as well as the help file (search for `beaver` in Help.  The data was taken in 1990 in Wisconsin. For both the `beaver1` and `beaver2` dataset, the `day` field is days since the beginning of 1990.  The `time` field is the digits from a 24 hour clock.
+
+```{r}
+data(beavers)
+summary(beaver1)
+summary(beaver2)
+```
+
+1. [2]  For each dataset, calculate the date for each data record. What dates are represented in each data file? (ideally, this should be within the data frame, but we will not take points off if this is a vector that corresponds to the dataset). (Hint:  add days to December 31, 1989 because January 1, 1990 should be day 1)
+
+**ANSWER**
+
+```{r}
+beaver1$date <- as.Date("1989-12-31") + beaver1$day # January 1, 1990 should be day 1
+beaver2$date <- as.Date("1989-12-31") + beaver2$day 
+unique(beaver1$date)
+unique(beaver2$date)
+```
+
+Alternative answer
+
+```{r}
+beaver1$date <- as.Date(beaver1$day, origin = "1989-12-31")
+beaver2$date <- as.Date(beaver2$day, origin = "1989-12-31")
+head(beaver1$date)
+head(beaver1$date)
+```
+
+
+2. [3] Look at the time stamps. 
+
+    a. What makes this hard to work with? 
+    b. Write out an algorithm (in pseudocode or a process map) that would converts this time into the R time format.  
+    c. Then code this in R.
+    
+Note: `str_pad` from `stringr` puts leading characters in front of a character string to make it a given length.  e.g. make sure that east coast zip codes show the 0 as the first digit.
+
+**ANSWER**
+Discuss the fact that the time stamps are of varying length, 3 or 4 numbers
+
+  i. Add zeros in front of the time (leading zeros) as needed to make the time stamps four characters
+  ii. Read in data using strftime as %H%M (note no punctuation).  
+  
+  
+Alternatively (most people will probably do this)
+
+  i. Count how many digits are in the time stamp
+  ii. If 4, split so that the first two are the hours and the last two are minutes
+  iii. If 3, split so that the first one is the hours and the last two are minutes
+  iv. If 1 or 2, the hours is 0 (12 AM) and the digits are the minutes
+
+```{r}
+library(stringr)
+library(lubridate)
+library(magrittr)
+library(dplyr)
+beaver1$time1 <- str_pad(beaver1$time, 4, pad="0")
+beaver1$time1 <- strftime(strptime(beaver1$time1, tz="America/New_York", format="%H%M"),format="%H:%M")
+head(beaver1$time1)
+tail(beaver1$time1)
+```
+
+Questions 3 and 4 use the Titanic data set. Note: The data dictionary is in Courseweb -> Course Documents -> data.
+```{r titanicdata}
+titanic <- read.csv("../data/titanic3.csv")
+```
+
+3.[2]  In the Titanic data, write and run the code that list the names of people with the following characteristics: 
+  -  Embarked in Queenstown
+  -  Female
+  -  Known to be under the age of 19 (i.e. 18 and under)
+
+**ANSWER**
+
+```{r}
+titanic %>%
+  filter(embarked=="Q") %>%
+  filter(sex=="female") %>%
+  filter(age<19) %>%
+    select(name)
+```
+
+Alternative:
+
+```{r}
+ titanic[titanic$embarked=="Q" & titanic$sex=="female" & titanic$age < 19 & !is.na(titanic$age),"name"]
+```
+
+4. [3] In the Titanic data, plot a histogram of ages in 5 year increments (bins) separated by Sex (gender) include a meaningful plot title, and x and y axis labels. 
+
+Note: 
+
+1.  Look at the help file for `geom_histogram`.  
+2.  You must set the binwidth properly and show both genders to get full credit for this question.
+
+
+**ANSWER**
+```{r}
+ggplot(titanic, aes(age)) + geom_histogram(binwidth=5, boundary=0) + 
+  facet_grid(sex ~ .) + ggtitle("Distribution of Age of Titanic passengers by gender") + 
+  ylab("Number of passengers") +xlab("Age")
+```
+
 1.  (3 pts) The Titanic accident was in a time when people were identified by their titles. In the Titanic data, How do you identify the title (Mr., Mrs., Miss. etc) of a person? Draw a process map for this procedure.
 
 Hint: open the Titanic csv file in R Studio and tell someone else exactly how to identify the title without pointing to the file.
