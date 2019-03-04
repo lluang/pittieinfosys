@@ -144,6 +144,9 @@ The Pittsburgh Bureau of Police is establishing a new investigations unit that w
 
 (a)  Create a CoNVO statement as an an analyst assisting the Pittsburgh Police Domestic Violence unit tracking police firearms seizures in Pittsburgh.
 
+The National Domestic Violence and Firearms Resource Center advocates for domestic violence victims. One of its activities is advocating for gun seizure laws when there is a risk for gun owners to commit acets of domestic violence.  In October 2018, Pennsylvania passed legislature forcing those convicted of domestic violence to more quickly surrender their guns. 
+
+(a)  Create a CoNVO statement as an an analyst assisting the National Domestic Violence and Firearms Resource Center to explore the effects of this legislation in Pittsburgh
 
 \begin{solution}[3in]
 
@@ -222,11 +225,11 @@ ggplot(seizuresperneighborhood) + geom_bar(aes(x=month, fill=neighborhood)) + fa
 @
 \end{solution}
 
-Domestic violence victim advocates working with police are interested in comparing firearms seizures with the rate of court orders to turn in firearms for each zone. Assume that you have the data from court orders to turn in firearms by police zone in whatever form that you need.
+Domestic violence victim advocates working with police are interested in examinig the time between the court order and firearms seizure.  Assume that you have access to data that identifies the fire arms owner as well as the actual date of the fire arms seizure (not only the year, month, and day of week as the sample data does).  Also assume that you have access to court data that specifies the fire arms owner and the date that the seizure was ordered.
 
 \begin{parts}
-  \part Draw a flow chart of a process that prepares the firearms seizure data so that each line shows one month's firearms seizures in each police zone in Pittsburgh since January 2015, sorted by polize zone and date.
-  \part Sketch out a plot that does this.  
+  \part Draw a flow chart of a process that prepares the firearms seizure data so that each line shows one month's firearms seizures in each police zone in Pittsburgh since January 2015, sorted by police zone and month and year.
+  \part Sketch out a plot that shows the monthly firearms seizures by police zone, month and year.  This should also break out the seizures by type of firearm.  
   \part Explain how your plot fits the criteria provided (i.e. state the visual cue for each part of the specification)
 \end{parts}
 
@@ -289,6 +292,44 @@ Operating Expenses &  & -200 &  -200 &  -200 &  -200 &  -200 \\
 \part Draw the flow chart that demonstrates how to find the present value of the entire cash flow presented in the table.
 \end{parts}
 
+\begin{solution}
+
+1. Multiple discount rate by number of periods
+
+2. Multiply future value by result of 1
+
+3. Apply PV to original cost
+
+4. Apply PV to each value of sale
+
+5. Apply PV to each value of ongoing costs
+\end{solution}
+
+
+Table \ref{tbl:projectcashflow} shows the cash flows for two mutually exclusive projects.
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+Project & 0 & 1 & 2 & 3\\  
+\hline
+A & -20 & 8 & 8 & 8 \\
+B & -20 & 0 & 0 & 25 \\
+\hline
+\end{tabular}
+\caption{Cash flow $1000s \label{tbl:projectcashflow}}
+\end{table}
+
+
+
+
+
+\begin{parts}
+\part Draw the flow chart that presents how to calculate present value from future value given the future value, the number of time periods, and the interest rate.  This flow chart should be at the level of detail of each block showing one step of arithmetic (add, subtract, multiply, divide, exponent)
+\part Draw the flow chart that demonstrates how to determine which project you prefer.  You may assume that the present value function you created in the flow chart for (a) is available to you (it takes up one block in your flow chart).  The interest rate is $i$\%
+\end{parts}
+
 
 
 \begin{solution}
@@ -302,6 +343,10 @@ Operating Expenses &  & -200 &  -200 &  -200 &  -200 &  -200 \\
 4. Apply PV to each value of sale
 
 5. Apply PV to each value of ongoing costs
+
+6. Take the sum of PV
+
+7. Compare the PV for both projects
 \end{solution}
 
 \end{questions}
