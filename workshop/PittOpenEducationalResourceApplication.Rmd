@@ -31,16 +31,21 @@ The most similar texts are Moderndive by Charles Ismay and Albert Kim (https://m
 
 This proposal will take the structure of Moderndive (chapter and topics), and rewrite it for use with Python.  As a data language, Python and R have a design that provides the same capabilities, but their design history (Python started out as a general purpose programming language, R was developed by those in statistical computing) leads to different design decisions to implement those capabilities.  The porting of Moderndive will require writing a parallel version of the text to fit how Python developers implemented the concepts.  This similarity extends to the mathematical and statistical modeling portions of Moderndive.
 
+For example, chapter 2 of ModernDive is about getting started with data in R.  Instead of R and R Studio, this will be an introduction to Python, the Python Package Library, and the Spyder IDE. Instead of the 
+
 4. How will Pitt students access your OER (required devices, platforms, etc.)? In which open education platform do you plan to deposit your work (refer to library guide above)? (Up to 200 words)
 
-Moderndive is currently Creative Commons licensed and is available through github and related platforms.
+Moderndive is currently Creative Commons licensed and is available through github and related platforms.  I will developed the derived work within Github (which will also allow me to ask for feedback) as well as to host the final project in a format that can both be read and run within computer software (example is Probabalistic Programming and Bayesian Methods for Hackers by Cam Davidson https://camdavidsonpilon.github.io/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/)
 
 5. Describe your plan to work with the Library and Teaching Center to integrate the OER. (Up to 100 words)
 
 
 6. Describe your plan for evaluating the outcomes. What benefits do you hope to achieve by using OER, and how will you evaluate whether you met them? (Up to 200 words)
 
-I expect that 
+For the programming course within the department of Industrial Engineering, there are three methods of evaluation
+    i. Use of technical programming within coop and internship assignments by students. Over the past few years, the department has begun to see students using R and Python in their assignments. Our belief is that the hiring companies are heavier in Python than R, so switching the course to Python will enhance their use.
+    ii. Use of technical programming in other IE courses.  Currently there is little programming occuring during the other courses, as faculty report that requests to use Matlab on assignments are received with much resistance and little competence from the students. As Python is a more general programming language, there is a belief within the department that the faculty will be able to apply Python more readily than they can apply R.
+    iii. Use of technical programming in senior capstone design course. Over the past few years, an increasing number of students have been able to apply technical programming in senior design. This is a mix of R and Python (students learn Python in coop assignments or in CS courses). It is believed that teaching technical programming in Python will enhance IE student performance in CS and allow for better transfer of skills between the class and their coop assignments. 
 
 7. Include a budget showing how your funds will be used. (Template provided)
 8. Include a signed letter of support from your department chair. (Template provided)
