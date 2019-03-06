@@ -1,11 +1,11 @@
 ---
 title: 'Homework 3: Dates and strings'
 author: "IE 0015 Information Systems"
-date: "March 20, 2019"
+date: "March 27, 2019"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ```{r loadtitanic}
@@ -13,8 +13,8 @@ library(dplyr)
 library(tidyr)
 library(magrittr)
 library(stringr)
+library(lubridate)
 library(ggplot2)
-titanic <- read.csv("../data/titanic3.csv")
 ```
 
 Read in the `beavers` data that is included in R as well as the help file (search for `beaver` in Help.  The data was taken in 1990 in Wisconsin. For both the `beaver1` and `beaver2` dataset, the `day` field is days since the beginning of 1990.  The `time` field is the digits from a 24 hour clock.
@@ -25,140 +25,53 @@ summary(beaver1)
 summary(beaver2)
 ```
 
-1. [2]  For each dataset, calculate the date for each data record. What dates are represented in each data file? (ideally, this should be within the data frame, but we will not take points off if this is a vector that corresponds to the dataset). (Hint:  add days to December 31, 1989 because January 1, 1990 should be day 1)
+1. [4]  Working with dates.
 
-**ANSWER**
+a. For each dataset, calculate the date for each data record and store it in a new field. 
+b. What dates are represented in each data file? (ideally, this should be within the data frame, but we will not take points off if this is a vector that corresponds to the dataset). (Hint:  add days using `lubridate` to December 31, 1989 because January 1, 1990 should be day 1)
 
-```{r}
-beaver1$date <- as.Date("1989-12-31") + beaver1$day # January 1, 1990 should be day 1
-beaver2$date <- as.Date("1989-12-31") + beaver2$day 
-unique(beaver1$date)
-unique(beaver2$date)
-```
-
-Alternative answer
-
-```{r}
-beaver1$date <- as.Date(beaver1$day, origin = "1989-12-31")
-beaver2$date <- as.Date(beaver2$day, origin = "1989-12-31")
-head(beaver1$date)
-head(beaver1$date)
-```
-
-
-2. [3] Look at the time stamps. 
+2. [16] Look at the time stamps. 
 
     a. What makes this hard to work with? 
-    b. Write out an algorithm (in pseudocode or a process map) that would converts this time into the R time format.  
+    b. Write out an algorithm (flow chart in pseudocode or a process map) that would converts the date and time into a single timestamp (hint: use .  
     c. Then code this in R.
+    d. For both Beaver1 and Beaver2, plot the changes in temperature over time and compare the plots.
+
     
 Note: `str_pad` from `stringr` puts leading characters in front of a character string to make it a given length.  e.g. make sure that east coast zip codes show the 0 as the first digit.
 
-**ANSWER**
-Discuss the fact that the time stamps are of varying length, 3 or 4 numbers
+Note: `str_paste` will work with `lubridate` output to put the date and time together to form a timestamp.
 
-  i. Add zeros in front of the time (leading zeros) as needed to make the time stamps four characters
-  ii. Read in data using strftime as %H%M (note no punctuation).  
-  
-  
-Alternatively (most people will probably do this)
+Questions 3, 4, 5, 6, and 7 use the Titanic data set. Note: The data dictionary is in Courseweb -> Course Documents -> data.
 
-  i. Count how many digits are in the time stamp
-  ii. If 4, split so that the first two are the hours and the last two are minutes
-  iii. If 3, split so that the first one is the hours and the last two are minutes
-  iv. If 1 or 2, the hours is 0 (12 AM) and the digits are the minutes
-
-```{r}
-library(stringr)
-library(lubridate)
-library(magrittr)
-library(dplyr)
-beaver1$time1 <- str_pad(beaver1$time, 4, pad="0")
-beaver1$time1 <- strftime(strptime(beaver1$time1, tz="America/New_York", format="%H%M"),format="%H:%M")
-head(beaver1$time1)
-tail(beaver1$time1)
-```
-
-Questions 3 and 4 use the Titanic data set. Note: The data dictionary is in Courseweb -> Course Documents -> data.
 ```{r titanicdata}
 titanic <- read.csv("../data/titanic3.csv")
 ```
 
-3.[2]  In the Titanic data, write and run the code that list the names of people with the following characteristics: 
+3. [2]  In the Titanic data, 
+
+a. Write the flowchart that identifies the people with the following characteristics: 
   -  Embarked in Queenstown
   -  Female
   -  Known to be under the age of 19 (i.e. 18 and under)
+b.  Write and execute the R code that does this.
 
-**ANSWER**
+4. [8] In the Titanic data, plot a histogram of ages in 5 year increments (bins) separated by Sex (gender) include a meaningful plot title, and x and y axis labels. 
 
-```{r}
-titanic %>%
-  filter(embarked=="Q") %>%
-  filter(sex=="female") %>%
-  filter(age<19) %>%
-    select(name)
-```
+Notes: 
 
-Alternative:
+    -  Look at the help file for `geom_histogram`.  
+    -  You must set the binwidth properly and show both genders to get full credit for this question.
 
-```{r}
- titanic[titanic$embarked=="Q" & titanic$sex=="female" & titanic$age < 19 & !is.na(titanic$age),"name"]
-```
-
-4. [3] In the Titanic data, plot a histogram of ages in 5 year increments (bins) separated by Sex (gender) include a meaningful plot title, and x and y axis labels. 
-
-Note: 
-
-1.  Look at the help file for `geom_histogram`.  
-2.  You must set the binwidth properly and show both genders to get full credit for this question.
-
-
-**ANSWER**
-```{r}
-ggplot(titanic, aes(age)) + geom_histogram(binwidth=5, boundary=0) + 
-  facet_grid(sex ~ .) + ggtitle("Distribution of Age of Titanic passengers by gender") + 
-  ylab("Number of passengers") +xlab("Age")
-```
-
-1.  (3 pts) The Titanic accident was in a time when people were identified by their titles. In the Titanic data, How do you identify the title (Mr., Mrs., Miss. etc) of a person? Draw a process map for this procedure.
+5.  (8 pts) The Titanic accident was in a time when people were identified by their titles. In the Titanic data, How do you identify the title (Mr., Mrs., Miss. etc) of a person? Draw a process map for this procedure.
 
 Hint: open the Titanic csv file in R Studio and tell someone else exactly how to identify the title without pointing to the file.
 
-**ANSWER**
+6.  (8 pts) Read in the titanic data and extract the title of each person.  Make a list of unique titles.  
 
-Look in the name field, find the comma after the last name.
-The title starts two spaces after the comma.
-The title is completed with a period.
-
-2.  (5 pts) Read in the titanic data and extract the title of each person.  Make a list of unique titles.  
-
-Note 1: Look in lecture Rmd file
-Note 2: How do you find the first letter? how do you know the title is complete? Note: The Countess is a special case, don't worry about getting her territory right, just her title.  
-Note 3:  in a regular expression, you need to escape the punctuation with a backslash, and you need to escape the backslash with another backslash (i.e. two backslashes before a punctuation mark.)
-Note 4:  to apply a function to a vector (e.g. a column in a dataframe) use `sapply`, e.g. `sapply(dataframe$column, FUN=sqrt)`  
+- Note 1: Look in lecture Rmd file
+- Note 2: How do you find the first letter? how do you know the title is complete? Note: The Countess is a special case, don't worry about getting her territory right, just her title.  
+- Note 3:  in a regular expression, you need to escape the punctuation with a backslash, and you need to escape the backslash with another backslash (i.e. two backslashes before a punctuation mark.)
+- Note 4:  to apply a function to a vector (e.g. a column in a dataframe) use `sapply`, e.g. `sapply(dataframe$column, FUN=sqrt)` or `mutate`  
   
-**ANSWER**
-
-```{r}
-getTitle <- function(name) {
-  titlelocation = str_locate(name, ", [A-Z][a-z]*\\.")
-  title = str_sub(name, titlelocation[1]+2, titlelocation[2])
-  return (title)
-}
-titanic$Title <- sapply(titanic$name, FUN=getTitle)
-unique(titanic$Title)  
-```
-
-3.  (2 pts) How many passengers have each title? (hint: declare the list of titles to be a factor and take the summary)
-
-**ANSWER**
-```{r}
-titanic %>% group_by(Title) %>% summarize(count=n())
-```
-
-Alternative
-
-```{r}
-titanic$Title <- factor(titanic$Title)
-summary(titanic$Title)
-```
+7.  (4 pts) Write and execute R code to determine how many passengers have each title? (hint: declare the list of titles to be a factor and take the summary)
