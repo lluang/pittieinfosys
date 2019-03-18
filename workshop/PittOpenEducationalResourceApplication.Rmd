@@ -31,7 +31,9 @@ The most similar texts are Moderndive by Charles Ismay and Albert Kim (https://m
 
 This proposal will take the structure of Moderndive (chapter and topics), and rewrite it for use with Python.  As a data language, Python and R have a design that provides the same capabilities, but their design history (Python started out as a general purpose programming language, R was developed by those in statistical computing) leads to different design decisions to implement those capabilities.  The porting of Moderndive will require writing a parallel version of the text to fit how Python developers implemented the concepts.  This similarity extends to the mathematical and statistical modeling portions of Moderndive.
 
-For example, chapter 2 of ModernDive is about getting started with data in R.  Instead of R and R Studio, this will be an introduction to Python, the Python Package Library, and the Spyder IDE. Instead of the 
+For example, chapter 2 of ModernDive is about getting started with data in R.  Instead of R and R Studio, this will be an introduction to Python, the Python Package Library, and the Spyder IDE. Instead of the ggplot2, dplyr, and infer packages in R, I this will discuss plotnine, pandas, and functional programming patterns in Python.  Package installation will be done through use of the Anaconda Navigator instead of R Studio.  The initial example will be done using the same dataset, but using the pandas dataset.
+
+As I am already using both R and Python, and Moderndive was written using readily available data sources, I expect that I will be able to work through Moderndive at approximately one week per chapter (12 weeks). By week 4 I will  
 
 4. How will Pitt students access your OER (required devices, platforms, etc.)? In which open education platform do you plan to deposit your work (refer to library guide above)? (Up to 200 words)
 
@@ -39,6 +41,7 @@ Moderndive is currently Creative Commons licensed and is available through githu
 
 5. Describe your plan to work with the Library and Teaching Center to integrate the OER. (Up to 100 words)
 
+As the book is developed and made ready, I will provide the link to the Github Site with the rendered version of the book, which will be linked to the Github repository that will be the development and updating platform.
 
 6. Describe your plan for evaluating the outcomes. What benefits do you hope to achieve by using OER, and how will you evaluate whether you met them? (Up to 200 words)
 
