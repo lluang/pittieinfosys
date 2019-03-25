@@ -28,7 +28,9 @@ Note: to declare a field as a factor, use this form:
 **ANSWER**
 ```{r}
 inject.dots <- function(df) { names(df) <- sub(" ", ".", names(df)); df }
-datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\case\\"
+##datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\case\\"
+datadirectory <- "."
+
 RegionEx <- read_excel(file.path(datadirectory, "StudentData_RegionEx_(2010-9-22).xlsx"),
 col_types = c("text", "text", "text",
 "date", "date", "date", "date", "numeric",
@@ -78,3 +80,50 @@ ggpairs(RegionEx %>% select(Airline, Origin.airport, Destination.airport, Schedu
 
 
 5.  Explore at least five independent variables as identified in the pairs plot.  Apply each of the five basic plot types at least once.  You may find that you have to build on the basic plot type to make something meaningful.
+
+
+```{r}
+RegionEx <- RegionEx %>%
+  mutate(scheduledflighttime = Scheduled.arrival.time - Scheduled.departure.time)
+ggpairs(RegionEx %>% select(Airline,  Scheduled.departure.time, scheduledflighttime, Arrival.delay.in.minutes, Delay.indicator, Day.of.Week, Route.Code, Number.of.passengers))
+```
+
+
+```{r}
+summary(RegionEx)
+```
+
+
+Look at routes and airlines
+================
+
+```{r}
+ggplot(RegionEx, aes(x=Arrival.delay.in.minutes, fill=Airline)) + geom_histogram( position="dodge2" ) + facet_grid(Airline~.)
+```
+
+
+```{r}
+RegionEx %>% group_by(Airline, Route.Code) %>%
+  summarize(flights = n())
+```
+
+```{r}
+RegionEx %>% group_by(Airline, Route.Code) %>%
+  summarize(flights = n(),
+            meanflight = mean(scheduledflighttime),
+            medianflight=median(scheduledflighttime),
+            meandelay = mean(Arrival.delay.in.minutes),
+            mediandelay = median(Arrival.delay.in.minutes)
+            )
+```
+```{r}
+ggplot(RegionEx, aes(x=Arrival.delay.in.minutes, fill=Airline)) + geom_histogram( position="dodge2" ) + facet_grid(Route.Code + Airline~.)
+```
+
+```{r}
+ggplot(RegionEx, aes(x=scheduledflighttime, fill=Airline)) + geom_histogram( position="dodge2" ) + facet_grid(Route.Code + Airline~.)
+```
+
+```{r}
+ggplot(RegionEx, aes(x=scheduledflighttime, , y=Arrival.delay.in.minutes, color=Airline, shape=Airline)) + geom_point() + facet_grid(Route.Code~.)
+```
