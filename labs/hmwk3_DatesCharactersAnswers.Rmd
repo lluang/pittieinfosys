@@ -169,11 +169,22 @@ The title is completed with a period.
 ```{r}
 getTitle <- function(name) {
   titlelocation = str_locate(name, ", [A-Z][a-z]*\\.")
-  title = str_sub(name, titlelocation[1]+2, titlelocation[2])
+  #print(titlelocation)
+  #print(c(titlelocation[, "start"], titlelocation[,"end"]))
+  title = str_sub(name, titlelocation[,"start"]+2, titlelocation[,"end"])
+#  print(c(name, as.character(titlelocation[1]), as.character(titlelocation[2])))
   return (title)
 }
-titanic$Title <- sapply(titanic$name, FUN=getTitle)
+
+(titanic <- titanic %>% mutate(Title = getTitle(name))) %>% 
+  select(Title) %>% head()
+#titanic$Title <- sapply(titanic$name, FUN=getTitle)
 unique(titanic$Title)  
+```
+
+```{r}
+titlelocation = str_locate(titanic[1,"name"], ", [A-Z][a-z]*\\.")
+str_sub(titanic$name[1], titlelocation[1]+2, titlelocation[2])
 ```
 
 7.  (4 pts) How many passengers have each title? (hint: declare the list of titles to be a factor and take the summary)

@@ -2,19 +2,21 @@
 title: "Open Educational Resources Funding Application"
 author: "Louis Luangkesorn"
 date: "February 1, 2019"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
-Name:  Kiatikun Louis Luangkesorn
-Department: Industrial Engineering
-Campus address:  1028 Benedum Hall
-Email address:  lluangkesorn@pitt.edu
-Telephone number: (412) 624-9838
+- Name:  Kiatikun Louis Luangkesorn
+- Department: Industrial Engineering
+- Campus address:  1028 Benedum Hall
+- Email address:  lluangkesorn@pitt.edu
+- Telephone number: (412) 624-9838
 
-Course name and number:  IE 0015 Information Systems Engineering
-Semester(s) course will be taught:  Spring 2020 (repeats every spring)
-Expected enrollment:  78
-Title and cost of current textbook or course materials:  R for Data Science by Wickham and Grolemund.  List price: $39.99
+- Course name and number:  IE 0015 Information Systems Engineering
+- Semester(s) course will be taught:  Spring 2020 (repeats every spring)
+- Expected enrollment:  78
+- Title and cost of current textbook or course materials:  R for Data Science by Wickham and Grolemund.  List price: $39.99
 
 I am requesting funds to create a brand new OER
 
@@ -24,16 +26,16 @@ The course is currently based on R, which along with Python are the two commonly
 
 2. Have you found open textbooks and/or OER suitable to your course? If so, please list them here with links to their online availability. (Up to 200 words)
 
-The most similar texts are Moderndive by Charles Ismay and Albert Kim (https://moderndive.com/) and Python for Everybody by Charles Severance (https://www.py4e.com/).  Python for Everybody is intended to be a general introduction to programming in Python, with a few elements of programming for database access. As such, it does not cover data analysis.  Moderndive is written in R, but has the same audience, STEM students with a very rudimentary ability in programming, who are learning programming for data manipulation and analysis.  This differs from most programming books (which are for a general, systems programming audience) or data analysis books that presume a level of existing competency in programming which is not present in most undergraduate engineers.
+The most similar texts are Moderndive by Charles Ismay and Albert Kim (https://moderndive.com/) and Python for Everybody by Charles Severance (https://www.py4e.com/).  Python for Everybody is intended to be a general introduction to programming in Python, with a few elements of programming for database access. As such, it does not cover data analysis.  Moderndive is written in R, but has the same audience as IE 15, STEM students with a very rudimentary ability in programming who are learning programming for data manipulation and analysis.  This differs from most programming books (which are for a general, systems programming audience) or data analysis books that presume a level of existing competency in programming which is not present in most undergraduate engineers.
 
 
 3. How will you integrate the OER resource into your course? Please provide a simple timeline that includes the develop cycle, implementation cycle, the required technology for faculty, including the technology that students will need in order to use your OER, and evaluation. (Up to 200 words)
 
 This proposal will take the structure of Moderndive (chapter and topics), and rewrite it for use with Python.  As a data language, Python and R have a design that provides the same capabilities, but their design history (Python started out as a general purpose programming language, R was developed by those in statistical computing) leads to different design decisions to implement those capabilities.  The porting of Moderndive will require writing a parallel version of the text to fit how Python developers implemented the concepts.  This similarity extends to the mathematical and statistical modeling portions of Moderndive.
 
-For example, chapter 2 of ModernDive is about getting started with data in R.  Instead of R and R Studio, this will be an introduction to Python, the Python Package Library, and the Spyder IDE. Instead of the ggplot2, dplyr, and infer packages in R, I this will discuss plotnine, pandas, and functional programming patterns in Python.  Package installation will be done through use of the Anaconda Navigator instead of R Studio.  The initial example will be done using the same dataset, but using the pandas dataset.
+For example, chapter 2 of ModernDive is about getting started with data in R.  Instead of R and R Studio, this will be an introduction to Python, the Python Package Library, and the Spyder IDE. Instead of the ggplot2, dplyr, and infer packages in R, I this will discuss plotnine, pandas, and functional programming patterns in Python.  Package installation will be done through use of the Anaconda Navigator instead of R Studio.  The initial example will be done using the same dataset, but using the pandas library in Python for data analysis instead of dplyr in R.
 
-As I am already using both R and Python, and Moderndive was written using readily available data sources, I expect that I will be able to work through Moderndive at approximately one week per chapter (12 weeks). By week 4 I will  
+As I am already using both R and Python, and Moderndive was written using readily available data sources, I expect that I will be able to work through Moderndive at approximately one week per chapter (12 weeks). By week 4 I should have enough complete so that I may begin soliciting feedback from data analysts and Python programmers.
 
 4. How will Pitt students access your OER (required devices, platforms, etc.)? In which open education platform do you plan to deposit your work (refer to library guide above)? (Up to 200 words)
 
@@ -45,10 +47,16 @@ As the book is developed and made ready, I will provide the link to the Github S
 
 6. Describe your plan for evaluating the outcomes. What benefits do you hope to achieve by using OER, and how will you evaluate whether you met them? (Up to 200 words)
 
-For the programming course within the department of Industrial Engineering, there are three methods of evaluation
-    i. Use of technical programming within coop and internship assignments by students. Over the past few years, the department has begun to see students using R and Python in their assignments. Our belief is that the hiring companies are heavier in Python than R, so switching the course to Python will enhance their use.
-    ii. Use of technical programming in other IE courses.  Currently there is little programming occuring during the other courses, as faculty report that requests to use Matlab on assignments are received with much resistance and little competence from the students. As Python is a more general programming language, there is a belief within the department that the faculty will be able to apply Python more readily than they can apply R.
-    iii. Use of technical programming in senior capstone design course. Over the past few years, an increasing number of students have been able to apply technical programming in senior design. This is a mix of R and Python (students learn Python in coop assignments or in CS courses). It is believed that teaching technical programming in Python will enhance IE student performance in CS and allow for better transfer of skills between the class and their coop assignments. 
+For the programming course within the department of Industrial Engineering, there are three methods of evaluation.
+
+  i. Use of technical programming within coop and internship assignments by students. Over the past few years, the department has begun to see students using R and Python in their assignments. Our belief is that the hiring companies are heavier in Python than R, so switching the course to Python will enhance their use.
+  ii. Use of technical programming in other IE courses.  Currently there is little programming occuring during the other courses, as faculty report that requests to use Matlab on assignments are received with much resistance and little competence from the students. As Python is a more general programming language, there is a belief within the department that the faculty will be able to apply Python more readily than they can apply R.
+  iii. Use of technical programming in senior capstone design course. Over the past few years, an increasing number of students have been able to apply technical programming in senior design. This is a mix of R and Python (students learn Python in coop assignments or in CS courses). It is believed that teaching technical programming in Python will enhance IE student performance in CS and allow for better transfer of skills between the class and their coop assignments. 
 
 7. Include a budget showing how your funds will be used. (Template provided)
+
+Attached
+
 8. Include a signed letter of support from your department chair. (Template provided)
+
+Attached

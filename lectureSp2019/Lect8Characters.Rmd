@@ -427,13 +427,6 @@ length(womentitanic)
 ```
 
 
-```{r}
-data = titanic$name[5]
-titlelocation = str_locate(data, ", [A-Z][a-z]*\\.")
-title = str_sub(data, titlelocation[1]+2, titlelocation[2])
-title
-```
-
 The Rime of the Ancient Mariner
 ==========================
 
