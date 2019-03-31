@@ -1,7 +1,7 @@
 ---
 title: 'Lab 11: Probability and simulation'
 author: "IE 0015 Information Systems"
-date: "April 5-6, 2018"
+date: "April 4-5, 2019"
 output: html_document
 ---
 
