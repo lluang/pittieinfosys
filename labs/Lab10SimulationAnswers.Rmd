@@ -1,10 +1,10 @@
 ---
-title: 'Lab 12: Simulation'
+title: 'Lab 10: Simulation'
 author: "IE 0015 Information Systems"
-date: "April 12-13, 2018"
+date: "April 11-12, 2019"
 output: 
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
