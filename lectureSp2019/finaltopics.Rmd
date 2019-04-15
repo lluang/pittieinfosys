@@ -1,0 +1,87 @@
+---
+title: "Final topics"
+author: "IE 0015 Information Systems"
+date: "April 17, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##  Format
+
+- Same as midterm
+- 3, 4 questions. Intent is to make it possible for one hour. You will have two hours
+- CoNVO statement will center on announced datasets
+- Data manipulation
+    - Date/time, character strings, 
+- Expect questions around probability, statistics and simulation
+    -  May include process map to manipulate data first.
+
+## Programming
+
+-  For all questions that are based on algorithms, you may represent your answer in one of the following ways
+    -  Flow chart map
+    -  Enumerated (numbered) outline
+    -  Pseudocode (R, do not worry about getting the syntax correct)
+
+## CoNVO statements
+
+- Given a setting, write a CoNVO statement (four paragraphs)
+
+## Flowcharts
+
+-  Data manipulation verbs
+-  Spread and gather
+-  Operations
+    -  String operations (stringr)
+    -  Date manipulation (lubridate)
+    -  Statistical operations (mutate using statistics)
+    -  Simulation (probability and random sampling)
+    
+##  Data manipulation verbs 
+
+1.  Filter (filter)
+2.  Arrange (arrange)
+3.  Select columns (select)
+5.  Distinct rows (unique)
+6.  Mutate (mutate)
+7.  Summarize (group_by, summarize)
+8.  Random sample (sample, sample_n)
+
+## Characters and strings
+
+- Working with strings
+- Regular expressions not on final. But you should know they are possible for use in flow charts. (i.e. a box that says "find all instances of ___")
+
+## Strings, Factors, Dates
+
+- Lecture 9
+- Be able to describe the process of taking data and convert it to dates
+
+## Linear Regression
+
+-  Lecture Lecture 9
+-  Representing multiple linear regression model
+-  Plotting residuals and interpreting residual plots
+-  Identifying variables to add to linear regression model
+-  Regression model diagnostics summaries, plots, and interpretation
+
+
+## Probability distributions
+
+-  Lecture 11
+-  Scaling
+-  Implementing scaling
+
+
+## Simulation
+
+-  Lecture 13, 14
+-  Probability distribution fitting
+-  Use of Monte Carlo simulation
+-  Use of bootstrap simulation
+-  Simulation for hypothesis testing
+-  Interpreting simulation results for hypothesis testing
+-  Interpretting p-values in simulation results
