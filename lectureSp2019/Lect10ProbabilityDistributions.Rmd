@@ -3,8 +3,8 @@ title: "Probability distributions"
 author: "IE 0015 Information Systems"
 date: "April 2019"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
   slidy_presentation: default
 ---
 

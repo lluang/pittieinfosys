@@ -15,6 +15,7 @@ library(tidyr)
 library(ggplot2)
 ```
 
+Note: This assignment involves both developing models as well as applying simulation methods. It will help you if you diagram your models (i.e. draw flow charts) and methods before trying to code them.
 
 # Job scheduling (10 points)
 
@@ -38,6 +39,7 @@ datalist[neworder]
 ```
 
 (iii)  Figure how to pick the jobs first, then add in due dates.
+
 
 b. [5] Write functions that implement the following scheduling strategies and calculate the total lateness (time past due that an order is completed).  Apply this to the same example created in (a). Hint: use `arrange` to sort the orders:
     i. First-in First-out - Orders are done in the order received (i.e. unsorted) (this is provided below)
@@ -65,9 +67,9 @@ fifolate <- function(joblist){
 ```
 
     
-c. [3] Simulate each method 250 days (replications).  Show the results using a plot that shows variance. (remember to add titles and labels)  Which is the best in reducing lateness?
+c. [3] Simulate each method 250 replications.  Show the results using a plot that represents the variation across replications (remember to add titles and labels with units)  Which is the best in reducing lateness?
 
-Hint: create a `for` loop that iterates 250 days. For each day, generate a joblist and apply each sequencing method to it. And save the results to lists that you will combine into a data frame.
+Hint: create a `for` loop that iterates 250 replications. For each replication, generate a joblist and apply each sequencing method to it. Then save the results to lists that you will combine into a data frame.  
 
 **ANSWER**
 

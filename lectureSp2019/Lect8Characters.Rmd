@@ -3,10 +3,10 @@ title: 'Lecture 8: Character Manipulation and Strings'
 author: "IE 0015"
 date: "March 2019"
 output:
+  slidy_presentation: default
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
-  slidy_presentation: default
 ---
 
 Introduction
@@ -426,6 +426,13 @@ head(womentitanic)
 length(womentitanic)
 ```
 
+
+```{r}
+data = titanic$name[5]
+titlelocation = str_locate(data, ", [A-Z][a-z]*\\.")
+title = str_sub(data, titlelocation[1]+2, titlelocation[2])
+title
+```
 
 The Rime of the Ancient Mariner
 ==========================
