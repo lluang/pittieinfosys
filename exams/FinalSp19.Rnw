@@ -1,0 +1,627 @@
+%\documentclass[12pt, addpoints]{exam}
+\documentclass[12pt, addpoints, answers]{exam}
+\usepackage{Sweave}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{makeidx}
+
+\usepackage[colorlinks]{hyperref}
+
+% In case we're not using hyperref.sty:
+\providecommand{\texorpdfstring}[2]{#1}
+% The following can be used in \section commands
+% without generating pdf warnings:
+\newcommand{\bs}{\texorpdfstring{\char`\\}{}}
+
+\newcommand{\docversion}{2.5}
+\newcommand{\docdate}{April 27, 2016}
+%\newcommand{\docdate}{\today}
+
+%--------------------------------------------------------------------
+%
+% Changes since version 2.4 are described in the comments
+% near the beginning of the file exam.cls.
+%
+%--------------------------------------------------------------------
+
+\makeindex
+
+\newcommand{\indc}[1]{\index{#1@\texttt{\char`\\#1}}}
+\newcommand{\indcsub}[2]{\index{#1@\texttt{\char`\\#1}!#2}}
+\newcommand{\indcstart}[1]{\index{#1@\texttt{\char`\\#1}|(}}
+\newcommand{\indcstop}[1]{\index{#1@\texttt{\char`\\#1}|)}}
+
+\newcommand{\indt}[1]{\index{#1@\texttt{#1}}}
+\newcommand{\indtsub}[2]{\index{#1@\texttt{#1}!#2}}
+\newcommand{\indtstart}[1]{\index{#1@\texttt{#1}|(}}
+\newcommand{\indtstop}[1]{\index{#1@\texttt{#1}|)}}
+
+%---------------------------------------------------------------------
+\newenvironment{example}%
+   {\bigskip\filbreak
+    \subsubsection{Example:}
+   }%
+   {}
+
+\def\samplehead#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    \hbox to \textwidth{%
+      \rlap{\parbox[b]{\textwidth}{\raggedright#1\strut}}%
+      \hfil\parbox[b]{\textwidth}{\centering#2\strut}\hfil
+      \llap{\parbox[b]{\textwidth}{\raggedleft#3\strut}}%
+    }% hbox
+    #4
+  \end{trivlist}
+}
+
+\def\samplefoot#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    #1
+    \vskip 3pt
+
+    \hbox to \textwidth{%
+      \rlap{\parbox[t]{\textwidth}{\raggedright#2}}%
+      \hfil\parbox[t]{\textwidth}{\centering#3}\hfil
+      \llap{\parbox[t]{\textwidth}{\raggedleft#4}}%
+    }% hbox
+  \end{trivlist}
+}
+
+% \makeatletter
+%   \@ifundefined{AmS}{\def\AmS{{\protect\the\textfont\tw@
+%     A\kern-.1667em\lower.5ex\hbox{M}\kern-.125emS}}}
+%     {}
+% \makeatother
+
+
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+%---------------------------------------------------------------------
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{IE 0015 Information Systems Final}
+
+
+\author{Spring 2019}
+\date{\docdate}
+\maketitle
+\centering
+{\bf A}
+
+\begin{enumerate}
+\item  Write your name at the top of this page.
+\item  There are four questions (4 pages) the Toxic Release Inventory in Allegheny County from the WPRDC description (2 pages) and data dictionary (3 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  You may have a double sided sheet of paper for notes (crib sheet).
+\item  The phrase {\em describe the process} can be answered using any of the following:
+  \begin{enumerate}
+    \item Outline
+    \item Pseudocode
+    \item Flow chart/process map
+  \end{enumerate}
+  Remember, answers should be complete enough to enable a non-engineer programmer to write the program.
+\item  Answer questions in the space provided. You may also use the back of a sheet in the exam if needed.
+\item  You have 2 hours for the exam.
+\item  Staple crib sheet to the exam when you turn it in.
+\end{enumerate}
+
+\centering
+\gradetable
+
+% newpage
+
+<<echo=FALSE, warning=FALSE, message=FALSE>>=
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(readr)
+library(broom)
+library(openintro)
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2019/"
+#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+
+toxics <- read_csv(file.path(datadirectory,"toxics-release-inventory-pennsylvania-1987-2015.csv"),
+col_types = cols(`8.8_ONE-TIME_RELEASE` = col_integer(),
+`8.9_PRODUCTION_RATIO` = col_double(),
+CITY = col_double(), DOC_CTRL_NUM = col_character(),
+FRS_ID = col_character(), NAICS_2 = col_skip(),
+CITY = col_skip(),
+NAICS_3 = col_skip(), NAICS_4 = col_skip(),
+NAICS_5 = col_skip(), NAICS_6 = col_skip(),
+PARENT_COMPANY_DB_NUMBER = col_character(),
+PRIMARY_SIC = col_skip(), SIC_2 = col_skip(),
+SIC_3 = col_skip(), SIC_4 = col_skip(),
+SIC_5 = col_skip(), SIC_6 = col_skip(),
+SRS_ID = col_character(), ZIP = col_character()))
+
+toxicallegheny <- toxics %>% filter(COUNTY=="ALLEGHENY")
+
+# pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
+#     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
+#     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
+#     census_tract = col_character(),
+#     council_district = col_character(),
+#     incident_type = col_character(),
+#     pli_division = col_character(), police_zone = col_character(),
+#     public_works_division = col_character(),
+#     tract = col_character(), ward = col_character())
+# )
+# 
+# pittsburgh_PLI_violations <- read_csv(file.path(datadirectory, "pittsburgh_PLI_violations.csv"),
+#     col_types = cols(COUNCIL_DISTRICT = col_character(),
+#     PLI_DIVISION = col_character(), POLICE_ZONE = col_character(),
+#     PUBLIC_WORKS_DIVISION = col_character(),
+#     STREET_NUM = col_character(), TRACT = col_character(),
+#     WARD = col_character(), `_id` = col_character())
+# )
+@
+
+
+<<echo=FALSE, warning=FALSE, message=FALSE>>=
+toxicallegheny <- toxicallegheny %>%
+  mutate()
+@
+\begin{questions}
+\question [25]
+Pittsburgh 9th district
+
+Rev. Ricky Burgess is the City Councilman for Pittsburgh's 9th district, which includes the neighborhoods of East Liberty, Homewood, East Hills, Friendship, Garfield, Point Breeze, and Larimer on Pittsburgh's East side.  He believes that one obstical to development in Pittsburgh's east side are property owners who neglect maintaining their property and that this neglect is also seen in fires. Investigating these properties may lead to getting these properties being put on the market for purchase by owners who are more interested in putting these properties to productive use through either encouraging neglectful land ownders to put the property on the market or outright seizure for violations of a range of ordinances.
+
+\begin{parts}
+
+\part Write a CoNVO statement that corresponds to this narrative.
+
+\begin{solution}[4.7in]
+
+\begin{itemize}
+  \item Context - Concilman Burgess is concerned with economic development in his district and thinks that PLI violations are a sign of neglect and such properties should be considered for seizure.
+  \item Need - Demonstrate a relationship between PLI violations and fires.
+  \item Vision - Show relationship between number of violations and the probability of a fire for a property.
+  \item Outcome - Identify properties with many violations and refer them to City agencies for additional inspection or seizure.
+\end{itemize}
+
+\end{solution}
+
+\end{parts}
+
+
+% newpage
+\question [25]
+Commercial property insurance
+
+Insurance companies sell policies to commercial property owners so that in the case of major damage such as a fire the property owners will have resources to repair their property. 
+The insurance company wants to set rates so that in the long run, they receive more in insurance premiums (rates) than they pay out in claims. 
+However, if they set premiums too high, competitors can charge less and still make a long term profit.
+An insurance company believes that a history of permits, licensing, and inspection violations as well as major and minor fire incidents should be used to adjust premiums.  
+
+\begin{parts}
+
+\part Write a CoNVO statement that corresponds to this narrative.
+
+\begin{solution}[4.7in]
+
+\begin{itemize}
+  \item Context - An insurance company gives competive quotes on insurance policies but need to ensure it covers the expected long term cost for paying out claims.
+  \item Need - relationship between PLI violations and the risk of fires.
+  \item Vision - Based on PLI violations and other data, what is the risk of fire for a property.
+  \item Outcome - Use risk of fire to help in setting insurance rates.
+\end{itemize}
+
+\end{solution}
+
+\end{parts}
+
+\question 
+Fires and PLI
+
+\begin{parts}
+\part[10] What follows are the top ten types of fires in the Pittsburgh fire incidents databases.  Draw the process map that generates this list. (Note: "Type" is "type\_description" in the Pittsburgh fire database)
+
+<<echo = FALSE, warning=FALSE, message=FALSE>>=
+names(pittsburgh_fire_incidents)[which(names(pittsburgh_fire_incidents) == "type_description")] <- "Type"
+pittsburgh_fire_incidents %>%
+  group_by(Type) %>%
+  summarize(number=n()) %>%
+  arrange(desc(number)) %>%
+  head(10)
+@
+
+\part[10]  Because your client is only interested in property neglect fires, he is not interested in cooking or interior fires.  Draw the processmap that identifies all fires that involve a building, structure,or trash. Note: look for the words "building", "structure", or "trash" in the Type description. Check the list above to make sure you cover all cases.
+
+\part[10]  Notice that the addresses in the fire and incidents databases are recorded differently (see example in attachement. Note that they should indicate a match when you are done).  Draw a process map that will convert the addresses so that they do match each other.  Note that addresses ending in "00" indicate that it is not an exact address, but identifies the block on the street.  (i.e. when you are done, the field(s) with the address will match using `join` commands that identify equalities)
+
+\end{parts}
+
+\begin{solution}[2in]
+
+
+
+<<warning=FALSE, message=FALSE>>=
+keywordsregex <- "[B|b]uilding|[S|s]tructure|[T|t]rash"
+streetnumberregex <- "^\\d|"
+pittsburgh_building <- pittsburgh_fire_incidents %>%
+  filter(str_detect(Type, keywordsregex),
+         !str_detect(address, "\\&")) %>%
+  mutate(STREET_NUM= str_extract(address, "[:digit:]+(?=[:space:])"),
+         STREET_NAME = str_extract(address, "(?<=BLOCK[:space:])[[:alpha:]+[:space:]]*(?=,)"),
+         block_num=floor(as.numeric(STREET_NUM)/100)*100)
+@
+
+From the fire incidents data
+
+From the Pittsburgh Fire data
+i. Search for any of the words (includine possibility of initial capital) within the type description.
+ii. Include row if one of the words is available
+iii. Pull out the number at the beginning of `address` if available and call this STREET\_NUM.
+iv.  Skip the word 'BLOCK'
+v. Pull remainder of street name after BLOCK up to the comma and call this STREET\_NAME
+
+From PLI data
+i. In address, round to nearest 100
+
+Join Fire data on PLI data using rounded number and street name.
+\end{solution}
+
+
+
+
+\question 
+
+Duke GPA
+
+A survey of 55 Duke University students asked about their GPA, number of hours
+they study at night, number of nights they go out, and their gender.
+
+<<warning=FALSE, message=FALSE>>=
+library(openintro)
+data(gpa)
+gpa_lm1 <- lm(gpa ~ studyweek, data=gpa)
+tidy(gpa_lm1)
+@
+
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+par(mfrow=c(2,2))
+plot(gpa_lm1)
+par(mfrow=c(1,1))
+title("Diagnostic plots")
+@
+
+\begin{parts}
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the linear regression summary table.
+\part[10]  The three other variables collected were number of hours the students slept per night, number of nights they go out, and gender. (note that `studyweek` is already in the model)  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+gpa$residulas <- gpa_lm1$residuals
+gpaplot <- ggplot(gpa, aes(y=residulas))
+d1 <- gpaplot + geom_point(aes(x=studyweek))
+d2 <- gpaplot + geom_point(aes(x=sleepnight))
+d3 <- gpaplot + geom_point(aes(x=out))
+d4 <- gpaplot + geom_point(aes(x=gender))
+multiplot(d1, d2, d3, d4, cols=2)
+@
+\end{parts}
+
+\begin{solution}[2in]
+a. The study week has a high p-value, so it is likely not informative.  The residuals vs fitted looks good.  The qqplot is questionable.
+
+b. None of the variables look very good.  Hours of sleep per night could make the arguement that the extreme low end disappears as hours increases so that could be a candidate.
+\end{solution}
+
+% newpage
+\question Body measurements of active individuals 
+
+Researchers studying anthropometry collected body girth measurements and skeletal diameter measurements, as well as age, weight, height and gender for 507 physically active individuals.  Below is the result for a model relating the weight measured in kilograms and the hip girth measured in centimeters.
+
+<<warning=FALSE, message=FALSE>>=
+data(bdims)
+bdims_lm <- lm(wgt ~ hip.gi, data=bdims)
+tidy(bdims_lm)
+@
+
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+par(mfrow=c(2,2))
+plot(bdims_lm)
+par(mfrow=c(1,1))
+title("Diagnostic plots")
+@
+
+\begin{parts}
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the linear regression summary table.
+\part[10]  Four other variables collected were the waist girth, chest girth, shoulder girth, and thigh girth  Below are the sorted residual plots. Which variable(s) should be added to the model and why?
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+bdims$residuals <- bdims_lm$residuals
+bdimsplot <- ggplot(bdims, aes(y=residuals)) + ylab("Weight (kg)")
+b1 <- bdimsplot + geom_point(aes(x=wai.gi)) + xlab("Waist girth (cm)") + ggtitle("Residuals by waist girth")
+b2 <- bdimsplot + geom_point(aes(x=che.gi)) + xlab("Chest girth (cm)") +ggtitle("Residuals by chest girth")
+b3 <- bdimsplot + geom_point(aes(x=sho.gi)) + xlab("Shoulder girth (cm)") +ggtitle("Residuals by shoulder girth")
+b4 <- bdimsplot + geom_point(aes(x=thi.gi)) + xlab("Thigh girth (cm)") +ggtitle("Residuals by thigh girth")
+multiplot(b1, b2, b3, b4, cols=2)
+@
+\end{parts}
+
+\begin{solution}[2in]
+a. The hip girth looks significant based on p-value. For the diagnostic plots, all of the plots do not seem that good. 
+The qq plot is off. Scale-location is not flat. Cook's distance identifies outliers.
+
+b. Waist, shoulder, and chest girth all look significant as the residual plots show trends.  Thigh does not.  Potentially, it is correlated with hip as they are close to each other.
+\end{solution}
+
+
+% newpage
+\question Analytics skills of gifted children
+
+An investigator is interested in understanding the relationship, if any, between the analytical skills of young gifted children and the following variables: father's IQ, mother's IQ, age in month when the child first said ‘mummy’ or ‘daddy’, age in month when the child first counted to 10 successfully, average number of hours per week the child's mother or father reads to the child, average number of hours per week the child watched an educational program on TV during the past three months, average number of hours per week the child watched cartoons on TV during the past three months. The analytical skills are evaluated using a standard testing procedure, and the score on this test is used as the response variable.
+
+Data were collected from schools in a large city on a set of thirty-six children who were identified as gifted children soon after they reached the age of four.  Below is a regression model looking at analytical skills test score as a function of the mother's IQ along with the diagnostic plots.
+
+
+
+<<warning=FALSE, message=FALSE>>=
+data(gifted)
+gifted_lm <- lm(score ~ motheriq, data=gifted)
+tidy(gifted_lm)
+@
+
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+par(mfrow=c(2,2))
+plot(gifted_lm)
+par(mfrow=c(1,1))
+title("Diagnostic plots for analytical score vs Mother's IQ")
+@
+
+\begin{parts}
+\part[10]  Comment on the quality of the model given the four diagnostic plots and the linear regression summary table.
+\part[10]  Four other variables collected were the father's IQ (fathersiq), average number of hours per week the child's parents read  to the child (read), average number of hours per week the child watched educational programming on TV (edutv), and the average number of hours per week the child watched cartoons (cartoons). Which variable(s) should be added to the model and why?
+
+<<echo = FALSE, warning=FALSE, message=FALSE, fig=TRUE>>=
+gifted$residuals <- gifted_lm$residuals
+giftedplot <- ggplot(gifted, aes(y=residuals)) + ylab("Score") 
+g1 <- giftedplot + geom_point(aes(x=fatheriq)) + xlab("Father's IQ") + ggtitle("Residuals by father's IQ")
+g2 <- giftedplot + geom_point(aes(x=read)) + xlab("Reading (hours per day)") +ggtitle("Residuals by hours of reading")
+g3 <- giftedplot + geom_point(aes(x=edutv)) + xlab("Educational TV (hours per day)") +ggtitle("Residuals by hours of educational tv")
+g4 <- giftedplot + geom_point(aes(x=cartoons)) + xlab("Cartoons (hour per day)") +ggtitle("Residuals by hours of cartoons ")
+multiplot(g1, g2, g3, g4, cols=2)
+@
+\end{parts}
+
+\begin{solution}[4in]
+a.  Mother's iq has a very low p-value so it is significant.  All plots are roughly right, so you would not reject the model, but it could be improved.
+
+b.  Hours of reading is the most promising candidate. Next is father's iq.  Hours on educational or cartoon programming are not promising.
+\end{solution}
+
+% newpage
+\question Heart transplant success.
+
+The Stanford University Heart Transplant Study was conducted to determine whether an experimental heart transplant program increased lifespan. Each patient entering the program was officially designated a heart transplant candidate, meaning that he was gravely ill and might benefit from a new heart. 
+Patients were randomly assigned into treatment and control groups. Patients in the treatment group received a transplant, and those in the control group did not. The table below displays how many patients survived and died in each
+group.
+
+<<echo=FALSE>>=
+heart <- data.frame(outcome=c("alive", "dead"),
+                    control=c(6, 22),
+                    treatment=c(24, 51))
+heart
+@
+
+
+\begin{parts}
+\part[10]  Write a process map that will allow you to answer the question if receiving a transplant was more likely to survive than not receiving a transplant using simulation to the 5\% significance level.
+
+\part[5] Write the null and alternative hypothesis for this question (from (a)).
+
+\part[10] This figure is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
+
+
+
+<<echo=FALSE, fig=TRUE>>=
+#VERSION D
+set.seed(1234)
+pControl <- 6./28
+heartsim <- function(i){
+              control <- sum(sample(x=c(1,0), 
+                            size=75, prob = c(pControl, 1-pControl), 
+                            replace = TRUE))
+}
+heartout <-sapply(1:10000, heartsim)
+tailnulltrue <- length(heartout[heartout > 24])/length(heartout)
+#iint(tailnulltrue)
+hist(heartout, breaks = 36, main = "Simulation of heart transplant study", xlab = "Survived", xlim=c(0, 35))
+@
+
+
+\begin{solution}[3in]
+a. Process map:
+\begin{enumerate}
+  \item  Calculate the probability of a member of the control group surviving.
+  \item  Create a simulation that draws samples of the same size as the treatment group, with the probability of yes being the same as the control group.
+  \item  Rerun that simulation 10000 times
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the treatment group that survived
+  \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
+\end{enumerate}
+
+b.  H0: The treatment group has the same probability of survival as the control group.
+    H1: The treatment group has a better probability of survival as the control group.
+
+c.  Draw a line on the histogram corresponding to the number of people in the treatment group that survived (24)
+\end{solution}
+\end{parts}
+
+
+% newpage
+\question The Daily Show
+.
+A 2010 Pew Research foundation poll indicates that among 1,099 college graduates, 33\% watch The Daily Show. Meanwhile, 22\% of the 1,110 people with a high
+school degree but no college degree in the poll watch The Daily Show.
+
+
+
+<<echo=FALSE>>=
+dailyshow <- data.frame(outcome=c("Watch", "no watch"),
+                    college=c(366, 733),
+                    hs=c(294, 816))
+dailyshow
+@
+
+
+\begin{parts}
+\part[10]  Write a process map that will allow you to answer the question if the proportion of people with college degrees that watch The Daily Show is different from the proportion of people without college degrees (HS or less) that watch the Daily Show using simulation to the 5\% significance level.
+\part[5] Write the null and alternative hypothesis for this question (from (a)).
+\part[10] This figure is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
+
+
+
+<<echo=FALSE, fig=TRUE>>=
+#VERSION D
+set.seed(1234)
+pControl <- 294./1110
+dailysim <- function(i){
+              control <- sum(sample(x=c(1,0), 
+                            size=1099, prob = c(pControl, 1-pControl), 
+                            replace = TRUE))
+}
+dailyout <-sapply(1:10000, dailysim)
+tailnulltrue <- length(dailyout[dailyout > 366])/length(dailyout)
+#iint(tailnulltrue)
+hist(dailyout, breaks=30, main = "Simulation of 1099 college students watching The Daily Show", xlab = "Watchers")
+@
+
+
+\begin{solution}[3in]
+a. Process map:
+\begin{enumerate}
+  \item  Calculate the probability of a member of the control group (HS) watching the Daily Show.
+  \item  Create a simulation that draws samples of the same size as the treatment group (college), with the probability of yes being the same as the control group (HS).
+  \item  Rerun that simulation 10000 times
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the college group that watch The Daily Show.
+  \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
+\end{enumerate}
+
+b.  H0: The College group has the same probability of watching The Daily show as the High school group.
+    H1: The College group has a higher probability of watching The Daily show as the High school group.
+
+c.  Draw a line on the histogram corresponding to the number of people in the college group that watch The Daily Show (366)
+\end{solution}
+\end{parts}
+
+% newpage
+\question Offshore drilling in California
+
+A 2010 survey asked 827 randomly sampled registered voters in California "Do you support? Or do you oppose? Drilling for oil and natural gas off the Coast of
+California? Or do you not know enough to say?" 
+Below is the distribution of responses, separated based on whether or not the respondent graduated from college.
+
+
+
+<<echo=FALSE>>=
+oil <- data.frame(outcome=c("Support", "Oppose", "Do not know"),
+                    college=c(154, 180, 104),
+                    no_college=c(132, 126, 131))
+oil
+@
+
+
+\begin{parts}
+\part[10]  Write a process map that will allow you to conduct a hypothesis test to determine if the data provide strong evidence that the proportion
+of college graduates who support off-shore drilling in California is different than that of non-college graduates. using simulation to the 5\% significance level.
+\part[5] Write the null and alternative hypothesis for this question (from (a)).
+\part[10] This figure is the output of a Monte Carlo simulation designed to answer the question in (a).  Interpret this histogram. State what you need to know in order to interpret the histogram and represent it on the histogram.
+
+
+
+<<echo=FALSE, fig=TRUE>>=
+#VERSION D
+set.seed(1234)
+pControl <- 132./389
+oilsim <- function(i){
+              control <- sum(sample(x=c(1,0), 
+                            size=sum(oil$college), prob = c(pControl, 1-pControl), 
+                            replace = TRUE))
+}
+oilout <-sapply(1:10000, oilsim)
+tailnulltrue <- length(oilout[oilout > 154])/length(oilout)
+#iint(tailnulltrue)
+hist(oilout, breaks=30, main = "Simulation of 438 college students asked if they support off shore drilling in California", xlab = "Watchers")
+@
+
+
+\begin{solution}[3in]
+a. Process map:
+\begin{enumerate}
+  \item  Calculate the probability of a member of the control group (HS) watching the Daily Show.
+  \item  Create a simulation that draws samples of the same size as the treatment group (college), with the probability of yes being the same as the control group (HS).
+  \item  Rerun that simulation 10000 times
+  \item  Identify the point on the CDF/Histogram that corresponds to the actual proportion of people in the college group that watch The Daily Show.
+  \item  The tail probability at that point is the p-value for the probability of that observation occurring if the null hypothesis is true.
+\end{enumerate}
+
+b.  H0: The College group has the same probability of supporting off shore drilling as the non-college graduates.
+    H1: The College group has a different probability of supporting off shore drilling as the non-college graduates.
+
+c.  Draw a line on the histogram corresponding to the number of people in the college group that supporting off shore drilling  (154)
+
+\end{solution}
+\end{parts}
+
+\end{questions}
+\end{document}

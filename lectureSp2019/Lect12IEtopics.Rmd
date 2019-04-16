@@ -76,7 +76,7 @@ Graphic User Interfaces
     - http://www.rcommander.com/
 
 ```{r}
-library(Rcmdr)
+#library(Rcmdr)
 ```
 
 R Commander
@@ -95,8 +95,7 @@ R Commander extensions
 -  Most extensions were written by textbook authors
 -  Result is a GUI statistics package that is the convex hull of topics in the first few statistics courses.
 ```{r}
-library(RcmdrPlugin.IPSUR)
-library(RcmdrPlugin.HH)
+#library(RcmdrPlugin.HH)
 ```
 
 GUI for machine learning
@@ -486,14 +485,13 @@ set.seed(1234)
 parkingtime = 2
 
 env <- simmer("ParkingSimulation")
-arrival <- create_trajectory("Car path") %>%
+arrival <- trajectory("Car path") %>%
   seize("parking", 1) %>%
   timeout(function() rexp(1, 1/parkingtime)) %>%
   release("parking", 1)
 env %>%
   add_resource("parking", capacity = 100, mon=TRUE) %>%
   add_generator("arrival", arrival, function() rexp(1, 25))
-
 env %>% run(until= (24))
 ```
 
@@ -522,7 +520,7 @@ Output summaries
 -  Then, apply statistical techniques to quantify the performance of the system.
 
 ```{r}
-plot(env, what = "resources", names = "parking", metric = "usage", steps = TRUE)
+plot(get_mon_resources(env))
 ```
 
 
@@ -547,6 +545,5 @@ envs <- lapply(1:30, function(i) {
 
 
 ```{r}
-
-plot(envs, what = "resources", names = "parking", metric = "usage", steps = TRUE)
+plot(get_mon_resources(envs))
 ```
