@@ -1,0 +1,145 @@
+---
+title: "ToxicData"
+author: "Louis Luangkesorn"
+date: "April 17, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(stringr)
+library(lubridate)
+library(ggplot2)
+library(readr)
+library(broom)
+library(openintro)
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+```{r}
+datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2019/"
+#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+
+toxics <- read_csv(file.path(datadirectory,"toxics-release-inventory-pennsylvania-1987-2015.csv"),
+col_types = cols(`8.8_ONE-TIME_RELEASE` = col_double(),
+`8.9_PRODUCTION_RATIO` = col_double(),
+CITY = col_double(), DOC_CTRL_NUM = col_character(),
+FRS_ID = col_character(), NAICS_2 = col_skip(),
+CITY = col_skip(),
+NAICS_3 = col_skip(), NAICS_4 = col_skip(),
+NAICS_5 = col_skip(), NAICS_6 = col_skip(),
+PARENT_COMPANY_DB_NUMBER = col_character(),
+PRIMARY_SIC = col_skip(), SIC_2 = col_skip(),
+SIC_3 = col_skip(), SIC_4 = col_skip(),
+SIC_5 = col_skip(), SIC_6 = col_skip(),
+SRS_ID = col_character(), ZIP = col_character()))
+
+toxicallegheny <- toxics %>% filter(COUNTY=="ALLEGHENY")
+```
+
+
+```{r}
+toxicalleghenyyearly <- toxicallegheny %>%
+  mutate(TOTAL_RELEASES = (`8.1_RELEASES` + `8.1A_ON-SITE_CONTAINED_REL.`+ `8.1B_ON-SITE_OTHER_RELEASES` +
+                                `8.1C_OFF-SITE_CONTAINED_REL.`+`8.1D_OFF-SITE_OTHER_RELEASES`),
+         TOTAL_RECOVERY = (`8.2_ENERGY_RECOVERY_ON-SITE`+`8.3_ENERGY_RECOVERY_OFF-SITE`),
+         TOTAL_RECYCLE = (`8.4_RECYCLING_ON-SITE`+`8.5_RECYCLING_OFF-SITE`),
+         TOTAL_TREATMENT = (`8.6_TREATMENT_ON-SITE`+`8.7_TREATMENT_OFF-SITE`),
+         TOTAL_ONE_TIME = (`8.8_ONE-TIME_RELEASE`)) %>%
+  group_by(YEAR) %>%
+  summarize(Releases = sum(TOTAL_RELEASES, na.rm = TRUE), 
+            Energy_recovery = sum(TOTAL_RECOVERY, na.rm = TRUE),
+            Recycle = sum(TOTAL_RECYCLE, na.rm = TRUE),
+            Treatment = sum(TOTAL_TREATMENT, na.rm = TRUE),
+            Onetime = sum(TOTAL_ONE_TIME, na.rm = TRUE))
+```
+
+
+```{r}
+ggplot(toxicalleghenyyearly, aes(x=YEAR)) + geom_line(aes(y=Releases), color="black") +
+                                       geom_line(aes(y=Energy_recovery), color="blue") +
+                                       geom_line(aes(y=Recycle), color="green") +
+                                       geom_line(aes(y=Treatment), color="purple") +
+                                        geom_line(aes(y=Onetime), color="red")
+
+```
+
+
+CoNVO 1:  Clean Water Action
+
+*There is growing concern surrounding contamination by per- and polyfluoroalkyl substances (PFAS). The issue blew open in Pennsylvania in 2014 when the chemicals were discovered at unsafe amounts in local drinking water wells in Bucks and Montgomery Counties. The scope of the problem has grown since then with the Pennsylvania Department of Environmental Protection also identifying at least 20 other contamination sites in the state, including two near Pittsburgh at Pittsburgh Air National Guard in Moon Township and Pittsburgh Air Reserve Station in Coraopolis.
+
+PFAS chemicals have been used in consumer products and fire-fighting foam on industrial sites and military bases. Exposure is associated with health impacts including cancer, thyroid disease, ulcerative colitis and birth defects.*
+
+Clean Water Action is interested in the toxic releases in Allegheny County by the chemicals industry (identified through the Industry_Sector field), their forms (release, energy recovery, treatment, recycling, identified in 8.x), and locations within Allegheny County.
+
+a. Write a CoNVO statement that covers this.
+
+1. Clean Air Council
+
+The Clean Air Council is a member-supported environmental organization serving the Mid-Atlantic Region. The Council is dedicated to protecting and defending everyone’s right to a healthy environment. The Council works through a broad array of related sustainability and public health initiatives, using public education, community action, government oversight, and enforcement of environmental laws.  They have published the following statement:
+
+*There are a lot of reasons to love Pittsburgh in the center of Allegheny County, but their air pollution is not one of them. Pittsburgh is one of the most up and coming cities in the country but it is also consistently ranked in the top counties for air pollution by the American Lung Association in their State of the Air reports.
+
+In the 2016 State of the Air report, the region landed as the 8th worst in the country for year-round measures on fine particle pollution (or soot), and the 14th worst for short-term particle pollution (the number of days with unhealthy particle levels when air quality is especially dangerous). Pittsburgh also ranked 26th worst in the nation for smog from ground level ozone. Asthma rates for the Pittsburgh region, especially children, exceed the national average and air pollution plays a big role in that.
+
+Pittsburgh has made improvements from the industrial days of the past, but there is still a long way to go before the air is truly clean and safe for all Pittsburghers.
+
+There’s no one single cause to Pittsburgh’s poor air quality. Rather, the region’s legacy as an industrial center has resulted in numerous major sources of air pollution.*
+
+The Clean Air Council wished to depict the major sources of air pollution (Clean Air Act Chemical), their INDUSTRY_SECTOR, location, and how they have changed over the past decade (10 years). (facilities are identfied by TRI_FACILITY_ID and FACILITY_NAME.
+
+
+a. Write a CoNVO statement that covers this.
+
+

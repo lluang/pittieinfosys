@@ -215,7 +215,12 @@ toxicallegheny <- toxics %>% filter(COUNTY=="ALLEGHENY")
 
 <<echo=FALSE, warning=FALSE, message=FALSE>>=
 toxicallegheny <- toxicallegheny %>%
-  mutate()
+  mutate(TOTAL_RELEASES = sum(`8.1_RELEASES` + `8.1A_ON-SITE_CONTAINED_REL.`+ `8.1B_ON-SITE_OTHER_RELEASES` +
+                                `8.1C_OFF-SITE_CONTAINED_REL.`+`8.1D_OFF-SITE_OTHER_RELEASES`),
+         TOTAL_RECOVERY = sum(`8.2_ENERGY_RECOVERY_ON-SITE`+`8.3_ENERGY_RECOVERY_OFF-SITE`),
+         TOTAL_RECYCLE = sum(`8.4_RECYCLING_ON-SITE`+`8.5_RECYCLING_OFF-SITE`),
+         TOTAL_TREATMENT = sum(`8.6_TREATMENT_ON-SITE`+`8.7_TREATMENT_OFF-SITE`),
+         TOTAL_ONE-TIME = sum(`8.8_ONE-TIME_RELEASE`))
 @
 \begin{questions}
 \question [25]
