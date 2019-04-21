@@ -5,11 +5,7 @@ date: "April 17, 2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(magrittr)
@@ -20,55 +16,11 @@ library(ggplot2)
 library(readr)
 library(broom)
 library(openintro)
-# Multiple plot function
-#
-# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
-# - cols:   Number of columns in layout
-# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
-#
-# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
-# then plot 1 will go in the upper left, 2 will go in the upper right, and
-# 3 will go all the way across the bottom.
-#
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
 
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-
-  numPlots = length(plots)
-
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                    ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-
- if (numPlots==1) {
-    print(plots[[1]])
-
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
 ```
-```{r}
-datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2019/"
-#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+```{r, error=FALSE, message=FALSE, echo=FALSE, warning=FALSE}
+#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2019/"
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2019/"
 
 toxics <- read_csv(file.path(datadirectory,"toxics-release-inventory-pennsylvania-1987-2015.csv"),
 col_types = cols(`8.8_ONE-TIME_RELEASE` = col_double(),
@@ -88,7 +40,7 @@ toxicallegheny <- toxics %>% filter(COUNTY=="ALLEGHENY")
 ```
 
 
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 toxicalleghenyyearly <- toxicallegheny %>%
   mutate(TOTAL_RELEASES = (`8.1_RELEASES` + `8.1A_ON-SITE_CONTAINED_REL.`+ `8.1B_ON-SITE_OTHER_RELEASES` +
                                 `8.1C_OFF-SITE_CONTAINED_REL.`+`8.1D_OFF-SITE_OTHER_RELEASES`),
@@ -141,5 +93,102 @@ The Clean Air Council wished to depict the major sources of air pollution (Clean
 
 
 a. Write a CoNVO statement that covers this.
+
+PennEnvironment is a statewide, citizen-based environmental advocacy organization. We believe there’s something special about Pennsylvania — something worth protecting and preserving for future generations. 
+
+Much of the industrial air pollution in Pittsburgh’s Allegheny County comes from just 10 industrial facilities that are responsible for 83% of the toxic air pollution reported by industry in the region--They’re known as the Pittsburgh Toxic Ten.
+
+For example, one of the worst offenders is the Shenango Coke Works. This polluting behemoth recently violated its Clean Air Act permits 330 times in a 432 day period—essentially 3 out of every four days.
+
+Many communities located near or downwind from these polluting facilities have been fighting to get them to reduce their pollution and clean up their act for years. 
+
+PennEnvironment is evaluating its strategy that focuses on the top 10 industrial facilities responsible for most of the air pollution in Allegheny County. They want to know if their efforts have led to change over time through changing the quantity of releases compared to other methods of handling waste (energy recovery, treatment or recycling). Note: the field Clean Air Act Chemical identifies toxic substances that effect air pollution.
+
+a.  Write an appropriate CoNVO statement for this.
+
+2.  Baby weight
+
+The Child Health an Development Studies investigate a range of topics. One study considered all pregnancies between 1960 and 1967 among women in the Kaiser Foundation Health Plan in the San Francisco East Bay area. They recorded birthweight (ounces), gestation (length of pregnancy in days), parity (if first born), age (mother's age in years), height (mother's height in inches),  weight (mother's weight in pounds), and smoke (if mother is a smoker).
+
+a. Interpret and compare the two models below: one which looks at `smoke` and one that looks at `parity`
+
+```{r }
+babies <- read_csv("C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/os3_data/Ch 8 Exercise Data/babies.csv")
+babies <- babies[complete.cases(babies),]
+smokelm <- lm(bwt ~ smoke, data=babies)
+summary(smokelm)
+par(mfrow = c(2,2))
+plot(smokelm)
+par(mfrow=c(1,1))
+```
+
+```{r }
+paritylm <- lm(bwt ~ parity, data=babies)
+summary(paritylm)
+
+par(mfrow = c(2,2))
+plot(paritylm)
+par(mfrow=c(1,1))
+```
+
+b. You are considering adding one of `gestation`, `age`, `height`, or `weight` to the linear regression model that includes both `smoke` and `parity` from part a. Below is the new linear model and the residual plots based on the candidate variables to be added.  Compare the new model to the models in (a) and comment.
+
+```{r}
+babieslm <- lm(bwt ~ smoke + parity, babies)
+summary(babieslm)
+```
+
+c. Below are the residual plots for the four candidate variables.  For each, explain if you would add this to the model and why.
+
+```{r}
+plot(babies$gestation, babieslm$residuals)
+```
+
+```{r}
+plot(babies$gestation, babieslm$residuals)
+```
+
+```{r}
+plot(babies$age, babieslm$residuals)
+```
+
+```{r}
+plot(babies$height, babieslm$residuals)
+```
+
+```{r}
+plot(babies$weight, babieslm$residuals)
+```
+
+
+3. Prenatal vitamins and autism
+
+Researchers studying the link between prenatal vitamin use and autism surveyed the mothers of a random sample of children aged 24-60 months with autism and conducted another separate random sample for children with typical development. The table below shows the number of mothers in each group who did and did not use prenatal vitamins during the three months before pregnancy.
+
+periconceptual vitamins  |  Autism  | Typical development | total
+-----+----------+---------------------+------
+No vitamin | 111 | 70 | 181
+Vitamin | 143 | 159 | 302 
+-----+----------+---------------------+------
+Total | 254 | 229  | 302
+
+a.  State appropriate hypthesis to test for independence of the use of prenatal vitamins during the periconceptional period (three months before pregnancy)
+
+b. Present a flowchart that implements bootstrap simulation with 10000 replications to test if using prenatal vitamins during the three months before pregnancy reduces the incidence of autism.  Note: if you need a calculation, you may define a variable to be the result of the calculation for use. e.g. $a=3/4$.  Your answer must include any use of data as well as how a final hypothesis test will be completed.
+
+c.  Below is the result of the hypothesis test in b.  Discuss the conclusion you would draw.  Draw on the diagram as needed. Use a standard of *alpha = 0.05*.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+pautismnone = 111/181
+autismsim <- function(i){
+              successes <- sum(sample(x=1:0, size = 302, replace=TRUE, prob=c(pautismnone, (1-pautismnone))))
+}
+autismout <-sapply(1:10000, autismsim)
+```
+
+
+```{r}
+hist(autismout, breaks = 100, main = "Distribution of autism in simulation", xlab="Number of instances", xlim=c(120, 230))
+```
 
 
