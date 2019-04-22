@@ -1,5 +1,5 @@
-%\documentclass[12pt, addpoints]{exam}
-\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, addpoints]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
 \usepackage{Sweave}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -91,13 +91,13 @@
 \author{Spring 2019}
 \maketitle
 \centering
-{\bf A}
+{\bf C}
 \begin{solution}
 SOLUTION
 \end{solution}
 \begin{enumerate}
 \item  Write your name at the top of this page.
-\item  There are four questions (8 pages) the Toxic Release Inventory in Allegheny County from the WPRDC description (2 pages) and data dictionary with map (3 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  There are four questions (8 pages) the Toxic Release Inventory in Allegheny County from the WPRDC fact sheet (2 pages) and data dictionary with map (4 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
 \item  You may have a double sided sheet of paper for notes (crib sheet).
 \item  The phrase {\em describe the process} can be answered using any of the following:
   \begin{enumerate}
@@ -222,73 +222,6 @@ toxicallegheny <- toxicallegheny %>%
 @
 \begin{questions}
 \newpage
-\question [20]
-CoNVO 1:  Clean Water Action
-
-There is growing concern surrounding contamination by per- and polyfluoroalkyl substances (PFAS). The issue blew open in Pennsylvania in 2014 when the chemicals were discovered at unsafe amounts in local drinking water wells in Bucks and Montgomery Counties. The scope of the problem has grown since then with the Pennsylvania Department of Environmental Protection also identifying at least 20 other contamination sites in the state, including two near Pittsburgh at Pittsburgh Air National Guard in Moon Township and Pittsburgh Air Reserve Station in Coraopolis.
-
-PFAS chemicals have been used in consumer products and fire-fighting foam on industrial sites and military bases. Exposure is associated with health impacts including cancer, thyroid disease, ulcerative colitis and birth defects.
-
-Clean Water Action is interested in the toxic releases in Allegheny County by the chemicals industry (identified through the Industry\_Sector field = `Chemicals`), their forms (release, energy recovery, treatment, recycling, identified in 8.x), and locations within Allegheny County.
-
-\begin{parts}
-\part Write an appropriate CoNVO statement for Clean Water Action.
-\end{parts}
-
-\newpage
-\question [25]  Clean Water Action wants to identify the 10 largest pollution locations in the Chemical industry.  However, these facilities are actually complexes, so there are multiple addresses on the same street with the same corporate owner (in Facility Name.  Here is an example of the items in Facility\_Name and Street\_Address.
-
-<<r, echo=FALSE, warning=FALSE, message=FALSE>>=
-head(toxicallegheny$FACILITY_NAME)
-head(toxicallegheny$STREET_ADDRESS)
-@
-\begin{parts}
-\part Assume that you have a function, \texttt{findmunicipality(lat, long)}, that can identify the municipality and council district that a given latitude and longitude falls into.  Write a process map that can calculate the total releases by the Chemical industry by facility and list the top 10 in rank order (largest first).  A facility is identified as all locations with the same owner (FACILITY\_NAME), Street (note: you cannot use STREET\_ADDRESS as is), and council district.
-\end{parts}
-
-\newpage
-\question [20] Clean Air Council
-
-The Clean Air Council is a member-supported environmental organization serving the Mid-Atlantic Region. The Council is dedicated to protecting and defending everyone’s right to a healthy environment. The Council works through a broad array of related sustainability and public health initiatives, using public education, community action, government oversight, and enforcement of environmental laws.  They have published the following statement:
-
-There are a lot of reasons to love Pittsburgh in the center of Allegheny County, but their air pollution is not one of them. Pittsburgh is one of the most up and coming cities in the country but it is also consistently ranked in the top counties for air pollution by the American Lung Association in their State of the Air reports.
-
-In the 2016 State of the Air report, the region landed as the 8th worst in the country for year-round measures on fine particle pollution (or soot), and the 14th worst for short-term particle pollution (the number of days with unhealthy particle levels when air quality is especially dangerous). Pittsburgh also ranked 26th worst in the nation for smog from ground level ozone. Asthma rates for the Pittsburgh region, especially children, exceed the national average and air pollution plays a big role in that.
-
-Pittsburgh has made improvements from the industrial days of the past, but there is still a long way to go before the air is truly clean and safe for all Pittsburghers.
-
-There’s no one single cause to Pittsburgh’s poor air quality. Rather, the region’s legacy as an industrial center has resulted in numerous major sources of air pollution.
-
-The Clean Air Council wished to depict the major sources of air pollution (Clean Air Act Chemical), their INDUSTRY\_SECTOR, location, and how they have changed over the past decade (10 years). (facilities are identified by TRI\_FACILITY\_ID and FACILITY\_NAME.
-
-\newpage
-\question [25]
-2.  The Clean Air Council wants to identify the 10 largest Clean Air Act Chemical pollution facilities.  However, these facilities are actually complexes, so there are multiple addresses on the same street with the same corporate owner (in Facility Name.  Here is an example of the items in Facility\_Name and Street\_Address.
-
-<<r, echo=FALSE, warning=FALSE, message=FALSE>>=
-head(toxicallegheny$FACILITY_NAME)
-head(toxicallegheny$STREET_ADDRESS)
-@
-
-\begin{parts}
-\part Assume that you have a function, \texttt{findmunicipality(lat, long)}, that can identify the municipality (city or town) that a given latitude and longitude falls into.  Write a process map that can calculate the total releases of Clean Air Act Chemicals by facility and list the top 10 in rank order (largest first).  A facility is identified as all locations with the same owner (FACILITY\_NAME), Street (note: you cannot use STREET\_ADDRESS as is), and municipality.
-\end{parts}
-
-
-\begin{solution}
-\begin{itemize}
-\item From Street Address, extract street name for each line by taking everything after the initial numbers
-\item Apply findmunicipality(LATITUDE, LONGITUDE) to get the municipality of each line
-\item Filter on Clean Air Act Chemicals
-\item Take sum of all of 8.1A, 8.1B, 8.1C, 8.1D for each line to get total releases
-\item Group by municipality, street, facility name
-\item sum over municipality, street, facility to get total releases for each facility
-\item arrange in decending order by total releases
-\item show top 10
-\end{itemize}
-\end{solution}
-
-\newpage
 \question[20] CoNVO 
 PennEnvironment is a statewide, citizen-based environmental advocacy organization. We believe there’s something special about Pennsylvania — something worth protecting and preserving for future generations. 
 
@@ -303,7 +236,7 @@ PennEnvironment is evaluating its strategy that focuses on the top 10 industrial
 \begin{parts}
 \part Write an appropriate CoNVO statement for PennEnvironment.
 \end{parts}
-
+\newpage
 \question[25] PennEnvironment wants to identify the 10 largest pollution facilities.  However, these facilities are actually complexes, so there are multiple addresses on the same street with the same corporate owner (in Facility Name.  Here is an example of the items in Facility\_Name and Street\_Address.
 
 <<r, echo=FALSE, warning=FALSE, message=FALSE>>=

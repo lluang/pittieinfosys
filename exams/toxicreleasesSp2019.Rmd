@@ -62,7 +62,9 @@ ggplot(toxicalleghenyyearly, aes(x=YEAR)) + geom_line(aes(y=Releases), color="bl
                                        geom_line(aes(y=Energy_recovery), color="blue") +
                                        geom_line(aes(y=Recycle), color="green") +
                                        geom_line(aes(y=Treatment), color="purple") +
-                                        geom_line(aes(y=Onetime), color="red")
+                                        geom_line(aes(y=Onetime), color="red") +
+   scale_colour_manual(name="Total Releases",values=y, 
+                  guide = guide_legend(override.aes=aes(fill=NA))) + xlab("Year (Releases-black, Energy recovery-blue, \n Recycle-green, Treatment-purple, Onetime release-red")
 
 ```
 
@@ -76,6 +78,16 @@ PFAS chemicals have been used in consumer products and fire-fighting foam on ind
 Clean Water Action is interested in the toxic releases in Allegheny County by the chemicals industry (identified through the Industry_Sector field), their forms (release, energy recovery, treatment, recycling, identified in 8.x), and locations within Allegheny County.
 
 a. Write a CoNVO statement that covers this.
+
+
+2.  The client in problem 1 wants to identify the 10 largest pollution locations.  However, these facilities are actually complexes, so there are multiple addresses on the same street with the same corporate owner (in Facility Name.  Here is an example of the items in Facility_Name and Street_Address.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+toxicallegheny %>% select(FACILITY_NAME) %>% head()
+toxicallegheny %>% select(STREET_ADDRESS) %>% head()
+```
+
+a. Assume that you have a function that can identify the municipality and council district that a given latitude and longitude falls into.  Write a process map that can calculate the total releases by facility and list the top 10 in rank order (largest first).  A facility is identified as all locations with the same owner (FACILITY_NAME), Street (note: you cannot use STREET_ADDRESS as is), and council district.
 
 1. Clean Air Council
 
@@ -94,6 +106,18 @@ The Clean Air Council wished to depict the major sources of air pollution (Clean
 
 a. Write a CoNVO statement that covers this.
 
+2.  The Clean Air Council wants to identify the 10 largest Clean Air Act Chemical pollution facilities.  However, these facilities are actually complexes, so there are multiple addresses on the same street with the same corporate owner (in Facility Name.  Here is an example of the items in Facility_Name and Street_Address.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+toxicallegheny %>% select(FACILITY_NAME) %>% head()
+toxicallegheny %>% select(STREET_ADDRESS) %>% head()
+
+
+```
+
+a. Assume that you have a function `findmunicipality(lat, long)` that can identify the municipality (city or town) that a given latitude and longitude falls into.  Write a process map that can calculate the total releases of Clean Air Act Chemicals by facility and list the top 10 in rank order (largest first).  A facility is identified as all locations with the same owner (FACILITY_NAME), Street (note: you cannot use STREET_ADDRESS as is), and municipality.
+
+1. CoNVO 
 PennEnvironment is a statewide, citizen-based environmental advocacy organization. We believe there’s something special about Pennsylvania — something worth protecting and preserving for future generations. 
 
 Much of the industrial air pollution in Pittsburgh’s Allegheny County comes from just 10 industrial facilities that are responsible for 83% of the toxic air pollution reported by industry in the region--They’re known as the Pittsburgh Toxic Ten.
@@ -105,6 +129,17 @@ Many communities located near or downwind from these polluting facilities have b
 PennEnvironment is evaluating its strategy that focuses on the top 10 industrial facilities responsible for most of the air pollution in Allegheny County. They want to know if their efforts have led to change over time through changing the quantity of releases compared to other methods of handling waste (energy recovery, treatment or recycling). Note: the field Clean Air Act Chemical identifies toxic substances that effect air pollution.
 
 a.  Write an appropriate CoNVO statement for this.
+
+2.  The PennEnvironment wants to identify the 10 largest pollution facilities.  However, these facilities are actually complexes, so there are multiple addresses on the same street with the same corporate owner (in Facility Name.  Here is an example of the items in Facility_Name and Street_Address.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+toxicallegheny %>% select(FACILITY_NAME) %>% head()
+toxicallegheny %>% select(STREET_ADDRESS) %>% head()
+
+
+```
+
+a. a. Assume that you have a function `findmunicipality(lat, long)` that can identify the municipality (city or town) that a given latitude and longitude falls into.  Write a process map that can calculate the total releases by facility and list the top 10 in rank order (largest first).  A facility is identified as all locations with the same owner (FACILITY_NAME), Street (note: you cannot use STREET_ADDRESS as is), and council district.
 
 2.  Baby weight
 

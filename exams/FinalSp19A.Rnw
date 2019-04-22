@@ -1,5 +1,5 @@
-%\documentclass[12pt, addpoints]{exam}
-\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, addpoints]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
 \usepackage{Sweave}
 \usepackage{amssymb}
 \usepackage{graphicx}
@@ -97,7 +97,7 @@ SOLUTION
 \end{solution}
 \begin{enumerate}
 \item  Write your name at the top of this page.
-\item  There are four questions (8 pages) the Toxic Release Inventory in Allegheny County from the WPRDC description (2 pages) and data dictionary with map (3 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
+\item  There are four questions (8 pages) the Toxic Release Inventory in Allegheny County from the WPRDC fact sheet (2 pages) and data dictionary with map (4 pages) for this exam.  Each question has multiple parts to answer indicated by lower case letters in parenthesis followed by the points to be awarded.
 \item  You may have a double sided sheet of paper for notes (crib sheet).
 \item  The phrase {\em describe the process} can be answered using any of the following:
   \begin{enumerate}
@@ -211,6 +211,7 @@ toxicallegheny <- toxics %>% filter(COUNTY=="ALLEGHENY")
 # )
 @
 
+
 <<echo=FALSE, warning=FALSE, message=FALSE>>=
 toxicallegheny <- toxicallegheny %>%
   mutate(TOTAL_RELEASES = sum(`8.1_RELEASES` + `8.1A_ON-SITE_CONTAINED_REL.`+ `8.1B_ON-SITE_OTHER_RELEASES` +
@@ -221,7 +222,6 @@ toxicallegheny <- toxicallegheny %>%
          TOTAL_ONE_TIME = sum(`8.8_ONE-TIME_RELEASE`))
 @
 \begin{questions}
-\newpage
 \question [20]
 CoNVO 1:  Clean Water Action
 
@@ -245,36 +245,6 @@ head(toxicallegheny$STREET_ADDRESS)
 \begin{parts}
 \part Assume that you have a function, \texttt{findmunicipality(lat, long)}, that can identify the municipality and council district that a given latitude and longitude falls into.  Write a process map that can calculate the total releases by the Chemical industry by facility and list the top 10 in rank order (largest first).  A facility is identified as all locations with the same owner (FACILITY\_NAME), Street (note: you cannot use STREET\_ADDRESS as is), and council district.
 \end{parts}
-
-\newpage
-\question [20] Clean Air Council
-
-The Clean Air Council is a member-supported environmental organization serving the Mid-Atlantic Region. The Council is dedicated to protecting and defending everyone’s right to a healthy environment. The Council works through a broad array of related sustainability and public health initiatives, using public education, community action, government oversight, and enforcement of environmental laws.  They have published the following statement:
-
-There are a lot of reasons to love Pittsburgh in the center of Allegheny County, but their air pollution is not one of them. Pittsburgh is one of the most up and coming cities in the country but it is also consistently ranked in the top counties for air pollution by the American Lung Association in their State of the Air reports.
-
-In the 2016 State of the Air report, the region landed as the 8th worst in the country for year-round measures on fine particle pollution (or soot), and the 14th worst for short-term particle pollution (the number of days with unhealthy particle levels when air quality is especially dangerous). Pittsburgh also ranked 26th worst in the nation for smog from ground level ozone. Asthma rates for the Pittsburgh region, especially children, exceed the national average and air pollution plays a big role in that.
-
-Pittsburgh has made improvements from the industrial days of the past, but there is still a long way to go before the air is truly clean and safe for all Pittsburghers.
-
-There’s no one single cause to Pittsburgh’s poor air quality. Rather, the region’s legacy as an industrial center has resulted in numerous major sources of air pollution.
-
-The Clean Air Council wished to depict the major sources of air pollution (Clean Air Act Chemical), their INDUSTRY\_SECTOR, location, and how they have changed over the past decade (10 years). (facilities are identified by TRI\_FACILITY\_ID and FACILITY\_NAME.
-
-\newpage
-\question [25]
-2.  The Clean Air Council wants to identify the 10 largest Clean Air Act Chemical pollution facilities.  However, these facilities are actually complexes, so there are multiple addresses on the same street with the same corporate owner (in Facility Name.  Here is an example of the items in Facility\_Name and Street\_Address.
-
-<<r, echo=FALSE, warning=FALSE, message=FALSE>>=
-head(toxicallegheny$FACILITY_NAME)
-head(toxicallegheny$STREET_ADDRESS)
-@
-
-\begin{parts}
-\part Assume that you have a function, \texttt{findmunicipality(lat, long)}, that can identify the municipality (city or town) that a given latitude and longitude falls into.  Write a process map that can calculate the total releases of Clean Air Act Chemicals by facility and list the top 10 in rank order (largest first).  A facility is identified as all locations with the same owner (FACILITY\_NAME), Street (note: you cannot use STREET\_ADDRESS as is), and municipality.
-\end{parts}
-
-
 \begin{solution}
 \begin{itemize}
 \item From Street Address, extract street name for each line by taking everything after the initial numbers
@@ -287,34 +257,6 @@ head(toxicallegheny$STREET_ADDRESS)
 \item show top 10
 \end{itemize}
 \end{solution}
-
-\newpage
-\question[20] CoNVO 
-PennEnvironment is a statewide, citizen-based environmental advocacy organization. We believe there’s something special about Pennsylvania — something worth protecting and preserving for future generations. 
-
-Much of the industrial air pollution in Pittsburgh’s Allegheny County comes from just 10 industrial facilities that are responsible for 83\% of the toxic air pollution reported by industry in the region--They’re known as the Pittsburgh Toxic Ten.
-
-For example, one of the worst offenders is the Shenango Coke Works. This polluting behemoth recently violated its Clean Air Act permits 330 times in a 432 day period—essentially 3 out of every four days.
-
-Many communities located near or downwind from these polluting facilities have been fighting to get them to reduce their pollution and clean up their act for years. 
-
-PennEnvironment is evaluating its strategy that focuses on the top 10 industrial facilities responsible for most of the air pollution in Allegheny County. They want to know if their efforts have led to change over time through changing the quantity of releases compared to other methods of handling waste (energy recovery, treatment or recycling). Note: the field Clean Air Act Chemical identifies toxic substances that effect air pollution.
-
-\begin{parts}
-\part Write an appropriate CoNVO statement for PennEnvironment.
-\end{parts}
-
-\question[25] PennEnvironment wants to identify the 10 largest pollution facilities.  However, these facilities are actually complexes, so there are multiple addresses on the same street with the same corporate owner (in Facility Name.  Here is an example of the items in Facility\_Name and Street\_Address.
-
-<<r, echo=FALSE, warning=FALSE, message=FALSE>>=
-head(toxicallegheny$FACILITY_NAME)
-head(toxicallegheny$STREET_ADDRESS)
-@
-
-\begin{parts}
-\part Assume that you have a function, \texttt{findmunicipality(lat, long)}, that can identify the municipality (city or town) that a given latitude and longitude falls into.  Write a process map that can calculate the total releases by facility and list the top 10 in rank order (largest first).  A facility is identified as all locations with the same owner (FACILITY\_NAME), Street (note: you cannot use STREET\_ADDRESS as is), and municipality.
-\end{parts}
-
 \newpage
 \question [25] Baby weight
 
@@ -364,7 +306,6 @@ multiplot(b1, b2, b3, b4, cols=2)
 @
 \end{parts}
 
-
 \begin{solution}
 \begin{itemize}
   \item Should note that smoke seems significant and parity does not.
@@ -372,7 +313,6 @@ multiplot(b1, b2, b3, b4, cols=2)
   \item Gestation time should seem to be a good candidate.  Height and weight are acceptable either way. Mother's age is not a good candidate
 \end{itemize}
 \end{solution}
-
 
 \newpage
 \question [30] Prenatal vitamins and autism
@@ -393,7 +333,7 @@ Total & 254 & 229  & 302
 
 \begin{parts}
 
-\part   State appropriate null and alternative hypothesis to test for independence of the use of prenatal vitamins during the periconceptional period (three months before pregnancy).
+\part  State appropriate null and alternative hypothesis to test for independence of the use of prenatal vitamins during the periconceptional period (three months before pregnancy).
 
 \part Present a flowchart that implements bootstrap simulation with 10000 replications to test if using prenatal vitamins during the three months before pregnancy reduces the incidence of autism.  Note: if you need a calculation, you may define a variable to be the result of the calculation for use. e.g. $a=3/4$.  Your answer must include any use of data as well as how a final hypothesis test will be completed.
 
@@ -414,8 +354,8 @@ hist(autismout, breaks = 100, main = "Distribution of autism in simulation", xla
 \end{parts}
 \begin{solution}
 \begin{itemize}
-\item $H_0$ that using prenatal vitamins does not reduce the rate of autism. $H_A$ using prenatal vitamins reduces the rate of autism.
-\item 
+  \item $H_0$ that using prenatal vitamins does not reduce the rate of autism. $H_A$ using prenatal vitamins reduces the rate of autism.
+  \item 
 \begin{verbatim}
 pautismnone = 111/181
 autismsim <- function(i){
@@ -425,9 +365,10 @@ autismsim <- function(i){
 }
 autismout <-sapply(1:10000, autismsim)
 \end{verbatim}
-\item Should discuss finding 143 on histogram and getting area or fraction to the left.
+  \item Should discuss finding 143 on histogram and getting area or fraction to the left.
 \end{itemize}
 \end{solution}
+@
 
 \end{questions}
 \end{document}
