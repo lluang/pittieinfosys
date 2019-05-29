@@ -1,0 +1,111 @@
+---
+title: "Data Analyis and Programming in Pitt IE"
+author: "Louis Luangkesorn"
+date: "May 29, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(readxl)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(tidyr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r readdata}
+dataIE <- read_excel("Data analysis and Computer programming in Industrial Engineering_survey.xlsx")
+```
+
+## General responses
+
+
+
+```{r coop, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=Coop)) + xlab("Coop or internship") + ylab("Number of responses") + ggtitle("Did you have a Coop or internship")
+```
+
+```{r Minor, echo=FALSE}
+dataIE <- within(dataIE, 
+                   Minor <- factor(Minor, 
+                                      levels=names(sort(table(Minor), 
+                                                        decreasing=TRUE))))
+ggplot(dataIE,aes(x=Minor)) + geom_bar() + xlab("Field") + ylab("Number of responses") + 
+  ggtitle("Did you have a double major, minor, or concentration") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r Analyzedata, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=AnalyzeData)) + xlab("Analyze Data") + ylab("Number of responses") + ggtitle("Outside of class, did you have to analyze data") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r ComputerProgramming, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=ComputerProgramming)) + xlab("Programming") + ylab("Number of responses") + ggtitle("Outside of class, did you have to program") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r DataProgramming, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=DataProgramming)) + xlab("Programming with data") + ylab("Number of responses") + ggtitle("Did your programming involve data") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r Environments, echo=FALSE}
+dataIE <- within(dataIE, 
+                   Minor <- factor(Environments, 
+                                      levels=names(sort(table(Environments), 
+                                                        decreasing=TRUE))))
+ggplot(dataIE) + geom_bar(aes(x=Environments)) + xlab("Data environments used") + ylab("Number of responses") + ggtitle("What data environment did you use") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r languages, echo=FALSE}
+dataIE <- within(dataIE, 
+                   Minor <- factor(WhichLanguages, 
+                                      levels=names(sort(table(WhichLanguages), 
+                                                        decreasing=TRUE))))
+ggplot(dataIE) + geom_bar(aes(x=WhichLanguages)) + xlab("Data languages used") + ylab("Number of responses") + ggtitle("What programming languages did you use") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r toolofchoice, echo=FALSE}
+dataIE <- within(dataIE, 
+                   Minor <- factor(ToolChoice, 
+                                      levels=names(sort(table(ToolChoice), 
+                                                        decreasing=TRUE))))
+ggplot(dataIE) + geom_bar(aes(x=ToolChoice)) + xlab("Choice") + ylab("Number of responses") + ggtitle("What is your data analysis tool of choice") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r ie1014, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=IE1014)) + xlab("IE1014") + ylab("Number of responses") + ggtitle("Did you ake IE 1014 (Database design)") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r programmingdataassignment, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=ProgrammingDataAssignment)) + xlab("Response") + ylab("Number of responses") + ggtitle("If you were given a data programming assignment, could you do it?") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r processdataassignment, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=DataProcessAssignment)) + xlab("Response") + ylab("Number of responses") + ggtitle("If you were given an assignment do describe the steps needed to manipulate data, could you do it?") + theme(axis.text.x = element_text(angle = 90))
+```
+
+
+```{r LearnDataProgramming, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=LearnDataProgramming)) + xlab("Response") + ylab("Number of responses") + ggtitle("If you were asked to learn programming with data on your own, could you do it?") + theme(axis.text.x = element_text(angle = 90))
+```
+
+
+```{r LearnDataProgramming, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=LearnAccess)) + xlab("Response") + ylab("Number of responses") + ggtitle("If you were asked to learn MS Access on your own, could you do it?") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r optionIE15, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=OptionsIE15)) + xlab("Response") + ylab("Number of responses") + ggtitle("Which would be your preference for a direction to take IE 15") + theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r optionIE152, echo=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=Option2IE15)) + xlab("Response") + ylab("Number of responses") + ggtitle("Which would be your 2nd preference for a direction to take IE 15?") + theme(axis.text.x = element_text(angle = 90))
+```
+
+
