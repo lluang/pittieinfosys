@@ -2,110 +2,207 @@
 title: "Data Analyis and Programming in Pitt IE"
 author: "Louis Luangkesorn"
 date: "May 29, 2019"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.width = 6, fig.height = 4)
 library(readr)
 library(readxl)
 library(dplyr)
 library(magrittr)
 library(ggplot2)
 library(tidyr)
+library(zoo)
 ```
 
-## R Markdown
+# Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+In Fall 2018, two surveys were distributed to students within the University of Pittsburgh IE program.  First, was a survey distributed in the IE seminar, which consists of declared IE majors (Sophomores, Juniors, and Seniors). This survey asked for the year, the number of coop rotations, and a rating of the required courses in the Pitt IE curriculum. Second, was a survey distributed towards 
+those enrolled in the Fall 2018 and Spring 2019 Senior Capstone Design course that was focused on the use of programming and data analysis outside of the specific courses that they were taught.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r readdata}
-dataIE <- read_excel("Data analysis and Computer programming in Industrial Engineering_survey.xlsx")
+```{r readdata, echo=FALSE, warning=FALSE, message=FALSE}
+datadirectory <- "E:\\Box Sync\\courses\\InfoSystems"
+#datadirectory <- "."
+dataIE <- read_excel(file.path(datadirectory, "Data analysis and Computer programming in Industrial Engineering_survey_F2018.xlsx"))
+
+iesurvey <- read_excel(file.path(datadirectory, "1085 Seminar Survey.xlsx"), skip=1)
+iesurvey$Year <- factor(iesurvey$Year, levels=c("Sophomore", "Junior", "Senior"), ordered=TRUE)
+iesurvey$Rating <- as.numeric(iesurvey$Rating)
+iesurvey$`Number of CO- OPS` <- as.ordered(iesurvey$`Number of CO- OPS`)
 ```
 
-## General responses
+# IE Seminar survey
+
+## Demographics
+
+```{r Year, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(iesurvey[(!is.na(iesurvey$`Name of Co Op`) & !is.na(iesurvey$Year)),]) + geom_bar(aes(x=Year)) + xlab("Year") + ylab("Number of responses") + ggtitle("Class year of respondent") 
+```
+
+```{r cooprotations, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(iesurvey[(!is.na(iesurvey$`Number of CO- OPS`) & !is.na(iesurvey$Year)),]) + geom_bar(aes(x=`Number of CO- OPS`)) + xlab("Coop rotations") + ylab("Number of responses") + ggtitle("Number of Coop rotations") 
+```
+
+Note that Sophomored generally do not have coop rotations.  The coop rotation is intended to have at least 3 rotations before graduation, but a number of students have a fourth rotation.
+
+## Class rating
 
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+iesurvey$Year <- na.locf(iesurvey$Year)
+iesurvey$`Number of CO- OPS` <- na.locf(iesurvey$`Number of CO- OPS`)
+iesurvey <- iesurvey %>% mutate(Coop= `Number of CO- OPS`>0)
+```
 
-```{r coop, echo=FALSE}
+```{r classrating, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(iesurvey) + geom_boxplot(aes(x=Course, y=Rating))  + ggtitle("Class rating") + ylim(1, 5) + theme(axis.text.x = element_text(angle = 90)) 
+```
+
+
+In a box and whiskers plot, a large box and long whiskers indicate a high variability in response. Therefore, we will condition the responses based on class year and the number of coop rotations. There will be two views of the data, first course by course then by class year.
+
+```{r classratingbyCourse, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(iesurvey) + geom_boxplot(aes(x=Year, y=Rating)) + facet_wrap(~Course) + ylim(1, 5)+ ggtitle("Class rating by Course") + theme(axis.text.x = element_text(angle = 90))
+```
+
+
+```{r classratingbyyear, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(iesurvey) + geom_boxplot(aes(x=Course, y=Rating)) + facet_grid(Year~.) + ylim(1, 5)+ ggtitle("Class rating by year") + theme(axis.text.x = element_text(angle = 90))
+```
+
+As Sophomores, most have not had most of the required courses, so only a minority of courses have responses and the responses have high variability. As the class year increases, the responses both change and become less variable, in keeping with the experiences of the students as they are able to evaluate earlier courses in light of their experiences in coops and followon classes.
+
+```{r classratingbyCoop, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(iesurvey) + geom_boxplot(aes(x=Course, y=Rating)) + facet_grid(`Number of CO- OPS`~.) + ggtitle("Class rating by Coop rotations") + ylim(1, 5)+ theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r classratingbyCoopyear, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(iesurvey) + geom_boxplot(aes(x=`Number of CO- OPS`, y=Rating)) + facet_wrap(~Course) + ggtitle("Class rating by Coop rotations") + xlab("Number of coop rotations") + ylim(1, 5)+ theme(axis.text.x = element_text(angle = 90))
+```
+
+Similarly to Sophomores, those with no coop rotations show very high variation in their responses, with almost all courses having whiskers extending the entire range from 1-5 and many boxes ranging from 1-4, with a majority of boxes ranging from 2-4 reflecting the lack of information possessed by students with little to no practical experience.  As the number of coop rotations increase, the variation decreases (which is a function of both the experience as well as the fewer students in each group).  As an interpretation, it would be instructive to look at the boxes of the 4 rotation coops, with boxes that include 1 as viewed as rated well and boxes that include 5 viewed as rated poorly.  In a setting where coops get increasing responsibility, the 4th rotation can be viewed as most similar to the first year of work as an engineer.
+
+# Data and programming experiences of senior IE's
+
+## Demographics
+
+```{r coop, echo=FALSE, echo=FALSE, warning=FALSE, message=FALSE}
 ggplot(dataIE) + geom_bar(aes(x=Coop)) + xlab("Coop or internship") + ylab("Number of responses") + ggtitle("Did you have a Coop or internship")
 ```
 
-```{r Minor, echo=FALSE}
+Note that the overall rate of Coops in the University of Pittsburgh IE program is approximately 50%.  The difference between 50% and the values shown give an indication that responders were skewed towards those who have had Coops over those who have not.
+
+
+```{r Minor, echo=FALSE, warning=FALSE, message=FALSE}
 dataIE <- within(dataIE, 
                    Minor <- factor(Minor, 
                                       levels=names(sort(table(Minor), 
                                                         decreasing=TRUE))))
 ggplot(dataIE,aes(x=Minor)) + geom_bar() + xlab("Field") + ylab("Number of responses") + 
-  ggtitle("Did you have a double major, minor, or concentration") + theme(axis.text.x = element_text(angle = 90))
+  ggtitle("Did you have a double major, minor, concentration, or certificate") + theme(axis.text.x = element_text(angle = 90)) + xlab("Minor or concentration name")
 ```
 
-```{r Analyzedata, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=AnalyzeData)) + xlab("Analyze Data") + ylab("Number of responses") + ggtitle("Outside of class, did you have to analyze data") + theme(axis.text.x = element_text(angle = 90))
-```
+## Out of class experiences
 
-```{r ComputerProgramming, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=ComputerProgramming)) + xlab("Programming") + ylab("Number of responses") + ggtitle("Outside of class, did you have to program") + theme(axis.text.x = element_text(angle = 90))
-```
+Note: respondents were allowed to choose more than one response.
 
-```{r DataProgramming, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=DataProgramming)) + xlab("Programming with data") + ylab("Number of responses") + ggtitle("Did your programming involve data") + theme(axis.text.x = element_text(angle = 90))
-```
-
-```{r Environments, echo=FALSE}
-dataIE <- within(dataIE, 
-                   Minor <- factor(Environments, 
-                                      levels=names(sort(table(Environments), 
+```{r Analyzedata, echo=FALSE, warning=FALSE, message=FALSE}
+dataIEAnalyze <- dataIE %>% separate(col='AnalyzeData', into=c('Tool1', 'Tool2', 'Tool3', 'Tool4', 'Tool5'), sep=', ') %>% gather(tool, AnalysisMethod, c(Tool1, Tool2, Tool3, Tool4, Tool5), na.rm=TRUE) %>% select(-tool)
+dataIEAnalyze <- within(dataIEAnalyze, 
+                   Minor <- factor(AnalysisMethod, 
+                                      levels=names(sort(table(AnalysisMethod), 
                                                         decreasing=TRUE))))
-ggplot(dataIE) + geom_bar(aes(x=Environments)) + xlab("Data environments used") + ylab("Number of responses") + ggtitle("What data environment did you use") + theme(axis.text.x = element_text(angle = 90))
+dataIEAnalyze$AnalysisMethod <- factor(dataIEAnalyze$AnalysisMethod, levels=c("No", "Work with others", "Databases", "Excel", "Programming language"), ordered=TRUE)
+ggplot(dataIEAnalyze) + geom_bar(aes(x=AnalysisMethod)) + xlab("Analyze Data") + ylab("Number of responses") + ggtitle("Outside of class, did you have to analyze data") + theme(axis.text.x = element_text(angle = 90))
 ```
 
-```{r languages, echo=FALSE}
-dataIE <- within(dataIE, 
-                   Minor <- factor(WhichLanguages, 
-                                      levels=names(sort(table(WhichLanguages), 
+The small number of No responses is probably a reflection of the fact that the data sample is skewed towards those with internships and coops.
+
+
+```{r ComputerProgramming, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=ComputerProgramming)) + xlab("Programming") + ylab("Number of responses") + ggtitle("Outside of class, did you have to program") + theme(axis.text.x = element_text(angle = 90)) + facet_grid(Coop ~ .)
+```
+
+While the number of those who indicate no internship or coop is low, this group is the only one that reports a majority not programming outside the classroom.
+
+```{r DataProgramming, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=DataProgramming)) + xlab("Programming with data") + ylab("Number of responses") + ggtitle("Did your programming involve data") + theme(axis.text.x = element_text(angle = 90)) + facet_grid(Coop ~ .)
+```
+
+Among IE's, most applications of computer programming is programming on data sets.  The alternative would be general programming such as procedural or object oriented programming.
+
+## Data analysis tools
+
+
+Note: respondents were allowed to choose more than one response.
+
+
+```{r environments, echo=FALSE, warning=FALSE, message=FALSE}
+dataIEEnvironment <- dataIE %>% separate(col='Environments', into=c('Tool1', 'Tool2', 'Tool3', 'Tool4', 'Tool5'), sep=', ') %>% gather(tool, Environment, c(Tool1, Tool2, Tool3, Tool4, Tool5), na.rm=TRUE) %>% select(-tool)
+dataIEEnvironment <- within(dataIEEnvironment, 
+                   Minor <- factor(Environment, 
+                                      levels=names(sort(table(Environment), 
                                                         decreasing=TRUE))))
-ggplot(dataIE) + geom_bar(aes(x=WhichLanguages)) + xlab("Data languages used") + ylab("Number of responses") + ggtitle("What programming languages did you use") + theme(axis.text.x = element_text(angle = 90))
+dataIEEnvironment <- dataIEEnvironment %>% transmute(Environment = as.ordered(Environment))
+ggplot(dataIEEnvironment) + geom_bar(aes(x=Environment)) + xlab("Response") + ylab("Number of responses") + ggtitle("What data environments do you use outside of class") + theme(axis.text.x = element_text(angle = 90))
 ```
 
-```{r toolofchoice, echo=FALSE}
+```{r toolofchoice, echo=FALSE, warning=FALSE, message=FALSE}
 dataIE <- within(dataIE, 
                    Minor <- factor(ToolChoice, 
                                       levels=names(sort(table(ToolChoice), 
                                                         decreasing=TRUE))))
-ggplot(dataIE) + geom_bar(aes(x=ToolChoice)) + xlab("Choice") + ylab("Number of responses") + ggtitle("What is your data analysis tool of choice") + theme(axis.text.x = element_text(angle = 90))
+ggplot(dataIE) + geom_bar(aes(x=ToolChoice)) + xlab("Choice") + ylab("Number of responses") + scale_y_discrete() + ylim(0,15) + ggtitle("What is your data analysis tool of choice") + theme(axis.text.x = element_text(angle = 90))
 ```
 
-```{r ie1014, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=IE1014)) + xlab("IE1014") + ylab("Number of responses") + ggtitle("Did you ake IE 1014 (Database design)") + theme(axis.text.x = element_text(angle = 90))
+Note that no respondent choose C in either question. Java and Python are used in the CS department. In addition, coop employers often choose R or Python for data analysis tasks. Visual Basic is often used for Excel or Access based Graphical User Interfaces.  Other SQL databases would normally be the client-server databases maintained by corporate IT departments.
+
+This results reflects the experiences of senior design and the teaching in IE 15, initial exploration is done with Excel, with R chosen due to the complexity of the analysis or when the students skill level in Excel reaches a limit or the capabilities of Excel are reached.
+
+
+```{r ie1014, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=IE1014)) + xlab("IE1014") + ylab("Number of responses") + ggtitle("Did you take IE 1014 (Database design)") + theme(axis.text.x = element_text(angle = 90)) + facet_grid(Coop ~ .)
 ```
 
-```{r programmingdataassignment, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=ProgrammingDataAssignment)) + xlab("Response") + ylab("Number of responses") + ggtitle("If you were given a data programming assignment, could you do it?") + theme(axis.text.x = element_text(angle = 90))
+## Abilities in data analysis
+
+IE 15 has two goals, one that students are able to develop a process for working with data, second that they can actually perform the task. This mirrors tasks that those who have had coops report, some report that they were the data analyst, others report that they were the intermediary between the subject expert and the programmers who would implement the analysis.
+
+```{r programmingdataassignment, echo=FALSE, warning=FALSE, message=FALSE}
+dataIE$ProgrammingDataAssignment <- factor(dataIE$ProgrammingDataAssignment, levels=c("Conceptual no Actual no", "Conceptual yes Actual No", "Yes two weeks", "Yes immediately"), ordered=TRUE)
+dataIE$DataProcessAssignment <- factor(dataIE$DataProcessAssignment, levels=c("Conceptual no Actual no", "Conceptual yes Actual No", "Yes two weeks", "Yes immediately"), ordered=TRUE)
+ggplot(dataIE) + geom_bar(aes(x=ProgrammingDataAssignment)) + xlab("Response") + ylab("Number of responses") + ylim(0,20) + ggtitle("If you were given a data programming assignment, could you do it?") + theme(axis.text.x = element_text(angle = 90))
 ```
 
-```{r processdataassignment, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=DataProcessAssignment)) + xlab("Response") + ylab("Number of responses") + ggtitle("If you were given an assignment do describe the steps needed to manipulate data, could you do it?") + theme(axis.text.x = element_text(angle = 90))
+```{r processdataassignment, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=DataProcessAssignment)) + xlab("Response") + ylab("Number of responses") + ylim(0,20) + ggtitle("If you were given an assignment to describe the steps needed to manipulate data, could you do it?") + theme(axis.text.x = element_text(angle = 90))
 ```
 
+## Ability to self teach
 
-```{r LearnDataProgramming, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=LearnDataProgramming)) + xlab("Response") + ylab("Number of responses") + ggtitle("If you were asked to learn programming with data on your own, could you do it?") + theme(axis.text.x = element_text(angle = 90))
-```
-
-
-```{r LearnDataProgramming, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=LearnAccess)) + xlab("Response") + ylab("Number of responses") + ggtitle("If you were asked to learn MS Access on your own, could you do it?") + theme(axis.text.x = element_text(angle = 90))
-```
-
-```{r optionIE15, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=OptionsIE15)) + xlab("Response") + ylab("Number of responses") + ggtitle("Which would be your preference for a direction to take IE 15") + theme(axis.text.x = element_text(angle = 90))
-```
-
-```{r optionIE152, echo=FALSE}
-ggplot(dataIE) + geom_bar(aes(x=Option2IE15)) + xlab("Response") + ylab("Number of responses") + ggtitle("Which would be your 2nd preference for a direction to take IE 15?") + theme(axis.text.x = element_text(angle = 90))
+```{r LearnDataProgramming, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=LearnDataProgramming)) + xlab("Response") + ylab("Number of responses") + ylim(0,20) + ggtitle("If you were asked to learn programming with data on your own, could you do it?") + theme(axis.text.x = element_text(angle = 90))
 ```
 
 
+```{r LearnAccess, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=LearnAccess)) + xlab("Response") + ylab("Number of responses") + ylim(0,20) + ggtitle("If you were asked to learn MS Access on your own, could you do it?") + theme(axis.text.x = element_text(angle = 90))
+```
+
+These questions were highly subjective as these students did actually take IE 15 as sophomores which covers programming with data but only two weeks were provided for working with databases. However, it does reflect the fact that most employers would expect any engineering student to be able to pick up MS Access without regard to prior training while they would select for engineering students with programming ability if needed.
+
+## Opinion on data analysis course
+
+```{r optionIE15, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=OptionsIE15)) + xlab("Response") + ylab("Number of responses") + ggtitle("Which would be your preference for a direction to take IE 15") + theme(axis.text.x = element_text(angle = 90)) + scale_y_discrete() +ylim(0,15)
+```
+
+```{r optionIE152, echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(dataIE) + geom_bar(aes(x=Option2IE15)) + xlab("Response") + ylab("Number of responses") + ggtitle("Which would be your 2nd preference for a direction to take IE 15?") + theme(axis.text.x = element_text(angle = 90))+ scale_y_discrete() +ylim(0,15)
+```
+
+There is a split among the students regarding the best use of IE 15 between Data manipulation (current state), database design (IE 1014), or General Programming (repeat of introduction to programming).  Note that the other response was a data structures course, which was explained to be the equivalent of a second programming course that would follow an introductory general programming course.
