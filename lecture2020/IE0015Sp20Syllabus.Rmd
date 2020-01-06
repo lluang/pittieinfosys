@@ -1,7 +1,7 @@
 ---
 title: "IE 0015 Information Systems Syllabus"
 author: "Louis Luangkesorn"
-date: "Spring 2019"
+date: "Spring 2020"
 output:
   html_document: default
   word_document: default
@@ -20,8 +20,8 @@ Office Hours:
 TA
 -----
 
-  - Alyssa Choboy
-  - Christian Parker
+  - Alyssa Choboy <anc194@pitt.edu>
+  - Christian Parker <csp35@pitt.edu>
 
 Description
 ===========
@@ -91,8 +91,8 @@ The following are resources we will use.  R for Data Science is the primary text
 
 1.  Assignments include weekly labs, homeworks, and projects.
 2.  All assignments should be done using R Markdown and rendered in PDF or MS Word.
-3.  All computer output should be annotated.  Axis must be labeled, figures and tables need titles and captions.  Figures and tables should be accompanied by explanatory text that explains how the output answers the question. **The uniqueness of annotations is your defense against charges of plagiarism**
-4.  Weekly labs and homeworks are submitted individually.  It is expected and encouraged that you work with classmates in developing programming code as that reflects industry practice where computer programming projects are done in teams. However, your annotations (figure notations and explanatory text) should be your own.
+3.  All computer output should be annotated.  Axis must be labeled, figures and tables need titles and captions.  Figures and tables should be accompanied by explanatory text that explains how the output answers the question. In the real world, data does not "speak" for itself, so computer output is by itself not sufficient in reporting results. **The uniqueness of annotations is your defense against charges of plagiarism**
+4.  Weekly labs and homeworks are submitted individually.  It is expected and encouraged that you work with classmates in developing programming code as that reflects industry practice where computer programming projects are done in teams. However, your annotations (figure notations and explanatory text) should be your own. **All figures and tables must have titles, axis labels, and captions. All answers should include narrative.**
 5.  You will note that there is not much homework in this course.  You are expected to follow along in the course readings.  This includes copying and running code found in the textbooks so that you see for yourself the output. It also implies that you will gain experience in reading the error messages that the inevitable typos in you copying the code results in, which will help you understand the error messages that you will encounter as you do your labs, homeworks, and project.
 
 #  Grading
@@ -172,9 +172,7 @@ If you have a disability for which you are or may be requesting an accommodation
 
 # STATEMENT ON CLASSROOM RECORDING
 
-To address the issue of students recording a lecture or class session, the University’s Senate Educational Policy Committee issued the recommended statement on May 4, 2010. While it is optional, the Committee recommends that faculty consider adding the statement to all course syllabi. 
-
-“To ensure the free and open discussion of ideas, students may not record classroom lectures, discussion and/or activities without the advance written permission of the instructor, and any such recording properly approved in advance can be used solely for the student’s own private use.” 
+To ensure the free and open discussion of ideas, students may not record classroom lectures, discussion and/or activities without the advance written permission of the instructor, and any such recording properly approved in advance can be used solely for the student’s own private use.
 
 # Student Opinion of Teaching Surveys
 

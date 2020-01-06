@@ -27,32 +27,32 @@ comma, "", If there is punctuation in the address, it will be broken into two co
 10 columns.  Can be 11 columns if an index column is created.
 
 
-3. [1]  Using default settings, for several records the data fields are in the wrong column.  What causes this error?  Re-import the Affiliate list and set the options so this is done correctly.  Set the Affiliate ID to be the primary key.
+3. [1]  Using default settings, for several records the data fields are in the wrong column.  What causes this error?  Re-import the Affiliate list and set the options so this is done correctly.  Set the Affiliate ID to be the primary key. Note: set all boolean and ID fields to "short text".
 
 **ANSWER**
 Some of the records have an extra fields, so fields beginning with the City are in the wrong column.  Need to identify the double quote \" character as text delimiter to keep the address from being split across two fields.  Especitally when there is a suite number as part of the address.
 
-4. [1]  Look at the Women 2017 Rx dataset in a text editor. Import the Women 2017 Rx dataset.  Set the UserID to be the primary key. Check that the field types make sense. Allow for duplicates.  What happened to the column names?
+4. [1]  Look at the 2020 Opens Athletes dataset in a text editor. Import the 2020 Opens Athletes dataset.  Set the competitor to be the primary key. Check that the field types make sense. Allow for duplicates.  What happened?  What error to do you get and why?  Try again and allow Access to create a primary key.
 
 **ANSWER** 
 You should notice that the periods (.) in the column names disappeared.
 
-5. [2]  Load in the remainder of the data files (Women 2018 Rx, Men 2017 Rx, Men 2018 Rx).  Check for import errors.  What import errors were there?  Find the errors in the original CSV file (import in Excel).  Lookup the workout on google (search for CrossFit Open (year)) and explain the error in terms of the workout.
+5. [2]  Load in the remainder of the data files (2019 Opens Scores, 2020 Opens Athletes, 2020 Opens Scores).  Remember to set a text delimiter for the "Scores" files. Develop a query that only keeps scores from the "Women" and "Men" divisions from the "Scores" files (these are open divisions without age qualifiers).  Export these files to csv.  *Save these results, they are much smaller files and will save you time loading data on future labs and homeworks*.
 
 **ANSWER**
 There were scores that were in days minutes hours format while most scores were in seconds.
 
-For problems 5 and 6, you will do the lab based on your last name and your birth month.
+For problems 6 and 7, you will do the lab based on your last name and your birth month.
 
 Last (family) name:  A-L: Women,  M-Z: Men
-Birth month:  Jan - June:  2017,  July-December: 2018
+Birth month:  Jan - June:  2019,  July-December: 2020
 
-5. [1]  The final result of the CrossFit Open is the sum of the ranks.  Modify the table design that calculates the sum of the ranks of athletes in your dataset, then sort the athletes by rank.  Confirm that this gives the same results as the field "Overall rank"
+6. [1]  The final result of the CrossFit Open is the sum of the ranks.  Modify the table design that calculates the sum of the ranks of athletes in your dataset, then sort the athletes by rank.  Confirm that this gives the same results as the field "Overall rank"
 
 Write how you modified the table design (include a copy and paste of the equation) and copy and paste in a table that shows the correct result.
 
 
-6. [3]  Create a query that does the following:
+7. [3]  Create a query that does the following:
 
     i. For each affiliate (gym), identify the number of athletes who entered the CrossFit Open that year.
     ii.  What is the minimum (best) sum of ranks for that affiliate.

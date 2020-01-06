@@ -3,12 +3,12 @@ title: "Course Introduction"
 author: "IE 0015"
 date: "January 2020"
 output:
+  pdf_document:
+    default
+  slidy_presentation: default
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
-  slidy_presentation: default
-  pdf_document:
-    default
 ---
 
 Rendering this file (Rmd)
