@@ -1,0 +1,363 @@
+---
+title: "Course Introduction"
+author: "IE 0015"
+date: "January 2020"
+output:
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
+  slidy_presentation: default
+  pdf_document:
+    default
+---
+
+Rendering this file (Rmd)
+=============================
+
+1. Open in R Studio
+2. Click on Knit icon in editor toolbar (look for icon with ball of string and knitting needle)
+3. Alternative, click on the down facing triangle next to the icon and choose an option.
+
+Notecard
+=========
+
+- Name:
+- Where are you from: (city/state/province)
+- Year and degree program:
+- Possible project topic:
+
+- Download the ACS personal and household data files from Courseweb -> Course Documents -> data
+- If English is not your first language, please stay back after class for a chat.
+
+Course Outline
+==============
+
+
+Course goals - Working with data
+==================================
+
+1.  Databases
+2.  Data manipulation
+3.  Exploratory data analysis and visualization
+4.  Modeling and simulation
+5.  Summer internships, coops, and senior design
+
+Course requirements
+==============
+
+- Labs weekly (*Individual*) 
+- Homework (*1-2*)
+- Midterm and final
+- Case Study (1-3)
+- Project (teams of 1-3)
+- Class participation
+
+Data sets
+==========
+
+-  Titanic survivors (Lectures)
+-  National Survey of Family Growth (Lectures and Labs)
+-  American Community Survey (Lectures and labs)
+-  CrossFit Open 2019-2020 (Labs and Homeworks)
+-  Western PA Regional Data Center http://www.wprdc.org/
+
+Labs and Homeworks
+==================
+
+-  There are weekly coding labs and monthly homeworks.
+-  Coding is creative and difficult, especially on realistic data sets. There is more than one way to complete the assignments.  
+- Being able to handle the fact that the first thing you try does not work and working on the details to get things to work will help your sanity and help you succeed.
+-  Industry practice is that programmers work in pairs. I expect and encourage you to work together to resolve coding problems on labs and homeworks.  But your final submission, which includes your explanation and interpretation of results, must be your own.
+-  All figures and tables must be annotated.  Axis must be labeled (include units), tables and figures need titles and captions, tables and figures should be accompanied by narrative. The annotations and narratives must be your own.  (i.e. your code may be similar to someone else's, but your explanations should be unique.)
+
+Plagerism
+==========
+
+-  Your final submission on homeworks and labs must be your own.
+    -  You may help each other, but the final submission is yours.
+-  We understand that code will be similar, because there usually is at least one straightforward way of solving problems.  But there are many ways of solving problems in this course.
+-  All homework assignments will have narrative parts to questions. 
+-  We expect that elements such as table and chart titles, axis labels, and narrative answers will be unique to each individual.  
+-  If we suspect plagerism, we will look at the narrative, plot annotations, and labels. If there are differences, that is an affirmative defence against charges of plagerism.
+
+Project
+=========
+
+#  Case study
+
+-  Use the case study in January to help scope your project
+-  Case study will be a realistic case faced by a realistic company using a dataset that has been scaled for classroom use.
+-  **Warning** Many students have been putting case studies on their resumes. **This is inapproprieate**
+
+
+# Class project
+
+- Team of up to 3.
+- Pick a topic
+    -  Suggest a topic at least one person has a personal interest in.
+    - e.g. hobbies, sports, future career
+    - This project has been used as an interview topic for jobs
+    
+#  Identify a large, complex data set
+-  Be aggressive in choosing a topic.  
+    - Your goal should be to have something to talk about in interviews.
+-  Large - Larger than you can take the time to look at the entire set in Excel.
+-  Variables that span a range of characteristics (you may need to get two related data sources to do this)
+-  Western PA Regional Data Center http://www.wprdc.org/
+-  U.S. Govt https://www.data.gov/
+-  **If you have a real world project, with an actual client who is interested in the results, see me**
+    -  I will bend project requirements if needed to make your work useful to your client.
+  
+#  Process the data
+
+-  The data must need processing
+-  Missing values
+-  Calculating intermediate values
+-  Data entry errors
+-  Collapsing categories
+
+#  Summarize it
+-  Data summaries
+-  Visual
+  - Make it pretty
+    
+#  Tell a story
+-  Context
+-  Needs
+-  Vision
+-  Outcome
+
+Course goals
+============
+
+1.  Databases
+2.  Data manipulation
+3.  Exploratory data analysis
+    -  Visualization and communication
+4.  Modeling and simulation - Linear regression and Monte Carlo/Bootstrap simulation
+
+Databases
+=========
+
+1.  MS Access
+2.  Read data from various sources
+3.  Basic SQL
+4.  Learn how to learn
+
+Data manipulation
+=================
+
+Table verbs. Basic data manipulation tools.
+
+1.  Filter (SELECT)
+2.  Arrange (SORT BY)
+3.  Select columns
+5.  Distinct rows (UNIQUE)
+6.  Mutate (new columns)
+7.  Summarize (GROUP BY)
+8.  Random sample
+
+You will learn to do this both in SQL and in R
+
+Exploratory data analysis
+=========================
+
+-  Statistical summaries
+-  Graphical display of data
+
+Algorithms
+==========
+
+-  Linear models
+-  Missing value imputation
+-  Using simulation for data analysis
+
+Communication - Literate programming
+===================================
+
+- Reporting that combines data input, narrative, data processing, data analysis, and analysis of results.
+- R Markdown format (R4DS Part V)
+- You will use R Markdown to write all labs, homeworks, and project reports.
+
+MS Access
+=========
+
+
+Learning MS Access
+==================
+
+-  The best way for you to learn MS Access is to sit with a tutorial and work at it for a day.
+  -  This is what your employers will ask you to do.
+  -  Our goal for this course is that you know how to do this.
+-  Use the Microsoft Support website tutorials to learn how to use MS Access
+
+Databases - Goal
+==================
+
+- The purpose of covering MS Access in IE 15 is to prepare you for your summer internship or co-op
+- Two weeks is enough to give you the confidence that you can learn whatever else you need as you go.
+- I want to hear your feedback if you do this.
+- So far, everyone who has needed MS Access in the first summer has stated that this was the correct coverage.
+
+
+What is MS Access
+=================
+
+Three components. Think of them separately.
+
+-  Relational Database Management System (RDBMS)
+-  Tools for working with databases
+-  Interfaces to other databases/data sources
+
+RDBMS
+===================
+
+- Actual storage of data
+- MS Access comes with its own database for use on individual computers (.accdb)
+- Suitable for small databases with no connectivity requirements.
+- Note: it is NOT accessible via MS Open Database Connectivity (ODBC), unlike almost every other available database management system in use.
+
+Database management tools
+=========================
+
+- Table designer
+- Query builder
+- Report generator
+- Forms designer
+
+Interfaces to other data sources
+================================
+
+- MS Access can connect to other databases so you can use MS Access tools on other data.
+- Does NOT make a local copy
+  - This is good, because your local copy can become outdated
+- MS Excel
+- Other RDBMS via ODBC
+
+Introduction to R and R Studio
+==============================
+
+
+Introduction to R
+=================
+
+- R is a data analysis environment
+- It includes a programming language
+- Base R includes basic statistical functions
+- More advanced data management and statistical functions are in packages
+
+R Packages
+==========
+
+- Most programming language functionality is in packages or libraries.
+- R packages tend to be written by subject experts
+  - Statistical researchers
+  - Experts in visualization
+  - Computer scientists who are experts in data manipulation
+- Packages are kept at the Comprehensive R Archive Network (CRAN)
+- We use Microsoft R Open (MRO) distribution of R, so we use the MRAN mirror of CRAN that corresponds to our version of R
+
+R Studio
+========
+
+- R is built on the philosophy of separation of concerns.
+- Base R provides the programming language and basic statistics.
+- Package writers provide statistics and data manipulation functionality.
+- R Studio is an Integrated Development Environment (IDE)
+  - Professional programmers will recognize it as a professional grade IDE.
+  
+Four quadrants of R Studio
+======================
+
+- Editor
+- Console
+- Upper right - Environment, History, Preview
+- Lower right - Files, Plots, Packages, Help, Viewer
+
+Editor
+======
+
+- Professional quality text editor
+  - It actually can work with other programming languages
+- Syntax highlighting
+- Tabbed completion
+- Session manages the console current working directory.
+  - Project directory
+  - Source code directory (active file)
+  - Files pane directory
+- Code output will display inline following the code chunk as it is run.
+
+File types
+==========
+
+- R Script (.R): R Code
+- R Markdown (.Rmd): R Markdown mixing formatted text and code chunks. Can generate html, pdf, or docx files.
+    -  Can also generate HTML or pdf slide presentations.
+    -  Use HTML when you are working, pdf or docx when you are done and ready to present this to others.
+
+
+Import dataset
+==============
+
+- File -> Import dataset
+- Wizards for importing data
+- CSV, Excel, SAS, SPSS, Stata
+- Generates R code to copy into your source code
+
+R Markdown
+===========
+
+-  Combines narrative text and source code
+-  Variations for reports and presentations
+-  'knitr' used to combine the narrative with the code output.
+-  Source code is set aside in *chunks*, which can be named.
+-  knitr can be used to create html, PDF, or MS Word output.
+-  Help available at R Studio website.
+
+Console
+=======
+
+- Console window is an R session.
+- Enter code in console
+- Active variables and objects show up in the upper right quadrant in the environment and history tabs.
+- If you have code in the Editor, highlight the code and hit <ctrl><enter> to run it in the console.
+
+Upper right quadrant
+====================
+
+- Environment
+  - Displays all active variables and values
+  - Distinguishes between data frames (datasets) and other variable types
+  - Accesses data viewer for data frames
+  - Use this often when debugging
+- History
+  - Searchable record of everything entered in the console
+  - Use the console to try things, then copy from the History To Source to save what lines worked to the editor
+  
+Git and presentation tabs
+=========================
+
+- Git
+  - Source code version control
+  - We will not use this in this class, but if you go to a professional software development organization, they may use Git
+- Presentation
+  - If you are working with an R Presentation, a preview will go here as you save the presentation
+  - Low quality web browser
+  
+Lower right
+===========
+
+- Files: file directory browser
+- Plots: plot history for the current session
+- Packages: packages manager. Use this to access package documentation or install packages.
+  - Vignettes: Little story. Quality packages will include a vignette that provides an example of use and explanation of how it works.
+- Help: Easy access to resources (e.g. Introduction to R and R Studio help) and searchable help files
+  - Note: two search boxes. Upper right searches all help files.  Left box searches current page (topic)
+- Viewer:  The output of an Rmd file.
+
+
+Projects with real world
+===========
+- Allegheny Health Network - Center for Inclusion Health
+- Pitt Office of Sustainability - Transportation
+- Pitt Department of Athletics - Injury data

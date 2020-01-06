@@ -1,0 +1,188 @@
+---
+title: "IE 0015 Information Systems Syllabus"
+author: "Louis Luangkesorn"
+date: "Spring 2019"
+output:
+  html_document: default
+  word_document: default
+---
+
+- 1044 Benedum Hall
+- MW 1:00PM - 1:50PM
+- Final TBD
+
+Office Hours:
+
+- 1028 Benedum Hall
+- lluangkesorn@pitt.edu
+- Hours: TBD
+
+TA
+-----
+
+  - Alyssa Choboy
+  - Christian Parker
+
+Description
+===========
+
+In the modern world, significant amounts of data are collected and stored by organizations. To think about data includes both an understanding of the types of questions that organizations will have and the decisions that will result from those answers. This course covers thinking about data driven questions as well as extracting data from common storage formats, then manipulating the stored data into forms useable for application of analytics.  The course covers data cleaning, data munging, and visualization to allow for descriptive analytics to be performed, then examples of more advanced analytics that are enabled by these initial topics prepare students for using these data manipulation capabilities as a precursor to more advanced analytics later in the curriculum.
+
+
+Course goals
+============
+
+- To be able to work with data and use programming and database tools for processing, manipulating, analyzing, and presenting data.
+- To develop and implement algorithms for processing data.
+- To understand and critique data analysis presentations.
+
+Major Topics
+==================================
+
+1.  Databases
+2.  Data manipulation
+3.  Exploratory data analysis
+4.  Data analysis through simulation
+
+# Materials
+
+## Software
+
+1.  R -  https://mran.microsoft.com/open/  Follow the appropriate download link for your platform
+
+2.  R Studio - An Integrated Development Environment (IDE). A basic environment (editor, console) comes with R, so this is optional, however, highly recommended as it will be much easier with this.
+
+http://www.rstudio.com/products/RStudio - Click on 'Download R Studio Desktop'.  You will be given options for your platform.  After installing this watch the video on this page to get familiarized with the platform.
+
+3.  Packages.  Much of the functionality of R is embedded in packages.  These need to be installed prior to use. (Note: installation of packages is easy given access to the internet.  You will quickly learn to recognize when it is necessary to install a package. But to start, you should enter the following in the R console after you install R and R Studio
+
+install.packages(c("ggplot2",  "knitr",  "reshape2",  "dplyr",  "rJava",  "readxl",  "RODBC", "chron",  "lubridate",  "stringr",  "stringdist",  "editrules",  "Hmisc",  "rspa",  "deducorrect", "jsonlite", "tidyverse"))
+
+4.  MS Access - Available on MS Windows as part of MS Office Pro
+
+##  Texts
+
+The following are resources we will use.  R for Data Science is the primary text, but we will use Wickham ggplot2 and de Jonge An introduction to data cleaning as well. The other texts are listed here as references.
+
+1.  (R4DS) Garrett Grolemund and Hadley Wickham, 2017, R for Data Science, Oreilly Press, http://r4ds.had.co.nz/
+2.  (ggplot) Hadley Wickham, 2016, GGplot2: Elegant Graphics for Data Analysis, Springer  ISBN: 331924275X
+  - Available electronically through Pitt Library
+  - A cheaper paperback version can be purchased through MySpringer, Pitt library
+3.  (de Jonge) An introduction to data cleaning with R by Edwin de Jonge and Mark van der Loo http://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf.
+4.  Introductory Statistics with Randomization and Simulation, https://www.openintro.org/stat/?stat_book=isrs. This is a different look at introductory statistics than the standard intro to statistics course. We will use it for simulation near the end of the course. In addition, the labs in the website has code that can help you implement statistical methods.
+5.  Introduction to R. https://cran.r-project.org/doc/manuals/R-intro.pdf. Also available within R Studio.
+
+
+##  Articles
+
+-  Every other week, an article will be posted for discussion.  Each article will be an example of a data analysis and will be a focus of discussion to consider both strengths and weaknesses of the data analysis and presentation.
+-  Exams are focused on being able to specify a data problem (CoNVO), plan a data analysis, and interpret exploratory data analysis output. All exam questions will be based on either an article or a problem described using a narrative. The article discussions are intended to help you prepare to read and answer these types of questions. 
+
+
+## Datasets
+
+-  National Survey of Family Growth
+-  American Community Survey
+-  Titanic survivors
+-  CrossFit Open 2019-2020
+-  Western PA Regional Data Center
+
+# Assignments
+
+1.  Assignments include weekly labs, homeworks, and projects.
+2.  All assignments should be done using R Markdown and rendered in PDF or MS Word.
+3.  All computer output should be annotated.  Axis must be labeled, figures and tables need titles and captions.  Figures and tables should be accompanied by explanatory text that explains how the output answers the question. **The uniqueness of annotations is your defense against charges of plagiarism**
+4.  Weekly labs and homeworks are submitted individually.  It is expected and encouraged that you work with classmates in developing programming code as that reflects industry practice where computer programming projects are done in teams. However, your annotations (figure notations and explanatory text) should be your own.
+5.  You will note that there is not much homework in this course.  You are expected to follow along in the course readings.  This includes copying and running code found in the textbooks so that you see for yourself the output. It also implies that you will gain experience in reading the error messages that the inevitable typos in you copying the code results in, which will help you understand the error messages that you will encounter as you do your labs, homeworks, and project.
+
+#  Grading
+
+1.  Weekly labs               15%
+2.  Midterm                   20%
+3.  Final                     25%
+4.  Case Study                15
+4.  Project (1-3 person teams)  15%
+5.  Homeworks                 10%
+5.  Class participation       5%
+
+## Grade breakpoints
+
+
+Grade    Breakpoint
+-----    ----------
+A            93
+A-           90
+B+           87
+B            83
+B-           80
+C+           77
+C            73
+C-           70
+
+
+# ABET Outcomes
+
+1.	an ability to identify, formulate, and solve complex engineering problems by applying principles of engineering, science, and mathematics;
+6.	an ability to develop and conduct appropriate experimentation, analyze and interpret data, and use engineering judgment to draw conclusions
+7.	an ability to acquire and apply new knowledge as needed, using appropriate learning strategies.
+
+
+Schedule
+========
+
+- Module 0: Introduction to Data and R 
+- Module 1: Using MS Access and SQL (Jan 6, 13)
+  - Microsoft Support Access Training Videos - Databases, tables, and relationships
+    - https://support.office.com/en-us/article/Access-training-a5ffb1ef-4cc4-4d79-a862-e2dda6ef38e6?ui=en-US&rs=en-US&ad=US
+    - Get Started - All 4 videos
+    - Create an Access Database - Create an Access desktop database
+    - Add tables - All 3 videos
+    - Getting started with table relationships - All 5 videos
+    -  Add and edit data - 2 videos
+- Module 2: Tidy data and relational data, R4DS ch 12, 13 (Jan 22)
+- Module 3: Data into R, R4DS ch 11 (Jan 27)
+- Module 4: Data manipulation and aggregation, ggplot Ch 10 (Feb 3)
+- **PROJECT TOPIC FEBRUARY 5**
+- Module 5: Character Manipulation and regular expressions R4DS (Feb 10)
+- **HOMEWORK 1: Data manipulation FEBRUARY 12**
+- Module 6: Basic plot types ggplot2 Ch 2, 3 (Feb 17)
+- Module 7: Data visualization grammer ggplot ch 4 (Feb 24)
+- **MIDTERM Mar 4** (No labs)
+- Module 8: Data types: strings, factors, dates R4DS Ch 14, 15, 16 (Mar 16)
+- **PROJECT EXPLORATORY DATA ANALYSIS MARCH 18**
+- Module 9: Advanced programming R4DS Part III (Mar 23)
+- **HOMEWORK 2: Exploratory Data Analysis MARCH 25**
+- Module 10: Linear modeling for visualization - R4DS ch 23, 24 ggplot ch 11 (March 30)
+- Module 11: Linear regression (April 6)
+- **HOMEWORK 3: Modeling APRIL 8**
+- Module 12: Simulation for statistical inference (April 13)
+- **PROJECT REPORT APRIL 15**
+- **PROJECT PRESENTATIONS APRIL 16, 17 in lab**
+- FINAL TBA
+
+# ACADEMIC INTEGRITY
+
+All students are expected to adhere to the standards of academic honesty.  Any student engaged in cheating, plagiarism, or other acts of academic dishonesty would be subject to disciplinary action.  Any student suspected of violating this obligation for any reason during the semester will be required to participate in the procedural process, initiated at the instructor level, as outlined in the University Guidelines on Academic Integrity http://www.provost.pitt.edu/info/ai1.html.  This may include, but is not limited to the confiscation of the examination of any individual suspected of violating the University Policy.
+
+In this course, it is understood that code will be similar because most homeworks and labs are scaffolded in a way that directs answers. However, there are usually several ways of finding a solution to the problem. In addition, the narrative parts of the homework as well as text elements such as labels, titles, and captions are expected to be different and they indicate the level of understanding by each student.  Homeworks and labs will be inspected for these differences, and assignments that show great simularities in these elements will be considered for charges of plagerism.
+
+# DISABILITY SERVICES 
+
+If you have a disability for which you are or may be requesting an accommodation, you are encouraged to contact both your instructor and Disability Resources and Services (DRS), 140 William Pitt Union, (412) 648-7890, drsrecep@pitt.edu, (412) 228-5347 for P3 ASL users, as early as possible in the term.  DRS will verify your disability and determine reasonable accommodations for this course.
+
+# STATEMENT ON CLASSROOM RECORDING
+
+To address the issue of students recording a lecture or class session, the University’s Senate Educational Policy Committee issued the recommended statement on May 4, 2010. While it is optional, the Committee recommends that faculty consider adding the statement to all course syllabi. 
+
+“To ensure the free and open discussion of ideas, students may not record classroom lectures, discussion and/or activities without the advance written permission of the instructor, and any such recording properly approved in advance can be used solely for the student’s own private use.” 
+
+# Student Opinion of Teaching Surveys
+
+Students in this class will be asked to complete a Student Opinion of Teaching Survey. Surveys will be sent via Pitt email and appear on your CourseWeb landing page during the last three weeks of class meeting days. Your responses are anonymous. Please take time to thoughtfully respond, your feedback is important to me. Read more about Student Opinion of Teaching Surveys.
+
+# Diversity and Inclusion
+
+The University of Pittsburgh does not tolerate any form of discrimination, harassment, or retaliation based on disability, race, color, religion, national origin, ancestry, genetic information, marital status, familial status, sex, age, sexual orientation, veteran status or gender identity or other factors as stated in the University’s Title IX policy. The University is committed to taking prompt action to end a hostile environment that interferes with the University’s mission. For more information about policies, procedures, and practices, see: http://diversity.pitt.edu/affirmative-action/policies-procedures-and-practices.
+
+I ask that everyone in the class strive to help ensure that other members of this class can learn in a supportive and respectful environment. If there are instances of the aforementioned issues, please contact the Title IX Coordinator, by calling 412-648-7860, or e-mailing titleixcoordinator@pitt.edu. Reports can also be filed online: https://www.diversity.pitt.edu/make-report/report-form. You may also choose to report this to a faculty/staff member; they are required to communicate this to the University’s Office of Diversity and Inclusion. If you wish to maintain complete confidentiality, you may also contact the University Counseling Center (412-648-7930).
+

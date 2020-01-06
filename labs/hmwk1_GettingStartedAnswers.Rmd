@@ -1,7 +1,7 @@
 ---
-title: 'Homework 1: Getting started with R'
+title: 'Homework 1: Data manipulation with dplyr'
 author: "IE 0015"
-date: "January 30, 2019"
+date: "January 30, 2020"
 output:
   html_document: default
   pdf_document: default
@@ -20,7 +20,9 @@ library(readxl)
 library(readr)
 ```
 
+The CrossFit Open is an international fitness competition where athletes compete in a series of weekly events. Events are scored by a judge in a CrossFit affiliate (gym) and the scores are used to qualify athletes for the annual CrossFit Games or for other competitions that will take place over the year.  In 2019 the CrossFit Open occurred in February/March. For 2020, the Crossfit Open corresponding to the 2020 Crossfit Games occurred in October/November.
 
+As each event is unique and not directly convertable, cumulative scoring is based on the sum of the individual's rank in each event worldwide, so lower scores are better.
 
 1. Load the affiliate and the two CrossFit Open files based on the following rule:
 
@@ -32,72 +34,73 @@ Last (family) name:  A-L: Men,  M-Z: Women
 
 **ANSWER**
 ```{r}
-Affiliate_list <- read_csv("../data/Affiliate_list.csv",
-col_types = cols(Affiliate_id = col_character()))
-Men_Rx_2017 <- read_csv("../data/Men_Rx_2017.csv",
-col_types = cols(Affiliateid = col_character(),
-Userid = col_character()))
-Men_Rx_2018 <- read_csv("../data/Men_Rx_2018.csv",
-col_types = cols(Affiliate_id = col_character(),
-User_id = col_character()))
+datadirectory <- "C:\\Users\\louis\\Documents\\courses\\crossfitopen"
+Affiliate_list <- read_csv(file.path(datadirectory, "Affiliate_list.csv"),
+                           col_types = cols(Affiliate_id = col_character()))
+athlete2019list <- read_csv(file.path(datadirectory, "2019_opens_athletes.csv"), 
+                            col_types = cols(affiliateid = col_character(), competitorid = col_character()))
+scores2019 <- read_csv(file.path(datadirectory,"2019_opens_scores.csv"),
+                       col_types = cols(competitorid = col_character()))
+athlete2020list <- read_csv(file.path(datadirectory, "2020_opens_athletes.csv"), 
+                            col_types = cols(affiliateid = col_character(), competitorid = col_character()))
+scores2020 <- read_csv(file.path(datadirectory,"2020_opens_scores.csv"),
+                       col_types = cols(competitorid = col_character()))
 ```
 
-1. [15] Affiliates would like to compare where they are to other nearby affiliates.  The CrossFit Open organizes athletes into regions.  Do the following using `dplyr`, 
-Identify all athletes who participated in the CrossFit Open in both 2017 and 2018.  List the top 10 affiliates based on the athletes who competed from that affiliate in 2018 for the region that represents your place of birth. 
+1. [15] Affiliates would like to compare where they are to other nearby affiliates.  You should group by either states or countries (depending on if there are enough affiliates in a state for grouping by state to make sense.)  Do the following using `dplyr`, 
+Identify all athletes who participated in the CrossFit Open in the main (not age group or scaled divisions) in both 2019 and 2020.  List the top 10 affiliates based on the athletes who competed from that affiliate in 2020 for the state/country that represents your place of birth. 
 
-a. [5] Make list of repeat athletes
-b. [5] Group athletes and count by affiliate based on 2018 affiliation.
-c. [5] Identify top 10 affiliates and calculate the number of repeat athletes who were there in 2018, and the average and spread of the improvement.
+a. [5] Make a list of athletes who competed in both 2019 and 2020 in the Men or Women division (as appropriate.
+b. [5] Group athletes and count by affiliate based on 2020 affiliation.
+c. [5] Identify top 10 affiliates and calculate the number of repeat athletes who were there in 2020, and the average and spread of the improvement.
 
 
 Notes: 
-    -  you should use the 2018 data to identify athletes by affiliate. 
-    -  Regions are identified in the athlete table. You should find an affiliate in your state/province to figure out what region you are in.  
-    -  You should make the list of repeat athletes first, then group by and summarize by affiliate, then filter by region.
+    -  You should use the 2020 data to identify athletes by affiliate and the competition division. Because later you are treating the affiliate as a customer, and they are only interested in current members.
+    -  You should make the list of repeat athletes first, then group by and summarize by affiliate, then filter by country/state
     
 
 **ANSWER**
 a
 ```{r repeatathletes}
-repeatathletes <- Men_Rx_2018 %>% 
-  inner_join(Men_Rx_2017, by=c("User_id"="Userid")) 
+repeatathletes <- athlete2020list %>% filter(division=="Women") %>%
+  inner_join(athlete2019list, by=c("competitorid"="competitorid", "division"="division")) 
 ```
 
 
-b
 ```{r affiliaterepeats}
 athletesaffiliates <- Affiliate_list %>%
-  left_join(repeatathletes, by="Affiliate_id") %>%
-  select(Affiliate_id, Affiliate_name, State, Country, Region_id, Region_name, Overall_rank, Overallrank) %>%
-  mutate(improvement = Overallrank - Overall_rank)
+  left_join(repeatathletes, by=c("Affiliate_id"="affiliateid.x")) %>%
+  select(Affiliate_id, Affiliate_name, State, Country, overallrank.x, overallrank.y) %>%
+  mutate(improvement = overallrank.y - overallrank.x)
 ```
 
 c
 ```{r countaffiliateathletes}
 athletesaffiliates %>% 
-  group_by(Affiliate_name, State, Country, Region_name) %>%
-  summarize(athletes2018 = n()) %>%
-  filter(Region_name=="North Central") %>%
-  arrange(-athletes2018) %>%
+  group_by(Affiliate_name, State, Country) %>%
+  summarize(athletes2020 = n()) %>%
+  filter(State=="MO") %>%
+  arrange(-athletes2020) %>%
   head(10)
 ```
 
 
-2. [10] For the top 10 affiliates in the region, calculate and show the number of athletes, average improvement in rank, and standard deviation of improvement who participated in  both the 2017 and 2018 Open.  
+2. [10] For the top 10 affiliates in the state/country, calculate and show the number of athletes, average improvement in rank, and standard deviation of improvement who participated in  both the 2019 and 2020 Open.  
 
 **ANSWER**
 ```{r}
 athletesaffiliates %>% 
-  group_by(Affiliate_name, Region_name) %>%
-  summarize(athletes2018 = n(),
+  group_by(Affiliate_name, Country, State) %>%
+  summarize(athletes2020 = n(),
             avgimprovement = mean(improvement, na.rm=TRUE),
             rangeimprovement = max(improvement, na.rm=TRUE)-min(improvement, na.rm=TRUE)) %>%
-  filter(Region_name=="North Central") %>%
-  arrange(-athletes2018) %>%
+  filter(State=="MO") %>%
+  arrange(athletes2020) %>%
   head(10)
 ```
 
-3.  [15] For your region, take the top 10 affiliates and create a boxplot of the improvement in the athletes for those affiliates.  
+3.  [15] For your state/country, take the top 10 affiliates and create a boxplot of the improvement in the athletes for those affiliates.  
 
 Note: that your plot needs labels for the x and y axis and a title that identifies the information presented and the region the plot is for.
 
@@ -106,12 +109,12 @@ Note: search on the internet for "ggplot rotate axis labels" to see how to rotat
 **ANSWER**
 ```{r}
 top10 <- athletesaffiliates %>% 
-  group_by(Affiliate_name, Affiliate_id, Region_name) %>%
-  summarize(athletes2018 = n(),
+  group_by(Affiliate_name, Affiliate_id, Country, State) %>%
+  summarize(athletes2020 = n(),
             avgimprovement = mean(improvement, na.rm=TRUE),
             rangeimprovement = max(improvement, na.rm=TRUE)-min(improvement, na.rm=TRUE)) %>%
-  filter(Region_name=="North Central") %>%
-  arrange(-athletes2018) %>%
+  filter(State=="MO") %>%
+  arrange(athletes2020) %>%
   head(10)
 ```
 ```{r}

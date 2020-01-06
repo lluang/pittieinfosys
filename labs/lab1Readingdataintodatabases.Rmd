@@ -1,7 +1,7 @@
 ---
 title: "Reading data into databases"
 author: "IE0015 Lab 1"
-date: "January 10/11, 2019"
+date: "January 10/11, 2020"
 output:
   word_document: default
   pdf_document: default
@@ -19,15 +19,17 @@ What character separates fields in this file?  What character identifies text th
 
 3. [1]  Using default settings, for several records the data fields are in the wrong column.  What causes this error?  Re-import the Affiliate list and set the options so this is done correctly.  Set the Affiliate ID to be the primary key.
 
-4. [1]  Look at the Women 2017 Rx dataset in a text editor. Import the Women 2017 Rx dataset.  Set the UserID to be the primary key. Check that the field types make sense. Allow for duplicates.  What happened to the column names?
 
-5. [2]  Load in the remainder of the data files (Women 2018 Rx, Men 2017 Rx, Men 2018 Rx).  Check for import errors.  What import errors were there?  Find the errors in the original CSV file (import in Excel).  Lookup the workout on google (search for CrossFit Open (year)) and explain the error in terms of the workout.
+Download the CrossFit 2019/2020 Open data from Kaggle (link is in Course Documents -> Datasets )
+4. [1]  Look at the 2019 Opens Athletes dataset in a text editor. Import the dataset into MS Access.  Set the UserID to be the primary key. Check that the field types make sense. Allow for duplicates.  What happened to the column names?
+
+5. [2]  Load in the remainder of the data files (2019 Opens scores, 2020 Opens athleets, 2020 Opens scores).  Check for import errors.  What import errors were there?  Find the errors in the original CSV file (import in Excel).  Lookup the workout on google (search for CrossFit Open (year)) and explain the error in terms of the workout.
 
 
 For problems 5 and 6, you will do the lab based on your last name and your birth month.
 
 Last (family) name:  A-L: Women,  M-Z: Men
-Birth month:  Jan - June:  2017,  July-December: 2018
+Birth month:  Jan - June:  2019,  July-December: 2020
 
 5. [1]  The final result of the CrossFit Open is the sum of the ranks.  Modify the table design that calculates the sum of the ranks of athletes in your dataset, then sort the athletes by rank.  Confirm that this gives the same results as the field "Overall rank"
 

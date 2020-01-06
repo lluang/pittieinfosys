@@ -1,7 +1,7 @@
 ---
-title: 'Homework 1: Getting started with R'
+title: 'Homework 1: Data manipulation verbs with R and dplyr'
 author: "IE 0015"
-date: "January 30, 2019"
+date: "January 30, 2020"
 output:
   html_document: default
   pdf_document: default
@@ -30,30 +30,24 @@ library(readr)
 Last (family) name:  A-L: Men,  M-Z: Women
 
 
-
 1. [15] Affiliates would like to compare where they are to other nearby affiliates.  The CrossFit Open organizes athletes into regions.  Do the following using `dplyr`, 
-Identify all athletes who participated in the CrossFit Open in both 2017 and 2018.  List the top 10 affiliates based on the athletes who competed from that affiliate in 2018 for the region that represents your place of birth. 
+Identify all athletes who participated in the CrossFit Open in both 2019 and 2020.  List the top 10 affiliates based on the number of athletes who competed from that affiliate in 2019 for the region that represents your place of birth. 
 
 a. [5] Make list of repeat athletes
-b. [5] Group athletes and count by affiliate based on 2018 affiliation.
-c. [5] Identify top 10 affiliates and calculate the number of repeat athletes who were there in 2018, and the average and spread of the improvement.
-
+b. [5] Group athletes and count by affiliate based on 2020 affiliation.
+c. [5] Identify top 10 affiliates and calculate the number of repeat athletes who were there in 2020, and the average and spread of the improvement in rank.
 
 Notes: 
-    -  you should use the 2018 data to identify athletes by affiliate. 
+    -  You should use the 2020 data to identify athletes by affiliate. 
     -  Regions are identified in the athlete table. You should find an affiliate in your state/province to figure out what region you are in.  
     -  You should make the list of repeat athletes first, then group by and summarize by affiliate, then filter by region.
-    
 
+2. [10] For the top 10 affiliates in the region, calculate and show the number of athletes, average improvement in rank, and standard deviation of improvement in rank of those who participated in both the 2019 and 2020 Open.  
 
-2. [10] For the top 10 affiliates in the region, calculate and show the number of athletes, average improvement in rank, and standard deviation of improvement who participated in  both the 2017 and 2018 Open.  
-
-
-3.  [15] For your region, take the top 10 affiliates and create a boxplot of the improvement in the athletes for those affiliates.  
+3.  [15] For your region, take the top 10 affiliates and create a boxplot of the improvement in the athletes for those affiliates.
 
 Note: that your plot needs labels for the x and y axis and a title that identifies the information presented and the region the plot is for.
 
 Note: search on the internet for "ggplot rotate axis labels" to see how to rotate the x-axis labels.
 
-
-4. [10]  For one of the top 5 affiliates in the region, create a plot that shows the improvement of each athletes who participated in both the 2017 and 2018 Open.  Assume that your client is the head coach of that affiliate.  Explain to the coach how to interpret the plot and the implication.  Note that the plot needs meaningful axis titles and a main title. 
+4. [10]  For one of the top 5 affiliates in the region, create a plot that shows the improvement in rank of each athlete who participated in both the 2019 and 2020 Open.  Assume that your client is the owner of that affiliate.  Explain to the owner how to interpret the plot and the implication.  Note that the plot needs meaningful axis titles and a main title. 
