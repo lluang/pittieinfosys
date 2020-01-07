@@ -9,60 +9,76 @@ output:
   word_document: default
 ---
 
-Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.  When a query is required, you may use the MS Access Query Wizard to design the query, then use the SQL View to display the resulting SQL that will go into your answer. 
+Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.  When a query is required, you may use the MS Access Query Wizard to design the query, then use the SQL View to display the resulting SQL that you will copy and paste to submit as your answer. Remember to write a narrative that explains how your query works.
 
-1. [1] Download the Affiliate data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
-
-What character separates fields in this file?  What character identifies text that should be kept in the same data field? (Note: only some records need to especially identify text, what distinguishes them) What would happen if you did not identify text that should be kept together?
-
-**ANSWER**
-
-comma, "", If there is punctuation in the address, it will be broken into two columns.
-
-
-2. [1]  Using the MS Access, import the Affiliate list data using default settings. How many rows and columns are in the resulting table?  
-
-**ANSWER**
-14844 rows. If off by one, check that field names are headers.
-10 columns.  Can be 11 columns if an index column is created.
-
-
-3. [1]  Using default settings, for several records the data fields are in the wrong column.  What causes this error?  Re-import the Affiliate list and set the options so this is done correctly.  Set the Affiliate ID to be the primary key. Note: set all boolean and ID fields to "short text".
-
-**ANSWER**
-Some of the records have an extra fields, so fields beginning with the City are in the wrong column.  Need to identify the double quote \" character as text delimiter to keep the address from being split across two fields.  Especitally when there is a suite number as part of the address.
-
-4. [1]  Look at the 2020 Opens Athletes dataset in a text editor. Import the 2020 Opens Athletes dataset.  Set the competitor to be the primary key. Check that the field types make sense. Allow for duplicates.  What happened?  What error to do you get and why?  Try again and allow Access to create a primary key.
+1. [4]  Import the 2020 Opens Athletes dataset.  Set the competitor to be the primary key. Check that the field types make sense.  What happened?  What error to do you get and why?  Try again and allow Access to create a primary key.
 
 **ANSWER** 
-You should notice that the periods (.) in the column names disappeared.
+You should notice that the periods (.) in the column names disappeared.  Some competitors are listed multiple times do you get an error of duplicates/
 
-5. [2]  Load in the remainder of the data files (2019 Opens Scores, 2020 Opens Athletes, 2020 Opens Scores).  Remember to set a text delimiter for the "Scores" files. Develop a query that only keeps scores from the "Women" and "Men" divisions from the "Scores" files (these are open divisions without age qualifiers).  Export these files to csv.  *Save these results, they are much smaller files and will save you time loading data on future labs and homeworks*.
+2. [4]  Load in the remainder of the data files (2019 Opens Scores, 2020 Opens Athletes, 2020 Opens Scores).  Remember to set a text delimiter for the "Scores" files. Develop queries that only keeps athletes and scores from the "Women" and "Men" open (not scaled) divisions (these are open divisions without age qualifiers).  Export these files to csv.  *Save these results, they are much smaller files and will save you time loading data on future labs and homeworks*.
 
 **ANSWER**
-There were scores that were in days minutes hours format while most scores were in seconds.
+
+SELECT DISTINCT [2019_opens_athletes].*, [2019_opens_athletes].division
+FROM 2019_opens_athletes
+WHERE ((([2019_opens_athletes].division)="Women")) OR ((([2019_opens_athletes].division)="Men"));
+
+SELECT [2019_opens_scores].*, [2019_opens_scores].division, 
+FROM 2019_opens_scores
+WHERE ((([2019_opens_scores].division)="Men" Or ([2019_opens_scores].division)="Women"));
+
+SELECT DISTINCT [2020_opens_athletes].*
+FROM 2020_opens_athletes
+WHERE ((([2020_opens_athletes].division)="Men" Or ([2020_opens_athletes].division)="Women"));
+
+SELECT [2020_opens_scores].*, [2020_opens_scores].division
+FROM 2020_opens_scores
+WHERE ((([2020_opens_scores].division)="Men" Or ([2020_opens_scores].division)="Women"));
+
 
 For problems 6 and 7, you will do the lab based on your last name and your birth month.
 
 Last (family) name:  A-L: Women,  M-Z: Men
 Birth month:  Jan - June:  2019,  July-December: 2020
 
-6. [1]  The final result of the CrossFit Open is the sum of the ranks.  Modify the table design that calculates the sum of the ranks of athletes in your dataset, then sort the athletes by rank.  Confirm that this gives the same results as the field "Overall rank"
+3. The final result of the CrossFit Open is the sum of the ranks.  
 
-Write how you modified the table design (include a copy and paste of the equation) and copy and paste in a table that shows the correct result.
+a. [4] Create a query that calculates the sum of the ranks of each score of athletes in your dataset, then sort the athletes by rank and displays the athlete's name, country, Affiliate of training, Division, and the sum of the ranks.  
+b. [2] Create a query that displays the sorted Overall from the athlete table.  Confirm that this gives the same results (Top 10) as the field "Overall rank" from the query from part (a).
+
+**ANSWER** 
+
+SELECT [2020_opens_athletes open division].competitorid, [2020_opens_athletes open division].competitorname, [2020_opens_athletes open division].countryoforiginname, [2020_opens_athletes open division].affiliatename, [2020_opens_athletes open division].division, Sum([2020_opens_scores open division].rank) AS SumOfrank
+FROM [2020_opens_athletes open division] INNER JOIN [2020_opens_scores open division] ON ([2020_opens_athletes open division].division = [2020_opens_scores open division].division) AND ([2020_opens_athletes open division].competitorid = [2020_opens_scores open division].competitorid)
+GROUP BY [2020_opens_athletes open division].competitorid, [2020_opens_athletes open division].competitorname, [2020_opens_athletes open division].countryoforiginname, [2020_opens_athletes open division].affiliatename, [2020_opens_athletes open division].division
+HAVING ((([2020_opens_athletes open division].division)="Women"))
+ORDER BY Sum([2020_opens_scores open division].rank);
+
+Note the division in the HAVING statement (same is WHERE), also in the SELECT there is a Sum(rank) statement that adds the rank. Finally, it is ordered by Sum(rank)
+
+SELECT [2020_opens_athletes].[ID], [2020_opens_athletes].[competitorid], [2020_opens_athletes].[competitorname], [2020_opens_athletes].[gender], [2020_opens_athletes].[countryoforiginname], [2020_opens_athletes].[affiliatename], [2020_opens_athletes].[overallrank], [2020_opens_athletes].[is_scaled], [2020_opens_athletes].[division]
+FROM 2020_opens_athletes
+WHERE ((([2020_opens_athletes].[is_scaled])="0") AND (([2020_opens_athletes].[division])="Women"))
+ORDER BY [2020_opens_athletes].[overallrank];
 
 
-7. [3]  Create a query that does the following:
+4. [6]  Create a query that does the following:
 
-    i. For each affiliate (gym), identify the number of athletes who entered the CrossFit Open that year.
-    ii.  What is the minimum (best) sum of ranks for that affiliate.
-    iii.  What is the maximum (worst) sum of ranks for that affiliate.
+  i. Calculate the rank for each athlete
+  ii. Identifies the affiliate for each athlete
+  iii. For each affiliate provide the number of athletes participating, the highest rank, and the lowest rank.
+  iv. Sorts the affiliates by the number of athletes participating, greatest number first.
     
 Select SQL View and copy and paste the results of the SQL view.  Also submit a table (copy and paste into word) with the top 10 affiliates, sorted by the number of athletes entered.
 
+Hint:  Sort the athlete scores by athlete.  How should the ranks be combined to get the sum of ranks?  What column should be used to identify the affiliate?
 
+**ANSWER**
 
-SELECT Affiliate_list.[Affiliate_id], Affiliate_list.[Affiliate_name], Affiliate_list.[State], Affiliate_list.[Country], Count(Women_Rx_2017.Userid) AS CountOfUserid, Min(Women_Rx_2017.Overallrank) AS MinOfOverallrank, Max(Women_Rx_2017.Overallrank) AS MaxOfOverallrank
-FROM Affiliate_list INNER JOIN Women_Rx_2017 ON Affiliate_list.Affiliate_id = Women_Rx_2017.Affiliateid
-GROUP BY Affiliate_list.[Affiliate_id], Affiliate_list.[Affiliate_name], Affiliate_list.[State], Affiliate_list.[Country]
-ORDER BY Count(Women_Rx_2017.Userid) DESC;
+SELECT [2020_opens_athletes open division].[countryoforigincode], [2020_opens_athletes open division].[countryoforiginname], [2020_opens_athletes open division].[divisionid], [2020_opens_athletes open division].[affiliateid], [2020_opens_athletes open division].[affiliatename], [2020_opens_athletes open division].[is_scaled], [2020_opens_athletes open division].[division], Min([2020_opens_athletes open division].overallrank) AS MinOfoverallrank, Max([2020_opens_athletes open division].overallrank) AS MaxOfoverallrank
+FROM [2020_opens_athletes open division]
+GROUP BY [2020_opens_athletes open division].[countryoforigincode], [2020_opens_athletes open division].[countryoforiginname], [2020_opens_athletes open division].[divisionid], [2020_opens_athletes open division].[affiliateid], [2020_opens_athletes open division].[affiliatename], [2020_opens_athletes open division].[is_scaled], [2020_opens_athletes open division].[division]
+HAVING ((([2020_opens_athletes open division].[is_scaled])="0") AND (([2020_opens_athletes open division].[division])="Women"))
+ORDER BY Count([2020_opens_athletes open division].[competitorid]) DESC;
+
