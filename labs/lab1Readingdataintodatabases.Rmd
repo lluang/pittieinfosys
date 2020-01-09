@@ -3,43 +3,39 @@ title: "Reading data into databases"
 author: "IE0015 Lab 1"
 date: "January 10/11, 2020"
 output:
-  word_document: default
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
+  word_document: default
 ---
 
-Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.  When a query is required, you may use the MS Access Query Wizard to design the query, then use the SQL View to display the resulting SQL that will go into your answer. 
+Note: This lab should be done as a Word file so you can cut and paste MS Access output to answer questions as needed.  When a query is required, you may use the MS Access Query Wizard to design the query, then use the SQL View to display the resulting SQL that you will copy and paste to submit as your answer. Remember to write a narrative that explains how your query works.
 
-1. [1] Download the Affiliate data from Courseweb (My Documents -> Data Sets) and look at it using a text editor (Notepad or the R Studio editor). 
-
-What character separates fields in this file?  What character identifies text that should be kept in the same data field? (Note: only some records need to especially identify text, what distinguishes them) What would happen if you did not identify text that should be kept together?
-
-2. [1]  Using the MS Access, import the Affiliate list data using default settings. How many rows and columns are in the resulting table?  
-
-3. [1]  Using default settings, for several records the data fields are in the wrong column.  What causes this error?  Re-import the Affiliate list and set the options so this is done correctly.  Set the Affiliate ID to be the primary key.
+1. [4]  Import the 2020 Opens Athletes dataset.  Set the competitor to be the primary key. Check that the field types make sense.  What happened?  What error to do you get and why?  Try again and allow Access to create a primary key.
 
 
-Download the CrossFit 2019/2020 Open data from Kaggle (link is in Course Documents -> Datasets )
-4. [1]  Look at the 2019 Opens Athletes dataset in a text editor. Import the dataset into MS Access.  Set the UserID to be the primary key. Check that the field types make sense. Allow for duplicates.  What happened to the column names?
-
-5. [2]  Load in the remainder of the data files (2019 Opens scores, 2020 Opens athleets, 2020 Opens scores).  Check for import errors.  What import errors were there?  Find the errors in the original CSV file (import in Excel).  Lookup the workout on google (search for CrossFit Open (year)) and explain the error in terms of the workout.
+2. [4]  Load in the remainder of the data files (2019 Opens Scores, 2020 Opens Athletes, 2020 Opens Scores).  Remember to set a text delimiter for the "Scores" files. Develop queries that only keeps athletes and scores from the "Women" and "Men" open (not scaled) divisions (these are open divisions without age qualifiers).  Export these files to csv.  *Save these results, they are much smaller files and will save you time loading data on future labs and homeworks*.
 
 
-For problems 5 and 6, you will do the lab based on your last name and your birth month.
+For problems 3 and 4, you will do the lab based on your last name and your birth month.
 
 Last (family) name:  A-L: Women,  M-Z: Men
 Birth month:  Jan - June:  2019,  July-December: 2020
 
-5. [1]  The final result of the CrossFit Open is the sum of the ranks.  Modify the table design that calculates the sum of the ranks of athletes in your dataset, then sort the athletes by rank.  Confirm that this gives the same results as the field "Overall rank"
+3. The final result of the CrossFit Open is the sum of the ranks.  
 
-Write how you modified the table design (include a copy and paste of the equation) and copy and paste in a table that shows the correct result.
+a. [4] Create a query that calculates the sum of the ranks of each score of athletes in your dataset, then sort the athletes by rank and displays the athlete's name, country, Affiliate of training, Division, and the sum of the ranks.  
+b. [2] Create a query that displays the sorted Overall from the athlete table.  Confirm that this gives the same results (Top 10) as the field "Overall rank" from the query from part (a).
 
 
-6. [3]  Create a query that does the following:
+4. [6]  Create a query that does the following:
 
-    i. For each affiliate (gym), identify the number of athletes who entered the CrossFit Open that year.
-    ii.  What is the minimum (best) sum of ranks for that affiliate.
-    iii.  What is the maximum (worst) sum of ranks for that affiliate.
+  i. Calculate the rank for each athlete
+  ii. Identifies the affiliate for each athlete
+  iii. For each affiliate provide the number of athletes participating, the highest rank, and the lowest rank.
+  iv. Sorts the affiliates by the number of athletes participating, greatest number first.
     
 Select SQL View and copy and paste the results of the SQL view.  Also submit a table (copy and paste into word) with the top 10 affiliates, sorted by the number of athletes entered.
+
+Hint:  Sort the athlete scores by athlete.  How should the ranks be combined to get the sum of ranks?  What column should be used to identify the affiliate?
+
