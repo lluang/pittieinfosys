@@ -8,11 +8,12 @@ output:
   word_document: default
 ---
 
-This lab uses the CrossFit Open data you used in last week's lab. You should start with the database from then that includes the affiliate data and Men's and Women's data from 2017 and 2018.  The goal for this lab is creation of a database tool that an affiliate can use to evaluate its own performance.
+
+This lab uses the CrossFit Open data you used in last week's lab. You should start with the database from then that includes the affiliate data and Men's and Women's data from 2019 and 2020.  The goal for this lab is creation of a database tool that an affiliate can use to evaluate their own performance.
 
 Last (family) name:  A-L: Women,  M-Z: Men
 
-1. [2] Create a query that identifies all athletes who competed in both the 2017 and 2018 CrossFit Open, shows their overall rank for each, and calculates the improvement in rank for each athlete. (Note: lower rank is better)  Sort by their 2018 rank.
+1. [2] Create a query that identifies all athletes who competed in both the 2019 and 2020 CrossFit Open, shows their overall rank for each, and calculates the improvement in rank for each athlete. (Note: lower rank is better)  Sort by their 2020 rank.  Note: a lower rank is better.
 
 
 **ANSWER**
@@ -34,7 +35,12 @@ Userid | Affiliateid | Overallrank | Overall_rank | Improverank
 264512 | 10868 | 4 | 9 | -5
 430191 | 9465 | 46 | 10 | 36
 
-2. [2] Create a query that for a given affiliate, collect the data of all athletes from that affiliate and gives the number of repeat athletes and the mean and standard deviation of the change in rank between 2017 and 2018.
+
+2. [2] Create a query that for a given affiliate, collect the data of all athletes from that affiliate and gives the number of repeat athletes and the mean and standard deviation of the change in rank between 2019 and 2020
+
+
+
+
 
 **ANSWER**
 ```
@@ -59,7 +65,7 @@ Affiliate_id | Affiliate_name | CountOfImproverank | AvgOfImproverank | StDevOfI
 
 For question 3, use your state or province of birth if you were born in the U.S., Canada, or Australia, your country of birth otherwise.  If there is no applicable affiliate, pick your favorite U.S. state :-)
 
-3. [3] Create a query that for a given state/country, provides a list of all affiliates with repeat athletes in that state/country, with the number of athletes, and the mean and standard deviation of their change in rank between 2017 and 2018.
+3. [3] Create a query that for a given state/country, provides a list of all affiliates with repeat athletes in that state/country from the 2019 and 2020 athlete files; with the number of athletes and the mean and standard deviation of their change in rank between 2019 and 2020
 
 **ANSWER**
 ```
@@ -83,10 +89,12 @@ MO | 3387 | CrossFit Believe | 13 | -4373.07692307692 | 22266.736740639
 MO | 12001 | CrossFit Higginsville | 12 | -885.25 | 20939.8943347382
 MO | 11384 | Share the Burden CrossFit | 12 | 2570.75 | 10930.1751805391
 
+
 4. [3]  Create a query that does the following:
 
-    i.  Select the top affiliate in the state from question 3 using the Affiliate ID.
-    ii. Display all athletes that are competed in both the 2017 and 2018 CrossFit Open with their overall ranks.
+    i.  Select the top affiliate in the area from question 3.
+    ii. Display all athletes that are competed in both the 2019 and 2020 CrossFit Open with their overall ranks.
+    
     
 **ANSWER**
 ```
