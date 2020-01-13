@@ -1,0 +1,115 @@
+---
+title: 'Lab 2: Database forms and reports'
+author: "IE 0015 Information Systems Engineering"
+date: "01/16-17/2020"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+
+This lab uses the CrossFit Open data you used in last week's lab. You should start with the database from last week and the division that you used last week  The goal for this lab is creation of a report for the owner of an affiliate (gym).
+
+Last (family) name:  A-L: Women,  M-Z: Men
+Birth month:  Jan - June:  2019,  July-December: 2020
+
+1. [8] Pick one affiliate from the list of top 10 affiliates from last year.  Create a query that identifies all athletes from that affiliate (as specified by the athlete table) and their scores for each event in that year's Open.  The result should include:
+
+    1. Affiliate Name
+    2. Competitor Name
+    3. Competitor Division
+    4. Competitor overall rank
+    5. Event number (ordinal)
+    6. Event breakdown (description)
+    7. Competitor event rank
+    8. Score (as displayed)
+
+Note that in the event of multiple scores for an event, use the best (minimum rank).  Also, you need to confirm that the division and scaled fields are matched (competitors sometimes enter in more than one division.  We want Men/Women (no age group) and not scaled (is_scaled=0).
+
+**ANSWER**
+```
+SELECT [2020_opens_scores].ID, 
+  [2020_opens_athletes].affiliatename, 
+  [2020_opens_athletes].competitorname, 
+  [2020_opens_scores].division, 
+  [2020_opens_athletes].overallrank, 
+  [2020_opens_scores].ordinal, 
+  [2020_opens_scores].breakdown, 
+  Min([2020_opens_scores].rank) AS MinOfrank, 
+  [2020_opens_scores].scoredisplay
+FROM 2020_opens_athletes INNER JOIN 2020_opens_scores ON 
+  ([2020_opens_athletes].is_scaled = [2020_opens_scores].is_scaled) AND
+  ([2020_opens_athletes].division = [2020_opens_scores].division) AND
+  ([2020_opens_athletes].competitorid = [2020_opens_scores].competitorid)
+GROUP BY [2020_opens_scores].ID, [2020_opens_athletes].affiliatename,
+  [2020_opens_athletes].competitorname, [2020_opens_scores].division, 
+  [2020_opens_athletes].overallrank, [2020_opens_scores].ordinal, 
+  [2020_opens_scores].breakdown, [2020_opens_scores].scoredisplay, 
+  [2020_opens_scores].is_scaled
+HAVING ((([2020_opens_athletes].affiliatename)="East West CrossFit") AND
+  (([2020_opens_scores].division)="Women") AND 
+  (([2020_opens_scores].is_scaled)="0"))
+ORDER BY [2020_opens_athletes].overallrank, [2020_opens_scores].ordinal;
+
+
+```
+affiliatename	competitorname	division	overallrank	ordinal	breakdown	MinOfrank	scoredisplay
+East West CrossFit	Kulwadee Inklin	Women	1422	1	"5 rounds +
+19 wall-ball shots
+5-cal. row
+"	111887	214 reps - s
+East West CrossFit	Kulwadee Inklin	Women	1422	2	"Within 16 minutes:
+3 rounds +
+25 knee-raises
+50 single-unders
+4 squat cleans
+Tiebreak: 12:50"	79621	343 reps - s
+East West CrossFit	Kulwadee Inklin	Women	1422	3	"200-ft. FR lunge
+50 box step-ups
+40 elevated strict HSPUs
+Tiebreak: 7:50"	84190	130 reps - s
+East West CrossFit	Kulwadee Inklin	Women	1422	4	"4 rounds +
+9 pull-ups
+Tiebreak: 5:47"	88305	97 reps - s
+East West CrossFit	Kulwadee Inklin	Women	1422	5	210 reps	77049	14:49 - s
+East West CrossFit	Nopawan Meunkaotong	Women	3305	1	"4 rounds +
+19 wall-ball shots
+13-cal. row
+"	79582	184 reps
+East West CrossFit	Nopawan Meunkaotong	Women	3305	2	"Within 8 minutes:
+1 round +
+25 toes-to-bars
+50 double-unders
+Tiebreak: 7:19"	28162	165 reps
+East West CrossFit	Nopawan Meunkaotong	Women	3305	3	"200-ft. OH lunge
+50 box step-ups
+3 strict HSPUs
+Tiebreak: 8:53"	20154	93 reps
+East West CrossFit	Nopawan Meunkaotong	Women	3305	4	"3 rounds
+Tiebreak: 5:28"	39752	66 reps
+East West CrossFit	Nopawan Meunkaotong	Women	3305	5	"Round of 21
+21 thrusters
+"	32954	141 reps
+East West CrossFit	Selina Richards	Women	4779	1	5 rounds	72834	190 reps
+East West CrossFit	Selina Richards	Women	4779	2	"Within 8 minutes:
+1 round +
+21 toes-to-bars
+Tiebreak: 2:58"	41917	111 reps
+East West CrossFit	Selina Richards	Women	4779	3	"200-ft. OH lunge
+50 box step-ups
+Tiebreak: 8:05"	47643	90 reps
+East West CrossFit	Selina Richards	Women	4779	4	"3 rounds
+Tiebreak: 7:14"	59023	66 reps
+East West CrossFit	Selina Richards	Women	4779	5	"Round of 27
+27 thrusters
+16 C2B pull-ups
+"	42161	109 reps
+
+```
+
+2. [4] Create a form for that affiliate that displays the same data as the query in question 1.  Make it so that you are able to see the entire workout description.
+
+Note:  You do not need to create a subform, so data for each may appear completely on its own form
+
+3. [8] Create a report that for the given affiliate, that provides the scores by each competitor.  The report should list the competitor information once, then the information for each of the workouts.
