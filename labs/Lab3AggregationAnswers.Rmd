@@ -1,7 +1,7 @@
 ---
 title: 'Lab 3:  Aggregation'
 author: "IE 0015 Information Systems Engineering"
-date: "January 24/25, 2019"
+date: "January 23/24, 2020"
 output:
   html_document: default
   pdf_document: default

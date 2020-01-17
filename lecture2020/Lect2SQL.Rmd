@@ -327,14 +327,14 @@ Identify households
 SELECT SERIALNO
 FROM ss12hpa
 WHERE FPARC IN ("1", "2", "3")
-AND FEC IN ("5", "6", "7", "8")
+AND FES IN ("5", "6", "7", "8")
 ```
 
 Now find people 18 and under in those households
 ======
 ```
 SELECT p.SERIALNO, p.AGEP, h.FPARC, h.FES
-FROM ss12ppa AS p JOIN ss12hpa as h
+FROM ss12ppaPittsburgh01701short AS p JOIN ss12hpaPittsburgh01701 as h
 ON p.SERIALNO=h.SERIALNO
 WHERE CAST(p.AGEP as INTEGER) BETWEEN 0 AND 18
 AND h.FPARC IN ("1", "2", "3")

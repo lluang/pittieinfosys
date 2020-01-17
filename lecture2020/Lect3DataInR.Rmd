@@ -6,8 +6,8 @@ output:
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
-  pdf_document: default
   html_document: default
+  pdf_document: default
   slidy_presentation: default
 ---
 
@@ -166,8 +166,8 @@ Reading from a file
 
 ```
 read.table("hogwarts.tab")
-read.csv("hogwarts.csv")
-readWorksheetFromFile("hogwarts.xlsx", sheet="Sheet1")
+read_csv("hogwarts.csv") # from readr
+read_xlsx("hogwarts.xlsx", sheet="Sheet1") #from readxl
 read.fwf("hogwarts.dat")
 ```
 
@@ -175,12 +175,12 @@ Read housing and personal record
 ===================
 
 ```{r readhousing}
-# Need to point this to lab datasets
-acshousing <- read.csv("../data/ss12hpaPittsburgh01701.csv")
+library(readr)
+acshousing <- read_csv("../data/ss12hpaPittsburgh01701.csv")
 head(acshousing[,1:10])
 ```
 ```{r readpersonal}
-acspersonal <- read.csv("../data/ss12ppaPittsburgh01701.csv")
+acspersonal <- read_csv("../data/ss12ppaPittsburgh01701.csv")
 head(acspersonal[,1:10])
 
 ```
@@ -199,7 +199,7 @@ Packages
 -  Most functionality in **R** (or any other data analysis environment) is in the form of *packages* or *libraries*.
 -  Packages are created to do a specific task or type of analysis.
 -  The *RSQLite* package handles connection to SQLite databases.
--  Other packages include *XLConnect* (for Excel spreadsheets), *ggplot2* (for charts), and *plyr* and *reshape* (for data manipulation)
+-  Other packages include *readr* for text (csv) files, *readxl* (for Excel spreadsheets), *ggplot2* (for charts), and *dplyr* and *reshape* (for data manipulation)
 
 Reading from a database
 =======================
@@ -295,11 +295,11 @@ General procedure for getting data into **R**
 The functions and libraries we need
 ===========================
 
-- read.csv() - comma separated values
+- read_csv() - from readr comma separated values
 - read.fwf() - Fixed width formatted data
 - read.table() - Text data tables
 - read.delim() - like read.csv, except you declare the delimiter
-- readxl - Microsoft Excel
+- read_xls() - from readxl Microsoft Excel
 
 Things that we need to be able to do with data
 ===============================================
@@ -337,10 +337,10 @@ hogwartstudents %>% select(name, house)
 Distinct rows
 ================
 
-- Remove duplicates from a dataset
+- Remove duplicates from a dataset.  E.g. get distinct houses
 
-```
-newdf <- olddf %>% distinct()
+```{r}
+hogwartstudents %>% select(house) %>% distinct()
 ```
 
 Calculations (Mutate)
@@ -421,7 +421,8 @@ Some examples
 
 ```{r}
 set.seed(1410)
-dsmall = diamonds[sample(nrow(diamonds),200),]
+dsmall <- diamonds %>% sample_n(200)
+# dsmall = diamonds[sample(nrow(diamonds),200),] also works
 ```
 
 Introduction to ggplot
@@ -471,7 +472,7 @@ Aesthetics - appearance
 ggplot(dsmall, aes(x=carat, y=price, shape=cut, colour=color)) + geom_point()
 ```
 
-Five named graphs
+Five named (basic) graphs
 ================
 
 - The type of plot is set using `geom`
