@@ -8,7 +8,7 @@ output:
 ---
 
 
-Load the data set from the National Survey of Family Growth from CourseWeb. (i.e. download the data and modify the below read_csv function call appropriately)
+Load the data set from the National Survey of Family Growth from CourseWeb. (i.e. download the data and modify the below read_csv function call appropriately) Note: you will also need to get the data dictionary, also linked in the Course Documents Dataset folder.
 ```{r loadlibraries, warning=FALSE}
 library(dplyr)
 library(readr)

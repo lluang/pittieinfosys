@@ -3,16 +3,17 @@ title: "Visualization"
 author: "IE 0015 Spring 2020"
 date: "January 2020"
 output:
+  html_document:
+    fig_height: 4
+    fig_width: 6
   pdf_document: default
+  slidy_presentation: default
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
     fig_height: 4
     fig_width: 6
-  slidy_presentation: default
-  html_document:
-    fig_height: 4
-    fig_width: 6
+=======
 ---
 
 
@@ -20,8 +21,9 @@ Midterm
 =========
 
 -  CoNVO
-    -  These are the article discussions we have every week. (we talked through the RegionEx CoNVO statement when we introduced the case)
+    -  These are the article discussions we have around every other week (e.g. What is Crossfit?). 
 -  Data manipulation (verbs)
+    -  Filter, Arrange, Select, Distinct, Mutate, Summarize, Random select
     -  Flow charts/Process maps
       -  SQL, R, plain English
     -  Aggregation
@@ -239,38 +241,52 @@ How to use visualizations
 
 
 
-## Visualizations in ggplot
+# Visualizations in ggplot
 
 -  Geometries and statistical summaries
 -  Scales, Axis, and Legends
 -  Colors
 
 
-## Geometries and statistics
+# Grammer of graphics
 
-## Geom
+- a grammar of graphics is a framework which follows a layered approach to describe and construct visualizations or graphics in a structured manner. 
+
+![](figures/majorcomponentsgg.png)
+
+# Building a visualization
+
+1. Data: Always start with the data, identify the dimensions you want to visualize.
+2. Aesthetics: Confirm the axes based on the data dimensions, positions of various data points in the plot. Also check if any form of encoding is needed including size, shape, color and so on which are useful for plotting multiple data dimensions.
+3. Scale: Do we need to scale the potential values, use a specific scale to represent multiple values or a range?
+4. Geometric objects: These are popularly known as *geoms*. This would cover the way we would depict the data points on the visualization. Should it be points, bars, lines and so on?
+5. Statistics: Do we need to show some statistical measures in the visualization like measures of central tendency, spread, confidence intervals?
+6. Facets: Do we need to create subplots based on specific data dimensions?
+7. Coordinate system: What kind of a coordinate system should the visualization be based on — should it be cartesian or polar?
+
+# Start with a dataset
+
+-  Load a dataset
+-  Diamond sales (included in ggplot library)
+```{r}
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+dsmall = diamonds %>% sample_n(200)
+```
+
+# Visualize two-dimensions - scatter ploat
+
+We can now visualize data up to two dimensions using some of the components from our layered grammar of graphics framework including data, scale, aesthetics and geoms. We choose a dot or scatter plot in this case for our geometric object to represent each data point.
+
+# Geom
 
 - A *geom* is the geometrical object that a plot uses to represent data.
-- We have been identifying the data to be represented in the main `ggplot()` function, but we could represent it in the `geom_()` function.
+-The *aesthetic* can be in the main `ggplot()` function or we can specify it in the `geom_()` function.
 - We do this because we want to change the statistic represented or because we will plot many things in the same chart.
 
 ```{r}
-library(ggplot2)
-dsmall = diamonds[sample(nrow(diamonds),200),]
-```
-
-Diamond scatter plots
-=========
-
-These two are the same. I will usually name the dataset in the `ggplot()` function and the aesthetic mapping in the `geom_()` command
-
-```{r}
-ggplot(dsmall, aes(x=carat, y=price)) + geom_point()
-```
-***
-
-```{r}
-ggplot(dsmall) + geom_point(mapping = aes(x=carat, y=price))
+ggplot(dsmall) + geom_point(aes(x=carat, y=price))
 ```
 
 Setting attributes
@@ -284,25 +300,92 @@ Setting attributes
   - dotted
   - dash-dot
   - etc.
+
+# Adding a third dimension
+
+- Can use color or shape of point to add another dimension
+
+```{r}
+ggplot(dsmall) + geom_point(aes(x=carat, y=price, color = color))
+```
   
-`geom_smooth()` with using linetype for adding a dimension
-=================
-
-
+`geom_smooth()` with using linetype
 
 ```{r}
 ggplot(dsmall) +
   geom_smooth(mapping = aes(x = carat, y = price))
 ```
+
+5 named graphs
+===============
+- The basic plots
+  - Scatterplot
+  - Lineplot
+  - Histogram
+  - Boxplots
+  - Barplots
+- Facets
+
+Lineplots
+===========
+- Often used for time series - shows change in values
+```{r}
+data(economics)
+ggplot(economics) + geom_line(aes(date, unemploy))
+```
+
+
+
+Histogram
+==========
+-  Look at distribution of data over a single axis
+```{r}
+ggplot(dsmall) + geom_histogram(aes(carat))
+```
+
+
+Boxplots
+==============
+- Five number summary of a numerical variable
+- Minimum, first quartile, median, third quartile, maximum
+- *whiskers* are 1.5 times interquartile range, if this does not reach the maximum value.
 ```{r}
 ggplot(dsmall) +
-  geom_smooth(mapping = aes(x = carat, y = price, linetype = color, color=color))
+  geom_boxplot(mapping = aes(x=color, y=carat))
+```
+
+Barplots
+==========
+
+- Distribution over a categorical variable (compare to histogram over a numerical variable)
+
+```{r}
+ggplot(dsmall) + geom_bar(aes(x=color))
+```
+
+Facets
+===========
+- You can use multiple aesthetics to show dimensions, or split the data using *facets*
+- E.g. scatterplot, split by cut
+- `facet_grid` either horizontal or vertical stacked
+- `facet_wrap` creates a 2d grid
+
+```{r}
+ggplot(dsmall) + geom_point(aes(x=carat, y=price)) + facet_grid(. ~ cut)
+```
+
+```{r}
+ggplot(dsmall) + geom_point(aes(x=carat, y=price)) + facet_grid(cut ~ .)
+```
+  
+```{r}
+ggplot(dsmall) + geom_point(aes(x=carat, y=price)) + facet_wrap(. ~ cut)
 ```
 
 Overlaying representations
 =================
 
-- You can then overlay multiple representations of the same data to provide more information.
+- You can instead overlay multiple representations of the same data to provide more information.
 
 ```{r}
 ggplot(dsmall) +
