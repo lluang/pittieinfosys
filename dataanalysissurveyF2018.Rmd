@@ -20,14 +20,19 @@ library(zoo)
 
 # Introduction
 
+In 201X, IE 0015, Information Systems Engineering (Infosys) was changed from a course that described corporate information systems to one that focused on programming with data.  This was done after several years where faculty observed senior capstone projects that had large datasets required significant amounts of time devoted to data processing and manipulation in Excel, at times occupying the majority of a team member's time over the course of the semester.  In addition, there was a general sense of a lack of programming skill by the faculty, by employers, and by students who compared themselves to their colleagues from other schools at their cooperative education (coop) assignments.
+
+We measure the effectiveness of the change in the Infosys course through three measures.  A survey of the IE students rating the required courses in general, a survey of senior industrial engineering students on their use of computer programming outside of the programming focused courses, and use of programming during senior capstone projects.
+
 In Fall 2018, two surveys were distributed to students within the University of Pittsburgh IE program.  First, was a survey distributed in the IE seminar, which consists of declared IE majors (Sophomores, Juniors, and Seniors). This survey asked for the year, the number of coop rotations, and a rating of the required courses in the Pitt IE curriculum. Second, was a survey distributed towards 
 those enrolled in the Fall 2018 and Spring 2019 Senior Capstone Design course that was focused on the use of programming and data analysis outside of the specific courses that they were taught.
 
-
+For the senior capstone projects, records were maintained over three academic years documenting the courses, methods, and tools used.  In particular, the use of Excel, R, or other data processing tools that were utilized to enable the application of quantitative courses such as statistics or operations research methods (simulation, optimization, stochastic methods).
 ```{r readdata, echo=FALSE, warning=FALSE, message=FALSE}
-datadirectory <- "E:\\Box Sync\\courses\\InfoSystems"
+#datadirectory <- "E:\\Box Sync\\courses\\InfoSystems"
+datadirectory <- "~/Documents/courses/datascience/pittieinfosys2015/data"
 #datadirectory <- "."
-dataIE <- read_excel(file.path(datadirectory, "Data analysis and Computer programming in Industrial Engineering_survey_F2018.xlsx"))
+dataIE <- read_excel(file.path(datadirectory, "Data analysis and Computer programming in Industrial Engineering_survey.xlsx"))
 
 iesurvey <- read_excel(file.path(datadirectory, "1085 Seminar Survey.xlsx"), skip=1)
 iesurvey$Year <- factor(iesurvey$Year, levels=c("Sophomore", "Junior", "Senior"), ordered=TRUE)
@@ -47,7 +52,7 @@ ggplot(iesurvey[(!is.na(iesurvey$`Name of Co Op`) & !is.na(iesurvey$Year)),]) + 
 ggplot(iesurvey[(!is.na(iesurvey$`Number of CO- OPS`) & !is.na(iesurvey$Year)),]) + geom_bar(aes(x=`Number of CO- OPS`)) + xlab("Coop rotations") + ylab("Number of responses") + ggtitle("Number of Coop rotations") 
 ```
 
-Note that Sophomored generally do not have coop rotations.  The coop rotation is intended to have at least 3 rotations before graduation, but a number of students have a fourth rotation.
+Note that Sophomores generally do not have coop rotations.  The coop rotation is intended to have at least 3 rotations before graduation, but a number of students have a fourth rotation.
 
 ## Class rating
 

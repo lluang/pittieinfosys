@@ -1,9 +1,0 @@
----
-title: "Tidy Data"
-author: "IE 0015"
-date: "January 2018"
-output:
-  html_document: default
-  pdf_document: default
-  slidy_presentation: default
----
