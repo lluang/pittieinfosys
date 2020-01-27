@@ -1,0 +1,157 @@
+---
+title: 'Homework 1: Data manipulation with dplyr'
+author: "IE 0015"
+date: "February 12, 2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+For the homework assignments, code and narrative should be written using R Markdown. Where process maps are needed you may write them in as pseudocode, draw them and add them to a Word Document You should render (knit) the R Markdown as a Word document, print the output, and staple with the process maps for the complete submission. Homework assignments may be done alone or in a team of 2 (note that labs are submitted individually, the case and project may be done in a team of up to 3).
+
+The first part of this homework assignment you will repeat labs 1 and 2, but you will do them in R using the dplyr/magrittr packages. Then you will generate some basic plots.
+
+```{r, warning=FALSE}
+library(tidyr)
+library(dplyr)
+library(magrittr)
+library(ggplot2)
+library(readxl)
+library(readr)
+```
+
+The CrossFit Open is an international fitness competition where athletes compete in a series of weekly events. Events are scored by a judge in a CrossFit affiliate (gym) and the scores are used to qualify athletes for the annual CrossFit Games or for other competitions that will take place over the year.
+
+As each event is unique and not directly convertable, cumulative scoring is based on the sum of the individual's rank in each event worldwide, so lower scores are better.
+
+For this assignment, you will be analyzing either men's or women's athletes based on the rule below.
+
+-  Use the first letter of your last name. 
+-  If you are in a team of two, use the last name of the person whose first name comes first alphabetically.
+-  Note: in the labs, you used 2019 and 2020 CrossFit Open, so you will need to get 2018 from the Courseweb Datasets directory in Course Documents.  Notice that for 2018, there are separate datasets for men and women and there is not a separate athlete list.
+
+Last (family) name:  A-L: Men,  M-Z: Women
+
+
+**ANSWER**
+```{r}
+# datadirectory <- "C:\\Users\\louis\\Documents\\courses\\crossfitopen"
+datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\data"
+#Affiliate_list <- read_csv(file.path(datadirectory, "Affiliate_list.csv"),
+#                           col_types = cols(Affiliate_id = col_character()))
+athlete2019list <- read_csv(file.path(datadirectory, "2019_opens_athletes.csv"), 
+                            col_types = cols(affiliateid = col_character(), competitorid = col_character()))
+scores2019 <- read_csv(file.path(datadirectory,"2019_opens_scores.csv"),
+                       col_types = cols(competitorid = col_character()))
+Women_Rx_2018 <- read_csv("../data/Women_Rx_2018.csv",
+col_types = cols(Affiliate_id = col_character(),
+User_id = col_character()))
+Men_Rx_2018 <- read_csv("../data/Men_Rx_2018.csv",
+col_types = cols(Affiliate_id = col_character(),
+User_id = col_character()))
+```
+
+1. [20] Affiliates would like to compare where they are to other nearby affiliates.  You should group by either states or countries (depending on if there are enough affiliates in a state for grouping by state to make sense.)  Do the following using `dplyr`.  Print out the answer by piping the resulting dataset to `head()` (which will list 6 rows in the result). 
+
+
+a. [5] Identify all athletes who participated in the CrossFit Open in the main division (not age group or scaled divisions) in both 2018 and 2019.  Note: that in 2019, you need to filter the dataset appropriately.  Also note that the User_id from 2018 corresponds to competitorid in 2019.
+b. [5] Create a 2019 affiliate list based on the athlete2019list data.
+c. [5] Group athletes and count the number of repeat athletes by affiliate based on 2019 affiliation.
+d. [5] For each athlete, calculate improvement as the decrease in overall rank from 2018 to 2019. Note that the appropriate field name is spelled differently in the 2018 and 2019 datasets.
+
+Notes: 
+    -  You should use the 2019 data to identify the affiliate the athlete belongs to and the competition division. Because later you are treating the affiliate as a customer, and they are only interested in current members.
+    -  You should make the list of repeat athletes first, then group by and summarize by affiliate, then filter by country/state/provice.  Choose the level that has enough affiliates for you to have 10. (i.e. if your state/province does not have 10 affiliates, you may use country.  If your country does not have 10 affiliates, you may use your discretion, e.g. add neighboring countries as needed)
+    -  The state/province of most affiliates are in the Affiliate_list dataset. Note that there may be affiliates with unknown country or state locations.
+    
+
+**ANSWER**
+a
+```{r repeatathletes}
+repeatathletes <- athlete2019list %>% filter(division=="Women") %>%
+  inner_join(Women_Rx_2018, by=c("competitorid"="User_id"))
+repeatathletes %>% head()
+```
+
+b and c
+```{r createaffiliatelist}
+affiliatelist2019 <- athlete2019list %>% 
+  select(affiliateid, affiliatename) %>%
+  distinct(affiliateid, affiliatename)
+affiatelist <- affiliatelist2019%>%
+  left_join(Affiliate_list, by=c("affiliateid"="Affiliate_id")) %>%
+  select(affiliateid, affiliatename, Country, State)
+affiliatelist %>% head()
+```
+
+d
+```{r affiliaterepeats}
+athletesaffiliates <- repeatathletes %>%
+  inner_join(affiliatelist) %>%
+  select(affiliateid, affiliatename, State, Country, overallrank, Overall_rank) %>%
+  mutate(improvement = Overall_rank - overallrank)
+athletesaffiliates %>% head()
+```
+
+
+
+
+2. [10] For the top 10 affiliates in the state/country, calculate and show the number of athletes, average improvement in rank, and standard deviation of improvement who participated in  both the 2019 and 2020 Open.  
+
+**ANSWER**
+```{r countaffiliateathletes}
+athletesaffiliates %>% 
+  group_by(affiliatename, State, Country) %>%
+  summarize(athletes2019 = n(),
+            averageimprove = mean(improvement, na.rm=TRUE),
+            sdimprove = sd(improvement, na.rm=TRUE)) %>%
+  filter(State=="PA") %>%
+  arrange(-athletes2019) %>%
+  head(10)
+```
+
+
+3.  [15] For your state/country, take the top 10 affiliates and create a boxplot of the improvement in the athletes for those affiliates.  
+
+Note:  First determine what the top 10 affiliates are, then find the athletes that are there to make the boxplot.
+Note: that your plot needs labels for the x and y axis and a title that identifies the information presented and the region the plot is for.
+Note: search on the internet for "ggplot rotate axis labels" to see how to rotate the x-axis labels.
+
+**ANSWER**
+```{r}
+top10 <- athletesaffiliates %>% 
+  group_by(affiliatename, affiliateid, Country, State) %>%
+  summarize(athletes2019 = n(),
+            avgimprovement = mean(improvement, na.rm=TRUE),
+            rangeimprovement = max(improvement, na.rm=TRUE)-min(improvement, na.rm=TRUE)) %>%
+  filter(State=="PA") %>%
+  arrange(-athletes2019) %>%
+  head(10)
+```
+
+```{r}
+athletestop10 <- top10 %>%
+  left_join(athletesaffiliates)
+```
+
+```{r}
+ggplot(athletestop10) + geom_boxplot(aes(x=affiliatename, y=improvement)) +
+  ylab("Improvement in rank") + xlab("Affiliate name") + ggtitle("Improvement in affiliates in Pennsylvania from 2018 to 2019 CrossFit Open") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+4. [10]  For one of the top 10 affiliates in the region, create a plot that shows the improvement of each athletes who participated in both the 2018 and 2019 Open.  Assume that your client is the head coach of that affiliate.  Explain to the coach how to interpret the plot and the implication.  Note that the plot needs meaningful axis titles and a main title. 
+
+**ANSWER**
+```{r}
+topaffiliate <- athletestop10 %>% 
+  filter(affiliatename=="CrossFit Q")
+```
+
+```{r}
+ggplot(topaffiliate) + geom_histogram(aes(improvement)) +
+  xlab("Improvement in rank from 2018 to 2019") + 
+  ylab("Number of athletes") +
+  ggtitle("Improvement in athletes from CrossFit Fig from 2018 to 2019 CrossFit Open")
+```
+
+Discuss if athletes generally improved, generally got worse, or were generally the same.  Discuss spread (range or variance)
