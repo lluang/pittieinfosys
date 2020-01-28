@@ -3,17 +3,18 @@ title: "Visualization"
 author: "IE 0015 Spring 2020"
 date: "January 2020"
 output:
-  html_document:
-    fig_height: 4
-    fig_width: 6
-  pdf_document: default
-  slidy_presentation: default
+  pdf_document: 
+    fig_height: 3
+    fig_width: 5
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
+    fig_height: 3
+    fig_width: 5
+  slidy_presentation: default
+  html_document:
     fig_height: 4
     fig_width: 6
-=======
 ---
 
 
@@ -41,10 +42,6 @@ Where to find help on the internet
 - R in general  
     -  CrossValidated https://stats.stackexchange.com/questions/tagged/r
     -  We use the `tidyverse` family of packages
-
-Summarizing data
-=================
-
 
 What is visualization for?
 ==========================
@@ -243,6 +240,7 @@ How to use visualizations
 
 # Visualizations in ggplot
 
+-  Grammer of graphics
 -  Geometries and statistical summaries
 -  Scales, Axis, and Legends
 -  Colors

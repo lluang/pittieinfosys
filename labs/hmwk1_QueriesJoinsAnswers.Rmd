@@ -37,10 +37,12 @@ Last (family) name:  A-L: Men,  M-Z: Women
 ```{r}
 # datadirectory <- "C:\\Users\\louis\\Documents\\courses\\crossfitopen"
 datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\data"
-#Affiliate_list <- read_csv(file.path(datadirectory, "Affiliate_list.csv"),
-#                           col_types = cols(Affiliate_id = col_character()))
+Affiliate_list <- read_csv(file.path(datadirectory, "Affiliate_list.csv"),
+                           col_types = cols(Affiliate_id = col_character()))
 athlete2019list <- read_csv(file.path(datadirectory, "2019_opens_athletes.csv"), 
-                            col_types = cols(affiliateid = col_character(), competitorid = col_character()))
+                            col_types = cols(affiliateid = col_character(), 
+                                             competitorid = col_character(),
+                                             gender= col_factor()))
 scores2019 <- read_csv(file.path(datadirectory,"2019_opens_scores.csv"),
                        col_types = cols(competitorid = col_character()))
 Women_Rx_2018 <- read_csv("../data/Women_Rx_2018.csv",
@@ -78,7 +80,7 @@ b and c
 affiliatelist2019 <- athlete2019list %>% 
   select(affiliateid, affiliatename) %>%
   distinct(affiliateid, affiliatename)
-affiatelist <- affiliatelist2019%>%
+affiliatelist <- affiliatelist2019%>%
   left_join(Affiliate_list, by=c("affiliateid"="Affiliate_id")) %>%
   select(affiliateid, affiliatename, Country, State)
 affiliatelist %>% head()
