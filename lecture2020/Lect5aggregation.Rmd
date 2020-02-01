@@ -1,0 +1,768 @@
+---
+title: 'Lecture 5: Data Aggregation: Mutate and summarize'
+author: "IE 0015 Spring 2020"
+date: "February 2020"
+output:
+  pdf_document: default
+  html_document: default
+  slidy_presentation: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
+    fig_height: 4
+    fig_width: 6
+---
+
+Note: You will need ACS data. Because this is R, you can use either the Allegheny County North or Pennsylvania data sets with no problem.
+
+Functional programming
+=========
+
+- In data analysis, one of the most common tasks is to perform an operation on every line.
+- When this is done, every line's operations is independent of every other line.
+- This is a tenet of functional programming (as opposed to procedural programming (what you learned in Matlab or C)) or object oriented programming (if you learned objects in C++).
+- The focus is on performing an action on data (functions are verbs) as opposed to identifying objects and their attributes and capabilities (objects are nouns with member attributes and member functions.)
+- In set theory (you learned this in high school algebra) this is *map-apply*
+    -  You apply a rule (function) to a set of objects to get another set.
+    -  e.g. $X = (1, 2, 3, 4, 5)$  `fivetimesx <- function(x) {5 * x}` 
+
+Compared to aggregation
+=======================
+
+- We may want to aggregate (summarize)
+    -  Calculations over groups of observations with something in common
+    - `group_by()` and `summarize()`
+- We may want to do an operation on every observation in the dataset
+    - `mutate()`
+
+Aggregating data
+================
+
+-  We often want to look at summarized data across groups, not individual data points.
+-  e.g. count instances, summations
+-  `table` function accomplishes this goal.
+-  `apply` family of functions can be used to work on arrays or lists.
+-  Usually, we can do things using the `mutate`, `group_by`, `summarize` functions from `dplyr`. This is for when those do not work (e.g. there is a function we need to use that does not work with `summarize`)
+
+Issues
+======
+
+-  Aggregating data hides information in the data, so typically do this after you have determined what aggregation is useful.
+-  We aggregate to reduce the number of dimensions being presented, so do this because there are more dimensions to be analyzed than can be understood easily.
+-  Aggregation is done because you have something that needs to be communicated and you are attempting to remove extra detail through summaries.  Make sure that what is removed is extra.
+
+>  Everything should be a simple as possible, but no simpler.
+>       - Einstein (paraphrase)
+
+
+
+table
+=====
+
+-  Creates an array of values and counts
+-  Can be turned into a `data.frame`
+
+Use ACS as an example
+============
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyr)
+library(dplyr)
+library(magrittr)
+
+acsh <- read.csv("../data/ss12hpaPittsburgh01701.csv")
+acsp <- read.csv("../data/ss12ppaPittsburgh01701.csv")
+```
+
+table summaries
+=================
+
+- Simplest way of creating summaries
+- The `table` function creates a formatted summary output of a list, usually a count.
+- Look at travel arrangements
+
+```{r}
+carpool <- acsp$JWRIP
+cptable <- table(carpool)
+cptable
+```
+
+Or make the table summary a data frame
+==================
+
+```{r}
+as.data.frame(cptable)
+```
+
+
+Diversion:  recode variables
+=======================
+
+- In the ACS data, many of the variables are coded as integers ("1", "2", "3", etc)
+- We would want to recode them with their values in English
+- In `dplyr` use `left_join()`
+    -  There is also a `merge()` function, but using `dplyr` is more consistent
+
+
+```{r}
+worktransportation = data.frame(
+              JWTR = as.factor(c("bb", "1", "2", "3", "4", "5", "6",
+                     "7", "8", "9", "10", "11", "12")), 
+              worktransportation = c(NA, 
+                    "Car, truck, or van",
+                    "Bus or trolley bus",
+                    "Streetcar", "Subway",
+                    "Railroad", "Ferryboat",
+                    "Taxicab", "Motorcycle",
+                    "Bicycle", "Walked",
+                    "Worked at home", "Other"))
+
+acsp$JWTR <- as.factor(acsp$JWTR)
+acsp1 <- acsp %>% left_join(worktransportation, by='JWTR')
+commutetable <- table(acsp1$worktransportation)
+as.data.frame(commutetable)
+```
+
+Using the `merge` function (we prefer `left_join`)
+==================================================
+
+```{r}
+acsp2 <- merge(acsp, worktransportation, by='JWTR')
+commutetable2 <- table(acsp2$worktransportation)
+as.data.frame(commutetable2)
+```
+
+Thinking about aggregation
+========================
+
+-  What are the groups that are useful to aggregate on?
+-  What is the nature of data to be operated on?
+-  What is the desired end result.
+
+dplyr group_by and summarize
+=============================
+
+- Use `group_by` and `summarize` to create data summaries
+- Apply a summary function for each group defined by `group_by`
+- Center:  `mean()`, `median()`
+- Spread:  `sd()`, `IQR()`
+- Range: `min()`, `max()`, `quantile()`
+- Position:   `first()`, `last()`, `nth()`
+- Count: `n()`, `n_distinct()`
+- Logical: `any()`, `all()`
+
+
+Look at housing tenure
+==============
+
+```{r}
+# Mean household income split by housing Tenure
+tenurevalues <- data.frame(
+                  TEN = c("", "1", "2", "3", "4"), 
+                  tenurevalues = c(NA, 
+                                 "Owned with mortgage or loan",
+                                 "Owned free and clear",
+                                 "Rented",
+                                 "Occupied without payment of rent"))
+acsh$TEN <- as.factor(acsh$TEN)
+acsh <- acsh %>% left_join(tenurevalues, by='TEN')
+acsh$watercost <- as.numeric(acsh$WATP)
+acsh$householdincome <- as.numeric(acsh$HINCP)
+acsh$numpeople <- as.numeric(acsh$NP)
+table(acsh$tenurevalues)
+```
+
+Mean income
+==========
+
+```{r}
+acsh %>% group_by(tenurevalues) %>%
+  summarize(meanincome = mean(householdincome, na.rm=TRUE))
+```
+
+More summary examples
+=====================
+```{r}
+acsh %>% group_by(tenurevalues) %>%
+  summarize(numberhouseholds = n(),
+            meanincome = mean(householdincome, na.rm=TRUE),
+            medianincome = median(householdincome, na.rm=TRUE),
+            sdincome = sd(householdincome, na.rm=TRUE),
+            minincome = min(householdincome, na.rm=TRUE),
+            maxincome = max(householdincome, na.rm=TRUE),
+            nintyfifthquant = quantile(householdincome, probs = 0.95, na.rm=TRUE))
+```
+
+`mutate()`
+==============
+
+-  While `group_by()` and `summarize()` take groups of observations, `mutate()` takes one observation at a time.
+-  In spreadsheets (e.g. MS Excel), this is like working with rows in a spreadsheet.
+-  The operations takes from variables *within* a single observation
+
+Using `mutate()`
+================
+
+- Identify the data
+- Write the equation that creates a new variable in that data frame
+
+```{r mutateexample}
+(acsh <- acsh %>%
+  mutate(incomeperperson = FINCP/NP)) %>%
+  select(FINCP, NP, incomeperperson) %>%
+  head()
+```
+
+Using `mutate()' with an external function
+===========================================
+
+- If the function is not simple arithmetic, it may be useful to create a function and call that within `mutate()`
+- Note that because you are passing a data frame into mutate (through pipe), the function already knows to look at the data one row at a time.
+
+```{r}
+percapitaincome <- function(income, numberpeople){
+  percapitaincome <- income/numberpeople
+  return(percapitaincome)
+}
+(acsh <- acsh %>%
+  mutate(incomepercapita = percapitaincome(FINCP,NP))) %>%
+  select(FINCP, NP, incomepercapita) %>%
+  head()
+```
+
+
+The `apply` family of functions
+=============================
+
+-  These are the other ways of doing the same thing as mutate (especially if you do not have a data frame)
+-  In programming languages that have functional features (e.g. R, Matlab), we generally do not use `for` loops to loop through data.
+-  If data is organized in a matrix, array, or vector, we can **map** a function to the data structure.
+-  Apply the function to each element in the data structure.
+
+The `for loop` counterpart
+==========================
+
+- If you cannot get this to work, but you remember how to do `for loops`, you can do the same by:
+  - creating an empty list to save the results
+  - Write a for loop that iterates through the data and appends an element for each row of data.
+
+```{r}
+# create a matrix of 10 rows x 2 columns
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+# mean of the rows 
+rowmean <- c() # Create an empty vector to store results
+for (i in 1:dim(m)[1]){ 
+  rowmean <- append(rowmean, mean(m[i,])) # Add current result to the list of past results
+}
+rowmean
+```
+
+
+
+Some members of the apply family of functions
+===========================
+
+Function name  | Description
+--------------------|------------------
+apply  |  Apply function over array margin
+by     | Apply function to a data frame split by factors
+lapply | Apply function over a list or vector (returns list)
+sapply | Apply function over a list or vector (returns vector or matrix)
+aggregate | Summaries over columns of a data frame.
+tapply | Apply function over a ragged array
+
+- Note: data frames are lists
+
+apply: 
+=======
+
+-  Apply function over array margins
+-  *Margins* are the dimensions of the array (row = 1, columns = 2)
+
+```{r}
+# create a matrix of 10 rows x 2 columns
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+# mean of the rows
+apply(m, 1, mean)
+# mean of the columns
+apply(m, 2, mean)
+# divide all values by 2
+apply(m, 1:2, function(x) x/2)
+```
+
+Mapping a function to a matrix or array
+=====================
+
+-  Because we often do analysis based on each element in a data frame, we often use `apply` on data frames.
+-  Note that the `apply` function requires that we use the `[["name"]]` method of specifying the elements in the observation
+    - Because we are using lists
+-  Note that we are passing in a data frame (which is a list of lists (of columns)) and getting a list back (which we add as a column in the data frame.)
+-  Compare to `mutate()`, where we already specified the data frame, so we pass in the specific variables
+
+```{r}
+familypercapita <- function(acs){
+  percapita <- as.numeric(acs[["FINCP"]])/as.numeric(acs[["NP"]])
+}
+acsh$percapita <- apply(acsh, 1, familypercapita)
+summary(acsh$percapita)
+```
+
+by: data frame split by factors
+======
+
+-  summarize data frame split by factors
+
+Results of grouping by a factor
+=====
+```{r}
+by(acsh[,c("householdincome", 'NP', 'watercost')], acsh$tenurevalues, colMeans)
+```
+
+
+```{r}
+acsh %>% group_by(tenurevalues) %>%
+  summarize(householdincome = mean(householdincome, na.rm=TRUE),
+            numberpeople = mean(NP, na.rm=TRUE),
+            watercost = mean(WATP, na.rm=TRUE))
+```
+lapply
+======
+- Returns a list resulting from applying a function to the corresponding element of X
+
+```{r}
+# create a list with 2 elements
+l <- list(a = 1:10, b = 11:20)
+# the mean of the values in each element
+l.mean <-lapply(l, mean)
+typeof(l.mean)
+l.mean[['a']]
+```
+
+sapply
+======
+
+- like `lapply` but returns a vector or matrix
+- This is usually more useful to us because you can perform use vector operations (linear algebra) on vectors and matrices.
+
+```{r}
+l.mean <- sapply(l, mean)
+typeof(l.mean)
+l.mean['a']
+l.mean[1]
+```
+
+vapply
+======
+
+- `vapply` is similar to `sapply`, but has a prespecified type of return value.
+- e.g. `fivenum` returns a summary of min, 1Q, median, 3Q, max
+
+```{r}
+l.fivenum <- vapply(l, fivenum, c(Min.=0, "1st Qu."=0, Median=0, "3rd Qu."=0, Max.=0))
+class(l.fivenum)
+l.fivenum
+```
+
+mapply
+======
+
+-  Multivariate version of `sapply`.  Applies the function to the first elements of each argument, second element, etc.
+
+```{r}
+l1 <- list(a = c(1:10), b = c(11:20))
+l2 <- list(c = c(21:30), d = c(31:40))
+# sum the corresponding elements of l1 and l2
+mapply(sum, l1$a, l1$b, l2$c, l2$d)
+```
+
+
+Groups based on one or more group variables
+==============
+
+- `aggregate`
+- `tapply`
+
+aggregate
+==========
+
+-  summarize a columns based on defined groups
+
+```{r}
+library(reshape2)
+library(ggplot2) #loads reshape2 package
+aggregate(diamonds[,c(1, 7)], diamonds[,c(2,3)], mean) %>% head()
+```
+
+
+dplyr counterpart
+=================
+
+- Same thing in `dplyr`
+- Note that `dplyr` style functions return a data frame instead of a table.
+
+```{r}
+diamonds %>% group_by(cut, color) %>%
+  summarize(carat = mean(carat), 
+            price = mean(price)) %>%
+  head()
+```
+tapply
+======
+
+-  Processes a single vector based on the values of one or more grouping vectors
+-  Specify the data, then the gr
+```{r}
+maxcarat <- tapply(diamonds$carat,diamonds$color , mean)
+maxcarat
+```
+
+Same in 
+```{r}
+diamonds %>% group_by(color) %>%
+  summarize(carat = mean(carat), 
+            price = mean(price))
+```
+
+
+Mapping a function to a vector or list
+====================
+
+-  `sapply` - returns output as a vector or matrix (if possible)
+- `lapply` - Returns output as a list
+-  `apply` allows choice of axis over a matrix. Returns a matrix
+-  Note: returning a vector implies that order is important, e.g. the results are matched to another vector.
+
+Example for a mapping
+=============
+
+-  Break out individual words for each sentence.
+-  Unknown number of words in each sentence, so use a row for each sentence.
+
+```{r}
+library(stringr)
+text = c("R is a free environment for statistical analysis",
+ "It compiles and runs on a variety of platforms",
+ "Visit the R home page for more information")
+result = str_split(text, " ", simplify=TRUE)
+result
+```
+
+Now, take the matrix and get the length of each sentence
+==================
+
+- Because we want the length to be associated with the rows, use `apply` and `MARGIN=1` (rows)
+
+```{r}
+nwords = apply(result, MARGIN=1, FUN=length)
+nwords
+```
+
+
+
+
+Mapping a function based on groups
+=====
+
+-  `aggregate`  for data frames
+-  `tapply` for vectors
+
+Compare to `for` loops
+=======================
+
+- The other way of working over a list of data is for loops.
+- Use for loops when order matters
+    - One operation depends on the results of a previous operation
+    - This should not be common
+    
+For loops
+==========
+
+```{r forloop}
+l <- data.frame(a = 1:10, b = 11:20)
+# the mean of the values in each element
+for (i in 1:10){
+  print(l$a[i] + l$b[i])
+}
+```
+
+Vectorized for loops
+====================
+- `foreach` package
+    - Just like `lapply`, but uses a `for` loop construct
+    - Returns a value, but no side effects (no other calculation)
+```{r}
+library(foreach)
+foreach(i=1:10) %do%
+  (l$a[i] + l$b[i])
+```
+
+Introduction
+============
+
+- 80% of data analysis is spent on the process of cleaning and preparing data.
+- Tidy data provides a standard way to organize data values within a data set.
+- Standard facilitates initial exploration and analysis of data.
+- Simplifies the development of data analysis tools that work well together.
+  - You do not have to take the output of one tool, then manipulate it into the input of the next.
+- Understanding tidy data should also improve your spreadsheets.
+  - Design your spreadsheets knowing that you will use it as a data source in addition to an analysis tool.
+
+Where data manipulation fits in the workflow
+=======================
+![Data analysis workflow](figures/data-science-communicate.png)
+
+Relationship to databases
+=========================
+
+- Tidy data is similar to Codd's normal forms in relational algebra and relational databases.
+  - This is covered this in IE 1014 Database design.
+- Presentation is focused on the need to make data analysis tools work together.
+
+
+Definitions
+==================
+
+- Most statistical datasets are rectangular tables made up of *rows* and *columns*.
+- A dataset is a collection of values
+  - Each value belongs to an *observation* and *variable*
+  - A *variable* contains all values that measure the same underlying attribute across observational units.
+  - An *observation* contains all values measured on the same unit.
+- A *tibble*  is an immutable data frame 
+  - *immutable* cannot be changed. This is an aspect of functional (as opposed to procedural or object oriented) programming. You can use a data frame where R4DS says tibble.
+
+Tidy data rules
+==========
+
+1.  Each variable must have its own column.
+2.  Each observation must have its own row.
+3.  Each value must have its own cell.
+
+Implications
+===========
+
+1. Put each dataset has its own data.frame.
+2. Put each variable in a column.
+
+Benefits to tidy data
+=====================
+
+1.  Having one consistent way of storing data leads you to learn a standard set of tools and methods to work with them (i.e. patterns)
+2.  If variables are in columns, then you can use vectorized methods. (vectorized methods are a hallmark of data focused programming environments like R, Matlab, and Python)
+3.  The R packages you will learn this semester (ggplot2, dplyr) are designed to work with tidy data.
+
+Introduction to R
+=================
+
+- R is a data analysis environment.
+- Includes the tools for working with data using data frames.
+- Anything that you can do in a database, you can do with a data frame.
+- Usually, the reason you use a database is to ensure data integrity and availability.
+
+Data types in R
+===============
+
+- R tries to automatically recognize data types, but you can tell R that a data frame variable is of a specific data type.
+- as.integer()
+- as.double()
+- as.character()
+- as.factor()
+- as.ordered()
+
+```{r, echo=FALSE}
+library(tidyr)
+library(dplyr)
+```
+
+Three versions of a table, what makes it not tidy?
+- Country, year, population, cases
+
+Version 1
+===========
+```{r, echo=FALSE}
+table2
+```
+
+Version 2
+==========
+```{r, echo=FALSE}
+table3
+```
+
+Version 3
+==========
+```{r, echo=FALSE}
+table4a
+```
+```{r, echo=FALSE}
+table4b
+```
+
+Version 4
+=========
+```{r, echo=FALSE}
+table1
+```
+
+Benefits - Vectorized operations %>% operator
+=================================
+
+- %>% (pipe) operator works on each row of a data frame.
+- Take something on the left side and perform the function on the right side to each element.
+- Alternative - run each function in turn and save intermediate results.
+
+```{r}
+table1 %>% 
+  mutate(rate = cases / population * 10000)
+```
+
+Why may data be provided in other forms?
+===========================
+
+- Data may be organized for another purpose? e.g. making collection easy.
+- People who do not work with data may not appreciate the need to make it easy.
+
+Ways data may be badly organized
+============================
+
+- There may be a variable spread among multiple columns (e.g. class1, class2, class3)
+- One observation may be spread among multiple rows.
+
+Basic operations to correct this
+=================================
+
+- *gather* - Column names are actually values not variables, need to break them into rows of individual values.
+- *spread* - One observation is on multiple rows, collect rows and use columns to hold variables.
+- use the package `tidyr` (part of `tidyverse`)
+
+Gather
+===========
+
+- Take a table where values are spread over two columns
+- Create rows that give a year and number of cases.
+- Columns should be: Country, year, cases
+```{r}
+table4a
+```
+
+gather()
+========
+```
+help(gather)
+```
+
+
+using gather
+===========
+```{r}
+ head(gather(table4a, `1999`, `2000`, key = "year", value = "cases"),6)
+```
+
+Same thing using pipes
+============
+```{r}
+table4a %>% gather(`1999`, `2000`, key = "year", value = "cases") %>% head(6)
+```
+
+Do the same thing with the population table and save the results
+=================
+
+```{r}
+tidy4a <- table4a %>% gather(`1999`, `2000`, key = "year", value = "cases") %>% head(6)
+tidy4b <- table4b %>% gather(`1999`, `2000`, key = "year", value = "population")
+```
+```{r}
+tidy4b %>% head(4)
+```
+
+With tidy data, now other operations become easier
+================
+
+- We will cover relational operations in the next lecture.
+
+```{r}
+tidy4 <- left_join(tidy4a, tidy4b, by=c('country', 'year'))
+head(tidy4, 4)
+```
+
+Spread
+=======
+
+- Data on a single observation is spread on two rows.
+- Often used to make data readable on a single sheet of paper.
+- You need to combine rows for a single observation into a single row.
+
+Example
+=====
+
+- For each country and year, have cases and population.
+- Then you can easily calculate a rate or proportion of population.
+```{r}
+table2%>% head(4)
+```
+
+Using spread
+==========
+
+- Key is the column with the variable names (which were split into different rows)
+- Value is the column with the value of the variable for that observation.
+
+```
+help(spread)
+```
+
+spread
+========
+```{r}
+tidy2 <- table2 %>% spread(key=type, value=count)
+tidy2 %>% head(4)
+```
+
+Separate
+========
+
+- Separate is when two values are kept in a single column.
+- Often seen in Excel spreadsheets where 2 values are put in a single cell to mimic a table.
+- `separate` will split on a non-alpha numeric character
+
+```
+help(separate)
+```
+
+Separate example
+========
+
+
+```{r}
+table3 %>% head(2)
+```
+
+===========
+```{r}
+tidy3 <- table3 %>% separate(col='rate', into=c('cases', 'population'), sep='/')
+head(tidy3, 4)
+```
+
+
+
+Returning multiple values
+==========================
+
+- In most programming languages, a function can return one value.
+- To get around this, you can return a data structure
+  - e.g. in C, you can create and return a `struct`
+  - In R, you generally return a list of values
+  
+```{r}
+# create a matrix of 10 rows x 2 columns
+m <- matrix(c(1:10, 11:20), nrow = 10, ncol = 2)
+doublehalfsumrow <- function(element){
+  doublerow <- sum(element)*2
+  halfrow <- sum(element)/2
+  c(doublerow, halfrow)
+}
+mframe <- data.frame(col1 = m[,1], col2 =m[,2])
+rowreturn <- apply(m, 1, doublehalfsumrow)
+mframe$doublerow <- rowreturn[1,]
+mframe$halfrow <- rowreturn[2,]
+mframe
+```
