@@ -1,0 +1,64 @@
+---
+title: 'Lab 5: Tidy data in R'
+author: "IE 0015"
+date: "February 6/7, 2020"
+output:
+  html_document: default
+  word_document: default
+---
+
+Note: this lab should be written using R Markdown.  The lab is provided as an R Markdown file for your convenience as a starting point. You should change the author and date appropriately. For the final submission, you should render (Knit) this as either a Word, PDF, or html document and print that output. (for most people, you will try Word, if that does not work, knit to html then open and print using your browser).  As a reminder, all computer output should be accompanied by an interpretation (in the case of an assignment, this is often an explaination of how the output answers the question.)
+
+In the `tidyr` package there are two Tuberculosis data sets `who` and `population`.  Look at the `tidyr` help files (R Studio -> Packages tab -> tidyr) to see what each contains. To load and view the last few rows of the datasets, you should enter:
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyr)
+library(dplyr)
+data(who)
+tail(who)
+```
+```{r}
+data(population)
+tail(population)
+```
+
+1. [2] Look the `who` file (which has cases by age), 
+
+a. What represents a single observation?  
+b. What makes the `who` dataset NOT comply with the Tidy data rules?  
+c. Why do you think this table is organized the way it is?
+d. What steps need to be taken make the WHO data tidy? Answer using a flow chart (or process map or pseudocode)
+
+2. [4]  Tidy data
+
+To save effort, only use the variables corresponding to new positive pulmonary smears. (*sp* code is in the name) (The code that does this is given for you. While it runs as is, you will need to modify this.)
+
+a. Make the data tidy using R and save the results to the data frame `tidywho`. Display the last 6 rows (which should be Zimbabwe)
+b. Draw a flow chart that shows the steps to calculate the annual rate of positive pulmonary smears per million population (number divided by population time 1000000) for each country from 2010 through 2012.  
+c. Implement (b) in R and display the last 9 rows. (Should be Yemen, Zambia, Zimbabwe)
+
+Note: For turning in the flow chart, after writing out the chart on a separate piece of paper, the students can either:
+
+1.	Take a picture then insert it into the knitted Word Document.
+2.	Turn in multiple files to Courseweb--one for the knitted .rmd file and one for the image file.
+
+```{r}
+who_new_sp <- who %>% 
+  select("country", "iso3", "year", 
+         "new_sp_m014", "new_sp_m1524",
+         "new_sp_m2534", "new_sp_m3544", 
+         "new_sp_m4554", "new_sp_m5564", 
+         "new_sp_m65", "new_sp_f014", 
+         "new_sp_f1524", "new_sp_f2534",
+         "new_sp_f3544", "new_sp_f4554",
+         "new_sp_f5564", "new_sp_f65")
+```
+
+3. [4] Create a table with one line per country with three years.
+
+a.  Using the results of 2, (a dataframe with country, iso3, year, cases of sp, population, and rate per million) draw a flow chart that will create a data frame with the country, iso3, and columns with the rate per million cases of positive pulmonary smears for each of 2010, 2011, 2012. (so 5 columns total).
+
+b.  Implement this in R code.  Display the last 6 rows when sorted by name of the country.
+
+c.  Compare the table in 2(c) and the table in 3(b).  Which way of presenting the data do you prefer and why?
+
