@@ -11,7 +11,7 @@ For the homework assignments, code and narrative should be written using R Markd
 
 The first part of this homework assignment you will repeat labs 1 and 2, but you will do them in R using the dplyr/magrittr packages. Then you will generate some basic plots.
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 library(tidyr)
 library(dplyr)
 library(magrittr)
@@ -113,7 +113,7 @@ athletesaffiliates %>%
 ```
 
 
-3.  [15] For your state/country, take the top 10 affiliates and create a boxplot of the improvement in the athletes for those affiliates.  
+3.  [10] For your state/country, take the top 10 affiliates and create a boxplot of the improvement in the athletes for those affiliates.  
 
 Note:  First determine what the top 10 affiliates are, then find the athletes that are there to make the boxplot.
 Note: that your plot needs labels for the x and y axis and a title that identifies the information presented and the region the plot is for.
