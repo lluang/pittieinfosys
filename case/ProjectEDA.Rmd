@@ -1,13 +1,11 @@
 ---
-title: 'RegionEx Case: Exploratory Data Analysis'
+title: 'Project: Exploratory Data Analysis'
 author: "IE 0015 Information Systems"
-date: "February 19, 2020"
+date: "March 18, 2020"
 output:
   pdf_document: default
   html_document: default
 ---
-
-**Due Wednesday February 19, 2020**
 
 1.  Using R, read in the data.  Note where you need to transform data and how you did this (e.g. declare it to be factor, ordered, normalize data, etc.). You may have to complete question 2 before you can completely answer this.
 2.  Describe data sets
