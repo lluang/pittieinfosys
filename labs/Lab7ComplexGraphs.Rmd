@@ -46,6 +46,17 @@ FemPreg$BIRTHWGT_LB1 <- as.numeric(FemPreg$BIRTHWGT_LB1)
 FemPreg <- FemPreg %>% filter(BIRTHWGT_LB1<98)
 ```
 
+
+**ANSWER EXAMPLE**
+
+```{r}
+ggplot(FemPreg) + geom_histogram(aes(x=BIRTHWGT_LB1, y=..density.., fill=raceorigin), position="stack", binwidth=1) + xlab("Birthweight (lbs)") + ylab("percent") 
+```
+
+```{r}
+ggplot(FemPreg) + geom_histogram(aes(x=BIRTHWGT_LB1, y=..density..), position="stack", binwidth=1) + facet_grid(raceorigin ~ .) + xlab("Birthweight (lbs)") + ylab("percent") 
+```
+
 2.  [5] The American Academy of Pediatrics recommends that infants are breastfed exclusively for about the first 6 months and that breastfeeding continue for at least 12 months.  Plot the average duration of breastfeeding (including none) according to both race (HISPRACE) and level of education of the mother (HIEDUC.  Make sure that the plot can be understood when printed in black and white and that the axis names are meaningful and legible. (i.e. translate the numerical values to the descriptions)
 
     a.  What kind of plot will you choose and why?
@@ -54,9 +65,10 @@ FemPreg <- FemPreg %>% filter(BIRTHWGT_LB1<98)
 
 Notes: 
 
-  1. Use AGEQTNURN1 indicate length of breastfeeding.  
+  1. Use BFEEDWKS  indicate length of breastfeeding. 
   2. Think about what NA means for this variable.
   3. Aggregations and summaries were covered in Lecture 6: Aggregation
+
 
 
   
@@ -80,4 +92,20 @@ colnames(highesteducation) <- c("HIEDUC", "highesteducation")
 highesteducation$HIEDUC <- as.ordered(highesteducation$HIEDUC)
 FemPreg <- FemPreg %>% 
   left_join(highesteducation)
+```
+
+**ANSWER**
+
+Need three dimensions. Highesteducation and raceorigin are factors, BFEEDWKS is numeric, so BFEEDWEEKS can be continuous, but the other two need to be separated so every combination of highesteducation and raceorigin has a value plotted.
+
+Here is using a heatmap
+```{r}
+ggplot(FemPreg %>% filter(BFEEDWKS < 104)) + geom_tile(aes(x=highesteducation,  y=raceorigin, fill=BFEEDWKS))+theme(axis.text.x = element_text(angle=90)) + scale_fill_distiller(palette="Greens")
+```
+
+
+Box and whiskers plot. Note this is really showing median, not mean, but that is ok.
+
+```{r}
+ggplot(FemPreg %>% filter(BFEEDWKS < 104)) + geom_boxplot(aes(x=highesteducation,   y=BFEEDWKS))+theme(axis.text.x = element_text(angle=90)) + facet_grid(.~raceorigin) 
 ```

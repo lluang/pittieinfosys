@@ -2,7 +2,9 @@
 title: "Project  Description"
 author: "Information Systems"
 date: "Spring 2020"
-output: word_document
+output:
+  pdf_document: default
+  word_document: default
 ---
 
 
@@ -36,7 +38,7 @@ Timeline
 
 1. Teams of 1-3. Identify a data set and a potential CoNVO and basic plots of data 
 - Part 1 above due
-February 20
+February 20  *CHANGE TO FEB 14 on paper* (Case EDA Due Feb 19)
 2. Exploratory data analysis - March 18
   - Detailed Exploratory Data Analysis of data set (2 and 3)
   - Refine CoNVO

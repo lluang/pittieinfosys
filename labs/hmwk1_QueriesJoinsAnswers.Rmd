@@ -35,8 +35,8 @@ Last (family) name:  A-L: Men,  M-Z: Women
 
 **ANSWER**
 ```{r}
-# datadirectory <- "C:\\Users\\louis\\Documents\\courses\\crossfitopen"
-datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\data"
+datadirectory <- "C:\\Users\\louis\\Documents\\courses\\crossfitopen"
+#datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\data"
 Affiliate_list <- read_csv(file.path(datadirectory, "Affiliate_list.csv"),
                            col_types = cols(Affiliate_id = col_character()))
 athlete2019list <- read_csv(file.path(datadirectory, "2019_opens_athletes.csv"), 
@@ -83,16 +83,20 @@ affiliatelist2019 <- athlete2019list %>%
 affiliatelist <- affiliatelist2019%>%
   left_join(Affiliate_list, by=c("affiliateid"="Affiliate_id")) %>%
   select(affiliateid, affiliatename, Country, State)
-affiliatelist %>% head()
+affiliatelist2019 %>% head()
 ```
 
-d
+c and d
 ```{r affiliaterepeats}
 athletesaffiliates <- repeatathletes %>%
   inner_join(affiliatelist) %>%
   select(affiliateid, affiliatename, State, Country, overallrank, Overall_rank) %>%
   mutate(improvement = Overall_rank - overallrank)
 athletesaffiliates %>% head()
+athletesaffiliates  %>% 
+  group_by(affiliatename) %>%
+  summarize(numberrepeatathletes = n())
+  
 ```
 
 
