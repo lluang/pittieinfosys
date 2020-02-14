@@ -14,7 +14,7 @@ library(magrittr)
 library(RColorBrewer)
 ```
 ```{r, loaddata}
-FemPreg <- read.csv("../data/FemPregCSV.csv",
+FemPreg <- read.csv("../data/nsfgFemPreg.csv",
                     header=TRUE, sep=",")
 ```
 
@@ -43,11 +43,38 @@ colnames(raceorigin) <- c("HISPRACE", "raceorigin")
 FemPreg$HISPRACE <- as.factor(FemPreg$HISPRACE)
 FemPreg <- FemPreg %>% 
   left_join(raceorigin)
-FemPreg$BIRTHWGT_LB1 <- as.numeric(FemPreg$BIRTHWGT_LB1)
+FemPreg$BIRTHWG_LB1 <- as.numeric(FemPreg$BIRTHWGT_LB1)
 FemPreg <- FemPreg %>% filter(BIRTHWGT_LB1<98)
+```
+**ANSWER**
+
+Look for each race to be separated.
+
+Note: only partial credit for facet_wrap/facet_grid since they are not single graphs.
+```{r}
+FemPreg <- FemPreg %>% mutate(birthweight = BIRTHWGT_LB1 + BIRTHWGT_OZ1/16.0)
+ggplot(FemPreg) + geom_histogram(aes(birthweight, y=..density..), binwidth=1) +facet_grid(raceorigin ~.) +
+  xlab("Birthweight (lbs)")
+```
+Should be either stacked, dodge, 
+
+```{r}
+ggplot(FemPreg) + geom_histogram(aes(birthweight, , y=..density.., fill=raceorigin), binwidth=1)+
+  xlab("Birthweight (lbs)")
 ```
 
 
+```{r}
+ggplot(FemPreg) + geom_histogram(aes(birthweight, , y=..density.., fill=raceorigin), binwidth=1, position="dodge")+
+  xlab("Birthweight (lbs)")
+```
+
+
+
+```{r}
+ggplot(FemPreg) + geom_density(aes(birthweight, y=..density.., fill=raceorigin), binwidth=1, position="stack")+
+  xlab("Birthweight (lbs)")
+```
 
 2.  [5] The American Academy of Pediatrics recommends that infants are breastfed exclusively for about the first 6 months and that breastfeeding continue for at least 12 months.  Plot the average duration of breastfeeding (including none) according to both race (HISPRACE) and level of education of the mother (HIEDUC.  Make sure that the plot can be understood when printed in black and white and that the axis names are meaningful and legible. (i.e. translate the numerical values to the descriptions)
 
@@ -58,7 +85,7 @@ FemPreg <- FemPreg %>% filter(BIRTHWGT_LB1<98)
 
 Notes: 
 
-  1. Use AGEQTNURN1 indicate length of breastfeeding.  
+  1. Use BFWEEKS indicate length of breastfeeding.  
   2. Think about what NA means for this variable.
 
   
@@ -68,10 +95,10 @@ highesteducation <- as.data.frame(
                      rbind(c("5", "9TH GRADE OR LESS"),
                             c("6", "10TH GRADE"),
                             c("7", "11TH GRADE"),
-                            c("8", "12TH GRADE, NO DIPLOMA (NOR GED)"),
-                            c("9", "HIGH SCHOOL GRADUATE (DIPLOMA OR GED)"),
+                            c("8", "12TH GRADE, NO DIPLOMA"),
+                            c("9", "HIGH SCHOOL GRADUATE OR GED"),
                             c("10", "SOME COLLEGE BUT NO DEGREE"),
-                            c("11", "ASSOCIATE DEGREE IN COLLEGE/UNIVERSITY"),
+                            c("11", "ASSOCIATE DEGREE"),
                             c("12", "BACHELOR'S DEGREE"),
                             c("13", "MASTER'S DEGREE"),
                             c("14", "DOCTORATE DEGREE"),
@@ -79,8 +106,25 @@ highesteducation <- as.data.frame(
                      )
            )
 colnames(highesteducation) <- c("HIEDUC", "highesteducation")
-highesteducation$HIEDUC <- as.ordered(highesteducation$HIEDUC)
 FemPreg <- FemPreg %>% 
   left_join(highesteducation)
 ```
 
+**ANSWER**
+
+Note: has to have every combination of Race and Education represented somewhere.
+
+
+```{r}
+breastfeeding <- FemPreg %>% filter(BFEEDWKS < 100)
+ggplot(breastfeeding) + geom_bar(aes(x=highesteducation)) +facet_grid(.~raceorigin) + 
+  theme(axis.text.x = element_text(angle=90)) +  xlab("Highest education level achieved") 
+```
+
+Note: Boxplots do include medium instead of mean, so this works.  
+
+```{r}
+breastfeeding <- FemPreg %>% filter(BFEEDWKS < 110)
+ggplot(breastfeeding) + geom_boxplot(aes(x=highesteducation, y=BFEEDWKS)) +facet_grid(.~raceorigin) + 
+  theme(axis.text.x = element_text(angle=90)) +  xlab("Highest education level achieved") 
+```

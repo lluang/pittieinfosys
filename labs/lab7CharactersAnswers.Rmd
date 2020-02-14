@@ -1,11 +1,11 @@
 ---
-title: 'Lab 5: Character Strings'
+title: 'Lab 7: Character Strings'
 author: "IE 0015 Information Systems"
-date: "February 8-9, 2018"
+date: "February 20-21, 2020"
 output:
+  html_document: default
   pdf_document: default
-  html_document:
-    df_print: paged
+  word_document: default
 ---
 
 ```{r loadtitanic}

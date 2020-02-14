@@ -3,8 +3,8 @@ title: 'Homework 1: Data manipulation with dplyr'
 author: "IE 0015"
 date: "February 12, 2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 For the homework assignments, code and narrative should be written using R Markdown. Where process maps are needed you may write them in as pseudocode, draw them and add them to a Word Document You should render (knit) the R Markdown as a Word document, print the output, and staple with the process maps for the complete submission. Homework assignments may be done alone or in a team of 2 (note that labs are submitted individually, the case and project may be done in a team of up to 3).
@@ -35,8 +35,8 @@ Last (family) name:  A-L: Men,  M-Z: Women
 
 **ANSWER**
 ```{r}
-datadirectory <- "C:\\Users\\louis\\Documents\\courses\\crossfitopen"
-#datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\data"
+#datadirectory <- "C:\\Users\\louis\\Documents\\courses\\crossfitopen"
+datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\data"
 Affiliate_list <- read_csv(file.path(datadirectory, "Affiliate_list.csv"),
                            col_types = cols(Affiliate_id = col_character()))
 athlete2019list <- read_csv(file.path(datadirectory, "2019_opens_athletes.csv"), 
@@ -75,13 +75,14 @@ repeatathletes <- athlete2019list %>% filter(division=="Women") %>%
 repeatathletes %>% head()
 ```
 
-b and c
+b
 ```{r createaffiliatelist}
 affiliatelist2019 <- athlete2019list %>% 
   select(affiliateid, affiliatename) %>%
   distinct(affiliateid, affiliatename)
 affiliatelist <- affiliatelist2019%>%
   left_join(Affiliate_list, by=c("affiliateid"="Affiliate_id")) %>%
+  filter(State=="PA") %>%
   select(affiliateid, affiliatename, Country, State)
 affiliatelist2019 %>% head()
 ```
@@ -95,7 +96,8 @@ athletesaffiliates <- repeatathletes %>%
 athletesaffiliates %>% head()
 athletesaffiliates  %>% 
   group_by(affiliatename) %>%
-  summarize(numberrepeatathletes = n())
+  summarize(numberrepeatathletes = n()) %>%
+  arrange(desc(numberrepeatathletes))
   
 ```
 
@@ -153,6 +155,8 @@ topaffiliate <- athletestop10 %>%
   filter(affiliatename=="CrossFit Q")
 ```
 
+An example using histogram. Other options could include scatterplot
+
 ```{r}
 ggplot(topaffiliate) + geom_histogram(aes(improvement)) +
   xlab("Improvement in rank from 2018 to 2019") + 
@@ -160,4 +164,12 @@ ggplot(topaffiliate) + geom_histogram(aes(improvement)) +
   ggtitle("Improvement in athletes from CrossFit Fig from 2018 to 2019 CrossFit Open")
 ```
 
+Here is an example of a plot that shows the individuals rank in both 2018 and 2019
+
+```{r}
+ggplot(topaffiliate) + geom_point(aes(x=Overall_rank, y=overallrank)) +
+  xlab("Rank in 2018") + 
+  ylab("Rank in 2019") +
+  ggtitle("Rank of athletes from CrossFit Fig in the 2018 and 2019 CrossFit Open")
+```
 Discuss if athletes generally improved, generally got worse, or were generally the same.  Discuss spread (range or variance)
