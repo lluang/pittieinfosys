@@ -13,11 +13,11 @@ library(dplyr)
 library(tidyr)
 library(magrittr)
 library(stringr)
-titanic <- read.csv("../data/titanic3.csv")
+titanic <- read.csv("../data/titanictrain.csv")
 ```
-1.  (3 pts) The Titanic accident was in a time when people were identified by their titles. In the Titanic data, How do you identify the title (Mr., Mrs., Miss. etc) of a person? Draw a process map for this procedure.
+1.  (3 pts) The Titanic accident was in a time when people were identified by their titles. In the Titanic data, How do you identify the title (Mr., Mrs., Miss. etc) of a person? Draw a flow chart for this procedure.
 
-Hint: open the Titanic csv file in R Studio and tell someone else exactly how to identify the title without pointing to the file.
+Hint: open the Titanic csv file in R Studio and try to tell someone else exactly how to identify the title without pointing to the file. Then you know how to write the flow chart.
 
 **ANSWER**
 
@@ -25,12 +25,14 @@ Look in the name field, find the comma after the last name.
 The title starts two spaces after the comma.
 The title is completed with a period.
 
-2.  (5 pts) Read in the titanic data and extract the title of each person.  Make a list of unique titles.  
+2.  (5 pts) Read in the titanic data and extract the title of each person. (i.e. implement (1)) Make a list of unique titles.  
 
 Note 1: Look in lecture Rmd file
-Note 2: How do you find the first letter? how do you know the title is complete? Note: The Countess is a special case, don't worry about getting her territory right, just her title.  
-Note 3:  in a regular expression, you need to escape the punctuation with a backslash, and you need to escape the backslash with another backslash (i.e. two backslashes before a punctuation mark.)
-Note 4:  to apply a function to a vector (e.g. a column in a dataframe) use `sapply`, e.g. `sapply(dataframe$column, FUN=sqrt)`  
+Note 2: How do you find the first letter? how do you know the title is complete? 
+Note 3:  To use the regular expression tool in R Studio, open the datafile (csv), then Find, then click the Regex box.  Remember that the regex tool does not require escape backslashes, but your code will.
+Note 4:  in a regular expression, you need to escape the punctuation with a backslash, and you need to escape the backslash with another backslash (i.e. two backslashes before a punctuation mark.)
+Note 5:  to apply a function to a each element in a dataframe) use `sapply`, e.g. `sapply(dataframe$column, FUN=sqrt)` or 
+`rowwise() %>% mutate(. . .)`
   
 **ANSWER**
 
@@ -38,17 +40,27 @@ Note 4:  to apply a function to a vector (e.g. a column in a dataframe) use `sap
 getTitle <- function(name) {
   titlelocation = str_locate(name, ", [A-Z][a-z]*\\.")
   title = str_sub(name, titlelocation[1]+2, titlelocation[2])
-  return (title)
+  # print(name)
+  # print(titlelocation)
+  # print(title)
 }
-titanic$Title <- sapply(titanic$name, FUN=getTitle)
+titanic$Title <- sapply(titanic$Name, FUN=getTitle)
 unique(titanic$Title)  
 ```
+
+Alternative using dplyr
+```{r}
+titanic <- titanic %>% rowwise() %>% 
+  mutate(Title2 = getTitle(Name))
+titanic %>% distinct(Title2)
+```
+
 
 3.  (2 pts) How many passengers have each title? (hint: declare the list of titles to be a factor and take the summary)
 
 **ANSWER**
 ```{r}
-titanic %>% group_by(Title) %>% summarize(count=n())
+titanic %>% group_by(Title2) %>% summarize(count=n())
 ```
 
 Alternative
