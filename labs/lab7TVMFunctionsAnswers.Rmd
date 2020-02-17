@@ -37,7 +37,7 @@ $$FV = PV {(1+r)^t}$$
 
 So the expression $1/(1+r)^t$ is the discount factor, of the present value of \$1 received in year $t$.
 
-# 1. Write time value of money functions [3 pts]
+# 1. Write time value of money functions [2 pts]
 
 a. Draw a flow chart that calculates present value (PV) given $FV, r$, and $t$.
 b. Write a function in R to calculate PV given $FV, r,$ and $t$. Note for this and (b), you need to have comments in the function that specify what the parameters are.
@@ -72,10 +72,10 @@ FV1200 <- FVM(1200, 0.08, 2)
 print(c(PV1000, FV1200))
 ```
 
-# 2.  Bond valuation [3]
+# 2.  Bond valuation [4]
 
 a.  Write the flow chart that finds the present value of a bond. A bond consists of a series of future payments, a final payout at maturity,  and the current interest rate. Note: you may assume that the PVM function use the PVM function you have created in (1) is available (i.e. it takes a single box).  
-b.  Create a function that finds the present value a bond (i.e. implements (2a).  In the comments of the function you need to define what the parameters are. (i.e. comments so you know how to use the function in the future.)
+b.  Create a function that finds the present value of a bond (i.e. implements (2a).  In the comments of the function you need to define what the parameters are. (i.e. comments so you know how to use the function in the future.)
 c.  Using your bond function, find the present values of the following bond:
     (i)  Payments of \$100 at the end of every year for three years, payout at maturity at the end of year 3 of \$1000 (note that one of the annual payments occurs simultaneously), and a rate of return of 10\%.
 
@@ -84,8 +84,9 @@ c.  Using your bond function, find the present values of the following bond:
 ```{r bondpayments}
 bondvalue <- function(payment, npayments, payout, maturitytime, r){
   # payment are the regular payments,
-  # npayments are the number of payments/periods
+  # npayments are the number of regular payments over the life of the investment
   # payout is the value at maturity
+  # maturitytime is the number of periods until the end of life of the investment 
   # r is the interest rate.
   paymentvalue <- sum(PVM(payment, r, 1:npayments))
   payoutvalue <- PVM(payout, r, maturitytime)
@@ -100,12 +101,13 @@ payout = 1000
 print(bondvalue(payment, npayments, payout, maturitytime, r))
 ```
 
-# Value of projects [5]
+# Value of projects [4]
 
-a.  Calculate the present value of each of the projects from the table above.  Use your bond function and present value functions as appropriate.
+a.  Calculate the present value of each of the projects from the table above.  Use your bond function and present value functions as appropriate. 
 b.  What is the best combination of investments for an \$8 million budget?
 
 Note: investments (your payments) are modeled as a negative payout.
+Note: Projects do not usually have a payout at the end (you invest, and you get an ongoing return, but you would only get an end of project payout if you could sell the project at salvage value.)
 Note: *Best* is defined as highest total present value of the project.
 
 **ANSWER**
