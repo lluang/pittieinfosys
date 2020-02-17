@@ -3,11 +3,21 @@ title: 'Lecture 6: Visualizing summaries'
 author: "IE 0015 Information Systems"
 date: "February 2020"
 output: 
-  pdf_document: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
+    fig_height: 4
+    fig_width: 6
   html_document: default
   slidy_presentation: default
-  beamer_presentation: default
+  pdf_document: default
 ---
+
+ANNOUCEMENT
+===========
+- We need to clear the room at the end of class because of the freshman orientation
+- Office hours moved to 10:45 - 11:45 on Thursday (because I need to come from another building)
+- Project proposals - Submit on hardcopy by end of day Friday (my IE mailbox.  Office closes at 5:00 PM)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)

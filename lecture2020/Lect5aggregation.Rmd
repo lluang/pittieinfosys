@@ -3,14 +3,14 @@ title: 'Lecture 5: Data Aggregation: Mutate and summarize'
 author: "IE 0015 Spring 2020"
 date: "February 2020"
 output:
-  pdf_document: default
-  html_document: default
-  slidy_presentation: default
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
     fig_height: 4
     fig_width: 6
+  html_document: default
+  slidy_presentation: default
+  pdf_document: default
 ---
 
 Note: You will need ACS data. Because this is R, you can use either the Allegheny County North or Pennsylvania data sets with no problem.
