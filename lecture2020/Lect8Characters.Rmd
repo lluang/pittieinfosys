@@ -3,10 +3,15 @@ title: 'Lecture 8: Character Manipulation and Strings'
 author: "IE 0015"
 date: "February 2020"
 output:
+  pdf_document: default
+  beamer_presentation:
+    colortheme: whale
+    theme: AnnArbor
+    fig_height: 2
+    fig_width: 4
+  slidy_presentation: default
   html_document:
     df_print: paged
-  pdf_document: default
-  slidy_presentation: default
 ---
 
 Introduction
@@ -15,7 +20,7 @@ Introduction
 - You should load the titanic and Rime of the Ancient Marinere from the Courseweb datasets.
 - You should have the `stringr` package
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(tidyr)
 library(dplyr)
 library(magrittr)
@@ -461,7 +466,7 @@ We can use it to find records in a data frame
 Titanic personal title example
 =====
 ```{r loadtitanic, echo=FALSE}
-titanic <- read.csv("../data/titanic3.csv")
+titanic <- read.csv("../data/titanictrain.csv")
 ```
 
 ```{r}
@@ -529,7 +534,7 @@ Using str_view
 str_view(rime, '[Ss]hip')
 ```
 ```{r}
-str_locate(rime, '[Ss]hip')
+str_locate(rime, '[Ss]hip') %>% head()
 ```
 
 ```{r}
@@ -543,11 +548,11 @@ Better will be to find all examples and where they are
 
 ```{r}
 findmarinere <- str_locate(rime, 'Marinere')
-findmarinere
+head(findmarinere, 10)
 ```
 ```{r}
 findtheall <- str_locate_all(rime, 'the')
-findtheall
+head(findtheall)
 ```
 
 
@@ -608,7 +613,7 @@ str_locate_all(characters, "[aeiou]") %>% head()
 Or everything else using ^
 ==============
 ```{r}
-str_locate_all(characters, "[^aeiou]") %>% head()
+str_locate_all(characters, "[^aeiou]")[[1]] %>% head()
 ```
 
 Try groups of characters
