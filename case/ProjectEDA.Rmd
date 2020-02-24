@@ -20,5 +20,5 @@ output:
     iv. Quantitative summary of data.  e.g. mean, median, 25/75 quartiles, range
     vi. Is this an outcome or a potential predictor? (dependent or independent variable)
 4.  CoNVO statement
-5.  Create a pairs plot. Identify some independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select 10 variables to include in the pairs plot. Use one paragraph to justify your choice of variables to include.
+5.  Create a pairs plot using `GGally::ggpairs()`. Identify some independent variables seem to produce variation in the outcome variables.  If there are more than 10 variables in the data set you should select 10 variables to include in the pairs plot. Use one paragraph to justify your choice of variables to include.
 6.  Explore at least five independent variables as identified in the pairs plot.  You may find that you have to build on the basic plot types to make something meaningful. At least one should be related to the Vision part of your CoNVO statement.

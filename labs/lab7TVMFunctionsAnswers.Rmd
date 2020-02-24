@@ -1,5 +1,5 @@
 ---
-title: 'Lab 7: TVM and Advanced programming'
+title: 'Lab 7: Functions'
 author: "Louis Luangkesorn"
 date: "February 21/22, 2020"
 output:

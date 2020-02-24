@@ -19,12 +19,6 @@ titanic <- read.csv("../data/titanictrain.csv")
 
 Hint: open the Titanic csv file in R Studio and try to tell someone else exactly how to identify the title without pointing to the file. Then you know how to write the flow chart.
 
-**ANSWER**
-
-Look in the name field, find the comma after the last name.
-The title starts two spaces after the comma.
-The title is completed with a period.
-
 2.  (5 pts) Read in the titanic data and extract the title of each person. (i.e. implement (1)) Make a list of unique titles.  
 
 - Note 1: Look in lecture Rmd file
@@ -33,38 +27,5 @@ The title is completed with a period.
 - Note 4:  in a regular expression, you need to escape the punctuation with a backslash, and you need to escape the backslash with another backslash (i.e. two backslashes before a punctuation mark.)
 - Note 5:  to apply a function to a each element in a dataframe) use `sapply`, e.g. `sapply(dataframe$column, FUN=sqrt)` or `rowwise() %>% mutate(. . .)`
   
-**ANSWER**
 
-```{r}
-getTitle <- function(name) {
-  titlelocation = str_locate(name, ", [A-Z][a-z]*\\.")
-  title = str_sub(name, titlelocation[1]+2, titlelocation[2])
-  # print(name)
-  # print(titlelocation)
-  # print(title)
-}
-titanic$Title <- sapply(titanic$Name, FUN=getTitle)
-unique(titanic$Title)  
-```
-
-Alternative using dplyr
-```{r}
-titanic <- titanic %>% rowwise() %>% 
-  mutate(Title2 = getTitle(Name))
-titanic %>% distinct(Title2)
-```
-
-
-3.  (2 pts) How many passengers have each title? 
-
-**ANSWER**
-```{r}
-titanic %>% group_by(Title2) %>% summarize(count=n())
-```
-
-Alternative
-
-```{r}
-titanic$Title <- factor(titanic$Title)
-summary(titanic$Title)
-```
+3.  (2 pts) How many passengers have each title? (Note: requires code)

@@ -1,16 +1,20 @@
 ---
-title: 'Homework 2: Calculations and Power'
+title: 'Homework 2: Calculations and Functions'
 author: "IE 0015"
-date: "February 13, 2018"
+date: "February 13, 2020"
 output:
   pdf_document: default
   html_document: default
 ---
 
+
 For the homework assignments, code and narrative should be written using R Markdown.  Process maps can be written on separate pieces of paper. You should render the R Markdown as PDF or Word then submit the hardcopy.
 
-This assignment builds on the discussion articles "What is Fitness?" and "What can exercise science learn from CrossFit?"  The purpose of those articles was to state in general terms a method of applying scientific principles to evaluating exercise and fitness.  In this homework assignment, you will operationalize the concepts in those articles 
+This assignment involves working with data, writing functions, and the act of data measurement. The data measurement tasks are based on topics that you will later cover in your human factors course.  Note: Over the break, you should start by looking at Problem 2, as it lists body measurements that you need to take.
 
+This assignment builds on the discussion articles "What is Fitness?" (first article from beginning of semester) and "What can exercise science learn from CrossFit?" (assigned for week we return from break)  The purpose of those articles was to state in general terms a method of applying scientific principles to evaluating exercise and fitness.  In this homework assignment, you will operationalize the concepts in those articles. 
+
+Note: we will discuss in class, there is more than one way to interpret this for some of the workouts (true in real life engineering), but your answers should have the correct units (from physics, dimensional analysis) and be internally consistent.
 
 ```{r, warning=FALSE, message=FALSE}
 library(tidyr)
@@ -21,39 +25,45 @@ library(readxl)
 library(readr)
 ```
 
-
-
-1. Load the affiliate and the two CrossFit Open files based on the following rule:
+1. [0] Load the affiliate list and the CrossFit Open files as needed based on the following rule:
 
 -  Use the first letter of your last name. 
--  If you are in a team of two, use the last name of the person whose first name comes first alphabetically to determine men or women, use the first name of the person whose last name comes first for 2017 or 2018.
+-  If you are in a team of two, use the last name of the person whose first name comes first alphabetically to determine men or women, use the first name of the person whose last name comes first for 2018 or 2019.
 
 Last (family) name:  A-L: Men,  M-Z: Women
-First (given) name:  A-L: 2017, M-Z: 2018
+First (given) name:  A-L: 2018, M-Z: 2019
 
 
 ```{r}
-Affiliate_list <- read_csv("../data/Affiliate_list.csv",
+#datadirectory <- "C:\\Users\\louis\\Documents\\courses\\crossfitopen"
+datadirectory <- "E:\\Documents\\courses\\datascience\\pittieinfosys2015\\data"
+Affiliate_list <- read_csv(file.path(datadirectory, "Affiliate_list.csv"),
 col_types = cols(Affiliate_id = col_character()))
-Men_Rx_2017 <- read_csv("../data/Men_Rx_2017.csv",
-col_types = cols(Affiliateid = col_character(),
-Userid = col_character()))
-#Men_Rx_2018 <- read_csv("../data/Men_Rx_2018.csv",
-#col_types = cols(Affiliate_id = col_character(),
-#User_id = col_character()))
-#Women_Rx_2017 <- read_csv("../data/Women_Rx_2017.csv",
-#col_types = cols(Affiliateid = col_character(),
-#Userid = col_character()))
-Women_Rx_2018 <- read_csv("../data/Women_Rx_2018.csv",
+Men_Rx_2018 <- read_csv(file.path(datadirectory, "Men_Rx_2018.csv"),
 col_types = cols(Affiliate_id = col_character(),
 User_id = col_character()))
+Women_Rx_2018 <- read_csv(file.path(datadirectory, "Women_Rx_2018.csv"),
+col_types = cols(Affiliate_id = col_character(),
+User_id = col_character()))
+athlete2019list <- read_csv(file.path(datadirectory, "2019_opens_athletes.csv"), 
+                            col_types = cols(affiliateid = col_character(), 
+                                             competitorid = col_character(),
+                                             gender= col_factor()))
+scores2019 <- read_csv(file.path(datadirectory,"2019_opens_scores.csv"),
+                       col_types = cols(competitorid = col_character()))
+Women_Rx_2019 <- athlete2019list %>%
+  filter(division=="Women") %>%
+  left_join(scores2019, by="competitorid")
+Men_Rx_2019 <- athlete2019list %>%
+  filter(division=="Men") %>%
+  left_join(scores2019, by="competitorid")
 # Note data set is large, you may want to do your work on a sample of the data.  
-# Comment out when you are done so done working
-Men_Rx_2017 <- Men_Rx_2017 %>% sample_frac(0.1)
-#Men_Rx_2018 <- Men_Rx_2018 %>% sample_frac(0.1)
-#Women_Rx_2017 <- Women_Rx_2017 %>% sample_frac(0.1)
-Women_Rx_2018 <- Women_Rx_2018 %>% sample_frac(0.1)
+# Comment out when you are done so you submit your final answer based on the full dataset
 
+Women_Rx_2018 <- Women_Rx_2017 %>% sample_frac(0.1)
+Women_Rx_2019 <- Women_Rx_2018 %>% sample_frac(0.1)
+Men_Rx_2018 <- Men_Rx_2018 %>% sample_frac(0.1)
+Men_Rx_2019 <- Men_Rx_2019 %>% sample_frac(0.1)
 ```
 
 The code below converts scores that are written in the format "0 days HH:MM:SS" into seconds.  Apply this to each column as needed.  See examples of use as needed.
@@ -68,20 +78,16 @@ texttoseconds <- function(textstring){
   return(seconds)
 }
 
-Men_Rx_2017$`17_1_seconds` <- sapply(Men_Rx_2017$`17.1_score`,texttoseconds)
-Men_Rx_2017$`17_3_seconds` <- sapply(Men_Rx_2017$`17.3_score`,texttoseconds)
-Men_Rx_2017$`17_5_seconds` <- sapply(Men_Rx_2017$`17.5_score`,texttoseconds)
-#Women_Rx_2017$`17_1_seconds` <- sapply(Women_Rx_2017$`17.1_score`,texttoseconds)
-#Men_Rx_2018$`18_2_seconds` <- sapply(Men_Rx_2018$`18.2_score`,texttoseconds)
+Men_Rx_2018$`18_2_seconds` <- sapply(Men_Rx_2018$`18.2_score`,texttoseconds)
 Women_Rx_2018$`18_2_seconds` <- sapply(Women_Rx_2018$`18.2_score`,texttoseconds)
 
 ```
 
-2. [3] Look up (search using the internet) the workouts that comprise the 2017 and 2018 CrossFit Opens (best place is games.crossfit.com).  In this assignment, you will need to calculate power output.  This requires being able to measure distance traveled.  You are only interested in vertical distance traveled in your calculations of power.  Measure the distances while standing.  Assign the results to variables. 
+2. [1] Look up (search using the internet) the workouts that comprise the 2018 and 2019 CrossFit Opens (best place is games.crossfit.com).  In this assignment, you will need to calculate power output in foot-pounds.  This requires being able to measure distance traveled.  You are only interested in vertical distance traveled in your calculations of power.  Measure the distances while standing.  Assign the results to variables that you will be using to calculate work. 
 
 For each workout in the year you are assigned, identify the body part (joint to joint) that would be an approximate measure of the vertical distance covered by each repetition of the movement, (for whole body movements from ground to standing, use the height from ground to your waist), measure that distance for two people (if you have two people doing the homework together, the two of you. Otherwise, find someone else in the class you can share measurements with), and average that distance.  Also estimate and average the weights for each person.  Assume that a persons weight is split evenly at the waist (top half and bottom half).
 
-Ignore cardio components (run, row, ski, double-unders) and $N$ rep max components.
+
 
 
     i. Identifies the workout.
@@ -112,7 +118,7 @@ waisttohand <-
 bodyweight <- 
 ```
 
-**ANSWER**
+**ANSWER example**
 ```{r}
 groundtowaist <- 99 /2.54/12 #ft
 groundtoknee <- 50/2.54/12 #ft
@@ -130,11 +136,13 @@ bodyweight <- 160 #lbs
 3. [2] Average power over time.
 
     a.  Draw a flow chart that calculates average power over time given mass, distance, and time. Each box should be a specific arithmetic operation.
-    b.  Write a function for each workout that calculates average power over time given weight, distance and time. Ignore all cardio (run, walk, row, bike, ski, double-unders, handstand walk, etc.) You may look up *work* and *power* in Wikipedia to see the mathematical definitions for both. (you will use this later, so design the function and its parameters accordingly) (Note: writing functions is covered in the readings from https://swcarpentry.github.io/r-novice-inflammation/)
+    b.  Write a function for each workout that calculates average power over time given weight, distance and time. You may look up *work* and *power* in Wikipedia to see the mathematical definitions for both. (you will use this later, so design the function and its parameters accordingly) (Note: writing functions is covered in the readings from https://swcarpentry.github.io/r-novice-inflammation/)
 
+For cardio components, you may ignore scores based on counts or distance. For scores based on energy consumption (unit = cals) (row, bike, or ski erg), note that 1 cal = 3085.96 foot pounds or 4186.8 joule (or Newton meters).
+For $N$ rep max exercises, score is based on the final 
 
 **ANSWER**
-Note that pounds is a unit of force.  Kilograms is a unit of mass. So mass needs to be multiplied by gravity to get force.
+Note that pounds is a unit of force.  Kilograms is a unit of mass. So mass needs to be multiplied by gravity to get force for those who use metric.
 
 ```{r}
 avgpower <- function(weight, distance, repsperround, rounds, time){
@@ -276,7 +284,7 @@ Open18_1 <- function(kneetowaist, handtoshoulder, weight, bodyweight,  time){
   # power <- weightmoved * distance * repsperround * rounds
   hangcleanjerkspower <- (weight) * (2*handtoshoulder) * 10
   toestobarpower <- bodyweight/2 * kneetowaist * 8
-  
+  rowpower <- 14 * 3085.96 # cals to foot pounds
   avgpower <- (hangcleanjerkspower + toestobarpower)/time
   return(avgpower)
 }
@@ -402,7 +410,7 @@ Open18_5 <- function(kneetowaist, handtoshoulder, chesttohand, weight1, bodyweig
 ```
 
 
-4.  [5] For the affiliate you identified in Homework 1 (one of the top 10 affiliates by number of athletes who competed in both 2017 and 2018 in the region that represents where you were born) For each athlete,
+4.  [5] For the affiliate you identified in Homework 1 (one of the top 10 affiliates by number of athletes who competed in both 2018 and 2019 in the state/country that represents where you were born) For each athlete,
 
     i. Calculate the average power over time for each workout for each athlete.
     ii. Use a boxplot to plot the distribution of average power for each workout.
