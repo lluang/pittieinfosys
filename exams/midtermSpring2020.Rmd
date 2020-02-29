@@ -1,0 +1,125 @@
+---
+title: "IE 0015 Spring 2020 Midterm"
+author: "Louis Luangkesorn"
+date: "2/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(ggplot2)
+library(GGally)
+```
+
+## Read in datasets
+
+These are the Allegheny County Property Assessments Parcel Data and Property Sales datasets.  Note: I renamed the datafiles to a meaningful name.
+
+- https://data.wprdc.org/dataset/property-assessments
+- https://data.wprdc.org/dataset/real-estate-sales
+
+```{r propertydata, warning=FALSE}
+# change the next line to be wherever you save the datasets
+#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSp2020/"
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSp2020/"
+PropertySalesTransactions <- read_csv(file.path(datadirectory, "PropertySalesTransactions.csv"),
+  col_types = cols(MUNICODE = col_character(),
+  PROPERTYZIP = col_character(), RECORDDATE = col_date(format = "%Y-%m-%d"),
+  SALEDATE = col_date(format = "%Y-%m-%d")))
+PropertySalesTransactions <- PropertySalesTransactions %>% 
+  mutate(PROPERTYCITY <- as.factor(PROPERTYCITY),
+         PROPERTYSTATE <- as.factor(PROPERTYSTATE),
+         SCHOOLDESC <- as.factor(SCHOOLDESC),
+         MUNIDESC <- as.factor(MUNIDESC),
+         SALEDESC <- as.factor(SALEDESC),
+         INSTRTYPDESC <- as.factor(INSTRTYPDESC))
+
+PropertyAssessmentsParcelData <- read_csv(file.path(datadirectory,"PropertyAssessmentsParcelData.csv"),
+  col_types = cols(CHANGENOTICEADDRESS4 = col_character(),
+              MUNICODE = col_character(), OWNERCODE = col_character(),
+              PREVSALEDATE = col_date(format = "%m-%d-%Y"),
+              PREVSALEDATE2 = col_date(format = "%m-%d-%Y"),
+              PROPERTYFRACTION = col_character(),
+              PROPERTYHOUSENUM = col_number(),
+              PROPERTYZIP = col_character(), RECORDDATE = col_date(format = "%m-%d-%Y"),
+              SALEDATE = col_date(format = "%m-%d-%Y"),
+              SCHOOLCODE = col_character(),
+              STYLE = col_character(),
+              ALT_ID = col_character(),
+              CLEANGREEN = col_character(),
+              FARMSTEADFLAG = col_character()))
+
+PropertyAssessmentsParcelData <- PropertyAssessmentsParcelData %>%
+    mutate(PROPERTYCITY <- as.factor(PROPERTYCITY),
+         PROPERTYSTATE <- as.factor(PROPERTYSTATE),
+         SCHOOLDESC <- as.factor(SCHOOLDESC),
+         MUNIDESC <- as.factor(MUNIDESC),
+         SALEDESC <- as.factor(SALEDESC),
+         CONDITIONDESC <- as.factor(CONDITIONDESC),
+         GRADEDESC <- as.factor(GRADEDESC),
+         EXTFINISH_DESC <- as.factor(EXTFINISH_DESC),
+         ROOFDESC <- as.factor(ROOFDESC),
+         BASEMENTDESC <- as.factor(BASEMENTDESC),
+         HEATINGCOOLINGDESC <- as.factor(HEATINGCOOLINGDESC),
+         SCHOOLCODE <- as.factor(SCHOOLCODE),
+         MUNICODE <- as.factor(MUNICODE),
+         SALECODE <- as.factor(SALECODE),
+         TAXCODE <- as.factor(TAXCODE),
+         TAXDESC <- as.factor(TAXDESC),
+         CONDITION <- as.factor(CONDITION),
+         GRADE <- as.factor(GRADE),
+         EXTREIORFINISH <- as.factor(EXTERIORFINISH),
+         ROOF <- as.factor(ROOF),
+         BASEMENT <- as.factor(BASEMENT),
+         HEATINGCOOLING <- as.factor(HEATINGCOOLING),
+         FARMSTEADFLAG <- as.factor(FARMSTEADFLAG))
+```
+
+
+# CoNVO - Realtor
+
+# CoNVO - Module - Home developer
+
+https://www.pghcitypaper.com/pittsburgh/module-to-commence-ground-breaking-on-mixed-income-housing-development-in-garfield/Content?oid=16208072
+
+https://www.nextpittsburgh.com/city-design/new-modular-home-project-in-garfield-could-be-a-model-for-affordable-development-in-pittsburgh/
+
+# CoNVO - Pittsburgh Affordable Housing Task Force
+
+https://projects.publicsource.org/guide-to-affordable-housing-pittsburgh-pennsylvania/
+
+
+## Are county property assessments accurate?
+
+The Allegheny County property tax assessor is interesting in knowing if their assessments have been reflecting actual market prices.  You will construct a visualization that compares assessments to sales over time for various sizes of home
+
+a. Draw a flow chart the takes the assessment and sales datasets, then for any home in the sales dataset, compare them. Note: total assessment value is in the field COUNTYTOTAL. Note: We only care about sales that have a SALESDESC == "VALID SALE"
+
+b. The county assessor 
+
+
+## Pairs plots
+
+For property sales transactions, all of the factor variables had more than 15 values, so they violate the cardinality threshold for pairs plot.
+
+```{r pairssales, warning=FALSE}
+# get column names and orders using  names(PropertySalesTransactions)
+PropertySalesTransactions %>% ggpairs(., 
+                                      columns = c(17, 18))
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r pairsassessment, warning=FALSE}
+# get column names and orders using  names(PropertyAssessmentsParcelData)
+PropertyAssessmentsParcelData %>% ggpairs(., 
+                                      columns = c(18, 22, 34, 50, 61, 64, 70,
+                                                  74, 75))
+```
+
+
+
