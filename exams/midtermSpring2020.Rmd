@@ -99,27 +99,14 @@ The Allegheny County property tax assessor is interesting in knowing if their as
 
 a. Draw a flow chart the takes the assessment and sales datasets, then for any home in the sales dataset, compare them. Note: total assessment value is in the field COUNTYTOTAL. Note: We only care about sales that have a SALESDESC == "VALID SALE"
 
-b. The county assessor 
+b. The county assessor wants a visual representation that allows comparison of all sales prices compared to the total assessment value. To make this comparison, design a plot that covers the following variables and explain how it enables the comparison:
+    i. COUNTYTOTAL (from assessment)
+    ii. PRICE (from sales)
+    iii. Year (from sales - SALEDATE)
+    iv. BEDROOMS (from assessment)
 
+## Are county property assessments accurate?
 
-## Pairs plots
-
-For property sales transactions, all of the factor variables had more than 15 values, so they violate the cardinality threshold for pairs plot.
-
-```{r pairssales, warning=FALSE}
-# get column names and orders using  names(PropertySalesTransactions)
-PropertySalesTransactions %>% ggpairs(., 
-                                      columns = c(17, 18))
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-```{r pairsassessment, warning=FALSE}
-# get column names and orders using  names(PropertyAssessmentsParcelData)
-PropertyAssessmentsParcelData %>% ggpairs(., 
-                                      columns = c(18, 22, 34, 50, 61, 64, 70,
-                                                  74, 75))
-```
 
 
 

@@ -173,8 +173,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
-datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
-#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
+#datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSP2018/"
+datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSP2018/"
 pittsburgh_fire_incidents <- read_csv(file.path(datadirectory, "pittsburgh_fire_incidents.csv"),
     col_types = cols(alarm_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"),
     arrival_time = col_datetime(format = "%Y-%m-%dT%H:%M:%S"), 
