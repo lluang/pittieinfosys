@@ -82,13 +82,29 @@ PropertyAssessmentsParcelData <- PropertyAssessmentsParcelData %>%
 
 # CoNVO - Realtor
 
+
+
 # CoNVO - Module - Home developer
+
+Module is a Pittsburgh based housing developer that makes modular homes that are expandable. They have designs that make it possible to start at a base level, then expand the size of the house over time.
+
+They have designs with 2 bed rooms 1 1/2 baths, 2 bedrooms 2 baths, and 3 bedrooms 2 baths.  They would like to know the sales values of houses with those descriptions over the past 5 years and how they have changed over time.
+
+Write a CoNVO for what Module would be interested in an analysis of housing sales and property assessment data in Allegheny County.
+
+
+a. Create a table (data frame) that shows the mean and standard distribution of the sales price (PRICE) for all homes based on the number of bedrooms and bathrooms and year.
+b. Design a visualization that shows the change in the distribution from year to year for homes for each of the three home types that Module sells.
+
+
 
 https://www.pghcitypaper.com/pittsburgh/module-to-commence-ground-breaking-on-mixed-income-housing-development-in-garfield/Content?oid=16208072
 
 https://www.nextpittsburgh.com/city-design/new-modular-home-project-in-garfield-could-be-a-model-for-affordable-development-in-pittsburgh/
 
 # CoNVO - Pittsburgh Affordable Housing Task Force
+
+The Pittsburgh Affordable Housing task force in concerned about the declining amount of 
 
 https://projects.publicsource.org/guide-to-affordable-housing-pittsburgh-pennsylvania/
 
