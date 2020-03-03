@@ -80,11 +80,7 @@ PropertyAssessmentsParcelData <- PropertyAssessmentsParcelData %>%
 ```
 
 
-# CoNVO - Realtor
-
-
-
-# CoNVO - Module - Home developer
+## [32] CoNVO - Module - Home developer
 
 Module is a Pittsburgh based housing developer that makes modular homes that are expandable. They have designs that make it possible to start at a base level, then expand the size of the house over time.
 
@@ -93,35 +89,87 @@ They have designs with 2 bed rooms 1 1/2 baths, 2 bedrooms 2 baths, and 3 bedroo
 Write a CoNVO for what Module would be interested in an analysis of housing sales and property assessment data in Allegheny County.
 
 
-a. Create a table (data frame) that shows the mean and standard distribution of the sales price (PRICE) for all homes based on the number of bedrooms and bathrooms and year.
-b. Design a visualization that shows the change in the distribution from year to year for homes for each of the three home types that Module sells.
 
 
+## [32] CoNVO - Pittsburgh Affordable Housing Task Force
+
+The Pittsburgh Affordable Housing Task Force in concerned about the declining amount of affordable housing for low to medium income residents of Pittsburgh.  The U.S. Department of Housing and Development describes affordable as, “Families who pay more than 30 percent of their income for housing are considered cost burdened and may have difficulty affording necessities such as food, clothing, transportation and medical care.”
+
+Using this definition, the vast majority of developers concerned with affordability set rent prices to be “affordable” for households making 60 percent of the average median income [AMI] or below for Allegheny County. In other words, they price those units to not exceed thirty percent of that particular applicant’s monthly income.  This AMI is conditioned on family size.  The Affordable Housing task force is asking for a data analysis of housing sales in Pittsburgh, their size (number of bedrooms), what fraction is below the AMI and where are they located.  (Note: Through Census data, the Affordable Housing Task Force knows the 60% of AMI for each size family, and will be looking at the market for housing for every value of number of bedrooms))
+
+
+**ANSWER**
+
+Context
+=====
+
+1.  Always from an organization point of view.
+2.  Focuses on the bigger picture, why is the organization interested in the general topic of the analysis.
+3.  Does NOT focus on the analysis itself.
+
+Need
+=====
+
+1.  Requires a decision to be made.
+2.  A question that needs to be answered to make a good decision.
+3.  The question should be one that can be answered through data.
+4.  NOT what you have to do as an analyst/engineer
+
+Vision
+=====
+
+1.  What kind of information will data analysis project provide.
+2.  What form will the data analysis take (*ideally a sketch*)
+3.  How does this vision answer the need?
+4.  Vision has to cover every named data element.
+5.  NOT your need as an analyst engineer.  NOT "make a chart".  Say "create a chart that shows . . ."
+
+Outcome
+=====
+
+1.  How could the organization respond when the information in the vision is presented?
+2.  Give an example  (if . . . then . . .)
+3.  There should be an action.  It can be vague.
+
+
+
+## Data manipulation - MODULE
+
+Module is a developer of modular housing based in Pittsburgh.  Modular housing allows for a house to be built at a certain size and price, and the owner has an option for adding on future modules to increase the size of the home.  This allows an initial purchase to be at a lower price than the future value of the home.
+
+a. [40] Create a table (data frame) that shows the mean and standard distribution of the sales price (PRICE) and the county assessement (COUNTYBUILDING) for all homes based on the number of bedrooms and bathrooms and the year. Note: We only care about sales that have a SALESDESC == "VALID SALE".
+
+**ANSWER**
+
+- Include join of tables based on property id
+- Filter on VALID SALE
+
+
+## Data visualization - MODULE
+
+a. [32] Manipulate the dataset from problem 2 and design a visualization that shows the change in the distribution in sale price from year to year for homes for each of the three home types that Module sells.  You may have to manipulate the data to do this and question 2 as a starting point. Note that a home type is defined as the combination of the number of bedrooms AND the number of bathrooms.  The visualization should include the following variables and an explaination of how it enables understanding the distribution of prices for that home type:
+    i. PRICE
+    ii. Number of bedrooms and bathrooms
+    iii. Square feet of living area (FINISHEDLIVINGAREA)
+    iv. Year of sale
 
 https://www.pghcitypaper.com/pittsburgh/module-to-commence-ground-breaking-on-mixed-income-housing-development-in-garfield/Content?oid=16208072
 
 https://www.nextpittsburgh.com/city-design/new-modular-home-project-in-garfield-could-be-a-model-for-affordable-development-in-pittsburgh/
 
-# CoNVO - Pittsburgh Affordable Housing Task Force
-
-The Pittsburgh Affordable Housing task force in concerned about the declining amount of 
-
-https://projects.publicsource.org/guide-to-affordable-housing-pittsburgh-pennsylvania/
-
 
 ## Are county property assessments accurate?
 
-The Allegheny County property tax assessor is interesting in knowing if their assessments have been reflecting actual market prices.  You will construct a visualization that compares assessments to sales over time for various sizes of home
+The Allegheny County property tax assessor is interesting in knowing if their assessments have been reflecting actual market prices.  You will construct a visualization that compares assessments to sales over time for various sizes of houses.
 
-a. Draw a flow chart the takes the assessment and sales datasets, then for any home in the sales dataset, compare them. Note: total assessment value is in the field COUNTYTOTAL. Note: We only care about sales that have a SALESDESC == "VALID SALE"
+a. [40] Draw a flow chart the takes the assessment and sales datasets, then for any home in the sales dataset, compare them. Note: total assessment value is in the field COUNTYTOTAL. Sales prices is in the field PRICE. Note: We only care about sales that have a SALESDESC == "VALID SALE"
 
-b. The county assessor wants a visual representation that allows comparison of all sales prices compared to the total assessment value. To make this comparison, design a plot that covers the following variables and explain how it enables the comparison:
+b. [30] The county assessor wants a visual representation that allows comparison of all sales prices compared to the total assessment value.  You may have to manipulate the data to do this and you may use your answer to question 2 as a starting point. To make this comparison, design a visualization that covers the following variables and explain how it enables the comparison:
     i. COUNTYTOTAL (from assessment)
     ii. PRICE (from sales)
     iii. Year (from sales - SALEDATE)
     iv. BEDROOMS (from assessment)
 
-## Are county property assessments accurate?
 
 
 

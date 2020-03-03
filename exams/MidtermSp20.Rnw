@@ -1,0 +1,309 @@
+\documentclass[12pt, addpoints, answers]{exam}
+%\documentclass[12pt, letter, addpoints]{exam}
+\usepackage{multirow}
+\usepackage{pdflscape}
+%\usepackage{amssymb}
+
+%\usepackage{makeidx}
+
+%\usiepackage[colorlinks]{hyperref}
+
+% In case we're not using hyperref.sty:
+%\providecommand{\texorpdfstring}[2]{#1}
+% Thie following can be used in \section commands
+% without generating pdf warnings:
+%\newcommand{\bs}{\texorpdfstring{\char`\\}{}}
+
+%\newcommand{\docversion}{2.5}
+%\newcommand{\docdate}{May 7, 2015}
+%\newcommand{\docdate}{\today}
+
+%--------------------------------------------------------------------
+%
+% Changes since version 2.4 are described in the comments
+% near the beginning of the file exam.cls.
+%
+%--------------------------------------------------------------------
+
+%\makeindex
+
+%\newcommand{\indc}[1]{\index{#1@\texttt{\char`\\#1}}}
+%\newcommand{\indcsub}[2]{\index{#1@\texttt{\char`\\#1}!#2}}
+%\newcommand{\indcstart}[1]{\index{#1@\texttt{\char`\\#1}|(}}
+%\newcommand{\indcstop}[1]{\index{#1@\texttt{\char`\\#1}|)}}
+
+%\newcommand{\indt}[1]{\index{#1@\texttt{#1}}}
+%\newcommand{\indtsub}[2]{\index{#1@\texttt{#1}!#2}}
+%\newcommand{\indtstart}[1]{\index{#1@\texttt{#1}|(}}
+%\newcommand{\indtstop}[1]{\index{#1@\texttt{#1}|)}}
+
+%---------------------------------------------------------------------
+\newenvironment{example}%
+   {\bigskip\filbreak
+    \subsubsection{Example:}
+   }%
+   {}
+
+\def\samplehead#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    \hbox to \textwidth{%
+      \rlap{\parbox[b]{\textwidth}{\raggedright#1\strut}}%
+      \hfil\parbox[b]{\textwidth}{\centering#2\strut}\hfil
+      \llap{\parbox[b]{\textwidth}{\raggedleft#3\strut}}%
+    }% hbox
+    #4
+  \end{trivlist}
+}
+
+\def\samplefoot#1#2#3#4{%
+  \begin{trivlist}
+    \item[]
+    \leavevmode
+    #1
+    \vskip 3pt
+
+    \hbox to \textwidth{%
+      \rlap{\parbox[t]{\textwidth}{\raggedright#2}}%
+      \hfil\parbox[t]{\textwidth}{\centering#3}\hfil
+      \llap{\parbox[t]{\textwidth}{\raggedleft#4}}%
+    }% hbox
+  \end{trivlist}
+}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\makebox[\textwidth]{Name:\enspace\hrulefill}
+
+\centering
+{\bf IE 0015 Spring 2019 Midterm}
+
+\centering
+{\bf A
+\begin{solution}
+SOLUTION
+\end{solution}
+}
+
+
+
+<<echo=FALSE>>=
+library(xtable)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(readr)
+library(lubridate)
+library(zoo)
+library(ggplot2)
+@
+
+<<echo=FALSE>>=
+## Read in datasets
+
+#These are the Allegheny County Property Assessments Parcel Data and Property Sales datasets.  Note: I renamed the datafiles to a meaningful name.
+
+#- https://data.wprdc.org/dataset/property-assessments
+#- https://data.wprdc.org/dataset/real-estate-sales
+
+# change the next line to be wherever you save the datasets
+datadirectory <- "E:/Box Sync/courses/InfoSystems/infosysSp2020/"
+#datadirectory <- "C:/Users/louis/Desktop/Box Sync/courses/InfoSystems/infosysSp2020/"
+PropertySalesTransactions <- read_csv(file.path(datadirectory, "PropertySalesTransactions.csv"),
+  col_types = cols(MUNICODE = col_character(),
+  PROPERTYZIP = col_character(), RECORDDATE = col_date(format = "%Y-%m-%d"),
+  SALEDATE = col_date(format = "%Y-%m-%d")))
+PropertySalesTransactions <- PropertySalesTransactions %>% 
+  mutate(PROPERTYCITY <- as.factor(PROPERTYCITY),
+         PROPERTYSTATE <- as.factor(PROPERTYSTATE),
+         SCHOOLDESC <- as.factor(SCHOOLDESC),
+         MUNIDESC <- as.factor(MUNIDESC),
+         SALEDESC <- as.factor(SALEDESC),
+         INSTRTYPDESC <- as.factor(INSTRTYPDESC))
+
+PropertyAssessmentsParcelData <- read_csv(file.path(datadirectory,"PropertyAssessmentsParcelData.csv"),
+  col_types = cols(CHANGENOTICEADDRESS4 = col_character(),
+              MUNICODE = col_character(), OWNERCODE = col_character(),
+              PREVSALEDATE = col_date(format = "%m-%d-%Y"),
+              PREVSALEDATE2 = col_date(format = "%m-%d-%Y"),
+              PROPERTYFRACTION = col_character(),
+              PROPERTYHOUSENUM = col_number(),
+              PROPERTYZIP = col_character(), RECORDDATE = col_date(format = "%m-%d-%Y"),
+              SALEDATE = col_date(format = "%m-%d-%Y"),
+              SCHOOLCODE = col_character(),
+              STYLE = col_character(),
+              ALT_ID = col_character(),
+              CLEANGREEN = col_character(),
+              FARMSTEADFLAG = col_character()))
+
+PropertyAssessmentsParcelData <- PropertyAssessmentsParcelData %>%
+    mutate(PROPERTYCITY <- as.factor(PROPERTYCITY),
+         PROPERTYSTATE <- as.factor(PROPERTYSTATE),
+         SCHOOLDESC <- as.factor(SCHOOLDESC),
+         MUNIDESC <- as.factor(MUNIDESC),
+         SALEDESC <- as.factor(SALEDESC),
+         CONDITIONDESC <- as.factor(CONDITIONDESC),
+         GRADEDESC <- as.factor(GRADEDESC),
+         EXTFINISH_DESC <- as.factor(EXTFINISH_DESC),
+         ROOFDESC <- as.factor(ROOFDESC),
+         BASEMENTDESC <- as.factor(BASEMENTDESC),
+         HEATINGCOOLINGDESC <- as.factor(HEATINGCOOLINGDESC),
+         SCHOOLCODE <- as.factor(SCHOOLCODE),
+         MUNICODE <- as.factor(MUNICODE),
+         SALECODE <- as.factor(SALECODE),
+         TAXCODE <- as.factor(TAXCODE),
+         TAXDESC <- as.factor(TAXDESC),
+         CONDITION <- as.factor(CONDITION),
+         GRADE <- as.factor(GRADE),
+         EXTREIORFINISH <- as.factor(EXTERIORFINISH),
+         ROOF <- as.factor(ROOF),
+         BASEMENT <- as.factor(BASEMENT),
+         HEATINGCOOLING <- as.factor(HEATINGCOOLING),
+         FARMSTEADFLAG <- as.factor(FARMSTEADFLAG))
+
+@
+
+\begin{enumerate}
+
+\item
+  Write your name on the top of this page.
+\item  Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required. You may have pens/pencils, and a straight edge (something to draw lines with)
+\item  The exam is N pages (including cover). There are 100 points total divided among 3 questions. In addition there are two pages of reference containing the data dictionaries and an example of the data from the Pittsburgh Property Sales and Property Assessments databases.
+\item  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.  Additional paper is available from the exam proctor.
+\item   Where a question requests a flow chart, you may answer with a flow chart, process map, step by step instructions, or pseudocode (R or SQL) as you choose.
+\item  You have until 2:00 PM to finish. Staple the exam, any extra paper you used, and your crib sheet and turn this in.
+\end{enumerate}
+
+\pagebreak
+\begin{center}
+\gradetable[v][questions]
+\end{center}
+
+\begin{questions}
+
+\question[32] CoNVO
+
+Module is a Pittsburgh based housing developer that makes modular homes that are expandable. They have designs that make it possible to start at a base level, then expand the size of the house over time.
+
+They have designs with 2 bed rooms 1 1/2 baths, 2 bedrooms 2 baths, and 3 bedrooms 2 baths.  They would like to know the sales values of houses with those descriptions over the past 5 years and how they have changed over time in Pittsburgh.
+
+(a)  Create a CoNVO statement for what Module would be interested in an analysis of housing sales and property assessment data in Allegheny County.
+
+
+The Pittsburgh Affordable Housing Task Force in concerned about the declining amount of affordable housing for low to medium income residents of Pittsburgh.  The U.S. Department of Housing and Development describes affordable as, “Families who pay more than 30 percent of their income for housing are considered cost burdened and may have difficulty affording necessities such as food, clothing, transportation and medical care.”
+
+Using this definition, the vast majority of developers concerned with affordability set rent prices to be “affordable” for households making 60 percent of the average median income [AMI] or below for Allegheny County. In other words, they price those units to not exceed thirty percent of that particular applicant’s monthly income.  This AMI is conditioned on family size.  The Affordable Housing task force is asking for a data analysis of housing sales in Pittsburgh, their size (number of bedrooms), what fraction is below the AMI and where are they located.  (Note: Through Census data, the Affordable Housing Task Force knows the 60\% of AMI for each size family, and will be looking at the market for housing for every value of number of bedrooms))
+
+(a)  Create a CoNVO statement for what the Pittsburgh Affordable Housing Task Force would be interested in an analysis of housing sales and property assessment data in Allegheny County.
+
+
+
+\begin{solution}[3in]
+
+  \begin{itemize}
+    \item Context -
+    
+1.  Always from an organization point of view.
+2.  Focuses on the bigger picture, why is the organization interested in the general topic of the analysis.
+3.  Does NOT focus on the analysis itself.
+
+PAHTF looking to ensure there is adequate affordable housing in Pittsburgh. Module is trying to sell houses.
+
+  \item  Needs - Has two parts.  A decision that the organization identified in the Context needs to make, and a question that can be answered through data analysis. Both of these need to be specific. The data analysis question in particular needs to be quantitative, the data analysis will show something that can be interpreted. Main issue that comes here is to not have a decision and question. Another problem is that the need has to be related to context. When I was grading, generally the points came off in vision.
+  
+1.  Requires a decision to be made.
+2.  A question that needs to be answered to make a good decision.
+3.  The question should be one that can be answered through data.
+4.  NOT what you have to do as an analyst/engineer
+
+PAHTF wants to know the distribution of housing sales prices for homes with specific room and bath characteristics. Module is looking for the market price distribution of houses for the home types it is building.
+
+  \item  Vision - The vision needs to be a presentation of data that can answer the Need and lead to a decision.  One common mistake is to overly summarize the data.  Summarizing the data hides information, so we only do it after we have determined that a variable is not important.  A sketch (an informal drawing or a mockup) of a chart can help here. Pie charts are especially bad at showing information, bar charts are slightly better.  Pie charts are often used to give justification to a decision already made, but when exploring data it is important to be able to see the variation in it. Because it allows for decisions and courses of action that allows for recognizing that "one size does not fit all." Another common mistake is to be too vague. The Vision in particular needs to be concrete enough so that a potential client has a picture of what she will be getting at the end of an analysis project and how she can use it.
+
+An example would be plotting the level of firearms seizures by neighborhood.  Another would be seizure trends by police district within his council district.
+  
+  \item  Outcome - The outcome should be how the data presented in the Vision can answer the question provided in the Need by the organization identified in the Context and lead to the decision identified in the Need. There should be more than one possible outcome (if not, there is no reason to do the project, the organization should take that route now). One thing that is important here is that the four parts of the answer are linked together.  One common problem was to answer these four parts independently.  
+
+Councilman Burgess could ask a police zone commander about the changes in seizure rates or ask them to look at specific neighborhoods.
+
+  \end{itemize}
+
+Note: for grading I don't expect anyone to be that nuanced.  You should have either filtered incident data on something, or filtered subject resistance on something for the vision. And the outcome should have had more than one possible result.
+\end{solution}
+
+\pagebreak
+
+\question[36] Data manipulation - MODULE
+
+## Data manipulation - MODULE
+
+Module is a developer of modular housing based in Pittsburgh.  Modular housing allows for a house to be built at a certain size and price, and the owner has an option for adding on future modules to increase the size of the home.  This allows an initial purchase to be at a lower price than the future value of the home.  Module has designs with 2 bed rooms 1 1/2 baths, 2 bedrooms 2 baths, and 3 bedrooms 2 baths. 
+
+\begin{parts}
+  \part Draw a flow chart of a process that prepares the sales and assessments data so that each row in the result shows the the number of sales, the mean, and the standard distribution of the sales price (PRICE) and the county assessement (COUNTYBUILDING) for all homes of the types that Module builds based on the number of bedrooms and bathrooms and the year in a given neighborhood. 
+  
+  Note: We only care about sales that have a SALESDESC == "VALID SALE".
+\end{parts}
+\begin{solution}
+
+- Include join of tables based on property id
+- Include a mutate that creates a column (housetype) with both number of bedrooms and number of bathrooms
+- Optional: filter on housetype
+- Include groupby that includes housetype, neighborhood, year, sales price, and county asssessment
+- summarize count, mean, and standard deviation
+Points off for missing an aspect 
+
+
+\end{solution}
+
+\{question}[32] Data visualization - MODULE
+
+\begin{parts}
+\part  Manipulate the dataset from problem 2 and design a visualization that shows the change in the distribution in sale price from year to year for homes for each of the three home types that Module sells.  You may have to manipulate the data to do this and question 2 as a starting point. Note that a home type is defined as the combination of the number of bedrooms AND the number of bathrooms.  The visualization should include the following variables and an explaination of how it enables understanding the distribution of prices for that home type:
+\begin{enumerate}
+    \item PRICE
+    \item Number of bedrooms and bathrooms
+    \item Square feet of living area (FINISHEDLIVINGAREA)
+    \item Year of sale
+\end{enumerate}
+\end{parts}
+
+
+\question[36] Data manipulation - Allegheny County tax assessor
+
+The Allegheny County property tax assessor is interesting in knowing if their assessments have been reflecting actual market prices.  You will construct a visualization that compares assessments to sales over time for various sizes of houses.
+
+\begin{parts}
+  \part Draw a flow chart the takes the assessment and sales datasets, then for any home in the sales dataset, compare them and show the year of the sale and the difference between the assessed price and sales price. Note: total assessment value is in the field COUNTYTOTAL. Sales prices is in the field PRICE. Note: We only care about sales that have a SALESDESC == "VALID SALE".
+  
+\end{parts}
+
+\begin{solution}
+
+- Include join of tables based on property id
+- Filter on VALID SALE
+- Mutate to calculate difference in price.
+- summarize count, mean, and standard deviation
+Points off for missing an aspect 
+
+\end{solution}
+
+\{question}[32] Data visualization - Allegheny County tax assessor
+
+
+\begin{parts}
+\part  The county assessor wants a visual representation that allows comparison of all sales prices compared to the total assessment value.  You may have to manipulate the data to do this and you may use your answer to question 2 as a starting point. To make this comparison, design a visualization that covers the following variables and explain how it enables the comparison:
+\begin{enumerate}
+    \item COUNTYTOTAL 
+    \item PRICE 
+    \item Square feet of living area (FINISHEDLIVINGAREA)
+    \item Year of sale
+    \item BEDROOMS
+\end{enumerate}
+\end{parts}
+
+
+\end{questions}
+
+\end{document}
