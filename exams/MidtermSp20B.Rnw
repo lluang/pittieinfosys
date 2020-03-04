@@ -1,5 +1,5 @@
-\documentclass[12pt, addpoints, answers]{exam}
-%\documentclass[12pt, letter, addpoints]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, letter, addpoints]{exam}
 \usepackage{multirow}
 \usepackage{pdflscape}
 %\usepackage{amssymb}
@@ -80,7 +80,7 @@
 {\bf IE 0015 Spring 2020 Midterm}
 
 \centering
-{\bf A
+{\bf B
 \begin{solution}
 SOLUTION
 \end{solution}
@@ -169,7 +169,7 @@ PropertyAssessmentsParcelData <- PropertyAssessmentsParcelData %>%
 \item
   Write your name on the top of this page.
 \item  Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required. You may have pens/pencils, and a straight edge (something to draw lines with)
-\item  The exam is N pages (including cover). There are 100 points total divided among 3 questions. In addition there are two pages of reference containing the data dictionaries and an example of the data from the Pittsburgh Property Sales and Property Assessments databases.
+\item  The exam is 4 pages (including cover). There are 100 points total divided among 3 questions. In addition there are two pages of reference containing the data dictionaries and an example of the data from the Pittsburgh Property Sales and Property Assessments databases.
 \item  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.  Additional paper is available from the exam proctor.
 \item   Where a question requests a flow chart, you may answer with a flow chart, process map, step by step instructions, or pseudocode (R or SQL) as you choose.
 \item  You have until 2:00 PM to finish. Staple the exam, any extra paper you used, and your crib sheet and turn this in.
@@ -184,13 +184,6 @@ PropertyAssessmentsParcelData <- PropertyAssessmentsParcelData %>%
 \begin{questions}
 
 \question[32] CoNVO
-
-Module is a Pittsburgh based housing developer that makes modular homes that are expandable. They have designs that make it possible to start at a base level, then expand the size of the house over time.
-
-They have designs with 2 bed rooms 1 1/2 baths, 2 bedrooms 2 baths, and 3 bedrooms 2 baths.  They would like to know the sales values of houses with those descriptions over the past 5 years and how they have changed over time in Pittsburgh.
-
-(a)  Create a CoNVO statement for what Module would be interested in an analysis of housing sales and property assessment data in Allegheny County.
-
 
 The Pittsburgh Affordable Housing Task Force in concerned about the declining amount of affordable housing for low to medium income residents of Pittsburgh.  The U.S. Department of Housing and Development describes affordable as, “Families who pay more than 30 percent of their income for housing are considered cost burdened and may have difficulty affording necessities such as food, clothing, transportation and medical care.”
 
@@ -268,6 +261,8 @@ pittsburghsales <- PropertySalesTransactions %>%
 
 \end{solution}
 
+\pagebreak
+
 \question[32] Data visualization - MODULE
 
 \begin{parts}
@@ -293,59 +288,6 @@ pittsburghsalesprice <- PropertySalesTransactions %>%
 ggplot(pittsburghsalesprice) +
   geom_density(aes(PRICE, color=saleyear)) + 
   facet_wrap(~bedbath)
-@
-\end{solution}
-
-
-\question[36] Data manipulation - Allegheny County tax assessor
-
-The Allegheny County property tax assessor is interesting in knowing if their assessments have been reflecting actual market prices.  You will construct a visualization that compares assessments to sales over time for various sizes of houses.
-
-\begin{parts}
-  \part Draw a flow chart the takes the assessment and sales datasets, then for any home in the sales dataset, compare them and show the year of the sale and the difference between the assessed price and sales price. Note: total assessment value is in the field COUNTYTOTAL. Sales prices is in the field PRICE. Note: We only care about sales that have a SALESDESC == "VALID SALE".
-  
-\end{parts}
-
-\begin{solution}
-
-- Include join of tables based on property id
-- Filter on VALID SALE
-- Mutate to calculate difference in price.
-- summarize count, mean, and standard deviation
-Points off for missing an aspect 
-
-<<>>=
-pittsburghassess <- PropertySalesTransactions %>%
-  filter(SALEDESC=="VALID SALE") %>%
-  left_join(PropertyAssessmentsParcelData, by="PARID") %>%
-  filter(PRICE < 1000000,
-         COUNTYTOTAL < 1000000) %>%
-  select(PARID, NEIGHDESC, SALEDATE.x, PRICE, COUNTYTOTAL, BEDROOMS, FULLBATHS, HALFBATHS) %>%
-  mutate(bedbath = paste(BEDROOMS, FULLBATHS, HALFBATHS),
-         saleyear=year(SALEDATE.x),
-         overassessment = PRICE-COUNTYTOTAL) 
-@
-\end{solution}
-
-\question[32] Data visualization - Allegheny County tax assessor
-
-
-\begin{parts}
-\part  The county assessor wants a visual representation that allows comparison of all sales prices compared to the total assessment value for homes with both an assessed value and a sales price of less that \$1 million.  You may have to manipulate the data to do this and you may use your answer to question 2 as a starting point. To make this comparison, design a visualization that covers the following variables and explain how it enables the comparison:
-\begin{enumerate}
-    \item COUNTYTOTAL 
-    \item PRICE 
-    \item Year of sale
-\end{enumerate}
-\end{parts}
-
-\begin{solution}
-
-<<>>=
-
-ggplot(pittsburghassess) +
-  geom_point(aes(PRICE, COUNTYTOTAL, alpha = 0.1)) + 
-  facet_wrap(~saleyear)
 @
 \end{solution}
 

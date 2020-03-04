@@ -1,5 +1,5 @@
-\documentclass[12pt, addpoints, answers]{exam}
-%\documentclass[12pt, letter, addpoints]{exam}
+%\documentclass[12pt, addpoints, answers]{exam}
+\documentclass[12pt, letter, addpoints]{exam}
 \usepackage{multirow}
 \usepackage{pdflscape}
 %\usepackage{amssymb}
@@ -169,12 +169,11 @@ PropertyAssessmentsParcelData <- PropertyAssessmentsParcelData %>%
 \item
   Write your name on the top of this page.
 \item  Exam is closed book with one page of notes allowed (both sides, handwritten or typed). No calculator is required. You may have pens/pencils, and a straight edge (something to draw lines with)
-\item  The exam is N pages (including cover). There are 100 points total divided among 3 questions. In addition there are two pages of reference containing the data dictionaries and an example of the data from the Pittsburgh Property Sales and Property Assessments databases.
+\item  The exam is 4 pages (including cover). There are 100 points total divided among 3 questions. In addition there are two pages of reference containing the data dictionaries and an example of the data from the Pittsburgh Property Sales and Property Assessments databases.
 \item  Answer the questions in the spaces provided on the question sheets. If you run out of room for an answer, continue on the back of the page.  Additional paper is available from the exam proctor.
 \item   Where a question requests a flow chart, you may answer with a flow chart, process map, step by step instructions, or pseudocode (R or SQL) as you choose.
 \item  You have until 2:00 PM to finish. Staple the exam, any extra paper you used, and your crib sheet and turn this in.
 \end{enumerate}
-
 \begin{center}
 \gradetable[v][questions]
 \end{center}
@@ -185,16 +184,9 @@ PropertyAssessmentsParcelData <- PropertyAssessmentsParcelData %>%
 
 \question[32] CoNVO
 
-Module is a Pittsburgh based housing developer that makes modular homes that are expandable. They have designs that make it possible to start at a base level, then expand the size of the house over time.
+Module is a Pittsburgh based housing developer that makes modular homes that are expandable. They have designs that make it possible to start at a base level, then expand the size of the house over time.  The goal is to sell affordable housing, potentially adding expansions to houses as the owners accumulate more wealth.
 
-They have designs with 2 bed rooms 1 1/2 baths, 2 bedrooms 2 baths, and 3 bedrooms 2 baths.  They would like to know the sales values of houses with those descriptions over the past 5 years and how they have changed over time in Pittsburgh.
-
-(a)  Create a CoNVO statement for what Module would be interested in an analysis of housing sales and property assessment data in Allegheny County.
-
-
-The Pittsburgh Affordable Housing Task Force in concerned about the declining amount of affordable housing for low to medium income residents of Pittsburgh.  The U.S. Department of Housing and Development describes affordable as, “Families who pay more than 30 percent of their income for housing are considered cost burdened and may have difficulty affording necessities such as food, clothing, transportation and medical care.”
-
-Using this definition, the vast majority of developers concerned with affordability set rent prices to be “affordable” for households making 60 percent of the average median income [AMI] or below for Allegheny County. In other words, they price those units to not exceed thirty percent of that particular applicant’s monthly income.  This AMI is conditioned on family size.  The Affordable Housing task force is asking for a data analysis of housing sales in Pittsburgh, their size (number of bedrooms), what fraction is below the AMI and where are they located.  (Note: Through Census data, the Affordable Housing Task Force knows the 60\% of AMI for each size family, and will be looking at the market for housing for every value of number of bedrooms))
+They have designs with 2 bed rooms 1 1/2 baths, 2 bedrooms 2 baths, and 3 bedrooms 2 baths.  They would like to know how sales values of houses with those descriptions over the past 5 years and how they have changed over time in Pittsburgh.
 
 (a)  Create a CoNVO statement for what the Pittsburgh Affordable Housing Task Force would be interested in an analysis of housing sales and property assessment data in Allegheny County.
 
@@ -234,67 +226,6 @@ Note: for grading I don't expect anyone to be that nuanced.  You should have eit
 
 \pagebreak
 
-\question[36] Data manipulation - MODULE
-
-Module is a developer of modular housing based in Pittsburgh.  Modular housing allows for a house to be built at a certain size and price, and the owner has an option for adding on future modules to increase the size of the home.  This allows an initial purchase to be at a lower price than the future value of the home.  Module has designs with 2 bed rooms 1 1/2 baths, 2 bedrooms 2 baths, and 3 bedrooms 2 baths. 
-
-\begin{parts}
-  \part Draw a flow chart of a process that prepares the sales and assessments data so that each row in the result shows the the number of sales, the mean, and the standard distribution of the sales price (PRICE) and the county assessment (COUNTYBUILDING) for all homes of the types that Module builds based on the number of bedrooms and bathrooms and the year in a given neighborhood. 
-  
-  Note: We only care about sales that have a SALESDESC == "VALID SALE".
-\end{parts}
-\begin{solution}
-
-- Include join of tables based on property id
-- Include a mutate that creates a column (housetype) with both number of bedrooms and number of bathrooms
-- Optional: filter on housetype
-- Include group by that includes housetype, neighborhood, year, sales price, and county assessment
-- summarize count, mean, and standard deviation
-Points off for missing an aspect 
-
-<<>>=
-pittsburghsales <- PropertySalesTransactions %>%
-  filter(SALEDESC=="VALID SALE") %>%
-  left_join(PropertyAssessmentsParcelData, by="PARID") %>%
-  select(PARID, NEIGHDESC, SALEDATE.x, PRICE, COUNTYTOTAL, BEDROOMS, FULLBATHS, HALFBATHS) %>%
-  mutate(bedbath = paste(BEDROOMS, FULLBATHS, HALFBATHS),
-         saleyear=year(SALEDATE.x)) %>%
-  group_by(bedbath, NEIGHDESC, saleyear) %>%
-  summarise(meanprice = mean(PRICE),
-            sdprice = sd(PRICE),
-            meanassess = mean(COUNTYTOTAL),
-            sdassess = sd(COUNTYTOTAL))
-@
-
-\end{solution}
-
-\question[32] Data visualization - MODULE
-
-\begin{parts}
-\part  Manipulate the dataset from problem 2 and design a visualization that shows the change in the distribution in sale price from year to year for homes for each of the three home types that Module sells.  You may have to manipulate the data to do this and question 2 as a starting point. Note that a home type is defined as the combination of the number of bedrooms AND the number of bathrooms.  The visualization should include the following variables and an explanation of how it enables understanding the distribution of prices for that home type:
-\begin{enumerate}
-    \item PRICE
-    \item Number of bedrooms and bathrooms
-    \item Square feet of living area (FINISHEDLIVINGAREA)
-    \item Year of sale
-\end{enumerate}
-\end{parts}
-
-\begin{solution}
-<<>>=
-pittsburghsalesprice <- PropertySalesTransactions %>%
-  filter(SALEDESC=="VALID SALE") %>%
-  left_join(PropertyAssessmentsParcelData, by="PARID") %>%
-  select(PARID, NEIGHDESC, SALEDATE.x, PRICE, COUNTYTOTAL, BEDROOMS, FULLBATHS, HALFBATHS) %>%
-  mutate(bedbath = paste(BEDROOMS, FULLBATHS, HALFBATHS),
-         saleyear=year(SALEDATE.x)) %>%
-  filter(bedbath %in% c("2 1 1", "2 2 NA", "3 2 NA"))
-         
-ggplot(pittsburghsalesprice) +
-  geom_density(aes(PRICE, color=saleyear)) + 
-  facet_wrap(~bedbath)
-@
-\end{solution}
 
 
 \question[36] Data manipulation - Allegheny County tax assessor
@@ -326,6 +257,8 @@ pittsburghassess <- PropertySalesTransactions %>%
          overassessment = PRICE-COUNTYTOTAL) 
 @
 \end{solution}
+
+\pagebreak
 
 \question[32] Data visualization - Allegheny County tax assessor
 
