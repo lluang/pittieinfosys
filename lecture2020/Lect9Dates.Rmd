@@ -1,0 +1,626 @@
+---
+title: 'Lecture 10: Data Formats: Dates and factors'
+author: "IE 0015 Information Systems"
+date: "March 2020"
+output: 
+  slidy_presentation: default
+  pdf_document: default
+  beamer_presentation: default
+  html_document: default
+---
+
+
+```{r, echo=FALSE, warnings=FALSE}
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+library(magrittr)
+library(readxl)
+# Trashwheel data from http://baltimorewaterfront.com/healthy-harbor/water-wheel/
+filename <- "C:/Users/louis/Documents/courses/pittieinfosys2015/data/Trash-Wheel-Collection-Totals-11-13-9-2.xlsx" 
+trashwheel <- HealthyHarborWaterWheelTotals2018_3_1 <- read_excel(filename,
+sheet = "Mr. Trash Wheel")
+trashwheel <- trashwheel %>% filter(!is.na(Dumpster))
+```
+
+Dates
+=======
+
+
+Date and time formats
+=====================
+
+-  Many ways to represent dates
+-  What does this mean
+  -  03-13-2020
+```{r}
+trashwheel$Date[1]
+```
+
+How do we think about date and time
+=======================
+
+When we think about time we could think of:
+
+1. The date (day month year)
+2. The time within a day (1:10 PM)
+3. A date-time (date plus time)
+
+Date and time formats
+=======================
+
+-  Goal: resolve ambiguity by telling the computer what format dates and times are written in.
+-  POSIX (Portable Operating System Interface) IEEE standard for computer operating systems
+-  Includes standards for representing dates
+-  Day, Month, Year
+-  Hour, minute, second, AM/PM
+-  What else do we have to specify?
+
+Communicating format
+====================
+
+-  When passing a date into R, tell R what the format represents.
+-  Sometimes, it can guess correctly
+
+```{r asdateexample}
+as.Date('2020-03-13')
+as.Date('2020/03/13')
+```
+
+Format codes
+==============
+
+-  Using C style (also Matlab) R has format codes to help R interpret strings.
+
+Code  |  Value
+------|---------
+%d  |  Day of month
+%m  |  Month (number)
+%b  |  Month (abbreviated)
+%B  |  Month (full)
+%y  |  Year (2 digit)
+%Y  |  Year (4 digit)
+
+Date examples
+===============
+
+```{r moredateexamples}
+as.Date('1/15/2020', format = '%m/%d/%Y')
+as.Date('April 26, 2019', format = '%B %d, %Y')
+as.Date('4MAR17', format = '%d%b%y')
+```
+
+Dates as variables
+=====================
+
+-  Date and times can be stored in date time format (independent of how they are entered)
+-  Internally, stored in reference to January 1, 1970.
+-  Default format is YYYY-MM-DD HH:MM:SS TZ
+
+```{r datevariables}
+thedate = as.Date('3/13/2020', format = '%m/%d/%Y')
+print(thedate)
+ndate = as.numeric(thedate)
+print(ndate)
+class(ndate) = 'Date'
+ndate
+```
+
+
+Origin notes for Excel
+========
+
+-  MS Excel represents dates differently than all other computer systems.
+    - See help(as.Date)
+-  MS says they used "1900-01-01" as origin (day 1)
+    - But they actually used 1899-12-30 (they also forgot that 1900 is not a leap year)
+    - If you see a date field that is in the 40000's, this is what happened.
+
+```{r}
+print(as.Date(43171, origin = "1899-12-30"))
+```
+
+
+Other representations of date
+============================
+
+-  If you have the date, you can get the day of the week.
+
+```{r dayofweek}
+weekdays(ndate)
+```
+
+Times
+=====
+
+-  Times can be more complicated because there are many ways of representing time.
+-  If you are reading it from an outside file, look at it within R to determine its format (Excel often hides information from display)
+-  If times are in a standard form, it can be read in directly.
+
+```{r readtimes}
+dts <- c("2014-10-21 18:47:22", "2016-12-24 16:39:58", "2018-10-20 07:30:05")
+as.POSIXlt(dts)
+```
+
+Working with time formats
+==========
+
+-  `strftime` is used to print/output date/times
+-  `strptime` is used to read date/times
+
+Time codes
+===========
+
+Code | Meaning | Code | Meaning
+---|----|----|----
+%a | Abbreviated weekday | %A | Full weekday
+%b | Abbreviated month | %B | Full month
+%c | Locale specific date-time | %d | Decimal date
+%H | Decimal hour (24 hour) | %I | Decimal hour (12 hour)
+%M | Decimal minute | %p | Locale specific AM/PM
+%S | Decimal second | %U | Decimal week of year (start on Sunday)
+%w | Decimal weekday | %W | Decimal week of year (start on Monday)
+%x | Locale-specific date | %X | Locale-specific time
+%y | 2-digit year | %Y | 4-digit year
+%z | Offset from GMT | %Z | Time zone (character)
+
+Examples strftime
+==========
+```{r strftime}
+timenow <- Sys.time()
+timenow
+strftime(timenow, format = '%c')
+strftime(timenow, format = '%a %x %X %z')
+strftime(timenow, format = '%A %B %d, %Y %I:%M:%S %p %Z')
+```
+
+Example strptime
+=================
+```{r strptime}
+mydate <- strptime('9/Feb/2019:1:05:00 PM',
+                   format='%d/%b/%Y:%I:%M:%S %p')
+mydate
+strftime(mydate, format = '%A %B %d, %Y %I:%M:%S %p')
+```
+
+Extract day of week
+==================
+
+```{r dayofweekformat}
+strftime(mydate, format = '%A %w')
+```
+
+
+Lubridate
+==============
+
+- The 'lubridate' package makes it easier to work with dates and times.
+
+```{r}
+library(lubridate)
+```
+
+Dates from strings
+============
+
+- Lubridate can take a common date format in string and determine the separators.
+
+```{r}
+ymd("2020-01-31")
+mdy("March 13, 2020")
+mdy("March 13th, 2020")
+mdy("3/13/2020")
+dmy("13/3/2020")
+dmy("13 Mar 20")
+```
+
+Lubridate will also work with date-times
+=================
+
+```{r}
+ymd_hms("2020 March 13 13:16:00")
+mdy_hm("03/13/2020 13:16")
+```
+
+There is also a data type for `yearmon`
+===============
+```{r}
+library(zoo)
+as.yearmon(trashwheel$Date) %>% head()
+```
+
+You can also set the time zone
+=============
+
+```{r}
+meeting <- ymd_hms("2020 March 13 13:16:00", tz = "America/Chicago")
+with_tz(meeting, "America/New_York")
+```
+
+Time spans
+===============
+
+- Date arithmetic can include subtraction, addition, and division.
+- Three classes in 'lubridate' that represent time spans.
+
+  1. Durations
+  2. Periods
+  3. Intervals
+
+Durations
+============
+
+- When you subtract two dates, you get a difftime object 
+- 'difftime' can be in one of many units, so the  'duration' class is in seconds.
+
+```{r}
+h.age <- today() - ymd(19791014)
+h.age
+as.duration(h.age)
+```
+
+Duration constructors
+===============
+
+You can create durations using a range of units.
+
+```{r}
+dseconds(15)
+dminutes(10)
+dhours(c(12, 24))
+ddays(0:5)
+dweeks(3)
+dyears(1)
+```
+
+- Why not 'months'?
+
+You can add and subtract durations
+==============
+```{r}
+today() + ddays(1)
+today() - dweeks(1)
+```
+
+Periods
+============
+
+```{r}
+one_pm <- ymd_hms("2020-3-11 13:00:00", tz="America/New_York")
+one_pm
+one_pm + ddays(1)
+```
+
+Periods
+===========
+
+Periods are time spans but do not have a fixed length in seconds.
+
+```{r}
+one_pm
+one_pm + days(1)
+```
+
+Period constructors
+=================
+```{r}
+seconds(15)
+minutes(10)
+hours(c(12, 24))
+days(7)
+months(1:3)
+weeks(3)
+years(1)
+```
+
+Adding and multiplying periods
+===========
+```{r}
+10*(months(6) + days(1))
+```
+
+Adding to dates
+============
+```{r}
+ymd("2018-1-1") + dyears(1)
+ymd("2018-1-1") + years(1)
+```
+
+```{r}
+one_pm + ddays(1)
+one_pm + days(1)
+```
+
+Time intervals
+==============
+
+What should 
+
+`years(1)/days(1)` return?
+
+===
+
+```{r}
+years(1)/days(1)
+```
+
+Intervals
+===========
+
+- An interval has a starting and ending point.
+- So, let's give dates for the year
+
+```{r}
+next_year <- today() + years(1)
+(today() %--% next_year) / ddays(1)
+```
+
+Division also works
+===========
+```{r}
+(today() %--% next_year) %/% ddays(1)
+```
+
+Plotting dates
+=============
+
+-  In ggplot, you can have datetime based scales
+-  `scale_x_date, scale_y_date`
+-  `scale_x_datetime, scale_y_datetime`
+-  `scale_x_time, scale_y_time`
+-  `scale_x_yearmon` (from `zoo` package)
+
+Trashwheel data
+====================
+- Look at month over month collection of trash.
+- First, create a variable to hold the month, then sum the weight over all dumpsters collected that month.
+```{r}
+trashwheel$yearmon <-  as.yearmon(trashwheel$Date)
+```
+
+Plotting time series
+============
+```{r}
+ggplot(trashwheel) + geom_point(aes(x=Date, y=`Weight (tons)`)) + 
+  ggtitle("Tons of waste collected at Mr. Trashwheel") +
+  ylab("waste (tons)") + xlab("Date dumpster filled") + theme_bw()
+```
+
+Now, group by date
+==================
+```{r}
+trashwheel %>%
+  group_by(Date) %>%
+  summarise(dailytons = sum(`Weight (tons)`)) %>%
+  ggplot() + geom_point(aes(x=Date, y=dailytons)) + 
+  ggtitle("Tons of waste collected at Mr. Trashwheel per day") +
+  ylab("waste (tons)") + xlab("Date") + theme_bw()
+```
+
+Now, group by date
+==================
+```{r}
+trashwheel %>%
+  group_by(Date) %>%
+  summarise(dailytons = sum(`Weight (tons)`)) %>%
+  ggplot() + geom_point(aes(x=Date, y=dailytons)) + 
+  ggtitle("Tons of waste collected at Mr. Trashwheel per day") +
+  ylab("waste (tons)") + xlab("Date") +
+  scale_x_datetime() + theme_bw()
+```
+
+Now, group by month
+==================
+```{r}
+monthlytrashwheel <- trashwheel %>%
+  group_by(yearmon) %>%
+  summarise(monthlytons = sum(`Weight (tons)`))
+monthlytwplot <- ggplot(monthlytrashwheel) + geom_point(aes(x=yearmon, y=monthlytons)) + 
+  ggtitle("Tons of waste collected at Mr. Trashwheel per month") +
+  ylab("waste (tons)") + xlab("Month") +
+  scale_x_yearmon()  + theme_bw()
+monthlytwplot
+```
+
+Having multiple data streams and axis
+====================
+-  There looks like an obvious pattern here.
+-  Is there anything else that can be compared to?
+-  Since this is in a bay, look at rainfall (which washes trash in the Chesapeake Bay watershed into Baltimore Harbor)
+
+```{r}
+Precipitation2014 <- read_excel(filename,
+sheet = "2014 Precipitation", skip = 1)
+Precipitation2014 <- Precipitation2014 %>% filter(!is.na(Month))
+Precipitation2015 <- read_excel(filename,
+sheet = "2015 Precipitation", skip = 1)
+Precipitation2015 <- Precipitation2015 %>% filter(!is.na(Month))
+Precipitation2016 <- read_excel(filename,
+sheet = "2016 Precipitation", skip = 1)
+Precipitation2016 <- Precipitation2016 %>% filter(!is.na(Month))
+Precipitation2017 <- read_excel(filename,
+sheet = "2017 Precipitation", skip = 1)
+Precipitation2017 <- Precipitation2017 %>% filter(!is.na(Month))
+Precipitation2018 <- read_excel(filename,
+sheet = "2018 Precipitation", skip = 1)
+Precipitation2018 <- Precipitation2018 %>% filter(!is.na(Month))
+Precipitation2019 <- read_excel(filename,
+sheet = "2019 Precipitation", skip = 1)
+Precipitation2019 <- Precipitation2019 %>% filter(!is.na(Month))
+```
+
+Convert date to yearmon and combine years
+==========================
+- from `help(yearmon)`
+- paste `floor(year + (month+ 0.001)/12 )`
+```{r}
+Precipitation2014 <- Precipitation2014 %>% 
+  mutate(yearmon = as.yearmon(2014 + Month/12.))
+Precipitation2015 <- Precipitation2015 %>% 
+  mutate(yearmon = as.yearmon(2015 + Month/12.))
+Precipitation2016 <- Precipitation2016 %>% 
+  mutate(yearmon = as.yearmon(2016 + Month/12.))
+Precipitation2017 <- Precipitation2017 %>% 
+  mutate(yearmon = as.yearmon(2017 + Month/12.))
+Precipitation2018 <- Precipitation2018 %>% 
+  mutate(yearmon = as.yearmon(2018 + Month/12.))
+Precipitation2019 <- Precipitation2019 %>% 
+  mutate(yearmon = as.yearmon(2019 + Month/12.))
+precipitation <- rbind(Precipitation2014,
+                       Precipitation2015,
+                       Precipitation2016,
+                       Precipitation2017,
+                       Precipitation2018,
+                       Precipitation2019)
+```
+
+Combine the two datasets
+==========
+```{r}
+monthlytrashwheel <- monthlytrashwheel %>%
+  left_join(precipitation)
+```
+
+Plot monthly precipitation
+========================
+
+```{r}
+ggplot(precipitation) + geom_bar(aes(x=yearmon, y=Total), stat="Identity", fill="white", color="black") + 
+  xlab("Month") + ylab("Preciptiation (in)") + 
+  scale_x_yearmon() + theme_bw()
+```
+
+Now, put them together using dual y-axis
+=========================
+- use the `sec.axis` argument to have superimpose two plots
+```{r}
+ggplot(monthlytrashwheel) + geom_bar(aes(x=yearmon, y=Total), stat="Identity", fill="white", color="black") + 
+               xlab("Month") + ylab("Precipitation (in)") + 
+  scale_x_yearmon() + theme_bw() + geom_point(aes(x=yearmon, y=monthlytons/5)) +
+  scale_y_continuous(sec.axis=sec_axis(~.*5, name = "Tons collected"))
+```
+
+Factors
+=======
+
+Using factors
+=============
+
+-  Factors are variables that take on a limited number of values.
+-  e.g. a bounded set of integers
+-  Categorical variables
+-  Statistical methods work with factors than continuous (real) numbers, so this is helpful information to pass to a statistical model.
+
+Example of factors
+====================
+```{r}
+FemPreg <- read.csv("../data/nsfgFemPreg.csv",
+                    header=TRUE, sep=",")
+FemPreg$BIRTHORD <- as.factor(FemPreg$BIRTHORD)
+FemPreg$PRGLNGTH <- as.integer(FemPreg$PRGLNGTH)
+```
+```{r}
+ggplot(FemPreg[FemPreg$BIRTHWGT_LB1<99,]) + geom_boxplot(aes(x=as.factor(pregordr), y=BIRTHWGT_LB1)) +
+                                                           xlab("Pregnancy order") + ylab("Birthweight (lbs)") +
+  ggtitle("Birthweight by pregnancy order")
+```
+
+Summarizing factor variables
+===========
+
+```{r}
+summary(FemPreg$pregordr)
+unique(FemPreg$pregordr)
+```
+
+Renaming factors
+===============
+
+- To rename factors, use the `labels` parameter within the `factors()` function.
+
+```{r}
+data = c(1,1, 2, 3, 3, 2, 2, 3, 1, 2)
+fdata = factor(data)
+fdata
+rdata = factor(data, labels = c("I", "II", "III"))
+rdata
+```
+
+Ordering factors
+===========
+
+- Normally factors to not have ordered
+
+```{r}
+levels(InsectSprays$spray)
+InsectSprays$spray <- with(InsectSprays,
+                           reorder(spray, count, mean))
+levels(InsectSprays$spray)
+```
+
+Creating factors from continuous variables
+============
+
+-  We can create a factor from integers.
+-  For continuous variables, first we need to identify `breaks` in the range, similar to histogram bins.
+```{r}
+summary(women$weight)
+length(women$weight)
+wfact <- cut(women$weight, 3)
+table(wfact)
+wfact <- cut(women$weight, pretty(women$weight,3))
+table(wfact)
+```
+
+Creating labels instead
+========
+
+```{r}
+wfact <- cut(women$weight,3, labels=c('Low', 'Medium', 'High'))
+table(wfact)
+```
+
+Factors based on quantiles
+========
+
+```{r}
+wfact <- cut(women$weight, quantile(women$weight, (0:4)/4))
+table(wfact)
+```
+
+Factors based on time and date
+=========
+
+- With dates, you often are not concerned as much with the precise date time but rather that an event fell within a certain bin.
+  -  Session logs are recorded to the second while you may only be interested in the day or hour.
+  -  Plotting sales data monthly while it is recorded to the second.
+
+
+Example of aggregating days into months
+===============
+
+Create a list of days
+
+```{r}
+everyday = seq(from =as.Date('2014-1-1'),
+               to = as.Date('2014-12-31'), by='day')
+```
+
+Grouping into months
+========
+
+```{r}
+cmonth = format(everyday, '%b')
+months = factor(cmonth, levels=unique(cmonth), ordered=TRUE)
+table(months)
+```
+
+Defining breakpoints
+========
+
+-   Use the 'breaks' argument to define the boundaries.
+
+```{r}
+quarters = cut(everyday, breaks="3 months", labels = paste('Q', 1:5, sep=''))
+tail(quarters)
+```
