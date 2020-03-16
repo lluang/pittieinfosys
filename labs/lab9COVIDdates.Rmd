@@ -1,7 +1,7 @@
 ---
-title: "COVID19 in the U.S."
+title: "Lab 9: Dates - COVID-19 in the U.S."
 author: "Louis Luangkesorn"
-date: "3/9/2020"
+date: "3/26/2020"
 output: html_document
 ---
 
@@ -23,16 +23,19 @@ This assignment will work with the data used with the COVID-19 dashboard created
 
 The data provided are not in tidy format and are difficult to work with in models. In order to make the data usable, it will require a combination of tidy data, string processing, and date processing. A skeloton of the process is here, but you will have to fill in the gaps.
 
-Download the daily reports data from Courseweb into a directory, and replace the `datadirectory` line with the appropriate directory path.  Use your Windows Explorer or Finder (Mac OSX to assist you if you do not know how).  Note the use of `\\` for separating directory names (escape character to use the `\`).  The alternative is to replace all of the `\` with `/`.
+Download the daily reports data from Courseweb into a directory, then unzip it. Next, to load the data, replace the `datadirectory` line in the next chunk with the appropriate directory path.  Use your Windows Explorer or Finder (Mac OSX to assist you if you do not know how).  Note the use of `\\` for separating directory names (escape character to use the `\`).  The alternative is to replace all of the `\` with `/`.
 
 The code below reads in the data for all of the data files and puts them into a single dataframe. Note that the data format changes over the course of the data collection, so the dates are read in as character.
 
 ```{r readdataset}
-datadirectory <- "C:\\Users\\louis\\Documents\\projects\\infectiousdisease\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports"
+#datadirectory <- "C:\\Users\\louis\\Documents\\projects\\infectiousdisease\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports"
+datadirectory <- "~/Documents/projects/sirmodels/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports"
+
+
 datafiles <- list.files(datadirectory)
 ```
 ```{r}
-coviddaily <- datafiles %>%
+coviddaily <- datafiles[50:length(datafiles)-1] %>%
   map(function(x) read_csv(file.path(datadirectory, x), 
                            col_types = cols(`Province/State` = col_character(),
                                 `Country/Region` = col_character(),
@@ -43,32 +46,19 @@ coviddaily <- datafiles %>%
                                 ))) %>%  
   reduce(rbind)
 
-
 ```
 
 ## 1. [5] Convert date types
 
 There are two types of data format.  Starting in February, the format changed to YYYY-MM-DD HH:MM:SS (with an optional 'T' between DD and HH).
 
-a. Using lubridate, convert the date from character to a date format and save the result into a datefield.  (Note:  you will get approximately 560 lines failing to parse and you will get an `NA`, because January data files are in a different date format (DD-MM-YYYY HH:MM)).  Since we are looking at only U.S. data in this lab, you will remove them. Remove them by filtering using `filter(!is.na(datefield))`
-
+a. Using lubridate, convert the date from character to a date format and then only keep the date (removing the time stamp) save the result into a datefield. 
 **ANSWER**
 ```{r convert dates}
 coviddaily <- coviddaily %>%
-  mutate(datetype1 = ymd_hms(`Last Update`))%>%
-  filter(!is.na(datetype1))
-
+  mutate(datetype = date(ymd_hms(`Last Update`)))
 ```
-
-From you answer above, we do not care about the time that the update occured, so use lubridate to change the datefield to only the date, without the time stamp.
-
-**ANSWER**
-```{r}
-coviddaily <- coviddaily %>%
-  mutate(datetype1 = date(datetype1))
-```
-
-## U.S. states
+## [6] U.S. states
 
 We are interested in spread in the U.S.  Currently, cases are reported by state, county, or city. To make these comparable, we want to report cases by state.
 
@@ -82,12 +72,12 @@ b.  Filter the COVID data to include only U.S. cases and then extract the state 
 ```{r}
 covidus <- coviddaily %>%
   filter(!str_detect(`Province/State`, "Princess"), 
-         !str_detect(`Province/State`, "Cruise")) %>%
-  filter(`Country/Region`=="US") %>%
-  mutate(state = str_extract(`Province/State`, "[A-Z]{2}?"))
+         !str_detect(`Province/State`, "[C|c]ruise"),
+         !str_detect(`Country/Region`, "[C|c]ruise")) %>%
+  filter(`Country/Region`=="US")
 ```
 
-## Plotting cases
+## [9] Plotting cases
 
 The standard epidemic model is Susceptible - Infected - Removed (SIR). However, the data is Confirmed-Deaths-Recovered.  
 
@@ -96,13 +86,14 @@ a. Convert the data provided into SIR (note, no need to plot Susceptible) using:
 - Removed = Deaths + Recovered
 - Infected = Confirmed - Deaths - Recovered
 
-b. Determine the three states with the most confirmed cases. Note that you need to group the data by state to do this. Note: because of NAs, use the option `na.rm=TRUE` for any summary function that needs it.
+b. Determine the six states with the most confirmed cases. Note that you need to group the data by state to do this. Note: because of NAs, use the option `na.rm=TRUE` for any summary function that needs it.
 
 c. Plot the Infected and Removed over time for the three states with the most confirmed cases.  Note that you need to use the data summarized by state to do this.
 
-```{r}
+**ANSWER**
+```{r }
 covidus <- covidus %>%
-  group_by(state, datetype1) %>%
+  group_by(`Province/State`, datetype) %>%
   summarize(Confirmed = sum(Confirmed, na.rm = TRUE),
             Deaths = sum(Deaths, na.rm=TRUE),
             Recovered =  sum(Recovered, na.rm=TRUE)) %>%
@@ -113,24 +104,24 @@ covidus <- covidus %>%
 
 
 ```{r}
-top9states <- covidus %>%
-  filter(!is.na(state)) %>%
-  group_by(state) %>%
+topstates <- covidus %>%
+  filter(!is.na(`Province/State`)) %>%
+  group_by(`Province/State`) %>%
   summarize(Confirmed = max(Confirmed)) %>%
   arrange(desc(Confirmed)) %>%
-  select(state) %>%
-  head(9) 
+  select(`Province/State`) %>%
+  head(6) 
 
 ```
 
 ```{r}
 covidtop9 <- covidus %>% 
-  filter(state %in% top9states$state)
+  filter(`Province/State` %in% topstates$`Province/State`)
 ggplot(covidtop9) +
-  geom_line(aes(x=datetype1, y=Infected), color="red") +
-  geom_line(aes(x=datetype1, y=Removed), color="blue") + 
-  facet_wrap(.~state)+
+  geom_line(aes(x=datetype, y=Infected), color="red") +
+  geom_line(aes(x=datetype, y=Removed), color="blue") + 
+  facet_wrap(.~`Province/State`)+
   scale_x_date() 
 ```
 
-Note: On occasion, the
+Note: On occasion in the early part of an epidemic, some shifts in cases reports are due to changing definitions and rules on reporting cases.
