@@ -61,6 +61,12 @@ Hint: Figure out how to do this with the first record (starter code below), then
 coviddaily$`Last Update`[1]
 ```
 
+**ANSWER**
+```{r convert dates}
+coviddaily <- coviddaily %>%
+  mutate(datetype = date(ymd_hms(`Last Update`)))
+```
+
 ## 2. [6] U.S. states
 
 We are interested in spread of COVID-19 cases in the U.S.  Currently, cases are reported by state, county, or city. To make these comparable, we want to report cases by state.
@@ -70,6 +76,14 @@ b.  Filter the COVID data to include only U.S. cases
 
 - Note: like all regular expression problems developing the solutions are not simple, even if the final solution may be.  Write a flow chart and talk through it with a classmate/friend/imaginary friend/stuffed animal first before you start coding. 
 
+**ANSWER**
+```{r}
+covidus <- coviddaily %>%
+  filter(!str_detect(`Province/State`, "Princess"), 
+         !str_detect(`Province/State`, "[C|c]ruise"),
+         !str_detect(`Country/Region`, "[C|c]ruise")) %>%
+  filter(`Country/Region`=="US")
+```
 
 ## 3. [9] Plotting cases
 
@@ -83,5 +97,39 @@ a. Convert the data provided into SIR (note, no need to plot Susceptible) using:
 b. Determine the six states with the most confirmed cases. Note that you need to group the data by state to do this. Note: because of NAs, use the option `na.rm=TRUE` for any summary function that needs it.  Note: to get the most confirmed cases, use `group_by` and `summarize` finding the `max()` of the number of confirmed.
 
 c. Plot the Infected and Removed over time for the six states with the most confirmed cases.  Note that you need to use the data summarized by state to do this. Note: you will have to plot Infected and Removed using separate `geom_` lines.
+
+**ANSWER**
+```{r 3a}
+covidus <- covidus %>%
+  group_by(`Province/State`, datetype) %>%
+  summarize(Confirmed = sum(Confirmed, na.rm = TRUE),
+            Deaths = sum(Deaths, na.rm=TRUE),
+            Recovered =  sum(Recovered, na.rm=TRUE)) %>%
+  mutate(Removed = Deaths + Recovered,
+         Infected = Confirmed - Deaths - Recovered)
+```
+
+
+
+```{r 3b}
+topstates <- covidus %>%
+  filter(!is.na(`Province/State`)) %>%
+  group_by(`Province/State`) %>%
+  summarize(Confirmed = max(Confirmed)) %>%
+  arrange(desc(Confirmed)) %>%
+  select(`Province/State`) %>%
+  head(6) 
+
+```
+
+```{r 3c}
+covidtop9 <- covidus %>% 
+  filter(`Province/State` %in% topstates$`Province/State`)
+ggplot(covidtop9) +
+  geom_line(aes(x=datetype, y=Infected), color="red") +
+  geom_line(aes(x=datetype, y=Removed), color="blue") + 
+  facet_wrap(.~`Province/State`)+
+  ylab("Cases") + ggtitle("Infected (red) and Removed (blue) Cases by state")
+```
 
 Note: On occasion in the early part of an epidemic, some shifts in cases reports are due to changing definitions and rules on reporting cases.
