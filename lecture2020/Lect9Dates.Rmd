@@ -5,19 +5,32 @@ date: "March 2020"
 output: 
   pdf_document: default
   slidy_presentation: default
-  beamer_presentation: default
   html_document: default
+  beamer_presentation: 
+    colortheme: whale
+    theme: AnnArbor
+    fig_height: 4
+    fig_width: 6
 ---
 
+Announcements
+=============
 
-```{r, echo=FALSE, warnings=FALSE}
+- Lectures on Zoom - will record and post in Course Documents
+- Class discussion on TopHat (377821). Discussion forum for each lecture.
+- My office hours are on Microsoft Team. Note that the Microsoft Team is always open and you can see past discussion and you can talk to each other.
+- TAs are planning on setting Zoom sessions for labs and office hours.  Will post links in Courseweb.
+- Check in on your teammates regularly.
+- Homework 2 cancelled.
+
+```{r, echo=TRUE, warnings=FALSE, message=FALSE}
 library(ggplot2)
 library(lubridate)
 library(dplyr)
 library(magrittr)
 library(readxl)
 # Trashwheel data from http://baltimorewaterfront.com/healthy-harbor/water-wheel/
-filename <- "C:/Users/louis/Documents/courses/pittieinfosys2015/data/Trash-Wheel-Collection-Totals-11-13-9-2.xlsx" 
+filename <- "../data/Trash-Wheel-Collection-Totals-11-13-9-2.xlsx" 
 trashwheel <- HealthyHarborWaterWheelTotals2018_3_1 <- read_excel(filename,
 sheet = "Mr. Trash Wheel")
 trashwheel <- trashwheel %>% filter(!is.na(Dumpster))
@@ -27,14 +40,15 @@ Dates
 =======
 
 
+
 Date and time formats
 =====================
 
 -  Many ways to represent dates
 -  What does this mean
-  -  03-13-2020
+  -  03-10-2020
 ```{r}
-trashwheel$Date[1]
+trashwheel$Date[150]
 ```
 
 How do we think about date and time
@@ -56,6 +70,11 @@ Date and time formats
 -  Hour, minute, second, AM/PM
 -  What else do we have to specify?
 
+Two ways
+==========
+- C standard with format codes (also used by Matlab, and just about every programming language that exists) 
+- Lubridate - Unique to R and the tidyverse. This is ALOT easier when it works, which is most of the time.
+
 Communicating format
 ====================
 
@@ -63,8 +82,11 @@ Communicating format
 -  Sometimes, it can guess correctly
 
 ```{r asdateexample}
-as.Date('2020-03-13')
-as.Date('2020/03/13')
+as.Date('2020-03-10')
+as.Date('2020/03/10')
+as.Date('3/10/2020')
+as.Date('10/3/2020')
+
 ```
 
 Format codes
@@ -85,7 +107,8 @@ Date examples
 ===============
 
 ```{r moredateexamples}
-as.Date('1/15/2020', format = '%m/%d/%Y')
+as.Date('3/10/2020', format = '%m/%d/%Y')
+as.Date('3/10/2020', format = '%d/%m/%Y')
 as.Date('April 26, 2019', format = '%B %d, %Y')
 as.Date('4MAR17', format = '%d%b%y')
 ```
@@ -98,7 +121,7 @@ Dates as variables
 -  Default format is YYYY-MM-DD HH:MM:SS TZ
 
 ```{r datevariables}
-thedate = as.Date('3/13/2020', format = '%m/%d/%Y')
+thedate = as.Date('3/10/2020', format = '%m/%d/%Y')
 print(thedate)
 ndate = as.numeric(thedate)
 print(ndate)
