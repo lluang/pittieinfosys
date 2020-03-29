@@ -8,34 +8,6 @@ output:
   slidy_presentation: default
 ---
 
-Case final Report
-=====
-
-1. Format is in Course Documents. Note that the case and final project formats are the same specifications.
-1. For the Case, the question is if RegionEX delays are out of ordinary. Because all you are doing is data analysis (no modeling that you are learning in other classes), you need to do comparisons. The only benchmark comparison data you have is MDA. So
-Through data analysis (EDA) determine what kinds of flights have high rates of RegionEx delays.
-Compare RegionEx flights to comparable flights for MDA for those types of flights.  
-2. Remember comparisons should include a measure of centrality (e.g. mean, median) and a measure of variation (e.g. standard deviation, IQR)
-    i. Differences in measure of variation usually imply that there is a process standardization problem
-    ii. Differences in measure of centrality usually imply a process improvement problem
-    iii. If the comparisons are not fair,  (e.g. one side does not see the same conditions as the other or the rules are different) state that as well.
-3. From that comparison, you may be able to make conclusions on where RegionEx can improve (i.e. it is fair to say that RegionExshould be able to match a comparable benchmark)
-
-4 V's of Big Data
-=================
-
--  Volume - How many observations?  What constitutes an observation
--  Variety - What information is available on each observation?  Are they very similar, or do they describe a range of different aspects of the observation
--  Velocity - Is data added over time? Does the underlying environment that produced the data change?  Does data expire?  Is the Need time sensitive (you can only use recent data)
--  Veracity - Is the data accurate?  Are there missing values or data errors?  Is data collection complete or are there missing observations?  Are data fields defined well enough so that entries mean what they seem to mean.
-
-
-
-Schedule
-=============
-
-- This week: Monte Carlo and Bootstrap simulation
-- Next week:  Time step simulation
 
 Simulation
 =============

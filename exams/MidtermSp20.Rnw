@@ -264,6 +264,7 @@ pittsburghsales <- PropertySalesTransactions %>%
             sdprice = sd(PRICE),
             meanassess = mean(COUNTYTOTAL),
             sdassess = sd(COUNTYTOTAL))
+pittsburghsales %>% head()
 @
 
 \end{solution}
@@ -289,7 +290,11 @@ pittsburghsalesprice <- PropertySalesTransactions %>%
   mutate(bedbath = paste(BEDROOMS, FULLBATHS, HALFBATHS),
          saleyear=year(SALEDATE.x)) %>%
   filter(bedbath %in% c("2 1 1", "2 2 NA", "3 2 NA"))
-         
+pittsburghsalesprice %>% head()
+@
+
+
+<<fig=TRUE>>=
 ggplot(pittsburghsalesprice) +
   geom_density(aes(PRICE, color=saleyear)) + 
   facet_wrap(~bedbath)
@@ -324,6 +329,7 @@ pittsburghassess <- PropertySalesTransactions %>%
   mutate(bedbath = paste(BEDROOMS, FULLBATHS, HALFBATHS),
          saleyear=year(SALEDATE.x),
          overassessment = PRICE-COUNTYTOTAL) 
+pittsburghassess %>% head()
 @
 \end{solution}
 
@@ -341,7 +347,7 @@ pittsburghassess <- PropertySalesTransactions %>%
 
 \begin{solution}
 
-<<>>=
+<<fig=TRUE>>=
 
 ggplot(pittsburghassess) +
   geom_point(aes(PRICE, COUNTYTOTAL, alpha = 0.1)) + 
