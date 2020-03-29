@@ -3,14 +3,14 @@ title: 'Lecture 9: Dates and factors'
 author: "IE 0015 Information Systems"
 date: "March 2020"
 output: 
-  pdf_document: default
-  slidy_presentation: default
-  html_document: default
   beamer_presentation: 
     colortheme: whale
     theme: AnnArbor
     fig_height: 4
     fig_width: 6
+  slidy_presentation: default
+  html_document: default
+  pdf_document: default
 ---
 
 Announcements

@@ -28,14 +28,14 @@ Download the daily reports data from Courseweb into a directory, then unzip it. 
 The code below reads in the data for all of the data files and puts them into a single dataframe. Note that the data format changes over the course of the data collection, so the dates are read in as character.
 
 ```{r readdataset}
-#datadirectory <- "C:\\Users\\louis\\Documents\\projects\\infectiousdisease\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports"
-datadirectory <- "~/Documents/projects/sirmodels/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports"
+datadirectory <- "C:\\Users\\louis\\Documents\\projects\\infectiousdisease\\COVID-19\\csse_covid_19_data\\csse_covid_19_daily_reports"
+#datadirectory <- "~/Documents/projects/sirmodels/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports"
 
 
 datafiles <- list.files(datadirectory)
 ```
 ```{r}
-coviddaily <- datafiles[50:length(datafiles)-1] %>%
+coviddaily <- datafiles[50:60] %>%
   map(function(x) read_csv(file.path(datadirectory, x), 
                            col_types = cols(`Province/State` = col_character(),
                                 `Country/Region` = col_character(),

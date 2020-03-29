@@ -1,7 +1,7 @@
 ---
 title: 'Lab 10: Simulation'
 author: "IE 0015 Information Systems"
-date: "April 11-12, 2019"
+date: "April 2-3, 2020"
 output: 
   pdf_document: default
   html_document: default
