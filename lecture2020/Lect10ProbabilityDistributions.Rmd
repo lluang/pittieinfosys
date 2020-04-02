@@ -3,10 +3,25 @@ title: "Probability and Monte Carlo simulation"
 author: "IE 0015 Information Systems"
 date: "April 2020"
 output:
-  html_document: default
+  beamer_presentation:
+    colortheme: whale
+    theme: AnnArbor
+
   pdf_document: default
+  html_document: default
   slidy_presentation: default
 ---
+
+Annoucement
+=======
+
+- Load Lecture 10 Probability from Courseweb
+- Sign into TopHat 377821 for class discussion
+
+Dr. Seuss
+===
+
+![](figures/seussismzoom.jpg)
 
 Case final Report
 =====
@@ -19,7 +34,7 @@ Compare RegionEx flights to comparable flights for MDA for those types of flight
     i. Differences in measure of variation usually imply that there is a process standardization problem
     ii. Differences in measure of centrality usually imply a process improvement problem
     iii. If the comparisons are not fair,  (e.g. one side does not see the same conditions as the other or the rules are different) state that as well.
-3. From that comparison, you may be able to make conclusions on where RegionEx can improve (i.e. it is fair to say that RegionExshould be able to match a comparable benchmark)
+3. From that comparison, you may be able to make conclusions on where RegionEx can improve (i.e. it is fair to say that RegionEx should be able to match a comparable benchmark)
 
 4 V's of Big Data
 =================
@@ -363,7 +378,7 @@ birth_dist$estimate
 
 - `denscomp` compares distributions to candidate
 - `qqcomp` shows Quantile-Quantile plot compared to the hypothesis. distribution. Focuses on errors in tails of distribution.
-- `cdfplot` shows cumulative distribution functionl
+- `cdfplot` shows cumulative distribution function
 - `ppcomp` probability plot. Focuses on middle of distribution.
 
 ```{r}
@@ -521,7 +536,7 @@ Using random numbers for simulation
 =============================
 
 -  We can use samples of random numbers for simulating settings.
-    -  Called *Monte Carlo Simulation*, after the city on the Meditterranean known for gambling.
+    -  Called *Monte Carlo Simulation*, after the city on the Mediterranean known for gambling.
     -  Often useful for determining probabilities when there is no analytic solution or the solution is too complex.
 -  Result is a probability distribution of the outcome.
     -  Not only a point estimate or a mean and variance.

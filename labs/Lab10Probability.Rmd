@@ -2,7 +2,9 @@
 title: 'Lab 10: Probability and simulation'
 author: "IE 0015 Information Systems"
 date: "April 2-3, 2020"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r libraries, warning=FALSE, message=FALSE}
@@ -11,27 +13,27 @@ library(ggplot2)
 library(dplyr)
 library(magrittr)
 library(tidyr)
-library(grid)
 library(foreach)
 library(fitdistrplus)
-library(openintro) # You will have to install this package
+library(openintro)
 ```
 
-# 1. Bookstore (5 points)
+# Bookstore (5 points)
 
 A bookstore offers a chemistry textbook for \$159 and a book supplement for \$41.  From past experience, they know about 25\% of chemistry students just buy the textbook while 60\% buy both the textbook and supplement.  No students buy the supplement without the textbook.
 
 a.  [1] Build a table with the probability and revenue for a single student (i.e. you will be able to use the table to get the expected revenue per student).
 
-b.  [3] Simulate a class of 20 students 10000 times.  Calculate the mean and standard deviation of the revenue.  Calculate the percentage of classes that fall within one, two, and three standard deviations of mean.
+b.  [1] Write a function that will generate the revenue from a single class, given the number of students in that class.
 
-Hint:  Write a function that simulates a class once, then call that function 10000 times.
+c.  [2] Simulate a class of 20 students 10000 times.  Calculate the mean and standard deviation of the revenue.  Calculate the percentage of classes that fall within one, two, and three standard deviations of mean. (Hint: the simulation should either use `sapply` or use `for` loops)
 
-c.  [1] Comment on the result of (b).  What probability distribution did you compare this to and why (or why was this different).
+Hint:  Build a function that simulates a class once, then call that function 10000 times.
+
+d.  [1] Comment on the result of (c).  What probability distribution did you compare this to and why (or why was this different).
 
 
-
-#  2. NBA player heights
+#  NBA player heights
 
 Does the height of NBA players fit a normal distribution?
 
@@ -39,9 +41,9 @@ a.  [4] Load in the NBA player heights and test if it fits a normal distribution
 
 b.  [1] Discuss the results of the plots and tests. Do you think that the distribution of NBA players fit a normal distribution.  Why or why not?
 
-
 ```{r}
 data("nba.heights")
+descdist(nba.heights$h.in) # Note could also use meters
 ```
 
-
+Should generally agree based on not failing the gof tests, qq-plot and pp plot generally following the line.  One thing that makes it not normal is the fact that NBA players are chosen to fit positions, so this may be a non-independent variable.
