@@ -1,26 +1,22 @@
 ---
-title: "Lecture 10 Monte Carlo Simulation"
-author: "IE0015 Information Systems Engineering"
+title: "Lecture 11 bootstrap and time step simulation"
+author: "Louis Luangkesorn: IE 0015"
 date: "April 2020"
 output:
+  pdf_document: default
   beamer_presentation:
     colortheme: whale
     theme: AnnArbor
     fig_height: 2
     fig_width: 4
-  pdf_document: default
   html_document: default
   slidy_presentation: default
 ---
 
 
-Simulation
-=============
-
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(ggplot2)
-library(foreach)
-library(deSolve)
+
 ```
 
 
@@ -35,86 +31,27 @@ Simulation in data analysis
 Some types of computer simulation
 ================
 
--  Monte Carlo (this week)
--  Bootstrap (resampling)
--  Time step simulation
+-  Monte Carlo (last week)
+-  Bootstrap (resampling) (this week)
+-  Time step simulation  (this week)
 -  Discrete event simulation (IE 1083)
 -  Continuous simulation
 -  Agent based simulation
 
-Monte Carlo
-=====================
-
-Monte Carlo Simulation
+Why simulation
 ==============
 
--  Based on repeated use of random numbers.
-    -  Name refers to the casinos in Monte Carlo by France
--  If the problem can be stated as the interaction of independent random numbers
-- Often used for integration type problems. (area under the curve or probability)
-
-
-Random numbers in R
-===================
-
-
-In R
-========
-
-```{r}
-maxi = 1000
-i = (1:maxi)
-x <- runif(maxi)
-y <- runif(maxi)
-incircle <- ifelse(x^2 + y^2 <= 1, 1.0, 0.0)
-ratio <- unlist(foreach(i=1:maxi) %do% 
-                  mean(incircle[1:i]))
-```
-
-Monte Carlo
-============
-
-```{r}
-head(ratio)
-```
-
-- What is this doing?
-
-Trend of `mean(incircle[1:i]))`
-==============
-```{r}
-plot(1:maxi, ratio)
-title("mean(incircle[1:i])")
-```
-
-Monte Carlo convergence
-======================
-
--  Run Monte Carlo until the confidence interval of the estimate of the mean is within a certain tolerance.
--  Take the first 30 iterations (Monte Carlo runs are fast)
--  Compute the sample standard deviation $s$.
--  Solve for $n$
-
-$$CI = z_{\alpha/2} s/\sqrt{n}$$
-```{r}
-meanratio <-mean(incircle)
-sdratio <- sd(incircle)
-print(meanratio, digits = 10)
-print(sdratio, digits = 10)
-```
-```{r}
-ci = pnorm(q = 0.975) * sdratio/sqrt(maxi)
-print(ci)
-```
-
-Usually, set ci to be some fraction of mean and solve for n
-==============
-
-$$n = \left(\frac{z_{(1-\alpha/2)} * S}{\bar{x} * 0.05}\right)$$
-
+- No analytic solution (no equation that matches the system without violating assumptions)
+- Need a distribution as output
+    - Performance measure something other than mean or standard deviation
+    - Quantile, threshold, max, min
 
 Bootstrap
 ======
+
+- Purpose:  Hypothesis testing in settings where there is limited data
+- Data may NOT come from a normal distribution
+- Bootstrap methods do not have as many assumptions
 
 Resampling methods
 ==============================
@@ -129,11 +66,11 @@ Resampling methods
 Advantages of simulation
 ==============================
 
--  Fewer assumptions:  we do not require that the underlying population is normally distributed or that the sample size is large.
+-  Fewer assumptions:  we do not require that the underlying population is normally distributed or that the sample size is large or any of the assumptions required in stochastic models.
 -  Greater accuracy: Many statistical methods are based on having rough upper bounds or use Taylor series expansions.  Simulations can be replicated based on the desired accuracy.
 -  Generality - Resampling methods can be applied to a large class of problems, so do not require developing and implementing methods specific to that problem definition.
 -  Actually determines probability.  Bayesian methods generate true probabilities.  Hypothesis testing methods do not (you are not supposed to treat a p-value as a probability)
--  What if? - We can use samples to create a study population with certain characteristics (e.g. oversample currently underrepresented sub-population) and explore what would happen if the current population changes.
+-  What if? - We can use samples to create a study population with certain characteristics (e.g. oversample currently underrepresented sub-population) and explore what would happen if the current population changes. (e.g. scale a probability distribution)
 
 
 Using bootstrap sampling
@@ -318,7 +255,7 @@ set.seed(1234)
 permdistfun <- function(azt){
   pdelta <- c()
   tf10 <- c(rep(FALSE, 10), rep(TRUE, 10))
-  select <- sample(tf10, 20, replace = TRUE)
+  select <- sample(tf10, 10, replace = TRUE)
   azt3 <- azt[select]
   azt6 <- azt[!select]
   delta <- mean(azt6)-mean(azt3)
@@ -364,8 +301,8 @@ t.test(x=azt300, y=azt600)
 Another example - Categorical variables
 ====================
 
-- Claim (HA) is that a treatment leads to a change in the population from the control.
-- Null hypothesis is that the treatment has not change.
+- Claim ($H_A$) is that a treatment leads to a change in the population from the control.
+- Null hypothesis ($H_0$) is that the treatment does not result in a change.
 - Simulate the sample the size of a treatment, and determine the $p$ that observed values were seen.
 
 Quadcopter rotor blades
@@ -397,12 +334,14 @@ Simulate assuming that all data is from the control group
 ==========================
 ```{r}
 rotorsim <- function(i){
-              successes <- sum(sample(x=0:1, size = 1000, replace=TRUE, prob=c(pfailnull, (1-pfailnull))))
+              successes <- sum(sample(x=0:1, size = 1000, 
+                                      replace=TRUE, 
+                                      prob=c(pfailnull, (1-pfailnull))))
 }
 rotorout <-sapply(1:10000, rotorsim)
 ```
 
-Look at the histogram of the result and find the HA
+Look at the histogram of the result and find the $H_A$
 ======================
 ```{r}
 hist(rotorout, breaks = 100)
@@ -440,6 +379,181 @@ for (i in 1:50){
 hist(sampletime, main="Distribution of processing time")
 ```
 
+Time step simulation
+=======================
+
+- Each round of simulation advances the simulation one time unit. e.g. one day.
+- Contrast - Discrete event simulation advances the clock to the next event
+- Monte Carlo models each round is independent of every other round
+
+Structure of a simulation
+==============
+
+1. Set initial state
+2. Run one time unit
+3. Save end state
+4. End state becomes the initial state for the next round
+5. Check if (simulation) stopping condition is met
+    - Number of iterations/time periods
+    - Specific state reached
+
+Inventory model example
+========================
+
+- One of the standard models is periodic inventory $S,s$ model
+- At the beginning of each period any deliveries occur.
+- Each period sees a random demand with a given probability distribution
+- At the end of the period, compare inventory $i$ to a reorder point $s$
+    -  If inventory $i$ is less than $s$, order $q = S - i$
+    -  $S$ and $s$ are calculated based on demand, order lead time, and cost factors.
+- Calculate cost of the period including inventory holding and ordering cost
+-  Assume daily demand is Poisson
+
+Set up initial conditions and cost structure
+========================
+```{r}
+S <- 50
+s <- 10
+i <- S # start at S
+meandemand <- 8
+K <- 10 # cost of orders
+h <- 1 # cost of storing inventory
+stockout <- 50 # stockout penalty
+delivery = 0
+```
+
+Set up statistics collection
+=============================
+```{r}
+nstockouts <- 0 # count times when inventory goes to zero
+inventorydays <- 0 # sum of inventory holding
+norders <- 0 # count orders made
+```
+
+Implement one time period
+=====================
+
+- Implement one day
+- Run several times to make sure it works.
+
+```{r}
+
+dailycost <- 0
+if (delivery > 0){
+  i <- i + delivery
+  delivery <- 0
+}
+daydemand <- rpois(1, lambda = meandemand)
+if (daydemand>i){
+  nstockouts <- nstockouts + 1
+  dailycost <- dailycost + stockout
+}
+i = max(i-daydemand, 0)
+inventorydays <- inventorydays + i
+dailycost <- dailycost + h*i
+if (i < s){
+  delivery <- S-i
+  norders <- norders + 1
+  dailycost <- dailycost + K
+}
+print(c(daydemand, i, delivery, inventorydays, nstockouts, norders, dailycost))
+```
+
+Turn the time period code into a function, then run one replication
+===================================================================
+
+
+- Run one replication
+    - One year = 250 working days
+    - Use a for loop (why can you not vectorize the whole thing)
+- Update statistics as you go
+
+```{r}
+nstockouts <- 0 # count times when inventory goes to zero
+inventorydays <- 0 # sum of inventory holding
+norders <- 0 # count orders made
+cost <- 0
+for (days in 1:250){
+  dailycost <- 0
+  if (delivery > 0){
+    i <- i + delivery
+    delivery <- 0
+  }
+  daydemand <- rpois(1, lambda = meandemand)
+  if (daydemand>i){
+    nstockouts <- nstockouts + 1
+    dailycost <- dailycost + stockout
+  }
+  i = max(i-daydemand, 0)
+  inventorydays <- inventorydays + i
+  dailycost <- dailycost + h*i
+  if (i < s){
+    delivery <- S-i
+    norders <- norders + 1
+    dailycost <- dailycost + K
+  }
+  cost <- cost + dailycost
+}
+print(c(cost, nstockouts, norders, inventorydays))
+```
+
+Run many replications to get a distribution of outcomes
+==================
+
+- Save results to lists.
+- Turn list into dataframe for further analysis
+
+```{r}
+# Initialize statistics for analysis with empty lists
+stockoutsperyear <- c()
+inventorydaysperyear <- c()
+ordersperyear <- c()
+costperyear <- c()
+
+for (rep in 1:1000){  # 1000 replications
+  nstockouts <- 0 # count times when inventory goes to zero
+  inventorydays <- 0 # sum of inventory holding
+  norders <- 0 # count orders made
+  cost <- 0  
+  for (days in 1:250){
+    dailycost <- 0
+    if (delivery > 0){
+      i <- i + delivery
+      delivery <- 0
+    }
+    daydemand <- rpois(1, lambda = meandemand)
+    if (daydemand>i){
+      nstockouts <- nstockouts + 1
+      dailycost <- dailycost + stockout
+    }
+    i = max(i-daydemand, 0)
+    inventorydays <- inventorydays + i
+    dailycost <- dailycost + h*i
+    if (i < s){
+      delivery <- S-i
+      norders <- norders + 1
+      dailycost <- dailycost + K
+    }
+    cost <- cost + dailycost
+  }
+  stockoutsperyear <- c(stockoutsperyear, nstockouts)
+  inventorydaysperyear <- c(inventorydaysperyear, inventorydays)
+  ordersperyear <- c(ordersperyear, norders)
+  costperyear <- c(costperyear, cost)
+}
+sssimulationoutput <- data.frame(stockouts = stockoutsperyear,
+                                 inventorydays = inventorydaysperyear,
+                                 orders = ordersperyear,
+                                 cost = costperyear)
+```
+
+Analyze output
+==============
+
+```{r}
+ggplot(sssimulationoutput) + geom_histogram(aes(cost)) +
+  ggtitle("Annual cost for S,s simulation")
+```
 
 Summary
 ======
