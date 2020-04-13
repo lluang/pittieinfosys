@@ -1,0 +1,73 @@
+---
+title: "IE 0015 Information Systems Spring 2020 Final"
+output: html_document
+---
+
+
+```{r setup, echo=FALSE, message = FALSE, warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(ggplot2)
+library(phonenumber)
+# replace my name with your name here and run all chunks before starting
+yourname = "Louis Luangkesorn"
+numbername = letterToNumber(yourname)
+examseed = (as.numeric(gsub("-", "", numbername, fixed = TRUE)) %% 256)
+print(paste("Name: ", yourname))
+print(Sys.Date())
+```
+
+Instructions
+=============
+
+1. Enter your name in the code chunk above as the variable `yourname`
+2. Run all chunks, then knit this file to see your exam with all of its specifications. (this exam is customized for you)
+3. Read the agreement below and agree before starting.  Type your name in below the agreement to indicate your acceptance.
+4. Open MS Teams into the IE 15 team. 
+5. Take a picture of your working environment to include a clock (use time.gov if you need one).
+6. (coding version) You have from 8:00 AM EDT to 1:00 PM (Noon) EDT to complete the exam.  I will be online in MS Teams from 8 to 12.
+6. (Written version)  You have from 10 AM to 12 PM (NOON) EDT to complete the exam.
+7. If you have a question, post that you have a question in the Team chat, and I will invite you to a private chat to answer your question. 
+8. This is exam is open book and notes. You have access to 
+    - your notes, , cheetsheets
+    - the lecture notes, 
+    - all homework  and labs, 
+    -  the R for Data Science book website (https://r4ds.had.co.nz/), 
+    - anything accessible through R Studio help section 
+        -  Cheetsheets https://rstudio.com/resources/cheatsheets/
+        -  Manuals - An Introduction to R
+        -  All package documentation (vignettes and help files)
+
+- Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement
+
+## Bootstrap simulation COVID tracking data
+
+
+
+```{r readcoviddata, echo=FALSE, message = FALSE, warning=FALSE}
+datadirectory <- "."
+#datadirectory <- "~/projects/infectiousdisease/covid-tracking-data"
+#datadirectory <- "~/desktop/IE0015/COVID-19/covid-tracking-data"
+statetracking <- read_csv(file.path(datadirectory, "states_daily_4pm_et.csv"),
+              col_types = cols(date = col_date(format = "%Y%m%d"),
+                  dateChecked = col_date(), 
+                  death = col_number(),
+                  negative = col_integer(), 
+                  pending = col_number(),
+                  positive = col_integer(), 
+                  total = col_number(),
+                  hospitalizedCumulative = col_integer(),
+                  inIcuCurrently = col_integer(),
+                  inIcuCumulative = col_integer()))
+statetracking <- statetracking %>% 
+  mutate(state = as.factor(state)) %>%
+  replace_na(list(positive=0,
+                  negative=0,
+                  pending=0))
+
+states <- sort(unique(statetracking$state))
+summary(statetracking)
+```

@@ -1,0 +1,85 @@
+---
+title: "IE 0015 Information Systems Spring 2020 Final"
+output: html_document
+---
+
+
+```{r setup, echo=FALSE, message = FALSE, warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(ggplot2)
+library(phonenumber)
+# replace my name with your name here and run all chunks before starting
+yourname = "Louis Luangkesorn"
+numbername = letterToNumber(yourname)
+examseed = (as.numeric(gsub("-", "", numbername, fixed = TRUE)) %% 256)
+print(paste("Name: ", yourname))
+print(Sys.Date())
+```
+
+Instructions
+=============
+
+1. Enter your name in the code chunk above as the variable `yourname`
+2. Run all chunks, then knit this file to see your exam with all of its specifications. (this exam is customized for you)
+3. Read the agreement below and agree before starting.  Type your name in below the agreement to indicate your acceptance.
+4. Open MS Teams into the IE 15 team. 
+5. Take a picture of your working environment to include a clock (use time.gov if you need one).
+6. (Coding version) You have from 8:00 AM EDT to 1:00 PM (Noon) EDT to complete the exam.  I will be online in MS Teams from 8 to 12.
+6. (Written version)  You have from 10 AM to 12 PM (NOON) EDT to complete the exam.
+7. If you have a question, post that you have a question in the Team chat, and I will invite you to a private chat to answer your question. 
+8. This is exam is open book and notes. You have access to 
+    - your notes, cheetsheets
+    - the lecture notes, 
+    - all homework  and labs, 
+    -  the R for Data Science book website (https://r4ds.had.co.nz/), 
+    - anything accessible through R Studio help section 
+        -  Cheetsheets https://rstudio.com/resources/cheatsheets/
+        -  Manuals - An Introduction to R
+        -  All package documentation (vignettes and help files)
+
+- Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement
+
+## Bootstrap simulation COVID tracking data
+
+
+
+```{r readcoviddata, echo=FALSE, message = FALSE, warning=FALSE}
+datadirectory <- "."
+#datadirectory <- "~/projects/infectiousdisease/covid-tracking-data"
+#datadirectory <- "~/desktop/IE0015/COVID-19/covid-tracking-data"
+statetracking <- read_csv(file.path(datadirectory, "states_daily_4pm_et.csv"),
+col_types = cols(date = col_date(format = "%Y%m%d"),
+dateChecked = col_character(), death = col_number(),
+negative = col_number(), pending = col_number(),
+positive = col_number(), total = col_number()))
+states <- sort(unique(statetracking$state))
+
+```
+```{r choosestate, echo=FALSE, message = FALSE, warning=FALSE}
+set.seed(examseed)
+state = sample(states, size=1)
+print(state)
+lastdate = tail(sort(unique(statetracking$date)), 1)
+```
+
+The codechunk `covidtrackingdata` looks at testing for COVID-19 for each state and territory of the United States.  You are an analyst for the Department of Health for `r state` (also printed above).  The Secretary of the `r state` Department of Health wants to know if `r state` has a rate of positive results similar or different from the United States as a whole.
+
+a.  From `statetracking`, you will determine the total positive and negative tests in the United States as a whole (note that the dataset includes all 50 states, plus all territories). Write and run the code that does this and return the number of positive and the number of negative tests as of `r lastdate`.
+
+b.  From `statetracking`, write the code that finds the number of positive and the number of negative tests as of `r lastdate` and return those numbers.
+
+c.  Write a simulation that tests the two-sided null hypothesis that `r state` has a proportion of tests that are positive that is the same as the proportion of tests that are positive as the United States as a whole.  Use 1000 replications.  Display the results graphically as well as using numerically and interpret the results.
+
+# What is the true proportion of COVID-19
+
+The `r state` Department of Health wants to know what the prevalence (true proportion) of COVID-19 is in `r state` and how it has been changing. Use 1000 replications of bootstrapping based on testing done for the past four Mondays. Show the mean and 90\% quantiles based on your boot.  Display the same results using summary plots with the mean and 90\% confidence interval of the proportion of those with COVID-19 for the same Mondays.
+
+## Inventory model
+
+
+
+## 
