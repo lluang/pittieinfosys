@@ -1,6 +1,8 @@
 ---
 title: "IE 0015 Information Systems Spring 2020 Final"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 
@@ -13,7 +15,7 @@ library(magrittr)
 library(ggplot2)
 library(phonenumber)
 # replace my name with your name here and run all chunks before starting
-yourname = "Louis Luangkesorn"
+yourname = "Jane Doe"
 numbername = letterToNumber(yourname)
 examseed = (as.numeric(gsub("-", "", numbername, fixed = TRUE)) %% 256)
 print(paste("Name: ", yourname))

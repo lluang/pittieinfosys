@@ -78,8 +78,40 @@ c.  Write a simulation that tests the two-sided null hypothesis that `r state` h
 
 The `r state` Department of Health wants to know what the prevalence (true proportion) of COVID-19 is in `r state` and how it has been changing. Use 1000 replications of bootstrapping based on testing done for the past four Mondays. Show the mean and 90\% quantiles based on your boot.  Display the same results using summary plots with the mean and 90\% confidence interval of the proportion of those with COVID-19 for the same Mondays.
 
-## Inventory model
+## FedEx Maintenance
+
+```{r, echo=FALSE}
+set.seed(examseed)
+timemaintainer <- round(rnorm(1, 30, 10), digits = 1)
+timeyellow <- round(rnorm(1, 80, 10), digits = 1)
+```
+In FedEx package handling facilities, there are motors are periodically checked by a maintainer who does a circuit of all motors in the facility. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Correcting a motor at yellow state is considerably less expensive than one that is at red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, FedEx saves considerable amount in maintenance.
+
+The time from when a motor becomes yellow to the time that a maintainer reaches the motor on her circuit is random exponential with mean `r timemaintainer`.  The time that a motor stays in yellow is random exponential with mean `r timeyellow`.  
+
+(a) Run 10000 replications of 1000 cycles where the motor reaches yellow (i.e. the next event is either the maintainer does a check or the motor reaches red).  Plot the histogram for the times that the motor becomes red (i.e. the motor becomes red before the maintainer arrives).
+
+Note:  the `rexp` function takes a rate, which is 1/(mean time to event)
+
+
+(b) In reality, the motors rarely reach red, because the maintainer visits a motor that has turned yellow much more frequently then it turns red, so they do not have many observations how long it will take to get to red.  In fact, after a motor turns yellow, it only turns red 10\% of the time.  Use the simulation to find the true mean time to turn red.  Hint:  run the simulation, each time changing the mean time to turn red until the simulation returns a value of 10\% of cases (1000 our of 10000).
+**ANSWER**
+
+```{r}
+onerep <- function(motorcount){
+    arrivalmaintainer = rexp(motorcount, 1/timemaintainer)
+    turnsred = rexp(motorcount, 1/timeyellow)
+    checkred <- ifelse(turnsred < arrivalmaintainer, 1, 0)
+    sum(checkred)
+}
+tenthousandreps <- sapply(rep(1000, 10000), onerep)
+hist(tenthousandreps, breaks = 50, 
+     main="Number of red events in 10000 cycles", 
+     xlab = "Number of red events")
+```
 
 
 
-## 
+## PNC ATM cash out occurances
+
+PNC Bank ATMs 

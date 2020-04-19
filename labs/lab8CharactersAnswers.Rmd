@@ -3,8 +3,8 @@ title: 'Lab 8: Character Strings'
 author: "IE 0015 Information Systems"
 date: "February 27-28, 2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 ---
 

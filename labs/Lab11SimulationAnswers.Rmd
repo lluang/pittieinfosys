@@ -3,8 +3,8 @@ title: 'Lab 11: Simulation'
 author: "IE 0015 Information Systems"
 date: "April 9-10, 2020"
 output: 
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
@@ -74,7 +74,7 @@ Hint: create a `for` loop that iterates 250 replications. For each replication, 
 **ANSWER**
 
 ```{r 2a}
-jobnumber <- sample(job$job, size = 8, replace = FALSE)
+jobnumber <- sample(job$job, size = 8, replace = TRUE)
 jobsim <- data.frame(job = jobnumber,
                      processingtime = job$processingtime[jobnumber], 
                      duedate = sample(job$duedate, size=8, replace = FALSE))
