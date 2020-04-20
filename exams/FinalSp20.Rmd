@@ -1,10 +1,13 @@
 ---
 title: "IE 0015 Information Systems Spring 2020 Final"
-output: html_document
+author: "Solution"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 
-```{r setup, echo=FALSE, message = FALSE, warning=FALSE, include=FALSE}
+```{r setup, echo=FALSE, message = FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(dplyr)
@@ -17,7 +20,7 @@ yourname = "Louis Luangkesorn"
 numbername = letterToNumber(yourname)
 examseed = (as.numeric(gsub("-", "", numbername, fixed = TRUE)) %% 256)
 print(paste("Name: ", yourname))
-print(Sys.Date())
+print(Sys.time())
 ```
 
 Instructions
@@ -41,77 +44,265 @@ Instructions
         -  Manuals - An Introduction to R
         -  All package documentation (vignettes and help files)
 
-- Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement
+9.  When you are done, you will submit the final into Courseweb ()
 
-## Bootstrap simulation COVID tracking data
+- Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement.
 
 
 
-```{r readcoviddata, echo=FALSE, message = FALSE, warning=FALSE}
+## State department of health - Opening up the state [35]
+
+As the worst of COVID-19 is being reached, the Govenor of `r mystate` is considering relaxing stay-at-home orders and other social distancing guidelines in order to allow businesses and economic activity to slowly start up again.  
+
+The World Health Organization (WHO) has developed six criteria that nations and states around the world have been applying in their decision making. Two of them apply to the COVID-19 test tracking data.
+
+    i. Disease transmission is under control
+    
+    ii. Health systems are able to "detect, test, isolate and treat every case and trace every contact"
+
+You are a data analyst working with the `r mystate` Department of Health.  You have been asked to perform an analysis of the COVID-19 Testing results to help the governor decide how and when to relax social distancing, and if COVID-19 returns and social distancing needs to be reinstated later.
+
+Write the Context-Need-Vision-Outcome (CoNVO) statement for this assignment.
+
+
+## COVID-19 Test Tracking [35]
+
+```{r readcoviddata, echo=TRUE, message = FALSE, warning=FALSE}
 datadirectory <- "."
-#datadirectory <- "~/projects/infectiousdisease/covid-tracking-data"
-#datadirectory <- "~/desktop/IE0015/COVID-19/covid-tracking-data"
 statetracking <- read_csv(file.path(datadirectory, "states_daily_4pm_et.csv"),
 col_types = cols(date = col_date(format = "%Y%m%d"),
 dateChecked = col_character(), death = col_number(),
 negative = col_number(), pending = col_number(),
 positive = col_number(), total = col_number()))
-states <- sort(unique(statetracking$state))
+states <- statetracking %>% 
+    filter(!state %in% c("AS", "MP", "VI")) %>%
+    select(state) %>%
+    distinct()
 
 ```
-```{r choosestate, echo=FALSE, message = FALSE, warning=FALSE}
+```{r choosestate, echo=TRUE, message = FALSE, warning=FALSE}
 set.seed(examseed)
-state = sample(states, size=1)
-print(state)
+mystate = sample(states$state, size=1)
 lastdate = tail(sort(unique(statetracking$date)), 1)
+print(mystate)
 ```
 
-The codechunk `covidtrackingdata` looks at testing for COVID-19 for each state and territory of the United States.  You are an analyst for the Department of Health for `r state` (also printed above).  The Secretary of the `r state` Department of Health wants to know if `r state` has a rate of positive results similar or different from the United States as a whole.
+The codechunk `covidtrackingdata` looks at testing for COVID-19 for each state and territory of the United States.  You are an analyst for the Department of Health for `r mystate` (also printed above).  The Secretary of the `r mystate` Department of Health wants to know if `r mystate` has a rate of positive results similar or different from the United States as a whole.
 
 a.  From `statetracking`, you will determine the total positive and negative tests in the United States as a whole (note that the dataset includes all 50 states, plus all territories). Write and run the code that does this and return the number of positive and the number of negative tests as of `r lastdate`.
 
-b.  From `statetracking`, write the code that finds the number of positive and the number of negative tests as of `r lastdate` and return those numbers.
+b.  From `statetracking`, write the code that finds the number of positive and the number of negative tests as of `r lastdate` for `r mystate` and return those numbers.
 
-c.  Write a simulation that tests the two-sided null hypothesis that `r state` has a proportion of tests that are positive that is the same as the proportion of tests that are positive as the United States as a whole.  Use 1000 replications.  Display the results graphically as well as using numerically and interpret the results.
+c.  Write a simulation that tests the two-sided null hypothesis that `r mystate` has a proportion of tests that are positive that is the same as the proportion of tests that are positive as the United States as a whole.  Use 10000 replications.  Display the results graphically as well as using numerically and interpret the results at the 0.05 level of significance. (Note: this should be a two-sided test. Remember that a state could be significantly below average or significanty above average)
 
-# What is the true proportion of COVID-19
+**ANSWER**
 
-The `r state` Department of Health wants to know what the prevalence (true proportion) of COVID-19 is in `r state` and how it has been changing. Use 1000 replications of bootstrapping based on testing done for the past four Mondays. Show the mean and 90\% quantiles based on your boot.  Display the same results using summary plots with the mean and 90\% confidence interval of the proportion of those with COVID-19 for the same Mondays.
+```{r}
+# calculate positive and negative for U.S. and the state
+usdata <- statetracking %>% 
+    filter(date == lastdate) %>%
+    group_by() %>%
+    summarize(positiveoutcomes = sum(positive),
+              negativeoutcomes = sum(negative))
+statedata <- statetracking %>%
+    filter(date == lastdate,
+           state== mystate) %>%
+        group_by() %>%
+    summarize(positiveoutcomes = sum(positive),
+              negativeoutcomes = sum(negative))
 
-## FedEx Maintenance
+```
+
+```{r}
+print(usdata)
+print(statedata)
+```
+
+```{r}
+# bootstrap, sample from state using U.S. probabilities
+testingsimulation <- function(nsamples){
+    ppositive <- usdata$positiveoutcomes/(usdata$negativeoutcomes + usdata$positiveoutcomes)
+    
+    bootstrapsamples <- runif(nsamples)
+    bootstrappositive <- sum(ifelse(bootstrapsamples < ppositive, 1, 0))   
+    bootstrappositive
+}
+
+
+nsamples <- statedata$positiveoutcomes + statedata$negativeoutcomes
+bootstrapresults <- sapply(rep(nsamples, 10000), testingsimulation)
+hist(bootstrapresults, breaks = 100) 
+abline(v=statedata$positiveoutcomes)
+```
+```{r}
+pvalue <- sum(ifelse(bootstrapresults > statedata$positiveoutcomes, 1, 0))/10000
+print(pvalue)
+```
+
+## FedEx Maintenance [30]
 
 ```{r, echo=FALSE}
 set.seed(examseed)
 timemaintainer <- round(rnorm(1, 30, 10), digits = 1)
-timeyellow <- round(rnorm(1, 80, 10), digits = 1)
+timetored <- round(rnorm(1, 100, 15), digits = 1)
 ```
 In FedEx package handling facilities, there are motors are periodically checked by a maintainer who does a circuit of all motors in the facility. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Correcting a motor at yellow state is considerably less expensive than one that is at red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, FedEx saves considerable amount in maintenance.
 
-The time from when a motor becomes yellow to the time that a maintainer reaches the motor on her circuit is random exponential with mean `r timemaintainer`.  The time that a motor stays in yellow is random exponential with mean `r timeyellow`.  
+The time from when a motor becomes yellow to the time that a maintainer reaches the motor on her circuit is random exponential with mean `r timemaintainer` days.  The time that a motor stays in yellow (*time to red*) is random exponential with mean `r timetored` days.  
 
 (a) Run 10000 replications of 1000 cycles where the motor reaches yellow (i.e. the next event is either the maintainer does a check or the motor reaches red).  Plot the histogram for the times that the motor becomes red (i.e. the motor becomes red before the maintainer arrives).
 
 Note:  the `rexp` function takes a rate, which is 1/(mean time to event)
 
 
-(b) In reality, the motors rarely reach red, because the maintainer visits a motor that has turned yellow much more frequently then it turns red, so they do not have many observations how long it will take to get to red.  In fact, after a motor turns yellow, it only turns red 10\% of the time.  Use the simulation to find the true mean time to turn red.  Hint:  run the simulation, each time changing the mean time to turn red until the simulation returns a value of 10\% of cases (1000 our of 10000).
+(b) In reality, the motors rarely reach red, because the maintainer visits a motor that has turned yellow much more frequently then it turns red, so they do not have many observations how long it will take to get to red.  In fact, after a motor turns yellow, it only turns red 20\% of the time.  Use the simulation with 10,000 cycles (note this is slightly different from (a)) for each value of the time to red to find the true mean time to turn red within 10 days. Run the simulations, then plot the results and estimate the true mean time from the plot.
+
+Hint:  run the simulation, each time changing the mean time to turn red until the simulation returns a value of 20\% of cases (2000 out of 10000).
+
+Hint:  run the simulation with the mean time to turn red being multiples of 10.
+
 **ANSWER**
 
 ```{r}
-onerep <- function(motorcount){
+print(c(timemaintainer, timetored))
+onerep <- function(timetored){
+    motorcount = 1000
     arrivalmaintainer = rexp(motorcount, 1/timemaintainer)
-    turnsred = rexp(motorcount, 1/timeyellow)
+    turnsred = rexp(motorcount, 1/timetored)
     checkred <- ifelse(turnsred < arrivalmaintainer, 1, 0)
     sum(checkred)
 }
-tenthousandreps <- sapply(rep(1000, 10000), onerep)
+tenthousandreps <- sapply(rep(timetored, 10000), onerep)
 hist(tenthousandreps, breaks = 50, 
-     main="Number of red events in 10000 cycles", 
+     main="Number of red events in 1000 cycles", 
      xlab = "Number of red events")
+abline(v=200)
+```
+
+```{r}
+onerep <- function(timetored){
+    motorcount = 10000
+    arrivalmaintainer = rexp(motorcount, 1/timemaintainer)
+    turnsred = rexp(motorcount, 1/timetored)
+    checkred <- ifelse(turnsred < arrivalmaintainer, 1, 0)
+    sum(checkred)
+}
+ttrvalues <- c(60,  70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200)
+redevents <- sapply(ttrvalues, onerep)
+plot(ttrvalues, redevents/10000)
+abline(h=0.2)
+```
+
+## FedEx Maintenance written exam [30]
+
+In FedEx package handling facilities, there are motors are periodically checked by a maintainer who does a circuit of all motors in the facility. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Correcting a motor at yellow state is considerably less expensive than one that is at red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, FedEx saves considerable amount in maintenance.
+
+The time a motor stays in the *green* (normal operation) state is a lognormal distribution time from when a motor becomes yellow to the time that a maintainer reaches the motor on her circuit is an exponential distribution with mean *timetomaintainer*.  The time that a motor stays in yellow (*time to red*) is random exponential with mean `r timetored` days.  
+
+
+a. Develop a simulation that looks at a motor in a facility over the course of a year.  The simulation should track the mean time to failure (time between red states).  Remember that a motor will have many rounds of yellow states where the maintainer gets to the machine first before the motor reaches a red state.
+b. In reality, there is very little data on *timetored*, the time from when a motor reaches the yellow state to the time that a motor reaches the red state, because the maintenance schedule is set so that red states are not very common.  But there is enough data so that the ratio of maintainers observing yellow (implying that the maintainer arrived before the motor turned red) and motors reaching red (implying that the motor turned red before a maintainer arrived) can be determined with good confidence.  
+
+Write a simulation that for a given value of *timetored* calculates the ratio of maintainers observing yellow to motors reaching red. Sketch a plot of potential output of that simulation over a range of potential values of *timetored* and how you would use that plot to identify the true value of *timetored* if the ratio of maintainers observing yellow to motors reaching red was 9:1 (i.e. 10% of the time, the motor reaches red)
+
+Note: you can use your answer for (a) as a single block here) 
+Note: the plot needs to show both your candidate value(s) of *timetored* and the observed ratio of rounds of maintainers observing yellow vs occurances of red.
+
+
+## PNC ATM cash out occurances [30]
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+set.seed(examseed)
+meancash = round(rnorm(1, 10000, 200), digits = 0)
+sdcash = round(rnorm(1, 2500, 500), digits = 0)
+meanlogcash = round(log(meancash) - log((sdcash/meancash)**2 + 1)/2, digits=1)
+sdlogcash = round(sqrt(log((sdcash/meancash)**2 + 1)), digits=1)
+```
+PNC Bank ATMs are visited on a regular basis to replenish the supply of cash.  Cash in an ATM has a cost to the bank, as that cash cannot be used for loans (which is how banks make money). But having an ATM run out of cash has a higher cost in customer good will and the staff costs of having an in-person cash withdrawal.  A particular ATM is in a category where they believe that the average weekly demand is \$10,000.  The current policy is to visit an ATM once a week, and fill it to \$15,000. (i.e. safety stock is 50\% of mean demand) (this is called the *base stock level*)
+
+The mean and standard deviation of the weekly demand at a particular ATM is $mean = `r meancash`$ and standard deviation = `r sdcash`  (the parameters for `rlnorm` are the meanlog = `r meanlogcash` and sdlog = `r sdlogcash`)
+
+(a)  Write a simulation that determines if the weekly demand exceeds \$15,000 (i.e. the ATM runs out of cash.)  Run it with 100,000 replications (weeks) and give the fraction of weeks that the ATMs stocks out.
+(b)  The bank wants to set cash levels for each ATM so that their is no more than a 1\% probability of stockout. Use the results of the above simulation to determine what that base stock level (amount of cash that you load the ATM up to) should be (Note: the ideal version would be to do a data analysis to obtain that number, but you could also identify it from a plot if you explain how to use the plot to get this number.)
+
+
+**ANSWER**
+```{r}
+reps=100000
+stock = 15000
+atmdemand <- rlnorm(reps, meanlogcash, sdlogcash)
+checkstockout <- ifelse(atmdemand > 15000, 1, 0)
+print(paste("The fraction of stockouts is ", sum(checkstockout)/reps))
+```
+```{r}
+atmdemand = sort(atmdemand)
+ninetyninepercent <- atmdemand[round(99*reps/100)]
+hist(atmdemand, breaks=1000)
+abline(v=ninetyninepercent)
+print(paste("The base stock level should be ", round(ninetyninepercent)))
+```
+
+## PNC ATM Cash management Written Exam [30]
+
+PNC Bank Automatic Teller Machines (ATMs) are visited on a regular basis to replenish the supply of cash.  Cash in an ATM has a cost to the bank, as that cash cannot be used for loans (which is how banks make money). But having an ATM run out of cash has a higher cost, in customer good will and the staff costs of having an in-person cash withdrawal.  A particular ATM is in a category where they believe that the average weekly demand is \$10,000 and the standard deviation is \$2,000.  The current policy is to visit an ATM once a week, and fill it to \$15,000. (i.e. safety stock is 50\% of mean demand) (this is called the *base stock level*)
+
+a. Write a simulation that observes 100 ATMs in this category (same mean and standard deviation) for one year (52 weeks) and returns the total stockouts in one year.  Note that your simulation must account for each ATM for each week.
+b. Write the process for running the simulation for 10,000 replications.
+c. The desired stockout level (fraction of weeks where the weekly demand for cash at the ATM exceeds the \$15,000 base stock level) is 10\%. Write a simulation that tests if the stockout level exceeds that level. Then draw a plot of the output and indicate and explain how you would use the plot to determine if that level was exceeded.
+
+## PSC Therapy [35]
+
+Presbyterian Senior Care (PSC) provides physical therapy services.  Their physical therapists schedule 22 patients per day, each taking a mean of 45 and standard deviation of 15 minutes.  There are 18 staff hours available.
+
+For each patient, there is a 10\% chance of a cancellation.  In addition, there are last minute requests to be added to the schedule with Poisson distribution with mean rate = 3.5 patients.
+
+(a)  Write a simulation of one day of patients, then run that simulation for 1000 days.  What is the probability that more than 18 hours of staff time is required?  (hint: first determine how many cancellations and additions there are to the schedule, then determine how much time they take.)
+
+(b)  PSC is thinking about making another 1.5 staff hours available to create two free slots in the schedule.  What is the probability that 19.5 staff hours will be used?
+
+Note:  for (a) and (b), the ideal answer will use a data analysis, but you could also create a plot and using the plot make an estimate. Make sure you write how you used the plot (don't just mark the plot without an explaination).
+
+**ANSWER**
+```{r}
+set.seed(examseed)
+therapy <- function(npatients){
+    pcancelled = 0.1
+    ncancelled = sum(sample(c(0,1), size = npatients, replace = TRUE, prob = c((1-pcancelled), pcancelled)))
+    nadded = rpois(n = 1, lambda = 3.1)
+    dailypatients <- npatients - ncancelled + nadded
+    patienttime <- sum(rnorm(dailypatients, 45, 15)/60)
+    check18 <- ifelse(patienttime > 18, 1, 0)
+    check195 <- ifelse(patienttime > 19.5, 1, 0)
+    return <- c(patienttime, check18, check195)
+}
+
+```
+
+```{r}
+npatients <- 22
+therapyresults <- sapply(rep(npatients, 10000), therapy)
+therapydf <- data.frame(patienttime = therapyresults[1,],
+                        check18 = therapyresults[2,],
+                        check195 = therapyresults[3,])
+ggplot(therapydf) + geom_histogram(aes(patienttime)) +
+  geom_vline(aes(xintercept=18))
+```
+
+```{r parta_b}
+pcheck18 <- sum(therapydf$check18)/10000
+pcheck195 <- sum(therapydf$check195)/10000
+print(c(pcheck18, pcheck195))
 ```
 
 
+## PSC Therapy [35]
 
-## PNC ATM cash out occurances
+Presbyterian Senior Care (PSC) provides physical therapy services.  Their physical therapists schedule 22 patients per day, each taking a mean of 45 and standard deviation of 15 minutes.  There are 18 staff hours available.
 
-PNC Bank ATMs 
+For each patient, there is a 10\% chance of a cancellation.  In addition, there are last minute requests to be added to the schedule with Poisson distribution with mean rate = 3.5 patients.
+
+(a)  Write a simulation that determines how much time is required for physical therapy services for a day. (hint: first determine how many cancellations and additions there are to the schedule, then determine how much time they take.)
+(b)  Sketch a plot of the output of 10000 days of this simulation. Using that plot show (both on the plot and in words) how you would determine the fraction of days that the staff time required to provide physical therapy services exceeds 18 hours. 
+
+
+Copyright 2020, Louis Luangkesorn, All rights reserved.  No distribution without written permission.
