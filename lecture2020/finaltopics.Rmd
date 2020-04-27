@@ -1,0 +1,113 @@
+---
+title: "Final topics"
+author: "IE 0015 Information Systems"
+date: "April 15, 2020"
+output:
+  beamer_presentation:
+    colortheme: whale
+    theme: AnnArbor
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##  Format written verions
+
+
+- Same as midterm
+- 3, 4 questions. Intent is to make it possible for one hour. You will have two hours
+- CoNVO statement will center on announced datasets
+- Data manipulation
+    - Date/time, character strings, 
+- Simulation
+    -  Probability
+    -  Monte Carlo
+    -  Bootstrap
+    -  Time-step
+
+## Programming
+
+-  For all questions that are based on algorithms, you may represent your answer in one of the following ways
+    -  Flow chart map
+    -  Enumerated (numbered) outline
+    -  Pseudocode (R, do not worry about getting the syntax correct)
+
+## CoNVO statements
+
+- Given a setting, write a CoNVO statement (four paragraphs)
+
+## Flowcharts
+
+-  Data manipulation verbs
+-  Spread and gather
+-  Operations
+    -  String operations (stringr)
+    -  Date manipulation (lubridate)
+    -  Statistical operations (mutate using statistics)
+    -  Simulation (probability and random sampling)
+    
+##  Data manipulation verbs 
+
+1.  Filter (filter)
+2.  Arrange (arrange)
+3.  Select columns (select)
+5.  Distinct rows (unique)
+6.  Mutate (mutate)
+7.  Summarize (group_by, summarize)
+8.  Random sample (sample, sample_n)
+
+## Characters and strings
+
+- Lecture 8
+- Working with strings
+- Regular expressions not on final. But you should know they are possible for use within flow charts. (e.g. a box that says "a function that finds all instances of ___")
+- How to split a string within a data frame
+- How to determine if a string is present in a data element of a data frame. e.g. is a specific word in a record 
+
+
+## Dates
+
+- Lecture 9
+- Be able to describe the process of taking character data and convert it to dates or times
+- Process of calculating time durations/intervals
+    - Do not need to differentiate between durations, periods, and intervals. (i.e. if you need one, any process that results in any of these will be correct)
+- Lubridate
+    - It helps to know what the functions are, but it is enough to describe them by purpose if you do not know their names (i.e. write what you want it to do in your flow chart box)
+
+## Probability distributions
+
+-  Lecture 10
+-  Probability distribution fitting
+-  Cullen and Fry graph
+-  Interpreting QQ plots and histograms
+    - 45 line for QQ plot
+    - Symmetry and skewness in histograms
+
+## Simulation
+
+-  Lecture 10, 11
+
+-  Development of Monte Carlo simulation
+-  Development of bootstrap simulation
+-  Development of time step simulation
+-  Simulation for hypothesis testing - bootstrap and Monte Carlo
+-  Interpreting simulation results for hypothesis testing
+    - p-values from histogram of output
+    - p-values using a quantile
+-  Time-step simulation
+    - Interpreting outputs (histogram)
+-  Use simulation for estimating parameters
+    - Like how you used simulation at end of Homework 3
+    
+## Hints for taking final
+
+- The problems will be similar to examples from labs and lecture.
+    - Study by becoming familiar with all examples
+    - Solutions for labs 8, 9, 10, 11 are posted in Courseweb (8: strings is new). Homework 3 solutions will be posted either Saturday night or Sunday morning.
+- The model you develop for Homework 3 is much more complex than anything I will ask you, but what you do with the model is fair game (i.e. analysis)
+- For coding version, find a similar model, start by copy and paste, then modify to fit.
+    - For coding version, write your plan (e.g. flow chart) before you start coding. Most people can think faster than they can code, having a plan written will make the coding easier.
+- Know the setups for each of the simulation types (in simulation overview lecture) well.

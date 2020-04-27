@@ -1,0 +1,95 @@
+---
+title: "IE 0015 Information Systems Spring 2020 Final"
+author: "Coding B"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+Instructions
+=============
+
+1. Enter your name in the code chunk above as the variable `yourname`
+2. Run all chunks, then knit this file to see your exam with all of its specifications. (this exam is customized for you)
+3. Read the agreement below and agree before starting.  Type your name in below the agreement to indicate your acceptance.
+4. Open MS Teams into the IE 15 team. 
+5. Take a picture of your working environment to include a clock (use time.gov if you need one).
+6. (Coding version) You have from 8:00 AM EDT to 1:00 PM EDT to complete the exam.  I will be online in MS Teams from 8 to 1 to answer questions.
+7. If you have a question, post that you have a question in the Team chat, and I will invite you to a private chat to answer your question. 
+8. This is exam is open book and notes. You have access to 
+    - your notes, cheetsheets
+    - the lecture notes, 
+    - all homework  and labs, 
+    -  the R for Data Science book website (https://r4ds.had.co.nz/), 
+    - anything accessible through R Studio help section 
+        -  Cheetsheets https://rstudio.com/resources/cheatsheets/
+        -  Manuals - An Introduction to R
+        -  All package documentation (vignettes and help files)
+
+9.  When you are done, you will submit the following documents into Courseweb -> Course Documents -> Final Exam Submission - Coding B
+    1. Photo of workspace and clock before exam
+    2. Photo of workspace and clock after exam
+    3. Rmd file with your solutions
+    4. Knitted file with your solutions
+    5. Scans/photo of any additional written work (with question number at top of page)
+
+
+- Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement.
+
+
+
+## State department of health - Opening up the state [35]
+
+As the worst of COVID-19 is being reached, the Govenor of GA is considering relaxing stay-at-home orders and other social distancing guidelines in order to allow businesses and economic activity to slowly start up again.  
+
+The World Health Organization (WHO) has developed six criteria that nations and states around the world have been applying in their decision making. Two of them apply to the COVID-19 test tracking data.
+
+    i. Disease transmission is under control
+    ii. Health systems are able to "detect, test, isolate and treat every case and trace every contact"
+
+You are a data analyst working with the GA Department of Health.  You have been asked to perform an analysis of the COVID-19 Testing results to help the governor decide how and when to relax social distancing, and if COVID-19 returns and social distancing needs to be reinstated later.
+
+a. Write the Context-Need-Vision-Outcome (CoNVO) statement for this assignment.
+
+
+## Package handling equipment maintenance [30]
+
+```{r, echo=FALSE}
+set.seed(examseed)
+timemaintainer <- round(rnorm(1, 30, 10), digits = 1)
+timetored <- round(rnorm(1, 100, 15), digits = 1)
+```
+In a package handling facility, there are motors that move packages which are periodically checked by a maintainer who does rounds of all motors in the facility, which takes many weeks to cover. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Preventative maintenance a motor in yellow state is considerably less expensive than the maintenance required after a motor becomes red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, they save a considerable amount in maintenance.
+
+The time from when a motor becomes yellow to the time that a maintainer reaches the motor on her circuit is random exponential with mean `r timemaintainer` days.  The time that a motor stays in yellow (*time to red*) is random exponential with mean `r timetored` days.  
+
+(a) Run 10000 replications of 1000 cycles where the motor reaches yellow (i.e. the next event is either the maintainer does a check or the motor reaches red).  Plot the histogram for the fraction of times that the motor becomes red (i.e. the motor becomes red before the maintainer arrives).
+
+Note:  the `rexp(n, rate)` function takes a rate, which is 1/(mean time to event)
+
+(b) In reality, the motors generally do not reach red, because the maintainer visits a motor that has turned yellow much more frequently then it turns red, so they do not have many observations how long it will take to get to red.  In fact, after a motor turns yellow, it only turns red 20\% of the time.  Use the simulation with 10,000 cycles (note this is slightly different from (a)) for each value of the time to red to find the true mean time to turn red within 10 days. Run the simulations, then plot the results and estimate the true mean time from the plot.
+
+Hint:  This is a Monte Carlo simulation, with the event being what happens after a motor reaches the yellow state.
+
+Hint:  For Part (b) look at the last question on Homework 3: SIR simulation for a similar question.
+
+Hint:  Run the simulation, each time changing the mean time to turn red and find the value where the simulation returns close to a value of 20\% of cases (2000 out of 10000).
+
+Hint:  Try multiples of 10 for the mean time to red.
+
+
+
+## PSC Therapy [35]
+
+Presbyterian Senior Care (PSC) provides physical therapy services.  Their physical therapists schedule 22 patients per day, each taking a mean of 45 and standard deviation of 15 minutes.  There are 18 staff hours available. (1 hour = 60 minutes)
+
+For each patient, there is a 10\% chance of a cancellation.  In addition, there are last minute requests to be added to the schedule with Poisson distribution with mean rate = 3.5 patients. `rpois(number, rate)`
+
+(a)  Write a simulation of one day of patients, then run that simulation for 1000 days.  What is the probability that more than 18 hours of staff time is required?  (hint: first determine how many cancellations and additions there are to the schedule, then determine how much time they take.)
+
+(b)  PSC is thinking about making another 1.5 staff hours available to create two free slots in the schedule.  What is the probability that 19.5 staff hours will be used?
+
+Note:  for (a) and (b), the ideal answer will use a data analysis, but you could also create a plot and use the plot make an estimate. Make sure you write how you used the plot (don't just mark the plot without an explaination).
+
+Copyright 2020, Louis Luangkesorn, All rights reserved.  No distribution without written permission.

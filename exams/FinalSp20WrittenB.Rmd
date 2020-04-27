@@ -1,0 +1,91 @@
+---
+title: "IE 0015 Information Systems Spring 2020 Final"
+author: "Written B"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r setup, echo=FALSE, message = FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(ggplot2)
+library(phonenumber)
+# replace my name with your name here and run all chunks before starting
+yourname = "Written B"
+numbername = letterToNumber(yourname)
+examseed = (as.numeric(gsub("-", "", numbername, fixed = TRUE)) %% 256)
+print(paste("Name: ", yourname))
+print(Sys.time())
+```
+
+Instructions
+=============
+
+1. Enter your name in the code chunk above as the variable `yourname`
+2. Run all chunks, then knit this file to see your exam with all of its specifications. (this exam is customized for you)
+3. Read the agreement below and agree before starting.  Type your name in below the agreement to indicate your acceptance.
+4. Open MS Teams into the IE 15 team. 
+5. Take a picture of your working environment to include a clock (use time.gov if you need one).
+6. (Coding version) You have from 8:00 AM EDT to 1:00 PM (Noon) EDT to complete the exam.  I will be online in MS Teams from 8 to 12.
+6. (Written version)  You have from 10 AM to 12 PM (NOON) EDT to complete the exam.
+7. If you have a question, post that you have a question in the Team chat, and I will invite you to a private chat to answer your question. 
+8. This is exam is open book and notes. You have access to 
+    - your notes, cheetsheets
+    - the lecture notes, 
+    - all homework  and labs, 
+    -  the R for Data Science book website (https://r4ds.had.co.nz/), 
+    - anything accessible through R Studio help section 
+        -  Cheetsheets https://rstudio.com/resources/cheatsheets/
+        -  Manuals - An Introduction to R
+        -  All package documentation (vignettes and help files)
+
+9.  When you are done, you will submit the following documents into Courseweb -> Course Documents -> Final Exam Submission - Written B
+    1. Photo of workspace and clock before exam
+    2. Photo of workspace and clock after exam
+    3. Rmd file with your solutions
+    4. Knitted file with your solutions
+    5. Scans/photo of any additional written work (with question number at top of page)
+
+
+- Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement.
+
+
+
+## State department of health - Opening up the state [35]
+
+As the worst of COVID-19 is being reached, the Govenor of OH is considering relaxing stay-at-home orders and other social distancing guidelines in order to allow businesses and economic activity to slowly start up again.  
+
+The World Health Organization (WHO) has developed six criteria that nations and states around the world have been applying in their decision making. Two of them apply to the COVID-19 test tracking data.
+
+    i. Disease transmission is under control
+    
+    ii. Health systems are able to "detect, test, isolate and treat every case and trace every contact"
+
+You are a data analyst working with the LA Department of Health.  You have been asked to perform an analysis of the COVID-19 Testing results to help the governor decide how and when to relax social distancing, and if COVID-19 returns and social distancing needs to be reinstated later.
+
+a. Write the Context-Need-Vision-Outcome (CoNVO) statement for this assignment.
+
+## PNC ATM Cash management Written Exam [30]
+
+PNC Bank Automatic Teller Machines (ATMs) are visited on a regular basis to replenish the supply of cash.  Cash in an ATM has a cost to the bank, as that cash cannot be used for loans (which is how banks make money). But having an ATM run out of cash has a higher cost, in customer good will and the staff costs of having an in-person cash withdrawal.  A particular ATM is in a category where they believe that the average weekly demand is \$10,000 and the standard deviation is \$2,000.  The current policy is to visit an ATM once a week, and fill it to \$15,000. (i.e. safety stock is 50\% of mean demand) (this is called the *base stock level*)
+
+a. Write a simulation that observes 100 ATMs in this category (same mean and standard deviation) for one year (52 weeks) and returns the total stockouts in one year.  Note that your simulation must account for each ATM for each week.
+b. Write the process for running the simulation for 10,000 replications.
+c. The desired stockout level (fraction of weeks where the weekly demand for cash at the ATM exceeds the \$15,000 base stock level) is 10\%. Write a simulation that tests if the stockout level exceeds that level. Then draw a plot of the output and indicate and explain how you would use the plot to determine if that level was exceeded.
+
+## PSC Therapy [35]
+
+Presbyterian Senior Care (PSC) provides physical therapy services.  Their physical therapists schedule 22 patients per day, each taking a mean of 45 and standard deviation of 15 minutes.  There are 18 staff hours available. (1 hour = 60 minutes)
+
+For each patient, there is a 10\% chance of a cancellation.  In addition, there are last minute requests to be added to the schedule with Poisson distribution with mean rate = 3.5 patients.
+
+(a)  Write a simulation that determines how much time is required for physical therapy services for a day. (hint: first determine how many cancellations and additions there are to the schedule, then determine how much time they take.)
+(b)  Sketch a plot of the output of 10000 days of this simulation. Using that plot show (both on the plot and in words) how you would determine the fraction of days that the staff time required to provide physical therapy services exceeds 18 hours. 
+
+
+Copyright 2020, Louis Luangkesorn, All rights reserved.  No distribution without written permission.

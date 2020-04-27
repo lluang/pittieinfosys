@@ -44,7 +44,13 @@ Instructions
         -  Manuals - An Introduction to R
         -  All package documentation (vignettes and help files)
 
-9.  When you are done, you will submit the final into Courseweb ()
+9.  When you are done, you will submit the following documents into Courseweb -> Course Documents -> Final Exam Submission - Coding A
+    1. Photo of workspace and clock before exam
+    2. Photo of workspace and clock after exam
+    3. Rmd file with your solutions
+    4. Knitted file with your solutions
+    5. Scans/photo of any additional written work (with question number at top of page)
+
 
 - Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement.
 
@@ -52,7 +58,7 @@ Instructions
 
 ## State department of health - Opening up the state [35]
 
-As the worst of COVID-19 is being reached, the Govenor of `r mystate` is considering relaxing stay-at-home orders and other social distancing guidelines in order to allow businesses and economic activity to slowly start up again.  
+As the worst of COVID-19 is being reached, the Govenor of STATE is considering relaxing stay-at-home orders and other social distancing guidelines in order to allow businesses and economic activity to slowly start up again.  
 
 The World Health Organization (WHO) has developed six criteria that nations and states around the world have been applying in their decision making. Two of them apply to the COVID-19 test tracking data.
 
@@ -60,9 +66,9 @@ The World Health Organization (WHO) has developed six criteria that nations and 
     
     ii. Health systems are able to "detect, test, isolate and treat every case and trace every contact"
 
-You are a data analyst working with the `r mystate` Department of Health.  You have been asked to perform an analysis of the COVID-19 Testing results to help the governor decide how and when to relax social distancing, and if COVID-19 returns and social distancing needs to be reinstated later.
+You are a data analyst working with the STATE Department of Health.  You have been asked to perform an analysis of the COVID-19 Testing results to help the governor decide how and when to relax social distancing, and if COVID-19 returns and social distancing needs to be reinstated later.
 
-Write the Context-Need-Vision-Outcome (CoNVO) statement for this assignment.
+a. Write the Context-Need-Vision-Outcome (CoNVO) statement for this assignment.
 
 
 ## COVID-19 Test Tracking [35]
@@ -89,11 +95,17 @@ print(mystate)
 
 The codechunk `covidtrackingdata` looks at testing for COVID-19 for each state and territory of the United States.  You are an analyst for the Department of Health for `r mystate` (also printed above).  The Secretary of the `r mystate` Department of Health wants to know if `r mystate` has a rate of positive results similar or different from the United States as a whole.
 
-a.  From `statetracking`, you will determine the total positive and negative tests in the United States as a whole (note that the dataset includes all 50 states, plus all territories). Write and run the code that does this and return the number of positive and the number of negative tests as of `r lastdate`.
+a.  From `statetracking`, determine the total positive and negative tests in the United States as a whole (note that the dataset includes all 50 states, plus all territories). Write and run the code that does this and return the number of positive and the number of negative tests as of `r lastdate`.  
 
 b.  From `statetracking`, write the code that finds the number of positive and the number of negative tests as of `r lastdate` for `r mystate` and return those numbers.
 
 c.  Write a simulation that tests the two-sided null hypothesis that `r mystate` has a proportion of tests that are positive that is the same as the proportion of tests that are positive as the United States as a whole.  Use 10000 replications.  Display the results graphically as well as using numerically and interpret the results at the 0.05 level of significance. (Note: this should be a two-sided test. Remember that a state could be significantly below average or significanty above average)
+
+Hint:  (a and b) If you use `group_by()` with no grouping variable, it sets up `summarize()` for the entire dataset.
+
+Hint:  (c) is a bootstrap simulation, and the null hypothesis is that the probability of a positive test is the same as the U.S. as a whole.
+
+Hint:  (c) most states are NOT similar to the country as a whole, so don't be surprised at that result.
 
 **ANSWER**
 
@@ -139,27 +151,36 @@ pvalue <- sum(ifelse(bootstrapresults > statedata$positiveoutcomes, 1, 0))/10000
 print(pvalue)
 ```
 
-## FedEx Maintenance [30]
+
+## Tracking COVID testing patterns over time.
+
+
+## Package handling equipment maintenance [30]
 
 ```{r, echo=FALSE}
 set.seed(examseed)
 timemaintainer <- round(rnorm(1, 30, 10), digits = 1)
 timetored <- round(rnorm(1, 100, 15), digits = 1)
 ```
-In FedEx package handling facilities, there are motors are periodically checked by a maintainer who does a circuit of all motors in the facility. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Correcting a motor at yellow state is considerably less expensive than one that is at red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, FedEx saves considerable amount in maintenance.
+In a package handling facility, there are motors that move packages which are periodically checked by a maintainer who does rounds of all motors in the facility, which takes many weeks to cover. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Preventative maintenance a motor in yellow state is considerably less expensive than the maintenance required after a motor becomes red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, they save a considerable amount in maintenance.
 
 The time from when a motor becomes yellow to the time that a maintainer reaches the motor on her circuit is random exponential with mean `r timemaintainer` days.  The time that a motor stays in yellow (*time to red*) is random exponential with mean `r timetored` days.  
 
-(a) Run 10000 replications of 1000 cycles where the motor reaches yellow (i.e. the next event is either the maintainer does a check or the motor reaches red).  Plot the histogram for the times that the motor becomes red (i.e. the motor becomes red before the maintainer arrives).
+(a) Run 10000 replications of 1000 cycles where the motor reaches yellow (i.e. the next event is either the maintainer does a check or the motor reaches red).  Plot the histogram for the fraction of times that the motor becomes red (i.e. the motor becomes red before the maintainer arrives).
 
-Note:  the `rexp` function takes a rate, which is 1/(mean time to event)
+Note:  the `rexp(n, rate)` function takes a rate, which is 1/(mean time to event)
+
+(b) In reality, the motors generally do not reach red, because the maintainer visits a motor that has turned yellow much more frequently then it turns red, so they do not have many observations how long it will take to get to red.  In fact, after a motor turns yellow, it only turns red 20\% of the time.  Use the simulation with 10,000 cycles (note this is slightly different from (a)) for each value of the time to red to find the true mean time to turn red within 10 days. Run the simulations, then plot the results and estimate the true mean time from the plot.
+
+Hint:  This is a Monte Carlo simulation, with the event being what happens after a motor reaches the yellow state.
+
+Hint:  For Part (b) look at the last question on Homework 3: SIR simulation for a similar question.
+
+Hint:  Run the simulation, each time changing the mean time to turn red and find the value where the simulation returns close to a value of 20\% of cases (2000 out of 10000).
+
+Hint:  Try multiples of 10 for the mean time to red.
 
 
-(b) In reality, the motors rarely reach red, because the maintainer visits a motor that has turned yellow much more frequently then it turns red, so they do not have many observations how long it will take to get to red.  In fact, after a motor turns yellow, it only turns red 20\% of the time.  Use the simulation with 10,000 cycles (note this is slightly different from (a)) for each value of the time to red to find the true mean time to turn red within 10 days. Run the simulations, then plot the results and estimate the true mean time from the plot.
-
-Hint:  run the simulation, each time changing the mean time to turn red until the simulation returns a value of 20\% of cases (2000 out of 10000).
-
-Hint:  run the simulation with the mean time to turn red being multiples of 10.
 
 **ANSWER**
 
@@ -193,9 +214,9 @@ plot(ttrvalues, redevents/10000)
 abline(h=0.2)
 ```
 
-## FedEx Maintenance written exam [30]
+## Material handling maintenance written exam [30]
 
-In FedEx package handling facilities, there are motors are periodically checked by a maintainer who does a circuit of all motors in the facility. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Correcting a motor at yellow state is considerably less expensive than one that is at red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, FedEx saves considerable amount in maintenance.
+In a package handling facility, there are motors that move packages which are periodically checked by a maintainer who does a circuit of all motors in the facility. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Preventative maintenance a motor in yellow state is considerably less expensive than the maintenance required after a motor becomes red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, they save a considerable amount in maintenance.
 
 The time a motor stays in the *green* (normal operation) state is a lognormal distribution time from when a motor becomes yellow to the time that a maintainer reaches the motor on her circuit is an exponential distribution with mean *timetomaintainer*.  The time that a motor stays in yellow (*time to red*) is random exponential with mean `r timetored` days.  
 
@@ -205,8 +226,8 @@ b. In reality, there is very little data on *timetored*, the time from when a mo
 
 Write a simulation that for a given value of *timetored* calculates the ratio of maintainers observing yellow to motors reaching red. Sketch a plot of potential output of that simulation over a range of potential values of *timetored* and how you would use that plot to identify the true value of *timetored* if the ratio of maintainers observing yellow to motors reaching red was 9:1 (i.e. 10% of the time, the motor reaches red)
 
-Note: you can use your answer for (a) as a single block here) 
-Note: the plot needs to show both your candidate value(s) of *timetored* and the observed ratio of rounds of maintainers observing yellow vs occurances of red.
+Note: you can use the simulation you developed in your answer for (a) as a single block in a flow chart.
+Note: the plot needs to show both your candidate value(s) of *timetored* and the simulated ratio of rounds of maintainers observing yellow vs occurances of red.
 
 
 ## PNC ATM cash out occurances [30]
@@ -220,11 +241,14 @@ sdlogcash = round(sqrt(log((sdcash/meancash)**2 + 1)), digits=1)
 ```
 PNC Bank ATMs are visited on a regular basis to replenish the supply of cash.  Cash in an ATM has a cost to the bank, as that cash cannot be used for loans (which is how banks make money). But having an ATM run out of cash has a higher cost in customer good will and the staff costs of having an in-person cash withdrawal.  A particular ATM is in a category where they believe that the average weekly demand is \$10,000.  The current policy is to visit an ATM once a week, and fill it to \$15,000. (i.e. safety stock is 50\% of mean demand) (this is called the *base stock level*)
 
-The mean and standard deviation of the weekly demand at a particular ATM is $mean = `r meancash`$ and standard deviation = `r sdcash`  (the parameters for `rlnorm` are the meanlog = `r meanlogcash` and sdlog = `r sdlogcash`)
+The mean and standard deviation of the weekly demand at a particular ATM is $mean = `r meancash`$ and standard deviation = `r sdcash`  (the parameters for `rlnorm` are the meanlog = `r meanlogcash` and sdlog = `r sdlogcash`. e.g. `rlnorm(100, meanlog, sdlog)` gives the weekly cash demand for 100 ATMs)
 
-(a)  Write a simulation that determines if the weekly demand exceeds \$15,000 (i.e. the ATM runs out of cash.)  Run it with 100,000 replications (weeks) and give the fraction of weeks that the ATMs stocks out.
+(a)  Write a simulation that determines if the weekly demand exceeds \$15,000 (i.e. the ATM runs out of cash.)  Run it with 100,000 replications (weeks) and give the fraction of weeks that the ATMs stocks out.  Assume all ATM weeks are independent and identically distributed (i.i.d.).
 (b)  The bank wants to set cash levels for each ATM so that their is no more than a 1\% probability of stockout. Use the results of the above simulation to determine what that base stock level (amount of cash that you load the ATM up to) should be (Note: the ideal version would be to do a data analysis to obtain that number, but you could also identify it from a plot if you explain how to use the plot to get this number.)
 
+Hint:  this is a Monte Carlo simulation, with the event being one week of cash withdrawals at one ATM.
+
+Hint: The results of many replications of a simulation is a distribution of the output.
 
 **ANSWER**
 ```{r}
@@ -261,6 +285,8 @@ For each patient, there is a 10\% chance of a cancellation.  In addition, there 
 (b)  PSC is thinking about making another 1.5 staff hours available to create two free slots in the schedule.  What is the probability that 19.5 staff hours will be used?
 
 Note:  for (a) and (b), the ideal answer will use a data analysis, but you could also create a plot and using the plot make an estimate. Make sure you write how you used the plot (don't just mark the plot without an explaination).
+
+
 
 **ANSWER**
 ```{r}
@@ -304,5 +330,21 @@ For each patient, there is a 10\% chance of a cancellation.  In addition, there 
 (a)  Write a simulation that determines how much time is required for physical therapy services for a day. (hint: first determine how many cancellations and additions there are to the schedule, then determine how much time they take.)
 (b)  Sketch a plot of the output of 10000 days of this simulation. Using that plot show (both on the plot and in words) how you would determine the fraction of days that the staff time required to provide physical therapy services exceeds 18 hours. 
 
+
+## CLASS Program Driver Requirements [35]
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+set.seed(examseed)
+```
+
+The Community Living and Support Services (CLASS) program is considering hiring drivers to provide transportation services for its residential housing residents.  Demand for trips is distributed according to a Poisson distribution with a mean of 18 trips per day (generating random values with a poisson distribution in done with `rpois(nsamples, mean)`).  Each trip has a duration distributed `N(mu =60, sigma = 15)` minutes (generated using `rnorm(nsamples, mean, standard deviation)`)
+
+Hint: this is a Monte Carlo distribution.
+
+a. Generate and plot the daily distribution of total daily travel time. Run 1,000 days.
+
+b. CLASS is interested in hiring staff that can also be drivers.  For each staff that will be partly assigned as a driver can devote 210 minutes per day to driving.  If demand exceeds that, a supervisor can drive the resident, but this is not desired as supervisors have many other responsibilities.  CLASS wants to know how many staff should be given driving assignments.  Plot the percent of days that drivers are able to meet all demand against the number of drivers (i.e. vary the number of drivers over a range, then from your simulation, determine what fraction of days had less than that much data).  
+
+c.  Using your plot, determine how many drivers are needed so that supervisors are not needed to drive residents more than 10\% of the time.  Hint: see the last part of Homework 3.
 
 Copyright 2020, Louis Luangkesorn, All rights reserved.  No distribution without written permission.

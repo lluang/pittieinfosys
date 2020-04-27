@@ -1,0 +1,371 @@
+---
+title: "Simulation Review"
+author: "Louis Luangkesorn"
+date: "4/13/2020"
+output:
+  pdf_document: default
+  html_document: default
+  beamer_presentation:
+    colortheme: whale
+    theme: AnnArbor
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+
+Simulation overview
+===================
+
+Simulation in data analysis
+=============================
+
+-  Simulation is the use of sampling through random numbers to obtain a distribution of a dependent variable.
+-  e.g. Discrete event simulation (IE 1083), Monte Carlo simulation
+-  Useful when we do not have a direct way of determining the value of a dependent variable.
+
+Some types of computer simulation
+================
+
+-  Monte Carlo (last week)
+-  Bootstrap (resampling) (this week)
+-  Time step simulation  (this week)
+-  Discrete event simulation (IE 1083)
+-  Continuous simulation
+-  Agent based simulation
+
+Why simulation
+==============
+
+- No analytic solution (no equation that matches the system without violating assumptions)
+- Need a distribution as output
+    - Performance measure something other than mean or standard deviation
+    - Quantile, threshold, max, min
+- Need to estimate an input paramter from output data.
+    - You do not have data on the inputs (e.g. arrivals or processing time) but you do have output observations (e.g. completion times).  
+    - Run simulation model with a range of input parameters and find what input parameters results in the observed output distribution.
+
+Using random numbers for simulation
+=============================
+
+-  We can use samples of random numbers to model input distributions.
+    -  Often useful for determining probabilities when there is no analytic solution or the solution is too complex.
+-  Result is a probability distribution of the outcome.
+    -  Not only a point estimate or a mean and variance.
+
+Monte Carlo Simulation
+==============
+
+-  Based on repeated use of random numbers.
+    -  Name refers to the casinos in Monte Carlo by France
+-  If the problem can be stated as the interaction of independent random numbers
+-  Often used for integration type problems. (area under the curve or probability)
+
+
+Setup Monte Carlo
+==================
+
+-  Identify events and outcomes
+-  Identify probability of events
+-  Model outcomes based on events
+-  Generate samples
+-  Calculate statistics as needed
+    -  e.g. quantiles
+
+Simple simulation - Monte Carlo
+================
+
+- Event - Uniform random x and y (Uniform(0,1))
+- Outcome - In region or out of region
+- Sample - Determine x and y, determine outcome
+- Statistics - Count how often sample was in region
+    -  So a probability, which happens to be the area of 1/4 circle.
+    
+```{r}
+simplesim <- function(points){
+  xval <- runif(n=points, 0, 1)
+  yval <- runif(n=points, 0, 1)
+  inside <- ifelse(xval^2 + yval^2 <= 1, 
+                   1, 
+                   0)
+  result <- sum(inside)/points
+}
+print(simplesim(100))
+```
+
+Bootstrap simulation
+=======================
+
+
+-  We have a small quantity of observed data but not enough to identify a distribution.
+-  *Bootstrap* - resample with replacement from the observed data.
+
+Steps in the bootstrap
+=========================
+1.  Create samples of the independent variables $x_1^*, ..., x_M^*$, called *resamples*, by sampling *with replacement* from the data (control group).
+
+2.  Calculate the statistic of interest $S(x_1^*), ..., S(x_M^*)$ for each resample. The distribution of the result of the resample is the *bootstrap distribution*.
+
+3.  The bootstrap distribution gives information about the sampling distribution of the original, unobservable, statistic *S*.  It gives an approximation of the center, spread, and shape of *S*.
+
+Categorical variables example
+====================
+
+- Claim ($H_A$) is that a treatment leads to a change in the population from the control.
+- Null hypothesis ($H_0$) is that the treatment does not result in a change.
+- Simulate the sample the size of a treatment, and determine the $p$ that observed values were seen.
+
+Quadcopter rotor blades
+==========
+
+A quadcopter company is considering a new manufacturer
+for rotor blades. 
+The new manufacturer would be more expensive but their higher-quality blades are more reliable, resulting in happier customers and fewer warranty claims. 
+However, management must be convinced that the more expensive blades are worth the conversion before they approve the switch. 
+
+If there is strong evidence of an improvement in the percent of blades that pass inspection, management says they will switch suppliers, otherwise they will maintain the current supplier. (NOTE: I removed the precent improvement from the lecture to make this simpler. )
+
+Data
+=======
+
+Rotor blade failures
+
+Group           Pass    Fail
+-------------- ------ --------
+Current         899     101
+Prospective     958     42
+
+```{r}
+rotor <- data.frame(pass = c(899, 958),
+                    fail = c(101, 42))
+pfailnull <- sum(rotor$fail[1])/sum(rotor)
+# adjust this for a percent improvement
+```
+
+Simulate assuming that all data is from the control group
+==========================
+```{r}
+rotorsim <- function(i){
+              successes <- sum(sample(x=0:1, size = 1000, 
+                                      replace=TRUE, 
+                                      prob=c(pfailnull, (1-pfailnull))))
+}
+rotorout <-sapply(1:10000, rotorsim)
+```
+
+Look at the histogram of the result and find the $H_A$
+======================
+```{r}
+hist(rotorout, breaks = 100,
+     main="Pass rate for 1000 tests of rotors under null hypothesis")
+abline(v=958)
+```
+
+Calculate probability of actual 
+```{r}
+print(length(rotorout[rotorout>958])/length(rotorout))
+```
+
+Compare observed probability to your threshold $\alpha$
+======================================================
+
+```{r}
+print (length(rotorout[rotorout>958])/length(rotorout)<0.05)
+```
+
+- If true, then reject Null Hypothesis
+
+Time step simulation
+=======================
+
+- Setting: you have data that is collected periodically (e.g. daily) as opposed to event logs (which would help with discrete event simulation)
+
+- Each round of simulation advances the simulation one time unit. e.g. one day.
+- Contrast - Discrete event simulation advances the clock to the next event
+- Monte Carlo models each round is independent of every other round
+
+Structure of a simulation
+==============
+
+1. Set initial state
+2. Run one time unit 
+    - determine probability distributions for events during that time unit.
+    - Determine outcomes for that time unit based on events
+3. Save end state
+    - Calculate costs and save time period statistics
+4. End state becomes the initial state for the next round
+5. Check if (simulation) stopping condition is met
+    - Number of iterations/time periods
+    - Specific state reached
+6.  Calculate simulation statistics for this replication
+    - Over all time periods before stopping rule is reached.
+7.  Repeat for as many replications are needed so that estimates of simulation statistics (e.g. mean) are within the desired confidence interval.
+
+Inventory model example
+========================
+
+- One of the standard models is periodic inventory $S,s$ model
+- At the beginning of each period any deliveries occur.
+- Each period sees a random demand with a given probability distribution
+- At the end of the period, compare inventory $i$ to a reorder point $s$
+    -  If inventory $i$ is less than $s$, order $q = S - i$
+    -  $S$ and $s$ are calculated based on demand, order lead time, and cost factors.
+- Calculate cost of the period including inventory holding and ordering cost
+-  Assume daily demand is Poisson
+
+Set up initial conditions and cost structure
+========================
+```{r}
+S <- 50
+s <- 10
+i <- S # start at S
+meandemand <- 8
+K <- 10 # cost of orders
+h <- 1 # cost of storing inventory
+stockout <- 50 # stockout penalty
+delivery = 0
+```
+
+Set up statistics collection
+=============================
+```{r}
+nstockouts <- 0 # count times when inventory goes to zero
+inventorydays <- 0 # sum of inventory holding
+norders <- 0 # count orders made
+```
+
+Implement one time period
+=====================
+
+- Implement one day
+- Model daily demand as Poisson
+- Run several times to make sure it works.
+
+```{r}
+
+dailycost <- 0
+if (delivery > 0){
+  i <- i + delivery
+  delivery <- 0
+}
+daydemand <- rpois(1, lambda = meandemand)
+if (daydemand>i){
+  nstockouts <- nstockouts + 1
+  dailycost <- dailycost + stockout
+}
+i = max(i-daydemand, 0)
+inventorydays <- inventorydays + i
+dailycost <- dailycost + h*i
+if (i < s){
+  delivery <- S-i
+  norders <- norders + 1
+  dailycost <- dailycost + K
+}
+print(c(daydemand, i, delivery, inventorydays, nstockouts, norders, dailycost))
+```
+
+Turn the time period code into a function, then run one replication
+===================================================================
+
+
+- Run one replication
+    - One year = 250 working days
+    - Use a for loop (why can you not vectorize the whole thing)
+- Update statistics as you go
+
+```{r}
+nstockouts <- 0 # count times when inventory goes to zero
+inventorydays <- 0 # sum of inventory holding
+norders <- 0 # count orders made
+cost <- 0
+for (days in 1:250){
+  dailycost <- 0
+  if (delivery > 0){
+    i <- i + delivery
+    delivery <- 0
+  }
+  daydemand <- rpois(1, lambda = meandemand)
+  if (daydemand>i){
+    nstockouts <- nstockouts + 1
+    dailycost <- dailycost + stockout
+  }
+  i = max(i-daydemand, 0)
+  inventorydays <- inventorydays + i
+  dailycost <- dailycost + h*i
+  if (i < s){
+    delivery <- S-i
+    norders <- norders + 1
+    dailycost <- dailycost + K
+  }
+  cost <- cost + dailycost
+}
+print(c(cost, nstockouts, norders, inventorydays))
+```
+
+Run many replications to get a distribution of outcomes
+==================
+
+- Save results to lists.
+- Turn list into dataframe for further analysis
+
+```{r}
+# Initialize statistics for analysis with empty lists
+stockoutsperyear <- c()
+inventorydaysperyear <- c()
+ordersperyear <- c()
+costperyear <- c()
+
+for (rep in 1:1000){  # 1000 replications
+  nstockouts <- 0 # count times when inventory goes to zero
+  inventorydays <- 0 # sum of inventory holding
+  norders <- 0 # count orders made
+  cost <- 0  
+  for (days in 1:250){
+    dailycost <- 0
+    if (delivery > 0){
+      i <- i + delivery
+      delivery <- 0
+    }
+    daydemand <- rpois(1, lambda = meandemand)
+    if (daydemand>i){
+      nstockouts <- nstockouts + 1
+      dailycost <- dailycost + stockout
+    }
+    i = max(i-daydemand, 0)
+    inventorydays <- inventorydays + i
+    dailycost <- dailycost + h*i
+    if (i < s){
+      delivery <- S-i
+      norders <- norders + 1
+      dailycost <- dailycost + K
+    }
+    cost <- cost + dailycost
+  }
+  stockoutsperyear <- c(stockoutsperyear, nstockouts)
+  inventorydaysperyear <- c(inventorydaysperyear, inventorydays)
+  ordersperyear <- c(ordersperyear, norders)
+  costperyear <- c(costperyear, cost)
+}
+sssimulationoutput <- data.frame(stockouts = stockoutsperyear,
+                                 inventorydays = inventorydaysperyear,
+                                 orders = ordersperyear,
+                                 cost = costperyear)
+```
+
+Analyze output
+==============
+
+```{r}
+ggplot(sssimulationoutput) + geom_histogram(aes(cost)) +
+  ggtitle("Annual cost for S,s simulation")
+```
+
+Summary
+======
+
+-  Simulation often used when some data is unobservable.
+    -  Ask the question: could I have seen the result I saw if *X* was true?
+-  Resampling can be used for hypothesis testing in the case of little data or if normal assumption is not true.
+    -  Bootstrapping can be used to identify what the system would look like if more data were available or if the source population changes.

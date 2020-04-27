@@ -1,0 +1,95 @@
+---
+title: "IE 0015 Information Systems Spring 2020 Final"
+author: "Written A"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+```{r setup, echo=FALSE, message = FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(ggplot2)
+library(phonenumber)
+# replace my name with your name here and run all chunks before starting
+yourname = "Written A"
+numbername = letterToNumber(yourname)
+examseed = (as.numeric(gsub("-", "", numbername, fixed = TRUE)) %% 256)
+print(paste("Name: ", yourname))
+print(Sys.time())
+```
+
+Instructions
+=============
+
+3. Read the agreement below and agree before starting.  Type your name in below the agreement to indicate your acceptance.
+4. Open MS Teams into the IE 15 team. 
+5. Take a picture of your working environment to include a clock (use time.gov if you need one).
+6. (Written version)  You have from 10 AM to 12 PM (NOON) EDT to complete the exam. I will be online in MS Teams to answer questions.
+7. If you have a question, post that you have a question in the Team chat, and I will invite you to a private chat to answer your question. 
+8. This is exam is open book and notes. You have access to 
+    - your notes, cheetsheets
+    - the lecture notes, 
+    - all homework  and labs, 
+    -  the R for Data Science book website (https://r4ds.had.co.nz/), 
+    - anything accessible through R Studio help section 
+        -  Cheetsheets https://rstudio.com/resources/cheatsheets/
+        -  Manuals - An Introduction to R
+        -  All package documentation (vignettes and help files)
+
+9.  When you are done, you will submit the following documents into Courseweb -> Course Documents -> Final Exam Submission - Written A
+    1. Photo of workspace and clock before exam
+    2. Photo of workspace and clock after exam
+    3. Scans/photo of work pages (with question number at top of each page) or
+    4. Document with your work and answers (as applicable)
+
+
+- Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement.
+
+
+
+## State department of health - Opening up the state [35]
+
+As the worst of COVID-19 is being reached, the Govenor of LA is considering relaxing stay-at-home orders and other social distancing guidelines in order to allow businesses and economic activity to slowly start up again.  
+
+The World Health Organization (WHO) has developed six criteria that nations and states around the world have been applying in their decision making. Two of them apply to the COVID-19 test tracking data.
+
+    i. Disease transmission is under control
+    
+    ii. Health systems are able to "detect, test, isolate and treat every case and trace every contact"
+
+You are a data analyst working with the LA Department of Health.  You have been asked to perform an analysis of the COVID-19 Testing results to help the governor decide how and when to relax social distancing, and if COVID-19 returns and social distancing needs to be reinstated later.
+
+a. Write the Context-Need-Vision-Outcome (CoNVO) statement for this assignment.
+
+
+## Material handling maintenance written exam [30]
+
+In a package handling facility, there are motors that move packages which are periodically checked by a maintainer who does a circuit of all motors in the facility. When they check a motor it could be green (which is good), yellow (which means that it is deteroriating and needs a low level of maintenance), or red (which means that failure is imminent and it needs to be stopped and fixed immediately).  Preventative maintenance a motor in yellow state is considerably less expensive than the maintenance required after a motor becomes red.  So if the maintainer arrives after the motor becomes yellow but before the motor becomes red, they save a considerable amount in maintenance.
+
+The time a motor stays in the *green* (normal operation) state is a lognormal distribution time from when a motor becomes yellow to the time that a maintainer reaches the motor on her circuit is an exponential distribution with mean *timetomaintainer*.  The time that a motor stays in yellow (*time to red*) is random exponential with mean `r timetored` days.  
+
+
+a. Develop a simulation that looks at a motor in a facility over the course of a year.  The simulation should track the mean time to failure (time between red states).  Remember that a motor will have many rounds of yellow states where the maintainer gets to the machine first before the motor reaches a red state.
+b. In reality, there is very little data on *timetored*, the time from when a motor reaches the yellow state to the time that a motor reaches the red state, because the maintenance schedule is set so that red states are not very common.  But there is enough data so that the ratio of maintainers observing yellow (implying that the maintainer arrived before the motor turned red) and motors reaching red (implying that the motor turned red before a maintainer arrived) can be determined with good confidence.  
+
+Write a simulation that for a given value of *timetored* calculates the ratio of maintainers observing yellow to motors reaching red. Sketch a plot of potential output of that simulation over a range of potential values of *timetored* and how you would use that plot to identify the true value of *timetored* if the ratio of maintainers observing yellow to motors reaching red was 9:1 (i.e. 10% of the time, the motor reaches red)
+
+Note: you can use the simulation you developed in your answer for (a) as a single block in a flow chart.
+Note: the plot needs to show both your candidate value(s) of *timetored* and the simulated ratio of rounds of maintainers observing yellow vs occurances of red.
+
+## PSC Therapy [35]
+
+Presbyterian Senior Care (PSC) provides physical therapy services.  Their physical therapists schedule 22 patients per day, each taking a mean of 45 and standard deviation of 15 minutes.  There are 18 staff hours available. (1 hour = 60 minutes)
+
+For each patient, there is a 10\% chance of a cancellation.  In addition, there are last minute requests to be added to the schedule with Poisson distribution with mean rate = 3.5 patients.
+
+(a)  Write a simulation that determines how much time is required for physical therapy services for a day. (hint: first determine how many cancellations and additions there are to the schedule, then determine how much time they take.)
+(b)  Sketch a plot of the output of 10000 days of this simulation. Using that plot show (both on the plot and in words) how you would determine the fraction of days that the staff time required to provide physical therapy services exceeds 18 hours. 
+
+
+Copyright 2020, Louis Luangkesorn, All rights reserved.  No distribution without written permission.

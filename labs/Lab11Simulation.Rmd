@@ -1,0 +1,72 @@
+---
+title: 'Lab 11: Simulation'
+author: "IE 0015 Information Systems"
+date: "April 9-10, 2020"
+output: 
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(ggplot2)
+```
+
+Note: This assignment involves both developing models as well as applying simulation methods. It will help you if you diagram your models (i.e. draw flow charts) and methods before trying to code them.
+
+# Job scheduling (10 points)
+
+A shop processes jobs through a single machine.  Currently, the shop runs on a First-in First-out basis, where orders are completed in the order they arrive.  However, there are a large number of late jobs (which are handled through expediting which leads to large amounts of Work In Progress). Evaluate some alternative scheduling rules using bootstrap simulation.
+
+```{r}
+job <- data.frame(job = c(1, 2,3, 4, 5, 6, 7, 8), 
+                  processingtime = c(2, 3, 2, 1, 4, 3, 4, 2),
+                  duedate = c(7, 3, 11, 5, 13, 10, 15, 17))
+```
+
+a. [2] You want to generate through bootstrapping a large number of simulated days.  Write a function that takes the current jobs, then samples from those eight jobs (with replacement), and assigns them randomly sampled due dates from the historical data (WITHOUT replacement).  Run this one time to prove that it works.  
+
+Hint: 
+(i) To pick from an existing order list, use the `sample()` function
+(ii) If you pass a vector as indices to a vector, you get a new vector with the original vectors data elements reordered. 
+```{r resequenceexample}
+datalist <- c(1,2,3,4,5,6,7,8)
+neworder <- c(4, 2, 5, 6, 3, 8, 7, 1)
+datalist[neworder]
+```
+
+(iii)  Figure how to pick the jobs first, then add in due dates.
+
+
+b. [5] Write functions that implement the following scheduling strategies and calculate the total lateness (time past due that an order is completed).  Apply this to the same example created in (a). Hint: use `arrange` to sort the orders:
+    i. First-in First-out - Orders are done in the order received (i.e. unsorted) (this is provided below)
+    ii.  Earliest Due date first (sequence orders in order of due date, ties settled using shortest processing time first).
+    iii.  Shortest processing time (sequence orders in order of processing time, with ties settled with earliest due date first).
+
+
+```{r latenessfunction}
+lateness <- function(duedate, completiondate){
+  lateness <- max(0, completiondate - duedate)
+}
+```
+
+```{r fifoimplementation}
+fifolate <- function(joblist){
+   joblength <- length(joblist$job)
+   totallateness <- 0
+   completion <- 0
+   for(i in 1:joblength){
+     completion <- completion + joblist$processingtime[i]
+     totallateness <- totallateness + lateness(joblist$duedate, completion)
+   } 
+   totallateness
+}
+```
+
+    
+c. [3] Simulate each method 250 replications.  Show the results using a plot that represents the variation across replications (remember to add titles and labels with units)  Which is the best in reducing lateness?
+
+Hint: create a `for` loop that iterates 250 replications. For each replication, generate a joblist and apply each sequencing method to it. Then save the results to lists that you will combine into a data frame.  

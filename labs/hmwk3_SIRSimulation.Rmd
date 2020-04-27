@@ -1,0 +1,192 @@
+---
+title: 'Homework 3: S-I-R Simulation'
+author: "IE 0015 Information Systems"
+date: "April 15, 2020"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r loadtitanic, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(ggplot2)
+```
+
+The standard model of spread of infectious disease spread is the S-I-R compartmental model: susceptible, infected, removed.  The population is divided into three compartments, and the model tracks the change in the size of each compartment over time.  The standard depiction of the model is as a system of differential equations.
+
+$$dS = -\beta *S*I$$
+$$dI =  \beta*S*I - \nu*I$$
+$$dR = \nu*I $$
+
+Where:
+
+- $\beta$ is the product of the contact per unit time and the probability of transmission. It is the product of the probability of contact of an infected individual and a susceptible individual and the probability that a contact results in the susceptible person being infected.
+- $\nu$ is the recovery rate 
+- S is the number of susceptible individuals. At the beginning this is the entire population. dS is the change in number of suspectible individuals in a given unit time
+- I is the number of infected individuals. Typically, in a model the initial value is 1. dI is the change in number of infected individuals in a given unit time
+- dR is the change in number of removed individuals in a given unit time.  This can either be due to recovery with future immunity, or through death of the individual.
+
+This homework assignment will develop this model as a simulation.  We will look at an artificial population of 1000 people, with one being infected.
+
+```{r setup}
+nperiods = 365
+population = 1000
+averagecontacts = 15
+pinfect = 0.02
+recoveryrate = 1/14 # 1 / average recovery time
+```
+
+1.  [5] Calculate the probability that two individuals meet. Save it to a variable named `pcontact`.
+
+```{r}
+
+pcontact <- 0  # calculate pcontact here
+```
+
+
+2. [10] This assignment will model the spread of the disease as a mixing model, meaning that every individual has an equal probability of being in contact with any other individual.  For every time period (a day) write a function named `checkinfection(nS, nI)` that determines given the the starting number of susceptible and infected: 
+  (1)  how many instances an infected individual is in contact with a susceptible individual
+  (2)  How many of those contacts result in infection.
+  (3)  Run this code for the first day (I0 = 1, S0 = 999, R0= 0)
+  
+  Note: you need to model each potential contact between individuals separately, you may not use an average.
+  
+  Note: if there are no suscepible individuals, there can be no contacts.
+  
+
+```{r}
+I0 = 1
+S0 = population - I0
+R0 = 0
+
+checkinfection <- function(nS, nI){
+
+  # your code starts here
+  
+  
+  dI # this is what will be the return value
+}
+
+dI = checkinfection(S0, I0)
+I1 = I0 + dI
+s1 = S0 - dI
+
+print(c(I1, s1))
+```
+
+
+3. [15] For those who are infected, assume that in each time period, the probability of recovery is 1 / (average recovery time).  Write a function named `checkrecover(nI)` that calculates the number of recovered given the number of infected.  Run the function with 100 infected.
+
+
+```{r}
+Istarting = 100
+
+checkrecover <- function(nI){
+  
+  # your code goes here
+}
+
+dr <- checkrecover(Istarting)
+print(dr)
+```
+
+4. [10] Simulate one year.
+    a. Use the functions you just created to run a simulation of one year with a starting population of 1000 (S0=999, I0 = 1, R0 = 0). You will need to run 365 days of simulation and save each day's S, I and R (hint: create a vector for each).  
+    b. The output of the simulation will be the maximum number infected and the number of days that the number of infected is greater than **20**. Calculate this from the simulation results.
+    c. Plot Susceptible, Infected, and Recovered vs time (days).
+
+
+Hint: develop the simulation with 1 day, then 3 days, then all 365.
+'
+Hint:  when everyone has gotten infected you no longer have to check for more infections (i.e. S <= 0)
+
+Hint:  when you are done, wrap the simulation into a function because you will need to run this many times.
+
+Hint: if you are plotting in ggplot, get the data into a data frame first. Don't forget to include a column for time (days).
+
+Hint: Use different colors or symbols for S, I, R.  You can specify the color by having the `color=` or `shape=` argument inside the `geom_` function, but outside the `aes()` arguement.
+
+
+
+```{r}
+#  One day
+
+onedayepidemic <- function(nS, nI, nR){
+  dI <- checkinfection(nS, nI)
+  dR <- checkrecover(nI)
+  
+  # your code goes here
+  # must determine the next period's S, I, and R
+  return = c(S1, I1, R1)
+}
+
+oneyearepidemic <- function(S0 = 999, I0 = 1, R0 = 0){
+  oneyear <- 365
+  nS = c(S0)
+  nI = c(I0)
+  nR = c(R0)
+  for (day in 1:(oneyear-1)){
+    nextday <- onedayepidemic(nS[day], nI[day], nR[day])
+    nS <- c(nS, nextday[1])
+    nI <- c(nI, nextday[2])
+    nR <- c(nR, nextday[3])
+  }
+  
+  simulationresults <- data.frame(day = 1:oneyear,
+                                  S = nS,
+                                  I = nI,
+                                  R = nR
+                                  )
+  simulationresults
+}
+```
+
+```{r}
+oneyearresults <- oneyearepidemic(S0, I0, R0)
+
+# your plotting code goes here
+```
+
+```{r}
+infectedstatistic <- oneyearresults
+
+# finish analysis code here
+```
+
+
+5. [10] Now run 100 replications (each replication is 365 days).  
+
+    a.  Represent all 100 replications on a single graph (note: there are many possible answers).  Keep in mind that from the representation of any single replication, it should be possible to determine the maximimum infected and the number of days the number of infected is greater than 20, but your final graph you are more interested in the distributions of the outputs, not the individual values.
+    b. Repeat, but change the average number of contacts per person to 10 from 15.
+
+Hint: at this point we only care about infected, so you do not have to use S and R.
+
+Hint: use either vectorization or for loops to manage the replications.
+
+
+```{r}
+
+epidemicsimulation <- function(S0 = 999, I0 = 1, R0 = 0){
+  oneyearresults <- oneyearepidemic(S0, I0, R0)
+  infectedstatistic <- oneyearresults %>% 
+    # summary statistics code from (4) goes here
+  
+  c(infectedstatistic$peak, infectedstatistic$duration)
+}
+
+infectedresults <- sapply(rep(999, 100), epidemicsimulation)
+epidemicresults <- data.frame(peak = infectedresults[1,],
+                              duration = infectedresults[2,])
+```
+
+```{r}
+# plotting code goes here
+```
+
+
+# Postscript
+
+In real life, after a simulation like this was used, you would change parameters to reflect potential policy changes.  For example, social distancing changes the variable `averagecontacts`.  Protective equipment such as non-medical masks changes the variable `pinfect`.  Treatment methods changes `recoveryrate`.  And you would see how the results shift as you change any of them. (e.g. reducing `averagecontacts` reduces the peak and increases the duration).

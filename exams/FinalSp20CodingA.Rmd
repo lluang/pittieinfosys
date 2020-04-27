@@ -1,0 +1,108 @@
+---
+title: "IE 0015 Information Systems Spring 2020 Final"
+author: "Coding A"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r setup, echo=FALSE, message = FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+library(ggplot2)
+library(phonenumber)
+# replace my name with your name here and run all chunks before starting
+yourname = "Coding A"
+numbername = letterToNumber(yourname)
+examseed = (as.numeric(gsub("-", "", numbername, fixed = TRUE)) %% 256)
+print(paste("Name: ", yourname))
+print(Sys.time())
+```
+
+Instructions
+=============
+
+1. Enter your name in the code chunk above as the variable `yourname`
+2. Run all chunks, then knit this file to see your exam with all of its specifications. (this exam is customized for you)
+3. Read the agreement below and agree before starting.  Type your name in below the agreement to indicate your acceptance.
+4. Open MS Teams into the IE 15 team. 
+5. Take a picture of your working environment to include a clock (use time.gov if you need one).
+6. (Coding version) You have from 8:00 AM EDT to 1:00 PM EDT to complete the exam.  I will be online in MS Teams from 8 to 1 to answer questions.
+7. If you have a question, post that you have a question in the Team chat, and I will invite you to a private chat to answer your question. 
+8. This is exam is open book and notes. You have access to 
+    - your notes, cheetsheets
+    - the lecture notes, 
+    - all homework  and labs, 
+    -  the R for Data Science book website (https://r4ds.had.co.nz/), 
+    - anything accessible through R Studio help section 
+        -  Cheetsheets https://rstudio.com/resources/cheatsheets/
+        -  Manuals - An Introduction to R
+        -  All package documentation (vignettes and help files)
+
+9.  When you are done, you will submit the following documents into Courseweb -> Course Documents -> Final Exam Submission - Coding A
+    1. Photo of workspace and clock before exam
+    2. Photo of workspace and clock after exam
+    3. Rmd file with your solutions
+    4. Knitted file with your solutions
+    5. Scans/photo of any additional written work (with question number at top of page)
+
+
+- Student agreement: 	"I have not received any unauthorized aid during this <assignment/quiz/exam> in accordance with the policies outlined above _________________."   Typing your name here indicates your agreement.
+
+
+
+## State department of health - Opening up the state [35]
+
+As the worst of COVID-19 is being reached, the Govenor of MI is considering relaxing stay-at-home orders and other social distancing guidelines in order to allow businesses and economic activity to slowly start up again.  
+
+The World Health Organization (WHO) has developed six criteria that nations and states around the world have been applying in their decision making. Two of them apply to the COVID-19 test tracking data.
+
+    i. Disease transmission is under control
+    
+    ii. Health systems are able to "detect, test, isolate and treat every case and trace every contact"
+
+You are a data analyst working with the MI Department of Health.  You have been asked to perform an analysis of the COVID-19 Testing results to help the governor decide how and when to relax social distancing, and if COVID-19 returns and social distancing needs to be reinstated later.
+
+a. Write the Context-Need-Vision-Outcome (CoNVO) statement for this assignment.
+
+
+
+
+## PNC ATM cash out occurances [30]
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+set.seed(examseed)
+meancash = round(rnorm(1, 10000, 200), digits = 0)
+sdcash = round(rnorm(1, 2500, 500), digits = 0)
+meanlogcash = round(log(meancash) - log((sdcash/meancash)**2 + 1)/2, digits=1)
+sdlogcash = round(sqrt(log((sdcash/meancash)**2 + 1)), digits=1)
+```
+PNC Bank ATMs are visited on a regular basis to replenish the supply of cash.  Cash in an ATM has a cost to the bank, as that cash cannot be used for loans (which is how banks make money). But having an ATM run out of cash has a higher cost in customer good will and the staff costs of having an in-person cash withdrawal.  A particular ATM is in a category where they believe that the average weekly demand is \$10,000.  The current policy is to visit an ATM once a week, and fill it to \$15,000. (i.e. safety stock is 50\% of mean demand) (this is called the *base stock level*)
+
+The mean and standard deviation of the weekly demand at a particular ATM is $mean = `r meancash`$ and standard deviation = `r sdcash`  (the parameters for `rlnorm` are the meanlog = `r meanlogcash` and sdlog = `r sdlogcash`. e.g. `rlnorm(100, meanlog, sdlog)` gives the weekly cash demand for 100 ATMs)
+
+(a)  Write a simulation that determines if the weekly demand exceeds \$15,000 (i.e. the ATM runs out of cash.)  Run it with 100,000 replications (weeks) and give the fraction of weeks that the ATMs stocks out.  Assume all ATM weeks are independent and identically distributed (i.i.d.).
+(b)  The bank wants to set cash levels for each ATM so that their is no more than a 1\% probability of stockout. Use the results of the above simulation to determine what that base stock level (amount of cash that you load the ATM up to) should be (Note: the ideal version would be to do a data analysis to obtain that number, but you could also identify it from a plot if you explain how to use the plot to get this number.)
+
+Hint:  this is a Monte Carlo simulation, with the event being one week of cash withdrawals at one ATM.
+
+Hint: The results of many replications of a simulation is a distribution of the output.
+
+
+## PSC Therapy [35]
+
+Presbyterian Senior Care (PSC) provides physical therapy services.  Their physical therapists schedule 22 patients per day, each taking a mean of 45 and standard deviation of 15 minutes.  There are 18 staff hours available. (1 hour = 60 minutes)
+
+For each patient, there is a 10\% chance of a cancellation.  In addition, there are last minute requests to be added to the schedule with Poisson distribution with mean rate = 3.5 patients. `rpois(number, rate)`
+
+(a)  Write a simulation of one day of patients, then run that simulation for 1000 days.  What is the probability that more than 18 hours of staff time is required?  (hint: first determine how many cancellations and additions there are to the schedule, then determine how much time they take.)
+
+(b)  PSC is thinking about making another 1.5 staff hours available to create two free slots in the schedule.  What is the probability that 19.5 staff hours will be used?
+
+Note:  for (a) and (b), the ideal answer will use a data analysis, but you could also create a plot and use the plot make an estimate. Make sure you write how you used the plot (don't just mark the plot without an explaination).
+
+Copyright 2020, Louis Luangkesorn, All rights reserved.  No distribution without written permission.
