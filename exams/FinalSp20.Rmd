@@ -347,4 +347,43 @@ b. CLASS is interested in hiring staff that can also be drivers.  For each staff
 
 c.  Using your plot, determine how many drivers are needed so that supervisors are not needed to drive residents more than 10\% of the time.  Hint: see the last part of Homework 3.
 
+
+**ANSWER**
+
+```{r}
+meantrips <- 18 # per day
+tripmean <- 60 #minutes
+tripsd <- 15 # minutes
+drivertime <- 210 # minutes
+replications <- 1000 # days
+
+dailytraveltime <- function(tripperday, meanduration, sdduration){
+  ntrips <- rpois(1, tripperday)
+  triptime <- sum(rnorm(ntrips, meanduration, sdduration))
+  return(triptime)
+}
+
+thousanddays <- sapply(rep(meantrips, 1000), 
+                       dailytraveltime, 
+                       tripmean,
+                       tripsd) #tripmean and tripsd repeated
+```
+
+```{r}
+thousanddays <- sort(thousanddays)
+thousanddf <- data.frame(days = 1:1000/1000,
+                         thousanddays,
+                         drivers = ceiling(thousanddays/210))
+ggplot(thousanddf) + geom_histogram(aes(drivers)) + 
+  ggtitle("Simulation result of drivers required per day")
+```
+
+```{r}
+ggplot(thousanddf) + geom_line(aes(drivers, days)) +
+  ggtitle("days drivers are sufficient")
+
+```
+
+Using this plot, find how many drivers are sufficient for  0.9 of days.
+
 Copyright 2020, Louis Luangkesorn, All rights reserved.  No distribution without written permission.
